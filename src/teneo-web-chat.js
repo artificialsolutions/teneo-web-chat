@@ -1,3 +1,11 @@
+import TIE from '@artificialsolutions/tie-api-client';
+
+const TENEO_AUTHOR = 'teneo';
+
+const teneoEngineUrl = 'https://developerarea-dev.teneocloud.com/tiesdktest/';
+
+const teneoApi = TIE.init(teneoEngineUrl);
+
 export default {
   name: 'app',
   data() {
@@ -6,7 +14,7 @@ export default {
       participants: [
         {
           id: 'user1',
-          name: 'Matteo',
+          name: 'Me',
           imageUrl:
             'https://avatars3.githubusercontent.com/u/1915989?s=230&v=4',
         },
@@ -19,10 +27,7 @@ export default {
       ],
       titleImageUrl:
         'https://a.slack-edge.com/66f9/img/avatars-teams/ava_0001-34.png',
-      messageList: [
-        { type: 'text', author: `me`, data: { text: `Say yes!` } },
-        { type: 'text', author: `user1`, data: { text: `No.` } },
-      ],
+      messageList: [],
       newMessagesCount: 0,
       isChatOpen: false,
       showTypingIndicator: '',
@@ -61,14 +66,22 @@ export default {
           ? this.newMessagesCount
           : this.newMessagesCount + 1;
         this.onMessageWasSent({
-          author: 'support',
+          author: TENEO_AUTHOR,
           type: 'text',
           data: { text },
         });
       }
     },
-    onMessageWasSent(message) {
+    async onMessageWasSent(message) {
       this.messageList = [...this.messageList, message];
+
+      if (message.author !== TENEO_AUTHOR) {
+        const response = await teneoApi.sendInput(null, {
+          text: message.data.text,
+        });
+
+        this.sendMessage(response.output.text);
+      }
     },
     openChat() {
       this.isChatOpen = true;
