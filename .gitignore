@@ -1,0 +1,6 @@
+node_modules/
+dist/
+
+stats-prod.json
+
+!dist/index.html

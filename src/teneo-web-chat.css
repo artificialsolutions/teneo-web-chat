@@ -1,0 +1,14 @@
+div {
+  padding: 10px;
+  font-family: Helvetica, Arial;
+}
+
+p {
+  font-size: 2em;
+  text-align: center;
+}
+
+.teneo-web-chat__arrow {
+  transform: rotate(45deg);
+  font-size: 10em;
+}
