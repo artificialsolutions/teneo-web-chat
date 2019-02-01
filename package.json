@@ -3,18 +3,17 @@
   "version": "0.0.1",
   "description": "",
   "scripts": {
-    "analyze": "NODE_ENV=production webpack --config webpack.config.js --mode production --profile --json > stats-prod.json && webpack-bundle-analyzer stats-prod.json dist/",
-    "build": "webpack --mode production",
-    "start:dev": "webpack-dev-server",
-    "test": "mocha-webpack --webpack-config webpack.config.js --require 'test/setup.js' 'test/**/*.test.js'",
+    "analyze": "NODE_ENV=production webpack --config webpack.prod.js --profile --json > stats-prod.json && webpack-bundle-analyzer stats-prod.json dist/",
+    "build": "NODE_ENV=production webpack --config webpack.prod.js",
+    "start:dev": "webpack-dev-server --config webpack.dev.js",
+    "test": "mocha-webpack --webpack-config webpack.dev.js --require 'test/setup.js' 'test/**/*.test.js'",
     "test:dev": "npm test -- --watch"
   },
   "keywords": [],
   "author": "",
   "license": "ISC",
   "dependencies": {
-    "vue": "^2.5.22",
-    "vue-beautiful-chat": "^2.2.0"
+    "vue": "^2.5.22"
   },
   "devDependencies": {
     "@artificialsolutions/tie-api-client": "^1.1.2",
@@ -31,13 +30,13 @@
     "mocha-webpack": "^2.0.0-beta.0",
     "node-sass": "^4.11.0",
     "prettier": "^1.16.2",
-    "sass-loader": "^7.1.0",
     "vue-loader": "^15.6.2",
     "vue-style-loader": "^4.1.2",
     "vue-template-compiler": "^2.5.22",
     "webpack": "^4.29.0",
     "webpack-bundle-analyzer": "^3.0.3",
     "webpack-cli": "^3.2.1",
-    "webpack-dev-server": "^3.1.14"
+    "webpack-dev-server": "^3.1.14",
+    "webpack-merge": "^4.2.1"
   }
 }
