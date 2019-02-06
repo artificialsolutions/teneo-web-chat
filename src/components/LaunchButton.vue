@@ -95,4 +95,10 @@ export default {
   font-size: 12px;
   font-weight: 500;
 }
+
+@media (max-width: 450px) {
+  .launcher.opened {
+    display: none;
+  }
+}
 </style>
