@@ -42,7 +42,6 @@ export default {
   box-sizing: border-box;
   display: flex;
   align-items: center;
-  justify-content: space-between;
   color: #e1e1e1;
 }
 
@@ -52,17 +51,23 @@ export default {
   width: 32px;
 }
 
+.header__title {
+  margin-left: 12px;
+}
+
 .header__close-button {
   outline: none;
   background: none;
   border: none;
   cursor: pointer;
   padding: 0;
+  margin-left: auto;
 }
 
 .header__close-icon {
   height: 32px;
   width: 32px;
+  color: #fff;
 }
 
 .header__close-icon {

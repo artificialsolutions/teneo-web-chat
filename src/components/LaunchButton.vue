@@ -62,6 +62,11 @@ export default {
   align-items: center;
 }
 
+.launcher__open-icon {
+  height: 100%;
+  width: 100%;
+}
+
 .launcher__close-icon {
   stroke-width: 1;
   height: 32px;
@@ -89,5 +94,11 @@ export default {
   margin: auto;
   font-size: 12px;
   font-weight: 500;
+}
+
+@media (max-width: 450px) {
+  .launcher.opened {
+    display: none;
+  }
 }
 </style>

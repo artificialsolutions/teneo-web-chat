@@ -13,7 +13,6 @@
         ref="userInput"
       ></div>
       <div class="sc-user-input--buttons">
-        <div class="sc-user-input--button"></div>
         <div class="sc-user-input--button">
           <SendIcon :onClick="_submitText" />
         </div>
@@ -77,6 +76,7 @@ export default {
   position: relative;
   bottom: 0;
   display: flex;
+  justify-content: space-between;
   background-color: #f4f7f9;
   border-bottom-left-radius: 10px;
   border-bottom-right-radius: 10px;
@@ -107,16 +107,12 @@ export default {
 
 .sc-user-input--text:empty:before {
   content: attr(placeholder);
-  display: block; /* For Firefox */
-  /* color: rgba(86, 88, 103, 0.3); */
+  display: block;
   filter: contrast(15%);
   outline: none;
 }
 
 .sc-user-input--buttons {
-  width: 100px;
-  position: absolute;
-  right: 12px;
   height: 100%;
   display: flex;
 }
