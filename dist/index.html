@@ -14,5 +14,16 @@
       <test-component></test-component>
     </div>
     <script src="main.js"></script>
+    <script>
+      if (
+        window.TeneoWebChat &&
+        typeof window.TeneoWebChat.initialize === 'function'
+      ) {
+        window.TeneoWebChat.initialize(
+          'Teneo',
+          'https://developerarea-dev.teneocloud.com/tiesdktest/'
+        );
+      }
+    </script>
   </body>
 </html>
