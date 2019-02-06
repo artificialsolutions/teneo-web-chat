@@ -63,6 +63,7 @@ export default {
 .header__close-icon {
   height: 32px;
   width: 32px;
+  color: #fff;
 }
 
 .header__close-icon {
