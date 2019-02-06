@@ -62,6 +62,11 @@ export default {
   align-items: center;
 }
 
+.launcher__open-icon {
+  height: 100%;
+  width: 100%;
+}
+
 .launcher__close-icon {
   stroke-width: 1;
   height: 32px;
