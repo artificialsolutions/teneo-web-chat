@@ -1,7 +1,10 @@
 <template>
   <div class="chat-window">
     <Header :title="title" :imageUrl="titleImageUrl" :onClose="onClose" />
-    <MessageList :messageList="messageList" :participants="participants" />
+    <MessageList
+      :messageList="$teneoApi.messageList"
+      :participants="participants"
+    />
     <UserInput :onSubmit="sendMessage" />
   </div>
 </template>
@@ -14,10 +17,6 @@ import UserInput from './UserInput.vue';
 export default {
   components: { Header, MessageList, UserInput },
   props: {
-    messageList: {
-      type: Array,
-      required: true,
-    },
     onClose: {
       type: Function,
       required: true,
@@ -34,9 +33,10 @@ export default {
       type: String,
       required: true,
     },
-    sendMessage: {
-      type: Function,
-      required: true,
+  },
+  methods: {
+    sendMessage(message) {
+      this.$teneoApi.sendMessage(message);
     },
   },
 };
