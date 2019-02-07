@@ -28,7 +28,16 @@ export default {
   },
   methods: {
     _scrollDown() {
-      this.$refs.scrollList.scrollTop = this.$refs.scrollList.scrollHeight;
+      const latestMessage = document.querySelector('.message:last-child');
+
+      if (latestMessage && typeof latestMessage.scrollIntoView === 'function') {
+        latestMessage.scrollIntoView({
+          behavior: 'smooth',
+          block: 'end',
+        });
+      } else {
+        this.$refs.scrollList.scrollTop = this.$refs.scrollList.scrollHeight;
+      }
     },
     shouldScrollToBottom() {
       return (
@@ -55,7 +64,8 @@ export default {
     },
   },
   mounted() {
-    this.$nextTick(this._scrollDown);
+    // wait for images to load
+    setTimeout(this._scrollDown.bind(this), 400);
   },
   updated() {
     if (this.shouldScrollToBottom()) {

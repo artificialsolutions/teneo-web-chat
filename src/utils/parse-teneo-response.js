@@ -15,8 +15,6 @@ export default function parseTeneoResponse(teneoResponse) {
     });
   }
 
-  console.log(JSON.stringify(teneoResponse, null, 2));
-
   const messageParams = parameters && parameters[TENEO_PARAM_KEY];
 
   const data = messageParams && JSON.parse(messageParams);
