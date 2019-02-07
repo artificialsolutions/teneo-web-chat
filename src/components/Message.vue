@@ -1,14 +1,16 @@
 <template>
   <div class="message">
-    <div class="message__content" :class="messageSource">
-      <div class="message__text">
-        <p>{{ messageText }}</p>
+    <div class="message__wrapper" :class="messageSource">
+      <div class="message__content">
+        <component :is="messageType" :message="message" />
       </div>
     </div>
   </div>
 </template>
 
 <script>
+import messageComponentName from '../utils/message-component-name.js';
+
 export default {
   data() {
     return {};
@@ -26,6 +28,9 @@ export default {
     },
   },
   computed: {
+    messageType() {
+      return messageComponentName(this.message.type);
+    },
     messageText() {
       return this.message.data.text;
     },
@@ -35,6 +40,7 @@ export default {
   },
 };
 </script>
+
 <style scoped>
 .message {
   width: 300px;
@@ -43,20 +49,20 @@ export default {
   display: flex;
 }
 
-.message__content {
+.message__wrapper {
   width: 100%;
   display: flex;
 }
 
-.message__content.user {
+.message__wrapper.user {
   justify-content: flex-end;
 }
 
-.message__content.system {
+.message__wrapper.bot {
   justify-content: flex-start;
 }
 
-.message__text {
+.message__content {
   padding: 6px 18px;
   border-radius: 6px;
   font-weight: 300;
@@ -66,7 +72,7 @@ export default {
   -webkit-font-smoothing: subpixel-antialiased;
 }
 
-.message__content.user .message__text {
+.message__wrapper.user .message__content {
   background: #4e8cff;
   color: #ffffff;
   max-width: calc(100% - 120px);
@@ -74,7 +80,7 @@ export default {
   border-bottom-right-radius: 0px;
 }
 
-.message__content.system .message__text {
+.message__wrapper.bot .message__content {
   color: #263238;
   background-color: #f4f7f9;
   margin-right: 40px;

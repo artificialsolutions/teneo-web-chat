@@ -32,8 +32,7 @@ export default {
     },
     shouldScrollToBottom() {
       return (
-        this.$refs.scrollList.scrollTop >
-        this.$refs.scrollList.scrollHeight - 600
+        this.$refs.scrollList.scrollTop < this.$refs.scrollList.scrollHeight
       );
     },
     profile(author) {
@@ -56,7 +55,7 @@ export default {
     },
   },
   mounted() {
-    this._scrollDown();
+    this.$nextTick(this._scrollDown);
   },
   updated() {
     if (this.shouldScrollToBottom()) {

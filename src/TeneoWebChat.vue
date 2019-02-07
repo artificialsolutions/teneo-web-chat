@@ -1,13 +1,13 @@
 <template>
   <div class="teneo-web-chat">
-    <h1>Teneo Web Chat</h1>
     <ChatWindow
       v-if="isChatOpen"
       :messageList="messageList"
       :onClose="closeChat"
       :participants="participants"
       :titleImageUrl="titleImageUrl"
-      :sendMessage="onMessageWasSent"
+      :title="serviceName"
+      :sendMessage="sendMessage"
     />
     <LaunchButton
       :open="openChat"
@@ -17,10 +17,15 @@
     />
   </div>
 </template>
+
 <script>
-import { PARTICIPANT_USER, PARTICIPANT_SYSTEM } from './utils/constants.js';
+import { PARTICIPANT_USER, PARTICIPANT_BOT } from './utils/constants.js';
+import parseMessage from './utils/parse-message.js';
+import registerMessageComponents from './utils/register-message-components.js';
 import ChatWindow from './components/ChatWindow.vue';
 import LaunchButton from './components/LaunchButton.vue';
+
+registerMessageComponents();
 
 export default {
   name: 'app',
@@ -58,7 +63,7 @@ export default {
             'https://avatars3.githubusercontent.com/u/1915989?s=230&v=4',
         },
         {
-          id: PARTICIPANT_SYSTEM,
+          id: PARTICIPANT_BOT,
           name: this.serviceName,
           imageUrl:
             'https://avatars3.githubusercontent.com/u/37018832?s=200&v=4',
@@ -72,43 +77,41 @@ export default {
     };
   },
   methods: {
-    sendMessage(text) {
-      if (text.length > 0) {
-        this.newMessagesCount = this.isChatOpen
-          ? this.newMessagesCount
-          : this.newMessagesCount + 1;
-        this.onMessageWasSent({
-          author: PARTICIPANT_SYSTEM,
-          type: 'text',
-          data: { text },
-        });
-      }
-    },
-    async onMessageWasSent(message) {
+    async sendMessage(message) {
       this.messageList = [...this.messageList, message];
-
       this.messageListCache.update(this.messageList);
 
-      if (message.author !== PARTICIPANT_SYSTEM) {
-        const response = await this.teneoApi.sendInput(null, {
-          text: message.data.text,
-        });
+      const response = await this.teneoApi.sendInput(null, {
+        text: message.data.text,
+      });
 
-        this.sendMessage(response.output.text);
-      }
+      this.onMessageReceived(parseMessage(response));
     },
+
+    onMessageReceived(message) {
+      if (!message) {
+        return;
+      }
+
+      this.messageList = [...this.messageList, message];
+      this.messageListCache.update(this.messageList);
+
+      this.newMessagesCount = this.isChatOpen
+        ? this.newMessagesCount
+        : this.newMessagesCount + 1;
+    },
+
     openChat() {
       this.isChatOpen = true;
       this.newMessagesCount = 0;
-      this.message = 'Close the chat!';
     },
     closeChat() {
       this.isChatOpen = false;
-      this.message = 'Open the chat!';
     },
   },
 };
 </script>
+
 <style scoped>
 .teneo-web-chat {
   width: 100%;
