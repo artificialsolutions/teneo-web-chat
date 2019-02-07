@@ -34,6 +34,7 @@ export default {
 
 <style scoped>
 .image-message img {
-  max-width: 100%;
+  margin: 12px;
+  max-width: 80%;
 }
 </style>

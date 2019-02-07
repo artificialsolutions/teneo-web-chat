@@ -20,7 +20,7 @@
 
 <script>
 import { PARTICIPANT_USER, PARTICIPANT_BOT } from './utils/constants.js';
-import parseMessage from './utils/parse-message.js';
+import parseTeneoResponse from './utils/parse-teneo-response.js';
 import registerMessageComponents from './utils/register-message-components.js';
 import ChatWindow from './components/ChatWindow.vue';
 import LaunchButton from './components/LaunchButton.vue';
@@ -85,7 +85,11 @@ export default {
         text: message.data.text,
       });
 
-      this.onMessageReceived(parseMessage(response));
+      const messages = parseTeneoResponse(response);
+
+      messages.forEach((message) => {
+        this.onMessageReceived(message);
+      });
     },
 
     onMessageReceived(message) {
