@@ -80,7 +80,6 @@
     "max-statements": "error",
     "max-statements-per-line": "error",
     "multiline-comment-style": "error",
-    "multiline-ternary": "error",
     "new-cap": "error",
     "new-parens": "error",
     "newline-after-var": [
@@ -211,7 +210,6 @@
     "radix": "error",
     "require-atomic-updates": "error",
     "require-await": "error",
-    "require-jsdoc": "error",
     "rest-spread-spacing": "error",
     "semi": "error",
     "semi-spacing": "error",

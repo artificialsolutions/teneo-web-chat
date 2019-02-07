@@ -7,6 +7,7 @@
     </button>
   </div>
 </template>
+
 <script>
 import XCircleIcon from '../icons/x-circle.vue';
 import XIcon from '../icons/x.vue';
@@ -30,6 +31,7 @@ export default {
   },
 };
 </script>
+
 <style scoped>
 .header {
   background: #4e8cff;

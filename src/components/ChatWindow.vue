@@ -5,6 +5,7 @@
     <UserInput :onSubmit="sendMessage" />
   </div>
 </template>
+
 <script>
 import Header from './Header.vue';
 import MessageList from './MessageList.vue';
@@ -12,9 +13,6 @@ import UserInput from './UserInput.vue';
 
 export default {
   components: { Header, MessageList, UserInput },
-  data: () => ({
-    title: 'Teneo Web Chat',
-  }),
   props: {
     messageList: {
       type: Array,
@@ -32,6 +30,10 @@ export default {
       type: String,
       required: true,
     },
+    title: {
+      type: String,
+      required: true,
+    },
     sendMessage: {
       type: Function,
       required: true,
@@ -39,6 +41,7 @@ export default {
   },
 };
 </script>
+
 <style scope>
 .chat-window {
   font-family: 'Helvetica Neue', Helvetica, Arial, sans-serif;

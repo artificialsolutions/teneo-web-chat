@@ -1,6 +1,6 @@
 <template>
   <div>
-    <form class="sc-user-input" :class="{ active: inputActive }">
+    <form class="user-input" :class="{ active: inputActive }">
       <div
         role="button"
         tabIndex="0"
@@ -9,11 +9,11 @@
         @keydown="handleKey"
         contentEditable="true"
         :placeholder="placeholder"
-        class="sc-user-input--text"
+        class="user-input--text"
         ref="userInput"
       ></div>
-      <div class="sc-user-input--buttons">
-        <div class="sc-user-input--button">
+      <div class="user-input--buttons">
+        <div class="user-input--button">
           <SendIcon :onClick="_submitText" />
         </div>
       </div>
@@ -70,7 +70,7 @@ export default {
 </script>
 
 <style scoped>
-.sc-user-input {
+.user-input {
   min-height: 55px;
   margin: 0px;
   position: relative;
@@ -83,7 +83,7 @@ export default {
   transition: background-color 0.2s ease, box-shadow 0.2s ease;
 }
 
-.sc-user-input--text {
+.user-input--text {
   width: 300px;
   resize: none;
   border: none;
@@ -105,23 +105,23 @@ export default {
   overflow-y: auto;
 }
 
-.sc-user-input--text:empty:before {
+.user-input--text:empty:before {
   content: attr(placeholder);
   display: block;
   filter: contrast(15%);
   outline: none;
 }
 
-.sc-user-input--buttons {
+.user-input--buttons {
   height: 100%;
   display: flex;
 }
 
-.sc-user-input--button:first-of-type {
+.user-input--button:first-of-type {
   width: 40px;
 }
 
-.sc-user-input--button {
+.user-input--button {
   width: 30px;
   height: 55px;
   margin-left: 2px;
@@ -131,24 +131,24 @@ export default {
   justify-content: center;
 }
 
-.sc-user-input.active {
+.user-input.active {
   box-shadow: none;
   background-color: white;
   box-shadow: 0px -5px 20px 0px rgba(150, 165, 190, 0.2);
 }
 
-.sc-user-input--button label {
+.user-input--button label {
   position: relative;
   height: 24px;
   padding-left: 3px;
   cursor: pointer;
 }
 
-.sc-user-input--button label:hover path {
+.user-input--button label:hover path {
   fill: rgba(86, 88, 103, 1);
 }
 
-.sc-user-input--button input {
+.user-input--button input {
   position: absolute;
   left: 0;
   top: 0;
@@ -158,27 +158,5 @@ export default {
   opacity: 0;
   cursor: pointer;
   overflow: hidden;
-}
-
-.file-container {
-  background-color: #f4f7f9;
-  border-top-left-radius: 10px;
-  padding: 5px 20px;
-  color: #565867;
-}
-
-.delete-file-message {
-  font-style: normal;
-  float: right;
-  cursor: pointer;
-  color: #c8cad0;
-}
-
-.delete-file-message:hover {
-  color: #5d5e6d;
-}
-
-.icon-file-message {
-  margin-right: 5px;
 }
 </style>
