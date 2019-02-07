@@ -4,12 +4,6 @@
     :class="{ opened: isOpen, closed: !isOpen }"
     @click.prevent="isOpen ? close() : open()"
   >
-    <div
-      v-if="newMessageCount > 0 && !isOpen"
-      class="launcher__new-message-count"
-    >
-      {{ newMessagesCount }}
-    </div>
     <LogoIcon v-if="!isOpen" class="launcher__open-icon" />
     <XIcon v-if="isOpen" class="launcher__close-icon" />
   </div>
@@ -27,10 +21,6 @@ export default {
     isOpen: {
       type: Boolean,
       required: true,
-    },
-    newMessageCount: {
-      type: Number,
-      default: () => 0,
     },
     open: {
       type: Function,
@@ -76,24 +66,6 @@ export default {
 
 .launcher:hover {
   box-shadow: 0 0px 27px 1.5px rgba(0, 0, 0, 0.2);
-}
-
-.launcher__new-messsages-count {
-  position: absolute;
-  top: -3px;
-  left: 41px;
-  display: flex;
-  justify-content: center;
-  flex-direction: column;
-  border-radius: 50%;
-  width: 22px;
-  height: 22px;
-  background: #ff4646;
-  color: white;
-  text-align: center;
-  margin: auto;
-  font-size: 12px;
-  font-weight: 500;
 }
 
 @media (max-width: 450px) {

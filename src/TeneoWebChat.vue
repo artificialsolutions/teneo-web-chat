@@ -2,25 +2,17 @@
   <div class="teneo-web-chat">
     <ChatWindow
       v-if="isChatOpen"
-      :messageList="messageList"
       :onClose="closeChat"
       :participants="participants"
       :titleImageUrl="titleImageUrl"
       :title="serviceName"
-      :sendMessage="sendMessage"
     />
-    <LaunchButton
-      :open="openChat"
-      :close="closeChat"
-      :isOpen="isChatOpen"
-      :newMessageCount="newMessageCount"
-    />
+    <LaunchButton :open="openChat" :close="closeChat" :isOpen="isChatOpen" />
   </div>
 </template>
 
 <script>
 import { PARTICIPANT_USER, PARTICIPANT_BOT } from './utils/constants.js';
-import parseTeneoResponse from './utils/parse-teneo-response.js';
 import registerMessageComponents from './utils/register-message-components.js';
 import ChatWindow from './components/ChatWindow.vue';
 import LaunchButton from './components/LaunchButton.vue';
@@ -37,20 +29,6 @@ export default {
     serviceName: {
       type: String,
       required: true,
-    },
-    teneoApi: {
-      type: Object,
-      required: true,
-      validator: (value) =>
-        value && value.sendInput && typeof value.sendInput === 'function',
-    },
-    messageListCache: {
-      type: Object,
-      required: true,
-      validator: (value) =>
-        value &&
-        typeof value.get === 'function' &&
-        typeof value.update === 'function',
     },
   },
   data() {
@@ -71,43 +49,12 @@ export default {
       ],
       titleImageUrl:
         'https://a.slack-edge.com/66f9/img/avatars-teams/ava_0001-34.png',
-      messageList: this.messageListCache.get(),
-      newMessageCount: 0,
-      isChatOpen: false,
+      isChatOpen: true,
     };
   },
   methods: {
-    async sendMessage(message) {
-      this.messageList = [...this.messageList, message];
-      this.messageListCache.update(this.messageList);
-
-      const response = await this.teneoApi.sendInput(null, {
-        text: message.data.text,
-      });
-
-      const messages = parseTeneoResponse(response);
-
-      messages.forEach((message) => {
-        this.onMessageReceived(message);
-      });
-    },
-
-    onMessageReceived(message) {
-      if (!message) {
-        return;
-      }
-
-      this.messageList = [...this.messageList, message];
-      this.messageListCache.update(this.messageList);
-
-      this.newMessagesCount = this.isChatOpen
-        ? this.newMessagesCount
-        : this.newMessagesCount + 1;
-    },
-
     openChat() {
       this.isChatOpen = true;
-      this.newMessagesCount = 0;
     },
     closeChat() {
       this.isChatOpen = false;
