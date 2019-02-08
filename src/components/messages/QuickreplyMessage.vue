@@ -52,7 +52,7 @@ export default {
 
         this.$teneoApi.messageList = [...messages, selectedQuickReply];
 
-        await this.$teneoApi.sendTeneoMessage(reply.postback);
+        await this.$teneoApi.sendSilentMessage(reply.postback);
       }
     },
   },
