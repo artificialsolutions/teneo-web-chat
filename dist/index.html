@@ -10,9 +10,7 @@
     }
   </style>
   <body>
-    <div id="app">
-      <test-component></test-component>
-    </div>
+    <div id="app"></div>
     <script src="main.js"></script>
     <script>
       if (
@@ -21,7 +19,7 @@
       ) {
         window.TeneoWebChat.initialize(
           'Teneo Web Chat',
-          'https://developerarea-dev.teneocloud.com/tiesdktest/'
+          '<%= TENEO_ENGINE_URL %>'
         );
       }
     </script>
