@@ -3,7 +3,10 @@
     "es6": true,
     "node": true
   },
-  "extends": "eslint:recommended",
+  "extends": [
+    "eslint:recommended",
+    "plugin:vue/recommended"
+  ],
   "parserOptions": {
     "ecmaVersion": 2018,
     "sourceType": "module"
@@ -247,6 +250,9 @@
     "wrap-iife": "error",
     "wrap-regex": "error",
     "yield-star-spacing": "error",
-    "yoda": "error"
+    "yoda": "error",
+    "vue/max-attributes-per-line": 0,
+    "vue/html-self-closing": 0,
+    "vue/singleline-html-element-content-newline": 0
   }
 }

@@ -1,5 +1,6 @@
-<template
-  ><svg
+<!-- eslint-disable vue/html-indent -->
+<template>
+  <svg
     xmlns="http://www.w3.org/2000/svg"
     xmlns:xlink="http://www.w3.org/1999/xlink"
     viewBox="-4749.48 -5020 35.036 35.036"

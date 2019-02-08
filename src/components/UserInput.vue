@@ -2,19 +2,19 @@
   <div>
     <form class="user-input" :class="{ active: inputActive }">
       <div
+        ref="userInput"
         role="button"
         tabIndex="0"
-        @focus="setInputActive(true)"
-        @blur="setInputActive(false)"
-        @keydown="handleKey"
         contentEditable="true"
         :placeholder="placeholder"
         class="user-input--text"
-        ref="userInput"
+        @focus="setInputActive(true)"
+        @blur="setInputActive(false)"
+        @keydown="handleKey"
       ></div>
       <div class="user-input--buttons">
         <div class="user-input--button">
-          <SendIcon :onClick="_submitText" />
+          <SendIcon :on-click="_submitText" />
         </div>
       </div>
     </form>
@@ -54,8 +54,9 @@ export default {
         event.preventDefault();
       }
     },
-    _submitText(event) {
+    _submitText() {
       const text = this.$refs.userInput.textContent;
+
       if (text && text.length > 0) {
         this.onSubmit({
           author: PARTICIPANT_USER,

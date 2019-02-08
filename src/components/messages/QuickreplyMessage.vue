@@ -1,10 +1,11 @@
 <template>
   <ul class="quickreply-message" :class="{ replied: replySent }">
     <li
-      class="quickreply-message__item"
       v-for="(reply, idx) in quickreplies"
-      @click="onSelect(reply, idx)"
+      :key="idx"
+      class="quickreply-message__item"
       :class="{ selected: replySent && selected === idx }"
+      @click="onSelect(reply, idx)"
     >
       {{ reply.title }}
     </li>
@@ -29,6 +30,17 @@ export default {
       },
     },
   },
+  computed: {
+    quickreplies() {
+      return this.message.data.quick_replies;
+    },
+    replySent() {
+      return !!this.message.selected || this.message.selected === 0;
+    },
+    selected() {
+      return this.message.selected;
+    },
+  },
   methods: {
     async onSelect(reply, idx) {
       if (!this.replySent) {
@@ -42,17 +54,6 @@ export default {
 
         await this.$teneoApi.sendTeneoMessage(reply.postback);
       }
-    },
-  },
-  computed: {
-    quickreplies() {
-      return this.message.data.quick_replies;
-    },
-    replySent() {
-      return !!this.message.selected || this.message.selected === 0;
-    },
-    selected() {
-      return this.message.selected;
     },
   },
 };
@@ -80,5 +81,9 @@ export default {
 .quickreply-message:not(.replied) .quickreply-message__item:hover {
   background: #4e8cff;
   color: #ffffff;
+}
+
+.quickreply-message.replied .quickreply-message__item {
+  cursor: default;
 }
 </style>

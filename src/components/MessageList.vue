@@ -1,11 +1,11 @@
 <template>
-  <div class="message-list" ref="scrollList">
+  <div ref="scrollList" class="message-list">
     <Message
       v-for="(message, idx) in messageList"
-      :message="message"
-      :chatImageUrl="chatImageUrl(message.author)"
-      :authorName="authorName(message.author)"
       :key="idx"
+      :message="message"
+      :chat-image-url="chatImageUrl(message.author)"
+      :author-name="authorName(message.author)"
     />
   </div>
 </template>
@@ -25,6 +25,15 @@ export default {
       type: Array,
       required: true,
     },
+  },
+  mounted() {
+    // Wait for images to load
+    setTimeout(this._scrollDown.bind(this), 400);
+  },
+  updated() {
+    if (this.shouldScrollToBottom()) {
+      this.$nextTick(this._scrollDown);
+    }
   },
   methods: {
     _scrollDown() {
@@ -62,15 +71,6 @@ export default {
     authorName(author) {
       return this.profile(author).name;
     },
-  },
-  mounted() {
-    // wait for images to load
-    setTimeout(this._scrollDown.bind(this), 400);
-  },
-  updated() {
-    if (this.shouldScrollToBottom()) {
-      this.$nextTick(this._scrollDown);
-    }
   },
 };
 </script>
