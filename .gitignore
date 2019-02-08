@@ -4,3 +4,4 @@ dist/
 stats-prod.json
 
 !dist/index.html
+.env

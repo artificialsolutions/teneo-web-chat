@@ -1,5 +1,7 @@
+const webpack = require('webpack');
 const path = require('path');
 const merge = require('webpack-merge');
+const HtmlWebpackPlugin = require('html-webpack-plugin');
 const baseConfig = require('./webpack.base.js');
 
 module.exports = merge(baseConfig, {
@@ -10,4 +12,12 @@ module.exports = merge(baseConfig, {
     compress: true,
     port: 9000,
   },
+  plugins: [
+    new webpack.DefinePlugin({
+      TENEO_ENGINE_URL: JSON.stringify(process.env.TENEO_ENGINE_URL),
+    }),
+    new HtmlWebpackPlugin({
+      template: './dist/index.html',
+    }),
+  ],
 });
