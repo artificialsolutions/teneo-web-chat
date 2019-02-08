@@ -1,21 +1,20 @@
 const express = require('express');
-const path = require('path');
 
 const app = express();
 const port = process.env.PORT || 9000;
-const teneoEngineUrl = process.env.TENEO_ENGINE_URL;
+const { TENEO_ENGINE_URL } = process.env;
 
-if (!teneoEngineUrl) {
+if (!TENEO_ENGINE_URL) {
   throw new Error('Missing environment variable TENEO_ENGINE_URL!');
 }
 
-app.use(express.static('./dist/'));
-
 app.set('view engine', 'ejs');
 
+app.use(express.static('./dist/'));
+
 app.get('/', (req, res) =>
-  res.render(path.join(__dirname, './dist/index.html'), {
-    TENEO_ENGINE_URL: teneoEngineUrl,
+  res.render('index', {
+    TENEO_ENGINE_URL,
   })
 );
 

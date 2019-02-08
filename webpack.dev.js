@@ -17,7 +17,7 @@ module.exports = merge(baseConfig, {
       TENEO_ENGINE_URL: JSON.stringify(process.env.TENEO_ENGINE_URL),
     }),
     new HtmlWebpackPlugin({
-      template: './dist/index.html',
+      template: './views/index.ejs',
     }),
   ],
 });
