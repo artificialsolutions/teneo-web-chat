@@ -81,4 +81,8 @@ export default {
   background: #4e8cff;
   color: #ffffff;
 }
+
+.quickreply-message.replied .quickreply-message__item {
+  cursor: default;
+}
 </style>
