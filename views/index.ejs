@@ -1,0 +1,32 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <title>Teneo Web Chat</title>
+  </head>
+  <style>
+    body {
+      background: #ddddaa;
+    }
+  </style>
+  <body>
+    <div id="teneo-web-chat"></div>
+    <script src="main.js"></script>
+    <script>
+      window.onload = function () {
+        if (
+          window.TeneoWebChat &&
+            typeof window.TeneoWebChat.initialize === 'function'
+        ) {
+          var element = document.getElementById('teneo-web-chat');
+
+          window.TeneoWebChat.initialize(
+            element,
+            'Teneo Web Chat',
+            '<%= TENEO_ENGINE_URL %>'
+          );
+        }
+      }
+    </script>
+  </body>
+</html>

@@ -5,7 +5,7 @@
   "scripts": {
     "analyze": "NODE_ENV=production webpack --config webpack.prod.js --profile --json > stats-prod.json && webpack-bundle-analyzer stats-prod.json dist/",
     "build": "NODE_ENV=production webpack --config webpack.prod.js",
-    "prestart": "npm run build",
+    "postinstall": "npm run build",
     "start": "node server.js",
     "start:dev": "env-cmd .env webpack-dev-server --config webpack.dev.js",
     "test": "npm run test:mocha && npm run lint",
