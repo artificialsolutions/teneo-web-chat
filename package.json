@@ -28,7 +28,8 @@
     "vue-style-loader": "^4.1.2",
     "vue-template-compiler": "^2.6.3",
     "webpack": "^4.29.3",
-    "webpack-cli": "^3.2.3"
+    "webpack-cli": "^3.2.3",
+    "webpack-merge": "^4.2.1"
   },
   "devDependencies": {
     "@artificialsolutions/tie-api-client": "^1.1.2",
@@ -45,7 +46,6 @@
     "nock": "^10.0.6",
     "prettier": "^1.16.2",
     "webpack-bundle-analyzer": "^3.0.3",
-    "webpack-dev-server": "^3.1.14",
-    "webpack-merge": "^4.2.1"
+    "webpack-dev-server": "^3.1.14"
   }
 }
