@@ -1,11 +1,11 @@
 <template>
   <div
-    class="launcher"
+    class="launch-button"
     :class="{ opened: isOpen, closed: !isOpen }"
     @click.prevent="isOpen ? close() : open()"
   >
-    <LogoIcon v-if="!isOpen" class="launcher__open-icon" />
-    <XIcon v-if="isOpen" class="launcher__close-icon" />
+    <LogoIcon v-if="!isOpen" class="launch-button__open-icon" />
+    <XIcon v-if="isOpen" class="launch-button__close-icon" />
   </div>
 </template>
 <script>
@@ -34,7 +34,7 @@ export default {
 };
 </script>
 <style scoped>
-.launcher {
+.launch-button {
   background-color: #4e8cff;
   width: 60px;
   height: 60px;
@@ -52,24 +52,24 @@ export default {
   align-items: center;
 }
 
-.launcher__open-icon {
+.launch-button__open-icon {
   height: 100%;
   width: 100%;
 }
 
-.launcher__close-icon {
+.launch-button__close-icon {
   stroke-width: 1;
   height: 32px;
   width: 32px;
   color: #ffffff;
 }
 
-.launcher:hover {
+.launch-button:hover {
   box-shadow: 0 0px 27px 1.5px rgba(0, 0, 0, 0.2);
 }
 
 @media (max-width: 450px) {
-  .launcher.opened {
+  .launch-button.opened {
     display: none;
   }
 }
