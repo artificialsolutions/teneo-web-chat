@@ -1,5 +1,5 @@
 <template>
-  <button @click.prevent="onClick" class="sc-user-input--send-icon-wrapper">
+  <button class="sc-user-input--send-icon-wrapper" @click.prevent="onClick">
     <svg
       version="1.1"
       class="sc-user-input--send-icon"

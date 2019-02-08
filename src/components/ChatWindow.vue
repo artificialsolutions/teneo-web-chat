@@ -1,11 +1,11 @@
 <template>
   <div class="chat-window">
-    <Header :title="title" :imageUrl="titleImageUrl" :onClose="onClose" />
+    <Header :title="title" :image-url="titleImageUrl" :on-close="onClose" />
     <MessageList
-      :messageList="$teneoApi.messageList"
+      :message-list="$teneoApi.messageList"
       :participants="participants"
     />
-    <UserInput :onSubmit="sendMessage" />
+    <UserInput :on-submit="sendMessage" />
   </div>
 </template>
 

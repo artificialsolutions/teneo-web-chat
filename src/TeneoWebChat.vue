@@ -2,12 +2,12 @@
   <div class="teneo-web-chat">
     <ChatWindow
       v-if="isChatOpen"
-      :onClose="closeChat"
+      :on-close="closeChat"
       :participants="participants"
-      :titleImageUrl="titleImageUrl"
+      :title-image-url="titleImageUrl"
       :title="serviceName"
     />
-    <LaunchButton :open="openChat" :close="closeChat" :isOpen="isChatOpen" />
+    <LaunchButton :open="openChat" :close="closeChat" :is-open="isChatOpen" />
   </div>
 </template>
 
@@ -20,7 +20,7 @@ import LaunchButton from './components/LaunchButton.vue';
 registerMessageComponents();
 
 export default {
-  name: 'app',
+  name: 'TeneoWebChat',
   components: {
     ChatWindow,
     LaunchButton,
@@ -49,7 +49,7 @@ export default {
       ],
       titleImageUrl:
         'https://a.slack-edge.com/66f9/img/avatars-teams/ava_0001-34.png',
-      isChatOpen: true,
+      isChatOpen: false,
     };
   },
   methods: {

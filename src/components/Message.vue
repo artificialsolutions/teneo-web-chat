@@ -10,19 +10,10 @@
 import messageComponentName from '../utils/message-component-name.js';
 
 export default {
-  data() {
-    return {};
-  },
   props: {
     message: {
       type: Object,
       required: true,
-    },
-    chatImageUrl: {
-      type: String,
-    },
-    authorName: {
-      type: String,
     },
   },
   computed: {

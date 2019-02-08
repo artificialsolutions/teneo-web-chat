@@ -1,6 +1,6 @@
 <template>
   <div class="header">
-    <img class="header__img" :src="imageUrl" v-if="imageUrl" />
+    <img v-if="imageUrl" class="header__img" :src="imageUrl" />
     <div class="header__title">{{ title }}</div>
     <button class="header__close-button" @click="onClose">
       <XIcon class="header__close-icon" />
@@ -9,10 +9,12 @@
 </template>
 
 <script>
-import XCircleIcon from '../icons/x-circle.vue';
 import XIcon from '../icons/x.vue';
 
 export default {
+  components: {
+    XIcon,
+  },
   props: {
     imageUrl: {
       type: String,
@@ -20,14 +22,12 @@ export default {
     },
     title: {
       type: String,
+      required: true,
     },
     onClose: {
       type: Function,
       required: true,
     },
-  },
-  components: {
-    XIcon,
   },
 };
 </script>

@@ -9,16 +9,18 @@
 export default {
   name: 'ImageMessage',
   props: {
-    message: Object,
-    required: true,
-    validator: (message) => {
-      return (
-        message &&
-        message.type === 'image' &&
-        message.data &&
-        message.data.payload &&
-        message.data.payload.url
-      );
+    message: {
+      type: Object,
+      required: true,
+      validator: (message) => {
+        return (
+          message &&
+          message.type === 'image' &&
+          message.data &&
+          message.data.payload &&
+          message.data.payload.url
+        );
+      },
     },
   },
   computed: {
