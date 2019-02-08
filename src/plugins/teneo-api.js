@@ -30,7 +30,7 @@ export default function teneoApiPlugin(teneoApiUrl) {
         this._onMessageReceived(msg);
       });
     },
-    async sendTeneoMessage(text) {
+    async sendSilentMessage(text) {
       const response = await teneoApi.sendInput(null, {
         text,
       });
