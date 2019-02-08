@@ -32,7 +32,8 @@ export default {
 
 <style scoped>
 .message {
-  width: 300px;
+  width: 90%;
+  min-width: 300px;
   margin: auto;
   padding-bottom: 10px;
   display: flex;

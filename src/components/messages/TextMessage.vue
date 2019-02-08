@@ -35,12 +35,18 @@ export default {
 <style scoped>
 .text-message {
   padding: 6px 18px;
-  border-radius: 6px;
+  border-radius: 10px;
   font-weight: 300;
   font-size: 0.9em;
   line-height: 1.4;
   white-space: pre-wrap;
   -webkit-font-smoothing: subpixel-antialiased;
+}
+
+.message p {
+  margin-top: 0.4em;
+  margin-bottom: 0.4em;
+  font-weight: 400;
 }
 
 .text-message.user {
@@ -53,7 +59,7 @@ export default {
 
 .text-message.bot {
   color: #263238;
-  background-color: #f4f7f9;
+  background-color: #eceff1;
   margin-right: 40px;
   border-bottom-left-radius: 0px;
 }
