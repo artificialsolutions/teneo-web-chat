@@ -17,6 +17,7 @@
   "author": "",
   "license": "ISC",
   "dependencies": {
+    "@babel/core": "^7.2.2",
     "babel-loader": "^8.0.5",
     "css-loader": "^2.1.0",
     "ejs": "^2.6.1",
@@ -33,7 +34,6 @@
   },
   "devDependencies": {
     "@artificialsolutions/tie-api-client": "^1.1.2",
-    "@babel/core": "^7.2.2",
     "@vue/test-utils": "^1.0.0-beta.28",
     "chai": "^4.2.0",
     "eslint": "^5.12.1",
