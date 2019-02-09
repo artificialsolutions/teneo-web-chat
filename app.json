@@ -1,0 +1,15 @@
+{
+    "name": "heroku-teneo-web-chat",
+    "description": "Teneo Web Chat UI",
+    "keywords": [
+        "bot",
+        "Teneo Web Chat"
+    ],
+    "repository": "https://github.com/artificialsolutions/teneo-web-chat/",
+    "env": {
+        "TENEO_ENGINE_URL": {
+            "description": "Please input your Teneo Engine URL. https://some.engine/instance/",
+            "required":true
+        }
+    }
+}
