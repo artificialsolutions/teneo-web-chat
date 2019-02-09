@@ -55,6 +55,7 @@ export default {
 
 .header__title {
   margin-left: 12px;
+  color: #fff;
 }
 
 .header__close-button {

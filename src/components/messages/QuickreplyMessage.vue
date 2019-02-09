@@ -61,20 +61,24 @@ export default {
 
 <style scoped>
 .quickreply-message {
-  width: 80%;
+  width: 90%;
   display: flex;
   flex-direction: row;
-  justify-content: space-between;
+  justify-content: center;
   list-style: none;
   padding: 0;
+  margin: 0;
 }
 
 .quickreply-message__item {
-  border: 2px solid #4e8cff;
-  border-radius: 6px;
-  padding: 6px;
+  border: 1px solid #4e8cff;
+  border-radius: 12px;
+  padding: 8px 14px 8px 14px;
   color: #4e8cff;
   cursor: pointer;
+  margin-right: 10px;
+  margin-left: 5px;
+  font-size: 0.8rem;
 }
 
 .quickreply-message__item.selected,
