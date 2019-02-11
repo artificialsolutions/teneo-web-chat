@@ -8,6 +8,7 @@ export default function teneoApiPlugin(teneoApiUrl) {
   const teneoApi = TIE.init(teneoApiUrl);
   const messageListCache = new MessageListCache();
   const tmpVm = new Vue({ data: { messageList: messageListCache.get() } });
+  let sessionId = null;
 
   const plugin = {
     get messageList() {
@@ -20,9 +21,12 @@ export default function teneoApiPlugin(teneoApiUrl) {
     async sendMessage(message) {
       this.messageList = [...this.messageList, message];
 
-      const response = await teneoApi.sendInput(null, {
+      const response = await teneoApi.sendInput(sessionId, {
         text: message.data.text,
       });
+
+      // eslint-disable-next-line prefer-destructuring
+      sessionId = response.sessionId;
 
       const messages = parseTeneoResponse(response);
 
@@ -31,9 +35,12 @@ export default function teneoApiPlugin(teneoApiUrl) {
       });
     },
     async sendSilentMessage(text) {
-      const response = await teneoApi.sendInput(null, {
+      const response = await teneoApi.sendInput(sessionId, {
         text,
       });
+
+      // eslint-disable-next-line prefer-destructuring
+      sessionId = response.sessionId;
 
       const messages = parseTeneoResponse(response);
 
