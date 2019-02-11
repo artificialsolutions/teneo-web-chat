@@ -4,17 +4,17 @@
     :class="{ opened: isOpen, closed: !isOpen }"
     @click.prevent="isOpen ? close() : open()"
   >
-    <LogoIcon v-if="!isOpen" class="launch-button__open-icon" />
+    <BubbleIcon v-if="!isOpen" class="launch-button__open-icon" />
     <XIcon v-if="isOpen" class="launch-button__close-icon" />
   </div>
 </template>
 <script>
-import LogoIcon from '../icons/logo.vue';
+import BubbleIcon from '../icons/bubble.vue';
 import XIcon from '../icons/x.vue';
 
 export default {
   components: {
-    LogoIcon,
+    BubbleIcon,
     XIcon,
   },
   props: {
