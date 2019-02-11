@@ -34,7 +34,7 @@ export default {
 
 <style scoped>
 .header {
-  background: #4e8cff;
+  background: var(--header-bg-color);
   min-height: 64px;
   border-top-left-radius: 9px;
   border-top-right-radius: 9px;
@@ -70,14 +70,11 @@ export default {
 .header__close-icon {
   height: 32px;
   width: 32px;
-  color: #fff;
+  color: var(--light-fg-color);
 }
 
 .header__close-icon {
   stroke-width: 1;
-}
-
-.header__title {
 }
 
 @media (max-width: 450px) {
