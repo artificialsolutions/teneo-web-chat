@@ -65,22 +65,18 @@ export default {
 
 <style scoped>
 .teneo-web-chat {
+  --light-fg-color: #ffffff;
+  --dark-fg-color: #263238;
+  --user-input-bg-color: #f4f7f9;
+  --bot-message-fg-color: var(--dark-fg-color);
+  --bot-message-bg-color: #eceff1;
+  --user-message-bg-color: #4e8cff;
+  --user-message-fg-color: var(--light-fg-color);
+  --header-bg-color: var(--user-message-bg-color);
+
   width: 100%;
   height: 100%;
   padding: 10px;
   font-family: Helvetica, Arial;
-}
-
-pre {
-  text-align: center;
-}
-
-h1 {
-  text-align: center;
-}
-
-.teneo-web-chat__arrow {
-  transform: rotate(45deg);
-  font-size: 10em;
 }
 </style>

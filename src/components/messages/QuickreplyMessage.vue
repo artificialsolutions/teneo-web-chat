@@ -71,10 +71,10 @@ export default {
 }
 
 .quickreply-message__item {
-  border: 1px solid #4e8cff;
+  border: 1px solid var(--user-message-bg-color);
   border-radius: 12px;
   padding: 8px 14px 8px 14px;
-  color: #4e8cff;
+  color: var(--user-message-bg-color);
   cursor: pointer;
   margin-right: 10px;
   margin-left: 5px;
@@ -83,8 +83,8 @@ export default {
 
 .quickreply-message__item.selected,
 .quickreply-message:not(.replied) .quickreply-message__item:hover {
-  background: #4e8cff;
-  color: #ffffff;
+  background: var(--user-message-bg-color);
+  color: var(--user-message-fg-color);
 }
 
 .quickreply-message.replied .quickreply-message__item {

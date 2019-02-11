@@ -50,16 +50,16 @@ export default {
 }
 
 .text-message.user {
-  background: #4e8cff;
-  color: #ffffff;
+  background: var(--user-message-bg-color);
+  color: var(--user-message-fg-color);
   max-width: calc(100% - 120px);
   word-wrap: break-word;
   border-bottom-right-radius: 0px;
 }
 
 .text-message.bot {
-  color: #263238;
-  background-color: #eceff1;
+  color: var(--bot-message-fg-color);
+  background-color: var(--bot-message-bg-color);
   margin-right: 40px;
   border-bottom-left-radius: 0px;
 }

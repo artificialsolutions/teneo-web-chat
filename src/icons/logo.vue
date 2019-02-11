@@ -11,13 +11,13 @@
           fill: none;
         }
         .b {
-          fill: #4e8cff;
+          fill: var(--header-bg-color);
         }
         .c {
           clip-path: url(#a);
         }
         .d {
-          fill: #fff;
+          fill: var(--light-fg-color);
         }
         .e {
           fill: #eff4f9;
