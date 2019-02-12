@@ -1,7 +1,6 @@
 <template>
   <div class="image-message">
     <img :src="imageUrl" />
-    <p v-if="messageText">{{ messageText }}</p>
   </div>
 </template>
 
@@ -17,7 +16,6 @@ export default {
           message &&
           message.type === 'image' &&
           message.data &&
-          message.data &&
           message.data.image_url
         );
       },
@@ -26,9 +24,6 @@ export default {
   computed: {
     imageUrl() {
       return this.message.data.image_url;
-    },
-    messageText() {
-      return this.message.data.text;
     },
   },
 };
