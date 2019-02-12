@@ -3,5 +3,7 @@ dist/
 
 stats-prod.json
 
+.vscode/
+
 !dist/index.html
 .env
