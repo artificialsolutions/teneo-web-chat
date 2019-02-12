@@ -17,15 +17,15 @@ export default {
           message &&
           message.type === 'image' &&
           message.data &&
-          message.data.payload &&
-          message.data.payload.url
+          message.data &&
+          message.data.image_url
         );
       },
     },
   },
   computed: {
     imageUrl() {
-      return this.message.data.payload.url;
+      return this.message.data.image_url;
     },
     messageText() {
       return this.message.data.text;
