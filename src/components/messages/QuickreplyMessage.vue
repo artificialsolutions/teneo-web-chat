@@ -1,5 +1,5 @@
 <template>
-  <ul class="quickreply-message" :class="{ replied: replySent }">
+  <ul class="quickreply-message" :class="{ expired: replySent || isExpired }">
     <li
       v-for="(reply, idx) in quickreplies"
       :key="idx"
@@ -40,20 +40,28 @@ export default {
     selected() {
       return this.message.selected;
     },
+    isExpired() {
+      const { messageList } = this.$teneoApi;
+      const latestMessage = messageList[messageList.length - 1];
+
+      return latestMessage && latestMessage !== this.message;
+    },
   },
   methods: {
     async onSelect(reply, idx) {
-      if (!this.replySent) {
-        const numMessages = this.$teneoApi.messageList.length;
-        const messages = this.$teneoApi.messageList.slice(0, numMessages - 1);
-        const quickreplyMessage = this.$teneoApi.messageList[numMessages - 1];
-
-        const selectedQuickReply = { ...quickreplyMessage, selected: idx };
-
-        this.$teneoApi.messageList = [...messages, selectedQuickReply];
-
-        await this.$teneoApi.sendSilentMessage(reply.postback);
+      if (this.replySent || this.isExpired) {
+        return;
       }
+
+      const numMessages = this.$teneoApi.messageList.length;
+      const messages = this.$teneoApi.messageList.slice(0, numMessages - 1);
+      const quickreplyMessage = this.$teneoApi.messageList[numMessages - 1];
+
+      const selectedQuickReply = { ...quickreplyMessage, selected: idx };
+
+      this.$teneoApi.messageList = [...messages, selectedQuickReply];
+
+      await this.$teneoApi.sendSilentMessage(reply.postback);
     },
   },
 };
@@ -61,6 +69,8 @@ export default {
 
 <style scoped>
 .quickreply-message {
+  --expired-quickreply-color: #a9a9a9;
+
   width: 90%;
   display: flex;
   flex-direction: row;
@@ -82,12 +92,20 @@ export default {
 }
 
 .quickreply-message__item.selected,
-.quickreply-message:not(.replied) .quickreply-message__item:hover {
+.quickreply-message:not(.expired) .quickreply-message__item:hover {
   background: var(--user-message-bg-color);
   color: var(--user-message-fg-color);
 }
 
-.quickreply-message.replied .quickreply-message__item {
+.quickreply-message__item.selected,
+.quickreply-message:not(.expired) .quickreply-message__item:hover {
+  background: var(--user-message-bg-color);
+  color: var(--user-message-fg-color);
+}
+
+.quickreply-message.expired .quickreply-message__item:not(.selected) {
   cursor: default;
+  color: var(--expired-quickreply-color);
+  border-color: var(--expired-quickreply-color);
 }
 </style>
