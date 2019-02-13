@@ -1,13 +1,14 @@
 <template>
   <div class="text-message" :class="messageSource">
     <!-- eslint-disable-next-line vue/no-v-html -->
-    <p v-if="isBot" class="text-message__text" v-html="messageText"></p>
+    <p v-if="isBot" class="text-message__text" v-html="sanitizedHtmlText"></p>
     <p v-else class="text-message__text">{{ messageText }}</p>
   </div>
 </template>
 
 <script>
 import { PARTICIPANT_BOT } from '../../utils/constants.js';
+import sanitizeHtml from '../../utils/sanitize-html.js';
 
 export default {
   name: 'TextMessage',
@@ -34,6 +35,9 @@ export default {
     },
     isBot() {
       return this.message.author === PARTICIPANT_BOT;
+    },
+    sanitizedHtmlText() {
+      return sanitizeHtml(this.message.data.text);
     },
   },
 };
