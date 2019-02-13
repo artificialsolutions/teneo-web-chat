@@ -1,10 +1,15 @@
 <template>
   <div class="text-message" :class="messageSource">
-    <p>{{ messageText }}</p>
+    <!-- eslint-disable-next-line vue/no-v-html -->
+    <p v-if="isBot" class="text-message__text" v-html="sanitizedHtmlText"></p>
+    <p v-else class="text-message__text">{{ messageText }}</p>
   </div>
 </template>
 
 <script>
+import { PARTICIPANT_BOT } from '../../utils/constants.js';
+import sanitizeHtml from '../../utils/sanitize-html.js';
+
 export default {
   name: 'TextMessage',
   props: {
@@ -28,6 +33,12 @@ export default {
     messageSource() {
       return this.message.author;
     },
+    isBot() {
+      return this.message.author === PARTICIPANT_BOT;
+    },
+    sanitizedHtmlText() {
+      return sanitizeHtml(this.message.data.text);
+    },
   },
 };
 </script>
@@ -43,7 +54,7 @@ export default {
   -webkit-font-smoothing: subpixel-antialiased;
 }
 
-.message p {
+.text-message__text {
   margin-top: 0.4em;
   margin-bottom: 0.4em;
   font-weight: 400;
