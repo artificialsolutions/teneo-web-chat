@@ -15,8 +15,8 @@ export default function teneoApiPlugin(teneoApiUrl) {
       return tmpVm.messageList;
     },
     set messageList(newVal) {
-      messageListCache.update(this.messageList);
       tmpVm.messageList = newVal;
+      messageListCache.update(newVal);
     },
     async sendMessage(message) {
       this.messageList = [...this.messageList, message];
