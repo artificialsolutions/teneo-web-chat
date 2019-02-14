@@ -1,11 +1,14 @@
-const capitalize = (s) => {
-  if (!s) {
-    return s;
-  }
+const capitalize = (s) => `${s[0].toUpperCase()}${s.slice(1).toLowerCase()}`;
 
-  return `${s[0].toUpperCase()}${s.slice(1)}`;
-};
+const allowedTypeName = /^[a-z]+(-[a-z]+)*$/;
 
 export default function messageComponentName(type) {
-  return `${capitalize(type)}Message`;
+  if (!type.match(allowedTypeName)) {
+    throw new TypeError(`'${type}' is not an allowed type name.`);
+  }
+
+  const words = type.split('-');
+  const componentName = `${words.map(capitalize).join('')}Message`;
+
+  return componentName;
 }
