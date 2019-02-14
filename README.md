@@ -55,7 +55,7 @@ There are two example extension included web chat ui.
 
 ### Example: displaying an image
 
-This example exention displays an image below the bots answer text.
+This example exention displays an image below the bot's answer text.
 
 #### Engine JSON
 
@@ -122,9 +122,7 @@ As you can see the file contains three sections:
 
 ### Example: Quick replies
 
-A second example extension shows how buttons can be displayed below the bot answer. When clicked a new input with the clicked postback value is sent to the bot. The buttons look like this:
-
-![](display_quick_reply.png?classes=w30)
+A second example extension shows how buttons can be displayed below the bot answer. When clicked a new input with the clicked postback value is sent to the bot.
 
 #### Engine JSON
 
