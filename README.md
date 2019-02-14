@@ -147,7 +147,7 @@ To display three buttons (Small, Medium and Large), the JSON that needs to be in
 }
 ```
 
-For each button, the title displayed in the button and the postback value is sent back to engine when the button is clicked.
+For each button, the title is displayed in the button and the postback value is sent back to engine when the button is clicked.
 
 #### Vue file
 
