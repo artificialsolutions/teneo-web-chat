@@ -49,7 +49,7 @@ Explanation here..
 
 ## Extending
 
-The web chat UI can be extended by adding additional `.vue` files in the [](/src/components/messages/) folder. This file should parse the JSON that is included in an output parameter called `teneowebchat` in the engine response. The .vue file should  display the data accordingly.
+The web chat UI can be extended by adding additional `.vue` files in the [/src/components/messages/](/src/components/messages/) folder. This file should parse the JSON that is included in an output parameter called `teneowebchat` in the engine response. The .vue file should  display the data accordingly.
 
 There are two example extension included web chat ui.
 
@@ -68,7 +68,7 @@ The JSON that should be included in the `teneowebchat` output parameter should l
 }
 ```
 
-Allowed characters for the type name are `a-z` and `-` where `-` cannot be the first character. Based on the `type`, the Teneo Web Chat code will look for a matching Vue component in the [](/src/components/messages) folder. The assumed file name is derived by taking the `type` field, turn it into upper `CamelCase` and append `Message` to the resulting string. E.g `image` becomes `ImageMessage` and `image-list` would become `ImageListMessage`.
+Allowed characters for the type name are `a-z` and `-` where `-` cannot be the first character. Based on the `type`, the Teneo Web Chat code will look for a matching Vue component in the [/src/components/messages/](/src/components/messages) folder. The assumed file name is derived by taking the `type` field, turn it into upper `CamelCase` and append `Message` to the resulting string. E.g `image` becomes `ImageMessage` and `image-list` would become `ImageListMessage`.
 
 #### Vue file
 
