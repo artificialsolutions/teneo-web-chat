@@ -93,7 +93,6 @@ export default {
           message &&
           message.type === 'image' &&
           message.data &&
-          message.data &&
           message.data.image_url
         );
       },
