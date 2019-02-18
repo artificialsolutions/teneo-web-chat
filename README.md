@@ -55,11 +55,11 @@ To add the web chat to your site, proceed as follows:
 	```
     <script type="text/javascript" src="/path/to/webchat/main.js"></script>
     ```
-3. Add an empty `&lt;div&gt;` to your page (or something with an id that can be referenced in the initialization script), for example:
+3. Add an empty `<div>` to your page (or something with an id that can be referenced in the initialization script), for example:
 	```
     <div id="teneo-web-chat"></div>
     ```
-4. Add a script node before the closing `&lt;/body&gt;` tag with the following initialization script:
+4. Add a script node before the closing `</body>` tag with the following initialization script:
 	```
     <script>
       window.onload = function () {
