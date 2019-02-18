@@ -85,7 +85,7 @@ To add the web chat to your site, proceed as follows:
 
 ## Extending
 
-The web chat UI can be extended by adding additional `.vue` files in the [/src/components/messages/](/src/components/messages/) folder. This file should parse the JSON that is included in an output parameter called `teneowebchat` in the engine response. The .vue file should  display the data accordingly.
+The web chat UI can be extended by adding additional `.vue` files in the [/src/components/messages/](/src/components/messages/) folder. This file should parse the JSON that is included in an output parameter called `teneowebclient` in the engine response. The .vue file should  display the data accordingly.
 
 There are two example extension included web chat ui.
 
@@ -95,7 +95,7 @@ This example exention displays an image below the bot's answer text.
 
 #### Engine JSON
 
-The JSON that should be included in the `teneowebchat` output parameter should look as follows:
+The JSON that should be included in the `teneowebclient` output parameter should look as follows:
 
 ``` json
 {
@@ -161,7 +161,7 @@ A second example extension shows how buttons can be displayed below the bot answ
 
 #### Engine JSON
 
-To display three buttons (Small, Medium and Large), the JSON that needs to be included in the `teneowebchat` output parameter should look as follows:
+To display three buttons (Small, Medium and Large), the JSON that needs to be included in the `teneowebclient` output parameter should look as follows:
 
 ``` json
 {
@@ -198,7 +198,7 @@ The Teneo API is available as `this.$teneoApi` if you need to send messages back
 To add additional extensions, these are the steps to take:
 
 1. Define the JSON that specifies the message type and any additional data.
-2. Create an example flow in studio that includes the JSON in the output parameter `teneowebchat` and publish your solution.
+2. Create an example flow in studio that includes the JSON in the output parameter `teneowebclient` and publish your solution.
 3. Create a .vue file for the message type
 4. In the view file create the template, scripts and applicable styles
 5. Test the result by connecting your web chat UI to the the engine with the example flow.
