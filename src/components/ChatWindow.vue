@@ -52,7 +52,7 @@ export default {
   right: 25px;
   bottom: 100px;
   box-sizing: border-box;
-  box-shadow: 0px 7px 40px 2px rgba(148, 149, 150, 0.1);
+  box-shadow: 0 2px 10px 0 rgba(0, 0, 0, 0.15);
   background: white;
   display: flex;
   flex-direction: column;
