@@ -45,7 +45,43 @@ The page should be loaded on [http://localhost:9000](http://localhost:9000) now.
 
 ## Embedding in a website
 
-Explanation here..
+To add the web chat to your site, proceed as follows:
+
+1. Build the bundle
+    ```
+    npm build
+    ```
+2. Copy the `main.js` and the `main.js.map` files to your site and a link to the `main.js` on the pages where you want the web chat window to appear.
+	```
+    <script type="text/javascript" src="/path/to/webchat/main.js"></script>
+    ```
+3. Add an empty `&lt;div&gt;` to your page (or something with an id that can be referenced in the initialization script), for example:
+	```
+    <div id="teneo-web-chat"></div>
+    ```
+4. Add a script node before the closing `&lt;/body&gt;` tag with the following initialization script:
+	```
+    <script>
+      window.onload = function () {
+          if (
+              window.TeneoWebChat &&
+              typeof window.TeneoWebChat.initialize === 'function'
+          ) {
+              var element = document.getElementById('teneo-web-chat');
+
+              window.TeneoWebChat.initialize(
+                  element,
+                  'Teneo Web Chat',
+                  'https://some.teneo/engine-instance/'
+              );
+          }
+      }
+    </script>
+    ```
+    When adding the script to your site, note the following:
+    * You can change the title that is displayed in header of the web chat window. In the script above it is specified as 'Teneo Web Chat'.
+    * The url `https://some.teneo/engine-instance/` should be updated to match the url of your engine.
+    * Make sure the line `var element = document.getElementById('teneo-web-chat');` references the id specified in step 3.
 
 ## Extending
 
