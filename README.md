@@ -61,11 +61,11 @@ Make the following changes to each page where you want the web chat window to ap
 ```
 <script type="text/javascript" src="/path/to/webchat/main.js"></script>
 ```  
-2. Add an empty `&lt;div&gt;` (or something with an id that can be referenced in the initialization script), for example:
+2. Add an empty `<div>` (or something with an id that can be referenced in the initialization script), for example:
 ```
 <div id="teneo-web-chat"></div>
 ```
-3. Add a script node before the closing `&lt;/body&gt;` tag with the following initialization script:
+3. Add a script node before the closing `</body>` tag with the following initialization script:
 ```
 <script>
   window.onload = function () {
