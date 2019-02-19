@@ -45,43 +45,49 @@ The page should be loaded on [http://localhost:9000](http://localhost:9000) now.
 
 ## Embedding in a website
 
-To add the web chat to your site, proceed as follows:
+To add the web chat UI to your site, proceed as follows:
 
-1. Build the bundle
-    ```
-    npm build
-    ```
-2. Copy the `main.js` and the `main.js.map` files to your site and a link to the `main.js` on the pages where you want the web chat window to appear.
-	```
-    <script type="text/javascript" src="/path/to/webchat/main.js"></script>
-    ```
-3. Add an empty `<div>` to your page (or something with an id that can be referenced in the initialization script), for example:
-	```
-    <div id="teneo-web-chat"></div>
-    ```
-4. Add a script node before the closing `</body>` tag with the following initialization script:
-	```
-    <script>
-      window.onload = function () {
-          if (
-              window.TeneoWebChat &&
-              typeof window.TeneoWebChat.initialize === 'function'
-          ) {
-              var element = document.getElementById('teneo-web-chat');
+### Build main.js
+To build the bundle, run:
+```
+npm build
+```
+This will add a file `main.js` in the `/dist` folder of the project. Add `main.js` to your site.
 
-              window.TeneoWebChat.initialize(
-                  element,
-                  'Teneo Web Chat',
-                  'https://some.teneo/engine-instance/'
-              );
-          }
+### Update pages
+Make the following changes to each page where you want the web chat window to appear.
+
+1.  Add a link to `main.js`:
+```
+<script type="text/javascript" src="/path/to/webchat/main.js"></script>
+```  
+2. Add an empty `&lt;div&gt;` (or something with an id that can be referenced in the initialization script), for example:
+```
+<div id="teneo-web-chat"></div>
+```
+3. Add a script node before the closing `&lt;/body&gt;` tag with the following initialization script:
+```
+<script>
+  window.onload = function () {
+      if (
+          window.TeneoWebChat &&
+          typeof window.TeneoWebChat.initialize === 'function'
+      ) {
+          var element = document.getElementById('teneo-web-chat');
+
+          window.TeneoWebChat.initialize(
+              element,
+              'Teneo Web Chat',
+              'https://some.teneo/engine-instance/'
+          );
       }
-    </script>
-    ```
-    When adding the script to your site, note the following:
-    * You can change the title that is displayed in header of the web chat window. In the script above it is specified as 'Teneo Web Chat'.
-    * The url `https://some.teneo/engine-instance/` should be updated to match the url of your engine.
-    * Make sure the line `var element = document.getElementById('teneo-web-chat');` references the id specified in step 3.
+  }
+</script>
+```
+When adding the script to your site, note the following:
+* You can change the title that is displayed in header of the web chat window. In the script above it is specified as 'Teneo Web Chat'.
+* The url `https://some.teneo/engine-instance/` should be updated to match the url of your engine.
+* Make sure the line `var element = document.getElementById('teneo-web-chat');` references the id of the div specified in step 3.
 
 ## Extending
 
