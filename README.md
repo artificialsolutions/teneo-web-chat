@@ -1,6 +1,6 @@
 # Teneo Web Chat
 
-This web chat UI is an example implementation of a chat GUI that can be embedded in websites. It is built using the [Vue.js](https://vuejs.org/) javascript framework and based on [Vue Beatiful Chat](https://github.com/mattmezza/vue-beautiful-chat) by Matteo Merola.
+This web chat UI is an example implementation of a chat GUI that can be embedded in websites. It is built using the [Vue.js](https://vuejs.org/) javascript framework and based on [Vue Beautiful Chat](https://github.com/mattmezza/vue-beautiful-chat) by Matteo Merola.
 
 ## Prerequisites
 * Your bot needs to be published and you need to know the engine URL.
