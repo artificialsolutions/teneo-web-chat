@@ -93,7 +93,7 @@ When adding the script to your site, note the following:
 
 The web chat UI can be extended by adding additional `.vue` files in the [/src/components/messages/](/src/components/messages/) folder. This file should parse the JSON that is included in an output parameter called `teneowebclient` in the engine response. The .vue file should  display the data accordingly.
 
-There are two example extensions included.
+There are two example extensions included in the project.
 
 ### Example: displaying an image
 
