@@ -204,7 +204,7 @@ The Teneo API is available as `this.$teneoApi` if you need to send messages back
 To add custom extensions, these are the steps to take:
 
 1. Define the JSON that specifies the message type and any additional data.
-2. Create an example flow in studio that includes the JSON in the output parameter `teneowebclient` and publish your solution.
+2. Create an example flow in Teneo Studio that includes the JSON in the output parameter `teneowebclient` and publish your solution.
 3. Create a .vue file for the message type
 4. In the view file create the template, scripts and applicable styles
 5. Test the result by connecting your web chat UI to the the engine with the example flow.
