@@ -97,7 +97,7 @@ There are two example extensions included in the project.
 
 ### Example: displaying an image
 
-This example exention displays an image below the bot's answer text.
+This example extention displays an image below the bot's answer text.
 
 #### Engine JSON
 
@@ -195,7 +195,7 @@ For each button, the title is displayed in the button and the postback value is 
 
 Because the type is `quickreply`, the web chat code looks for a component defined in a file called [QuickreplyMessage.vue](/src/components/messages/QuickreplyMessage.vue) and renders it.
 
-Again, everything needed to handle this type of exension is contained in the single .vue file. It contains a template section to specify the html, a script section to parse the json but to also handle what happens when a user clicks one of the buttons. It also contains the styles needed to style the buttons.
+Again, everything needed to handle this type of extension is contained in the single .vue file. It contains a template section to specify the html, a script section to parse the json but to also handle what happens when a user clicks one of the buttons. It also contains the styles needed to style the buttons.
 
 The Teneo API is available as `this.$teneoApi` if you need to send messages back to the bot. Look at the [QuickreplyMessage.vue](/src/components/messages/QuickreplyMessage.vue) for an example of how to use it.
 
