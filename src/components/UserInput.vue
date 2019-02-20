@@ -34,7 +34,7 @@ export default {
     },
     placeholder: {
       type: String,
-      default: 'Write a reply',
+      default: 'Please type here...',
     },
   },
   data() {
