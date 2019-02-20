@@ -199,15 +199,18 @@ Again, everything needed to handle this type of extension is contained in the si
 
 The Teneo API is available as `this.$teneoApi` if you need to send messages back to the bot. Look at the [QuickreplyMessage.vue](/src/components/messages/QuickreplyMessage.vue) for an example of how to use it.
 
-### Adding more extensions
+### Adding custom extensions
 
-To add additional extensions, these are the steps to take:
+To add custom extensions, these are the steps to take:
 
 1. Define the JSON that specifies the message type and any additional data.
 2. Create an example flow in studio that includes the JSON in the output parameter `teneowebclient` and publish your solution.
 3. Create a .vue file for the message type
 4. In the view file create the template, scripts and applicable styles
 5. Test the result by connecting your web chat UI to the the engine with the example flow.
+
+### Extensions repository
+A repostory with additional example extensions can be found here: [https://github.com/artificialsolutions/teneo-web-chat-extensions](https://github.com/artificialsolutions/teneo-web-chat-extensions).
 
 ## Cross-Origin Resource Sharing (CORS)
 
