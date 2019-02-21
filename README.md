@@ -32,6 +32,7 @@ If you want to run the code locally, proceed as follows:
     ```
     npm install
     ```
+    Note: if you're using Windows and get an error "'NODE_ENV' is not recognized as an internal or external command, operable program or batch file.", you may want to install a module called win-node-env and run npm install again.
 3. Create a `.env` file in the `teneo-web-chat` folder specifying the URL of your engine
     ```
     TENEO_ENGINE_URL=https://some.engine/instance/
