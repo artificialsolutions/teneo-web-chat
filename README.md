@@ -66,7 +66,7 @@ Make the following changes to each page where you want the web chat window to ap
 ```
 <div id="teneo-web-chat"></div>
 ```
-3. Add a script node before the closing `</body>` tag with the following initialization script:
+3. Add the following initialization script before the closing `</body>` tag:
 ```
 <script>
   window.onload = function () {
