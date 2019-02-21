@@ -51,7 +51,7 @@ To add the web chat UI to your site, proceed as follows:
 ### Build main.js
 To build the bundle, run:
 ```
-npm build
+npm run-script build
 ```
 This will add a file `main.js` in the `/dist` folder of the project. Add `main.js` to your site.
 
