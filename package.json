@@ -22,7 +22,7 @@
     "vue": "^2.6.5"
   },
   "devDependencies": {
-    "@artificialsolutions/tie-api-client": "^1.2.0",
+    "@artificialsolutions/tie-api-client": "^1.3.0",
     "@babel/core": "^7.2.2",
     "@vue/test-utils": "^1.0.0-beta.29",
     "babel-loader": "^8.0.5",
