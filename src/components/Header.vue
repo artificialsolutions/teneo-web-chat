@@ -1,6 +1,7 @@
 <template>
   <div class="header">
-    <img v-if="imageUrl" class="header__img" :src="imageUrl" />
+    <img v-if="imageUrl" class="header__img" :src="imageUrl">
+    <HeaderImagePlaceholder v-else class="header__img" />
     <div class="header__title">{{ title }}</div>
     <button class="header__close-button" @click="onClose">
       <XIcon class="header__close-icon" />
@@ -10,10 +11,12 @@
 
 <script>
 import XIcon from '../icons/x.vue';
+import HeaderImagePlaceholder from '../icons/titleImage.vue';
 
 export default {
   components: {
     XIcon,
+    HeaderImagePlaceholder,
   },
   props: {
     imageUrl: {

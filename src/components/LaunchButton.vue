@@ -53,8 +53,9 @@ export default {
 }
 
 .launch-button__open-icon {
-  height: 100%;
-  width: 100%;
+  height: 26px;
+  width: 26px;
+  color: var(--light-fg-color);
 }
 
 .launch-button__close-icon {

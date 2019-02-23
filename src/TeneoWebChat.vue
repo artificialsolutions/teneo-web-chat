@@ -12,7 +12,7 @@
 </template>
 
 <script>
-import { PARTICIPANT_USER, PARTICIPANT_BOT } from './utils/constants.js';
+import { PARTICIPANT_USER, PARTICIPANT_BOT, TITLE_IMAGE_URL } from './utils/constants.js';
 import registerMessageComponents from './utils/register-message-components.js';
 import ChatWindow from './components/ChatWindow.vue';
 import LaunchButton from './components/LaunchButton.vue';
@@ -36,19 +36,12 @@ export default {
       participants: [
         {
           id: PARTICIPANT_USER,
-          name: 'Me',
-          imageUrl:
-            'https://avatars3.githubusercontent.com/u/1915989?s=230&v=4',
         },
         {
           id: PARTICIPANT_BOT,
-          name: this.serviceName,
-          imageUrl:
-            'https://avatars3.githubusercontent.com/u/37018832?s=200&v=4',
         },
       ],
-      titleImageUrl:
-        'https://a.slack-edge.com/66f9/img/avatars-teams/ava_0001-34.png',
+      titleImageUrl: TITLE_IMAGE_URL,
       isChatOpen: false,
     };
   },
