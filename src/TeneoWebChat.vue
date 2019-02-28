@@ -3,7 +3,6 @@
     <ChatWindow
       v-if="isChatOpen"
       :on-close="closeChat"
-      :participants="participants"
       :title-image-url="titleImageUrl"
       :title="serviceName"
     />
@@ -12,7 +11,6 @@
 </template>
 
 <script>
-import { PARTICIPANT_USER, PARTICIPANT_BOT, TITLE_IMAGE_URL } from './utils/constants.js';
 import registerMessageComponents from './utils/register-message-components.js';
 import ChatWindow from './components/ChatWindow.vue';
 import LaunchButton from './components/LaunchButton.vue';
@@ -33,15 +31,8 @@ export default {
   },
   data() {
     return {
-      participants: [
-        {
-          id: PARTICIPANT_USER,
-        },
-        {
-          id: PARTICIPANT_BOT,
-        },
-      ],
-      titleImageUrl: TITLE_IMAGE_URL,
+      titleImageUrl:
+        'https://a.slack-edge.com/66f9/img/avatars-teams/ava_0001-34.png',
       isChatOpen: false,
     };
   },

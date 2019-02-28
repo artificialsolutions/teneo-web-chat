@@ -4,8 +4,6 @@
       v-for="(message, idx) in messageList"
       :key="idx"
       :message="message"
-      :chat-image-url="chatImageUrl(message.author)"
-      :author-name="authorName(message.author)"
     />
   </div>
 </template>
@@ -18,10 +16,6 @@ export default {
   },
   props: {
     messageList: {
-      type: Array,
-      required: true,
-    },
-    participants: {
       type: Array,
       required: true,
     },
@@ -52,24 +46,6 @@ export default {
       return (
         this.$refs.scrollList.scrollTop < this.$refs.scrollList.scrollHeight
       );
-    },
-    profile(author) {
-      const profile = this.participants.find(
-        (participant) => author.toLowerCase() === participant.id.toLowerCase()
-      );
-
-      return (
-        profile || {
-          imageUrl: '',
-          name: 'Unknown profile',
-        }
-      );
-    },
-    chatImageUrl(author) {
-      return this.profile(author).imageUrl;
-    },
-    authorName(author) {
-      return this.profile(author).name;
     },
   },
 };
