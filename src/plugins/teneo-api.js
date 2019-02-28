@@ -3,6 +3,7 @@ import TIE from '@artificialsolutions/tie-api-client';
 
 import MessageListCache from '../utils/message-list-cache.js';
 import parseTeneoResponse from '../utils/parse-teneo-response.js';
+import { EventBus, events } from '../utils/event-bus.js';
 
 export default function teneoApiPlugin(teneoApiUrl) {
   const teneoApi = TIE.init(teneoApiUrl);
@@ -33,6 +34,8 @@ export default function teneoApiPlugin(teneoApiUrl) {
       messages.forEach((msg) => {
         this._onMessageReceived(msg);
       });
+
+      EventBus.$emit(events.MESSAGE_SENT);
     },
     async sendSilentMessage(text) {
       const response = await teneoApi.sendInput(sessionId, {
@@ -47,6 +50,8 @@ export default function teneoApiPlugin(teneoApiUrl) {
       messages.forEach((msg) => {
         this._onMessageReceived(msg);
       });
+
+      EventBus.$emit(events.MESSAGE_SENT);
     },
     _onMessageReceived(message) {
       if (!message) {
