@@ -22,6 +22,7 @@
 <script>
 import SendIcon from '../icons/SendIcon.vue';
 import { PARTICIPANT_USER } from '../utils/constants.js';
+import { EventBus, events } from '../utils/event-bus.js';
 
 export default {
   components: {
@@ -41,6 +42,11 @@ export default {
     return {
       inputActive: false,
     };
+  },
+  mounted() {
+    EventBus.$on(events.MESSAGE_SENT, () => {
+      this.$refs.userInput.focus();
+    });
   },
   methods: {
     setInputActive(onoff) {
