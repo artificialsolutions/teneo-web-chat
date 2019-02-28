@@ -1,10 +1,7 @@
 <template>
   <div class="chat-window">
     <Header :title="title" :image-url="titleImageUrl" :on-close="onClose" />
-    <MessageList
-      :message-list="$teneoApi.messageList"
-      :participants="participants"
-    />
+    <MessageList :message-list="$teneoApi.messageList" />
     <UserInput :on-submit="sendMessage" />
   </div>
 </template>
@@ -19,10 +16,6 @@ export default {
   props: {
     onClose: {
       type: Function,
-      required: true,
-    },
-    participants: {
-      type: Array,
       required: true,
     },
     titleImageUrl: {
