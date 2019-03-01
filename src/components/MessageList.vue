@@ -21,8 +21,11 @@ export default {
     },
   },
   mounted() {
-    // Wait for images to load
-    setTimeout(this._scrollDown.bind(this), 400);
+    // Additional scroll down after images etc have loaded
+    setTimeout(this._scrollDown.bind(this), 700);
+
+    // Scroll down to bottom
+    this._scrollDown();
   },
   updated() {
     if (this.shouldScrollToBottom()) {
