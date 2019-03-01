@@ -10,7 +10,6 @@
 import Header from './Header.vue';
 import MessageList from './MessageList.vue';
 import UserInput from './UserInput.vue';
-import { PARTICIPANT_USER } from '../utils/constants.js';
 
 export default {
   components: { Header, MessageList, UserInput },
