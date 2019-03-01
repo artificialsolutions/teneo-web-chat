@@ -47,6 +47,8 @@ export default {
     EventBus.$on(events.MESSAGE_SENT, () => {
       this.$refs.userInput.focus();
     });
+
+    this.$refs.userInput.focus();
   },
   methods: {
     setInputActive(onoff) {
