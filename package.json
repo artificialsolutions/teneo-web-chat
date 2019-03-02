@@ -5,7 +5,6 @@
   "scripts": {
     "analyze": "NODE_ENV=production webpack --config webpack.prod.js --profile --json > stats-prod.json && webpack-bundle-analyzer stats-prod.json dist/",
     "build": "NODE_ENV=production webpack --config webpack.prod.js",
-    "postinstall": "npm run build",
     "start": "node server.js",
     "start:dev": "env-cmd .env webpack-dev-server --config webpack.dev.js",
     "test": "npm run test:mocha && npm run lint",
@@ -48,5 +47,6 @@
     "webpack-cli": "^3.2.3",
     "webpack-dev-server": "^3.1.14",
     "webpack-merge": "^4.2.1"
-  }
+  },
+  "heroku-run-build-script": true
 }
