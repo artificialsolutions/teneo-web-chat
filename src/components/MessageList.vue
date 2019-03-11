@@ -31,6 +31,9 @@ export default {
     if (this.shouldScrollToBottom()) {
       this.$nextTick(this._scrollDown);
     }
+
+    // Additional scroll down after images etc have loaded
+    setTimeout(this._scrollDown.bind(this), 700);
   },
   methods: {
     _scrollDown() {
