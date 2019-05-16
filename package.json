@@ -1,7 +1,7 @@
 {
   "name": "teneo-web-chat",
-  "version": "0.0.1",
-  "description": "",
+  "version": "1.0.1",
+  "description": "Example Teneo web chat UI implementation that can be embedded in websites.",
   "scripts": {
     "analyze": "NODE_ENV=production webpack --config webpack.prod.js --profile --json > stats-prod.json && webpack-bundle-analyzer stats-prod.json dist/",
     "build": "NODE_ENV=production webpack --config webpack.prod.js",
@@ -14,7 +14,7 @@
   },
   "keywords": [],
   "author": "",
-  "license": "ISC",
+  "license": "Apache-2.0",
   "dependencies": {
     "ejs": "^2.6.1",
     "express": "^4.16.4",
@@ -43,7 +43,7 @@
     "vue-style-loader": "^4.1.2",
     "vue-template-compiler": "^2.6.5",
     "webpack": "^4.29.3",
-    "webpack-bundle-analyzer": "^3.0.3",
+    "webpack-bundle-analyzer": "^3.3.2",
     "webpack-cli": "^3.2.3",
     "webpack-dev-server": "^3.1.14",
     "webpack-merge": "^4.2.1"
