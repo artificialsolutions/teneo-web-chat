@@ -60,6 +60,13 @@ export default function teneoApiPlugin(teneoApiUrl) {
 
       this.messageList = [...this.messageList, message];
     },
+    async closeSession(){
+      TIE.close(teneoApiUrl,sessionId);
+      this.messageList = []
+      if(this.messageListCache){
+         this.messageListCache.update([]);
+      }
+    },
   };
 
   plugin.install = function install() {
