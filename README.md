@@ -92,7 +92,7 @@ Make the following changes to each page where you want the web chat window to ap
 When adding the script to your site, note the following:
 * You can change the title that is displayed in header of the web chat window. In the script above it is specified as 'Teneo Web Chat'.
 * The url `https://some.teneo/engine-instance/` should be updated to match the url of your engine.
-* The variable 'closeEngineSessionOnExit' specifies if the Teneo Engine session should be ended when the chat UI is closed. It is advised to keept this value as is, to prevent your bot from losing the conversation history when the user closes the chat UI.
+* The variable 'closeEngineSessionOnExit' specifies if the Teneo Engine session should be ended when the chat UI is closed. It is advised to keep this value as is, to prevent your bot from losing the conversation history when the user closes the chat UI.
 * Make sure the line `var element = document.getElementById('teneo-web-chat');` references the id of the div specified in step 3.
 
 ## Extending
