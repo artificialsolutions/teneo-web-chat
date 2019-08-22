@@ -34,7 +34,7 @@ If you want to run the code locally, proceed as follows:
     npm install
     ```
     Note: if you're using Windows and get an error "'NODE_ENV' is not recognized as an internal or external command, operable program or batch file.", you may want to install a module called [win-node-env](https://github.com/laggingreflex/win-node-env) and run npm install again.
-3. Create a `.env` file in the `teneo-web-chat` folder with following (replace the dummy url with Tenoe Engine url of your bot):
+3. Create a `.env` file in the `teneo-web-chat` folder with following (replace the dummy url with Teneo Engine url of your bot):
     ```
     TENEO_ENGINE_URL=https://some.engine/instance/
     CLOSE_TIE_SESSION_ON_EXIT=false
