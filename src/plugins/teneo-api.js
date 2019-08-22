@@ -3,6 +3,7 @@ import TIE from '@artificialsolutions/tie-api-client';
 
 import MessageListCache from '../utils/message-list-cache.js';
 import parseTeneoResponse from '../utils/parse-teneo-response.js';
+import { CHANNEL_PARAM } from '../utils/constants.js';
 import { EventBus, events } from '../utils/event-bus.js';
 
 export default function teneoApiPlugin(teneoApiUrl) {
@@ -24,6 +25,7 @@ export default function teneoApiPlugin(teneoApiUrl) {
 
       const response = await teneoApi.sendInput(sessionId, {
         text: message.data.text,
+        channel : CHANNEL_PARAM
       });
 
       // eslint-disable-next-line prefer-destructuring
@@ -40,6 +42,7 @@ export default function teneoApiPlugin(teneoApiUrl) {
     async sendSilentMessage(text) {
       const response = await teneoApi.sendInput(sessionId, {
         text,
+        channel: CHANNEL_PARAM
       });
 
       // eslint-disable-next-line prefer-destructuring
