@@ -17,7 +17,7 @@ app.use(express.static('./dist/'));
 app.get('/', (req, res) =>
   res.render('index', {
     TENEO_ENGINE_URL,
-    CLOSE_TIE_SESSION_ON_EXIT,
+    CLOSE_TIE_SESSION_ON_EXIT
   })
 );
 
