@@ -28,6 +28,10 @@ export default {
       type: String,
       required: true,
     },
+    closeTieSessionOnExit: {
+      type: String,
+      required: false,
+    },
   },
   data() {
     return {
@@ -41,7 +45,10 @@ export default {
       this.isChatOpen = true;
     },
     closeChat() {
-      this.isChatOpen = false;
+      this.isChatOpen = false
+      if(this.closeTieSessionOnExit === "true" ){
+          this.$teneoApi.closeSession()
+      }
     },
   },
 };

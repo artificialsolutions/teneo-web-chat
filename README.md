@@ -17,6 +17,7 @@ Click the button below to create a new Heroku app that hosts the web chat:
 1. Give the app a name (lowercase, no spaces)
 2. In the 'Config Vars' section, add the following:
     * **TENEO_ENGINE_URL:** The engine url.
+    * **CLOSE_TIE_SESSION_ON_EXIT:** Optional. If set to true, the Teneo engine session will be killed when the chat UI is closed.
 3. Click 'Deploy app'.
 
 When Heroku has finished deploying, click 'View app'. You should now be able to use the web chat ui to talk to your bot.
@@ -33,9 +34,10 @@ If you want to run the code locally, proceed as follows:
     npm install
     ```
     Note: if you're using Windows and get an error "'NODE_ENV' is not recognized as an internal or external command, operable program or batch file.", you may want to install a module called [win-node-env](https://github.com/laggingreflex/win-node-env) and run npm install again.
-3. Create a `.env` file in the `teneo-web-chat` folder specifying the URL of your engine
+3. Create a `.env` file in the `teneo-web-chat` folder with following (replace the dummy url with Teneo Engine url of your bot):
     ```
     TENEO_ENGINE_URL=https://some.engine/instance/
+    CLOSE_TIE_SESSION_ON_EXIT=false
     ```
 4. Start the application:
     ```
@@ -75,11 +77,13 @@ Make the following changes to each page where you want the web chat window to ap
           typeof window.TeneoWebChat.initialize === 'function'
       ) {
           var element = document.getElementById('teneo-web-chat');
+          var closeEngineSessionOnExit = false;
 
           window.TeneoWebChat.initialize(
               element,
               'Teneo Web Chat',
-              'https://some.teneo/engine-instance/'
+              'https://some.teneo/engine-instance/',
+              closeEngineSessionOnExit
           );
       }
   }
@@ -88,7 +92,11 @@ Make the following changes to each page where you want the web chat window to ap
 When adding the script to your site, note the following:
 * You can change the title that is displayed in header of the web chat window. In the script above it is specified as 'Teneo Web Chat'.
 * The url `https://some.teneo/engine-instance/` should be updated to match the url of your engine.
+* The variable 'closeEngineSessionOnExit' specifies if the Teneo Engine session should be ended when the chat UI is closed. It is advised to keep this value as is, to prevent your bot from losing the conversation history when the user closes the chat UI.
 * Make sure the line `var element = document.getElementById('teneo-web-chat');` references the id of the div specified in step 3.
+
+## Channel
+In addition to the input entered by the user, requests to the Teneo Engine also contain an input paramter 'channel' with value 'teneo-webchat'. This allows you to change the behavior of your bot, depending on the channel used. For information on how to retrieve the value of an input parameter in Teneo Studio, see [Store input parameters](https://www.teneo.ai/studio/scripting/how-to/store-input-parameters) on the Teneo Developers website.
 
 ## Extending
 

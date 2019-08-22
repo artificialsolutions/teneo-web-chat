@@ -10,6 +10,10 @@
         "TENEO_ENGINE_URL": {
             "description": "Please input your Teneo Engine URL. https://some.engine/instance/",
             "required":true
+        },
+        "CLOSE_TIE_SESSION_ON_EXIT": {
+            "description": "If set to true, the Teneo Engine session will be ended when the chat UI is closed",
+            "required":false
         }
     }
 }

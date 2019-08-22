@@ -15,6 +15,7 @@ module.exports = merge(baseConfig, {
   plugins: [
     new webpack.DefinePlugin({
       TENEO_ENGINE_URL: JSON.stringify(process.env.TENEO_ENGINE_URL),
+      CLOSE_TIE_SESSION_ON_EXIT: JSON.stringify(process.env.CLOSE_TIE_SESSION_ON_EXIT),
     }),
     new HtmlWebpackPlugin({
       template: './views/index.ejs',

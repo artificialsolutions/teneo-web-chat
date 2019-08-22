@@ -45,7 +45,9 @@ export default {
   },
   mounted() {
     EventBus.$on(events.MESSAGE_SENT, () => {
-      this.$refs.userInput.focus();
+      if(this.$refs.userInput){ 
+          this.$refs.userInput.focus();
+      }
     });
 
     this.$refs.userInput.focus();
