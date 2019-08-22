@@ -95,6 +95,9 @@ When adding the script to your site, note the following:
 * The variable 'closeEngineSessionOnExit' specifies if the Teneo Engine session should be ended when the chat UI is closed. It is advised to keep this value as is, to prevent your bot from losing the conversation history when the user closes the chat UI.
 * Make sure the line `var element = document.getElementById('teneo-web-chat');` references the id of the div specified in step 3.
 
+## Channel
+In addition to the input entered by the user, requests to the Teneo Engine also contain an input paramter 'channel' with value 'teneo-webchat'. This allows you to change the behavior of your bot, depending on the channel used. For information on how to retrieve the value of an input parameter in Teneo Studio, see [Store input parameters](https://www.teneo.ai/studio/scripting/how-to/store-input-parameters) on the Teneo Developers website.
+
 ## Extending
 
 The web chat UI can be extended by adding additional `.vue` files in the [/src/components/messages/](/src/components/messages/) folder. This file should parse the JSON that is included in an output parameter called `teneowebclient` in the engine response. The .vue file should  display the data accordingly.
