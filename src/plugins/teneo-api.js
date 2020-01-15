@@ -40,9 +40,29 @@ export default function teneoApiPlugin(teneoApiUrl) {
       EventBus.$emit(events.MESSAGE_SENT);
     },
     async sendSilentMessage(text) {
-      const response = await teneoApi.sendInput(sessionId, {
+
+      const response = await teneoApi.sendInput(sessionId,{
         text,
         channel: CHANNEL_PARAM
+      });
+
+      // eslint-disable-next-line prefer-destructuring
+      sessionId = response.sessionId;
+
+      const messages = parseTeneoResponse(response);
+
+      messages.forEach((msg) => {
+        this._onMessageReceived(msg);
+      });
+
+      EventBus.$emit(events.MESSAGE_SENT);
+    },
+    async sendClickMessage(text) {
+
+      const response = await teneoApi.sendInput(sessionId,{
+        text,
+        channel: CHANNEL_PARAM,
+        'clickpostback' : text
       });
 
       // eslint-disable-next-line prefer-destructuring

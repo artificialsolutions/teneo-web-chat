@@ -6,4 +6,4 @@ stats-prod.json
 .vscode/
 
 !dist/index.html
-.env
+env.env
