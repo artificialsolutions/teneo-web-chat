@@ -50,6 +50,7 @@ export default {
   methods: {
     async onSelect(reply, idx) {
       if (this.replySent || this.isExpired) {
+        console.log("cancelling replySent/isExpired")
         return;
       }
 
@@ -61,7 +62,7 @@ export default {
 
       this.$teneoApi.messageList = [...messages, selectedQuickReply];
 
-      await this.$teneoApi.sendSilentMessage(reply.postback);
+      await this.$teneoApi.sendClickMessage(reply.postback);
     },
   },
 };
