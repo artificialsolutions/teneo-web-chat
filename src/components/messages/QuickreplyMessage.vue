@@ -50,7 +50,6 @@ export default {
   methods: {
     async onSelect(reply, idx) {
       if (this.replySent || this.isExpired) {
-        console.log("cancelling replySent/isExpired")
         return;
       }
 
