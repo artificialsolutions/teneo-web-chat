@@ -41,18 +41,18 @@
     "mocha": "^5.2.0",
     "mocha-webpack": "^2.0.0-beta.0",
     "nock": "^10.0.6",
-    "node-sass": "^4.12.0",
+    "node-sass": "^4.13.1",
+    "plyr": "^3.5.6",
     "prettier": "^1.18.2",
     "vue-loader": "^15.7.1",
+    "vue-plyr": "^6.0.4",
     "vue-style-loader": "^4.1.2",
     "vue-template-compiler": "^2.6.10",
     "webpack": "^4.39.1",
     "webpack-bundle-analyzer": "^3.4.1",
     "webpack-cli": "^3.3.6",
     "webpack-dev-server": "^3.8.0",
-    "webpack-merge": "^4.2.1",
-    "vue-plyr": "^6.0.4",
-    "plyr": "^3.5.6"
+    "webpack-merge": "^4.2.1"
   },
   "heroku-run-build-script": true
 }
