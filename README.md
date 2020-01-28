@@ -12,7 +12,6 @@ The quickest way to interact with your bot using this web chat UI is to deploy i
 ### Deploy to Heroku
 Click the button below to create a new Heroku app that hosts the web chat:
 
-//[![Deploy](https://www.herokucdn.com/deploy/button.svg?classes=heroku)](https://heroku.com/deploy?template=https://github.com/artificialsolutions/teneo-web-chat)
 
 [![Deploy Branch](https://www.herokucdn.com/deploy/button.svg?classes=heroku)](https://heroku.com/deploy?template=https://github.com/artificialsolutions/teneo-web-chat/tree/extensions)
 
