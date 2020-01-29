@@ -57,7 +57,7 @@ export default {
 
         this.$teneoApi.messageList = [...messages, selectedItem];
 
-        await this.$teneoApi.sendClickMessage(reply.postback);
+        await this.$teneoApi.sendSilentMessage(reply.postback);
       }
     },
   },
