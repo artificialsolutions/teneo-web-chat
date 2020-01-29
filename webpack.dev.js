@@ -3,6 +3,8 @@ const path = require('path');
 const merge = require('webpack-merge');
 const HtmlWebpackPlugin = require('html-webpack-plugin');
 const baseConfig = require('./webpack.base.js');
+require('dotenv').config(); 
+var dotenv = require('dotenv').config({path: __dirname + '/.env'});
 
 module.exports = merge(baseConfig, {
   mode: 'development',
@@ -14,8 +16,7 @@ module.exports = merge(baseConfig, {
   },
   plugins: [
     new webpack.DefinePlugin({
-      TENEO_ENGINE_URL: JSON.stringify(process.env.TENEO_ENGINE_URL),
-      CLOSE_TIE_SESSION_ON_EXIT: JSON.stringify(process.env.CLOSE_TIE_SESSION_ON_EXIT),
+      'process.env': JSON.stringify(dotenv.parsed)
     }),
     new HtmlWebpackPlugin({
       template: './views/index.ejs',

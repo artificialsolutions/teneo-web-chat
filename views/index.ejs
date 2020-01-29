@@ -24,8 +24,8 @@
           window.TeneoWebChat.initialize(
             element,
             'Teneo Web Chat',
-            '<%= TENEO_ENGINE_URL %>',
-            '<%= CLOSE_TIE_SESSION_ON_EXIT %>',
+            '<%= process.env.TENEO_ENGINE_URL %>',
+            '<%= process.env.CLOSE_TIE_SESSION_ON_EXIT %>',
           );
         }
       }
