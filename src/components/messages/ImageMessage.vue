@@ -29,9 +29,10 @@ export default {
 };
 </script>
 
-<style scoped>
-.image-message img {
-  margin: 12px;
-  max-width: 80%;
-}
+<style>
+  .image-message img {
+    margin: 12px;
+    max-width: 100%;
+    max-height: 200px;
+  }
 </style>

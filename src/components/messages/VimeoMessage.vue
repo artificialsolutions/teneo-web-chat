@@ -6,7 +6,7 @@
         allowfullscreen allowtransparency autoplay allow="">
       </iframe>
     </div>
-  </vue-plyr>
+</vue-plyr>
   
 </template>
 
@@ -34,3 +34,4 @@ export default {
   },
 };
 </script>
+
