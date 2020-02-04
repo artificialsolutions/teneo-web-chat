@@ -27,9 +27,14 @@
       </div>
 
       <div v-if='(JSON.parse(reply).type==="videofile")'>
-        <div class="video-message">
-          <iframe :src=JSON.parse(reply).video_url allowfullscreen allowtransparency autoplay allow=""></iframe>
-        </div>
+        <vue-plyr>
+          <div class="plyr__video-embed">
+            <iframe
+              :src=JSON.parse(reply).video_url
+              allowfullscreen allowtransparency autoplay allow="">
+            </iframe>
+          </div>
+        </vue-plyr>
       </div>
 
       
