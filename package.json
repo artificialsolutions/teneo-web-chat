@@ -5,7 +5,7 @@
   "scripts": {
     "analyze": "NODE_ENV=production webpack --config webpack.prod.js --profile --json > stats-prod.json && webpack-bundle-analyzer stats-prod.json dist/",
     "build": "NODE_ENV=production webpack --config webpack.prod.js",
-    "start": "webpack-dev-server --config webpack.dev.js",
+    "start": "node server.js",
     "start:dev": "webpack-dev-server --config webpack.dev.js",
     "test": "npm run test:mocha && npm run lint",
     "test:mocha": "mocha-webpack --webpack-config webpack.dev.js --require 'test/setup.js' 'test/**/*.test.js'",
