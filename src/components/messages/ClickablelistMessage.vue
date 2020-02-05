@@ -64,16 +64,26 @@ export default {
 };
 </script>
 
-<style scoped>
-.clickablelist-message {
-  display: flex;
-  flex-direction: column;
-  justify-content: center;
-  list-style: none;
-  padding: 0;
-  margin: 0;
-}
 
+<style>
+  .clickablelist-message {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    list-style: none;
+    padding: 0;
+    margin: 0;
+  }
+
+  .attachment-message.bot {
+    background-color: #fff;
+    margin-right: 40px;
+    border: none;
+    width:100%;
+  }
+</style>
+
+<style scoped>
 .clickablelist-message__item {
   border-bottom: 1px solid #ccc;
   border-right: 1px solid #ccc;
@@ -102,13 +112,6 @@ export default {
 
 .clickablelist-message.replied .clickablelist-message__item {
   cursor: default;
-}
-
-.attachment-message.bot {
-  background-color: #fff;
-  margin-right: 40px;
-  border: none;
-  width:100%;
 }
 
 .clickablelist-message__item i.material-icons {

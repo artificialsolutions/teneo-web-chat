@@ -43,15 +43,21 @@ export default {
 };
 </script>
 
-<style scoped>
-.text-message {
-  padding: 6px 18px;
-  border-radius: 10px;
-  font-weight: 300;
-  font-size: 0.9em;
-  line-height: 1.4;
-  white-space: pre-wrap;
-  -webkit-font-smoothing: subpixel-antialiased;
+<style>
+  .text-message {
+    padding: 6px 18px;
+    border-radius: 10px;
+    font-weight: 300;
+    font-size: 0.9em;
+    line-height: 1.4;
+    white-space: pre-wrap;
+    -webkit-font-smoothing: subpixel-antialiased;
+}
+.text-message.bot {
+  color: var(--bot-message-fg-color);
+  background-color: var(--bot-message-bg-color);
+  margin-right: 40px;
+  border-bottom-left-radius: 0px;
 }
 
 .text-message__text {
@@ -68,10 +74,5 @@ export default {
   border-bottom-right-radius: 0px;
 }
 
-.text-message.bot {
-  color: var(--bot-message-fg-color);
-  background-color: var(--bot-message-bg-color);
-  margin-right: 40px;
-  border-bottom-left-radius: 0px;
-}
+
 </style>

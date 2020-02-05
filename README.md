@@ -116,7 +116,7 @@ The JSON that should be included in the `teneowebclient` output parameter should
 ``` json
 {
     "type": "image",
-    "image_url": "https://url.to/an/image.png"
+    "url": "https://url.to/an/image.png"
 }
 ```
 
@@ -145,14 +145,14 @@ export default {
           message &&
           message.type === 'image' &&
           message.data &&
-          message.data.image_url
+          message.data.url
         );
       },
     },
   },
   computed: {
     imageUrl() {
-      return this.message.data.image_url;
+      return this.message.data.url;
     },
   },
 };
