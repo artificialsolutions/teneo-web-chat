@@ -5,12 +5,13 @@
   "scripts": {
     "analyze": "NODE_ENV=production webpack --config webpack.prod.js --profile --json > stats-prod.json && webpack-bundle-analyzer stats-prod.json dist/",
     "build": "NODE_ENV=production webpack --config webpack.prod.js",
-    "start": "node server.js",
+    "start": "env-cmd .env webpack-dev-server --config webpack.dev.js",//"node server.js",
     "start:dev": "env-cmd .env webpack-dev-server --config webpack.dev.js",
     "test": "npm run test:mocha && npm run lint",
     "test:mocha": "mocha-webpack --webpack-config webpack.dev.js --require 'test/setup.js' 'test/**/*.test.js'",
     "test:dev": "npm run test:mocha -- --watch",
     "lint": "eslint '{src,test}/**/*.{js,vue}'"
+
   },
   "repository": {
     "type": "git",
@@ -41,7 +42,7 @@
     "mocha": "^5.2.0",
     "mocha-webpack": "^2.0.0-beta.0",
     "nock": "^10.0.6",
-    "node-sass": "^4.12.0",
+    "node-sass": "^4.13.1",
     "prettier": "^1.18.2",
     "vue-loader": "^15.7.1",
     "vue-style-loader": "^4.1.2",
