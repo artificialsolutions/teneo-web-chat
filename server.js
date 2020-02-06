@@ -7,7 +7,7 @@ const {
   TENEO_ENGINE_URL,
   CLOSE_TIE_SESSION_ON_EXIT
 } = process.env;
-const port = 9000;
+const port = process.env.PORT || 9000;
 
 if (!TENEO_ENGINE_URL) {
   throw new Error('Missing environment variable TENEO_ENGINE_URL!');
@@ -27,5 +27,5 @@ app.get('/', (req, res) =>
 
 app.listen(port, () => {
   // eslint-disable-next-line no-console
-  console.log(`Server listening on http://localhost:${port}, Engine Endpoint${TENEO_ENGINE_URL}`);
+  console.log(`Server listening on http://localhost:${port}, Engine Endpoint ${TENEO_ENGINE_URL}`);
 });
