@@ -1,76 +1,72 @@
 <template>
   <div class="attachment-message" :class="messageSource">
     <ul class="clickablelist-message" :class="{ replied: replySent}">
-      <li
-        v-for="(message, idx) in dynamiclistitems"
-        :key="idx"
-      > 
-      
-      <div v-if='message.type==="text"'>
-        <div class="text-message" :class="messageSource">
-            <p class="text-message__text" v-html=message.text></p>
-          </div>
-      </div>
-
-      <div v-if='message.alt'>
+      <li v-for="(message, idx) in dynamiclistitems" :key="idx">
+        <div v-if="message.type==='text'">
           <div class="text-message" :class="messageSource">
-            <p class="text-message__text" v-html=message.alt></p>
+            <p class="text-message__text" v-html="message.text"></p>
           </div>
-      </div>
-
-     <div v-if='message.type==="quickreply"'>
-       <ul class="quickreply-message" :class="{ expired: replySent || isExpired }">
-    <li
-      v-for="(reply, idx) in message.quick_replies"
-      :key="idx"
-      class="quickreply-message__item"
-      :class="{ selected: replySent && selected === idx }"
-      @click="onSelect(reply, idx)"
-    >
-      {{ reply.title }}
-    </li>
-  </ul>
-</div>
-
-      <div v-if='message.type==="image"'>
-        <div class="image-message">
-          <img :src=message.image_url />
         </div>
-      </div>
 
-
-      <div v-if='message.type==="youtubevideo"'>
-        <div class="twc_youtubevideo">
-          <iframe :src=message.video_url frameborder="0" allow="accelerometer; autoplay; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>
+        <div v-if="message.alt">
+          <div class="text-message" :class="messageSource">
+            <p class="text-message__text" v-html="message.alt"></p>
+          </div>
         </div>
-      </div>
 
-      <div v-if='message.type==="videofile"'>
-        <div class="twc_videofile">
+        <div v-if="message.type==='quickreply'">
+          <ul class="quickreply-message" :class="{ expired: replySent || isExpired }">
+            <li
+              v-for="(reply, idx) in message.quick_replies"
+              :key="idx"
+              class="quickreply-message__item"
+              :class="{ selected: replySent && selected === idx }"
+              @click="onSelect(reply, idx)"
+            >{{ reply.title }}</li>
+          </ul>
+        </div>
+
+        <div v-if="message.type==='image'">
+          <div class="image-message">
+            <img :src="message.image_url" />
+          </div>
+        </div>
+
+        <div v-if="message.type==='youtubevideo'">
+          <div class="twc_youtubevideo">
+            <iframe
+              :src="message.video_url"
+              frameborder="0"
+              allow="accelerometer; autoplay; encrypted-media; gyroscope; picture-in-picture"
+              allowfullscreen
+            ></iframe>
+          </div>
+        </div>
+
+        <div v-if="message.type==='videofile'">
+          <div class="twc_videofile">
             <div class="plyr__video-embed">
               <video controls="1">
                 <source :src="videoUrl(message.video_url)" type="video/mp4" />
               </video>
-            </div> 
+            </div>
+          </div>
         </div>
-      </div>
 
-      
-      <div v-if='message.type==="vimeo"'>
-        <div class="twc_vimeovideo">
+        <div v-if="message.type==='vimeo'">
+          <div class="twc_vimeovideo">
             <iframe
-              :src=message.video_url
+              :src="message.video_url"
               frameborder="0"
-              allowfullscreen allowtransparency allow="">
-            </iframe>
+              allowfullscreen
+              allowtransparency
+              allow
+            ></iframe>
+          </div>
         </div>
-      </div>
-
-
       </li>
     </ul>
   </div>
-
 </template>
 
 <script>
@@ -115,7 +111,6 @@ export default {
 
       return latestMessage && latestMessage !== this.message;
     },
-    
   },
   methods: {
     async onSelect(reply, idx) {
@@ -132,7 +127,7 @@ export default {
       }
     },
     videoUrl(url) {
-      return url + "#t=0.1";
+      return url + '#t=0.1';
     },
   },
 };
