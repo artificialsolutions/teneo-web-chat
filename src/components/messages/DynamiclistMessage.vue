@@ -18,6 +18,20 @@
           </div>
       </div>
 
+     <div v-if='message.type==="quickreply"'>
+       <ul class="quickreply-message" :class="{ expired: replySent || isExpired }">
+    <li
+      v-for="(reply, idx) in message.quick_replies"
+      :key="idx"
+      class="quickreply-message__item"
+      :class="{ selected: replySent && selected === idx }"
+      @click="onSelect(reply, idx)"
+    >
+      {{ reply.title }}
+    </li>
+  </ul>
+</div>
+
       <div v-if='message.type==="image"'>
         <div class="image-message">
           <img :src=message.image_url />
@@ -31,26 +45,25 @@
         </div>
       </div>
 
-      <div v-if='(message.type==="videofile")'>
-        <vue-plyr class="twc_videofile">
+      <div v-if='message.type==="videofile"'>
+        <div class="twc_videofile">
             <div class="plyr__video-embed">
-              <video controls allowfullscreen allowtransparency>
-                <source :src="message.video_url" type="video/mp4" />
+              <video controls="1">
+                <source :src="videoUrl(message.video_url)" type="video/mp4" />
               </video>
-            </div>
-        </vue-plyr>
+            </div> 
+        </div>
       </div>
 
       
       <div v-if='message.type==="vimeo"'>
-        <vue-plyr class="twc_vimeovideo">
-            <div class="plyr__video-embed">
-              <iframe
-                :src=message.video_url
-                allowfullscreen allowtransparency allow="">
-              </iframe>
-            </div>
-        </vue-plyr>
+        <div class="twc_vimeovideo">
+            <iframe
+              :src=message.video_url
+              frameborder="0"
+              allowfullscreen allowtransparency allow="">
+            </iframe>
+        </div>
       </div>
 
 
@@ -96,6 +109,13 @@ export default {
     isBot() {
       return this.message.author === PARTICIPANT_BOT;
     },
+    isExpired() {
+      const { messageList } = this.$teneoApi;
+      const latestMessage = messageList[messageList.length - 1];
+
+      return latestMessage && latestMessage !== this.message;
+    },
+    
   },
   methods: {
     async onSelect(reply, idx) {
@@ -110,6 +130,9 @@ export default {
 
         await this.$teneoApi.sendSilentMessage(reply.postback);
       }
+    },
+    videoUrl(url) {
+      return url + "#t=0.1";
     },
   },
 };

@@ -1,12 +1,11 @@
 <template>
-  <vue-plyr class="twc_vimeovideo">
-      <div class="plyr__video-embed">
+  <div class="twc_vimeovideo">
         <iframe
           :src="videoUrl"
+          frameborder="0"
           allowfullscreen allowtransparency allow="">
         </iframe>
-      </div>
-  </vue-plyr>
+  </div>
 </template>
 
 <script>

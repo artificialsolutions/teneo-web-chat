@@ -1,11 +1,11 @@
 <template>
-  <vue-plyr class="twc_videofile">
+  <div class="twc_videofile">
       <div class="plyr__video-embed">
-        <video controls>
+        <video controls="1">
           <source :src="videoUrl" type="video/mp4" />
         </video>
       </div>
-  </vue-plyr>
+  </div>
 </template>
 
 <script>

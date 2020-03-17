@@ -67,7 +67,7 @@ export default {
 };
 </script>
 
-<style scoped>
+<style>
 .quickreply-message {
   --expired-quickreply-color: #a9a9a9;
 
