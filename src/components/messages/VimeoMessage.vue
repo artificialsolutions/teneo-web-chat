@@ -1,9 +1,9 @@
 <template>
-  <vue-plyr>
+  <vue-plyr class="twc_vimeovideo">
       <div class="plyr__video-embed">
         <iframe
           :src="videoUrl"
-          allowfullscreen allowtransparency autoplay allow="">
+          allowfullscreen allowtransparency allow="">
         </iframe>
       </div>
   </vue-plyr>
@@ -34,3 +34,9 @@ export default {
 };
 </script>
 
+<style>
+.twc_vimeovideo {
+  width: 90%;
+  min-width: 300px;
+}
+</style>

@@ -1,10 +1,9 @@
 <template>
-  <vue-plyr>
+  <vue-plyr class="twc_videofile">
       <div class="plyr__video-embed">
-        <iframe
-          :src="videoUrl"
-          allowfullscreen allowtransparency autoplay allow="">
-        </iframe>
+        <video controls>
+          <source :src="videoUrl" type="video/mp4" />
+        </video>
       </div>
   </vue-plyr>
 </template>
@@ -28,8 +27,19 @@ export default {
   },
   computed: {
     videoUrl() {
-      return this.message.data.video_url;
+      return this.message.data.video_url + "#t=0.1";
     },
   },
 };
 </script>
+
+<style>
+.twc_videofile {
+  width: 90%;
+  min-width: 300px;
+}
+video {
+  width: 100%;
+  max-height: 100%;
+}
+</style>

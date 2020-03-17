@@ -2,57 +2,56 @@
   <div class="attachment-message" :class="messageSource">
     <ul class="clickablelist-message" :class="{ replied: replySent}">
       <li
-        v-for="(reply, idx) in dynamiclistitems"
+        v-for="(message, idx) in dynamiclistitems"
         :key="idx"
       > 
       
-      <div v-if='JSON.parse(reply).alt.length>0'>
+      <div v-if='message.type==="text"'>
+        <div class="text-message" :class="messageSource">
+            <p class="text-message__text" v-html=message.text></p>
+          </div>
+      </div>
+
+      <div v-if='message.alt'>
           <div class="text-message" :class="messageSource">
-            <p v-if="isBot" class="text-message__text" v-html=JSON.parse(reply).alt></p>
-            <p v-else class="text-message__text">{{ JSON.parse(reply).alt }}</p>
+            <p class="text-message__text" v-html=message.alt></p>
           </div>
       </div>
 
-      <div v-if='JSON.parse(reply).type==="image"'>
+      <div v-if='message.type==="image"'>
         <div class="image-message">
-          <img :src=JSON.parse(reply).image_url />
+          <img :src=message.image_url />
         </div>
       </div>
 
 
-      <div v-if='JSON.parse(reply).type==="youtubevideo"'>
-        <div class="video-message">
-          <iframe :src=JSON.parse(reply).video_url frameborder="0" allow="accelerometer; autoplay; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>
+      <div v-if='message.type==="youtubevideo"'>
+        <div class="twc_youtubevideo">
+          <iframe :src=message.video_url frameborder="0" allow="accelerometer; autoplay; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>
         </div>
       </div>
 
-      <div v-if='(JSON.parse(reply).type==="videofile")'>
-        <vue-plyr>
-          <div class="plyr__video-embed">
-            <iframe
-              :src=JSON.parse(reply).video_url
-              allowfullscreen allowtransparency autoplay allow="">
-            </iframe>
-          </div>
+      <div v-if='(message.type==="videofile")'>
+        <vue-plyr class="twc_videofile">
+            <div class="plyr__video-embed">
+              <video controls allowfullscreen allowtransparency>
+                <source :src="message.video_url" type="video/mp4" />
+              </video>
+            </div>
         </vue-plyr>
       </div>
 
       
-      <div v-if='JSON.parse(reply).type==="vimeo"'>
-        <vue-plyr>
-          <div class="plyr__video-embed">
-            <iframe
-              :src=JSON.parse(reply).video_url
-              allowfullscreen allowtransparency autoplay allow=""
-              >
-            </iframe>
-          </div>
+      <div v-if='message.type==="vimeo"'>
+        <vue-plyr class="twc_vimeovideo">
+            <div class="plyr__video-embed">
+              <iframe
+                :src=message.video_url
+                allowfullscreen allowtransparency allow="">
+              </iframe>
+            </div>
         </vue-plyr>
       </div>
-
-
-    
-
 
 
       </li>
@@ -109,10 +108,37 @@ export default {
 
         this.$teneoApi.messageList = [...messages, selectedItem];
 
-        await this.$teneoApi.sendSilentMessage("replace this reply.postback");
+        await this.$teneoApi.sendSilentMessage(reply.postback);
       }
     },
   },
 };
 </script>
 
+<style scoped>
+.twc_videofile {
+  margin-bottom: 12px;
+  width: 90%;
+  min-width: 300px;
+}
+video {
+  width: 100%;
+  max-height: 100%;
+}
+
+.twc_vimeovideo {
+  margin-bottom: 12px;
+  margin-top: 12px;
+  width: 90%;
+  min-width: 300px;
+}
+
+.text-message {
+  margin-bottom: 12px;
+}
+
+.twc_youtubevideo {
+  margin-bottom: 12px;
+  margin-top: 12px;
+}
+</style>

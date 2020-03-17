@@ -31,7 +31,7 @@ export default {
 
 <style>
   .image-message img {
-    margin: 12px;
+    margin-bottom: 12px;
     max-width: 100%;
     max-height: 200px;
   }

@@ -1,6 +1,11 @@
 <template>
   <div class="video-message">
-    <iframe :src="videoUrl" frameborder="0" allow="accelerometer; autoplay; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>
+    <iframe
+      :src="videoUrl"
+      frameborder="0"
+      allow="accelerometer; autoplay; encrypted-media; gyroscope; picture-in-picture"
+      allowfullscreen
+    ></iframe>
   </div>
 </template>
 
@@ -20,11 +25,6 @@ export default {
         );
       },
     },
-
-
-
-
-    
   },
   computed: {
     videoUrl() {
