@@ -7,27 +7,35 @@
         </div>
       </div>
 
-      <div class="dynamiclist-message" v-if="message.alt">
-        <div class="text-message" :class="messageSource">
-          <p class="text-message__text" v-html="message.alt"></p>
-        </div>
-      </div>
-
       <div class="dynamiclist-message" v-if="message.type==='quickreply'">
         <ul class="quickreply-message" :class="{ expired: replySent || isExpired }">
           <li
             v-for="(reply, idx) in message.quick_replies"
-            :key="idx"
+            :key="idx +'qr'"
             class="quickreply-message__item"
-            :class="{ selected: replySent && selected === idx }"
-            @click="onSelect(reply, idx)"
+            :class="{ selected: replySent && selected === idx + 'qr'}"
+            @click="onSelect(reply, idx + 'qr')"
           >{{ reply.title }}</li>
         </ul>
       </div>
 
+      <div class="dynamiclist-message" v-if="message.type==='clickablelist'">
+        <div class="clickablelist" :class="messageSource">
+          <ul class="clickablelist-message" :class="{ replied: replySent || isExpired}">
+            <li
+              v-for="(reply, idx) in message.list_items"
+              :key="idx"
+              class="clickablelist-message__item"
+              :class="{ selected: replySent && selected === idx }"
+              @click="onSelect(reply, idx)"
+            >{{ reply.title }}</li>
+          </ul>
+        </div>
+      </div>
+
       <div class="dynamiclist-message" v-if="message.type==='image'">
         <div class="image-message">
-          <img :src="message.image_url" />
+          <img :src="message.image_url" :alt="message.alt" />
         </div>
       </div>
 
@@ -44,11 +52,9 @@
 
       <div class="dynamiclist-message" v-if="message.type==='videofile'">
         <div class="twc_videofile">
-          <div class="plyr__video-embed">
-            <video controls="1">
-              <source :src="videoUrl(message.video_url)" type="video/mp4" />
-            </video>
-          </div>
+          <video controls="1">
+            <source :src="videoUrl(message.video_url)" type="video/mp4" />
+          </video>
         </div>
       </div>
 

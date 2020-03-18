@@ -1,6 +1,6 @@
 <template>
   <div class="image-message">
-    <img :src="imageUrl" />
+    <img :src="imageUrl" :alt="altText"/>
   </div>
 </template>
 
@@ -24,6 +24,9 @@ export default {
   computed: {
     imageUrl() {
       return this.message.data.image_url;
+    },
+    altText() {
+      return this.message.data.alt;
     },
   },
 };

@@ -81,9 +81,7 @@ export default {
   border: none;
   width: 100%;
 }
-</style>
 
-<style scoped>
 .clickablelist-message__item {
   border-bottom: 1px solid #ccc;
   border-right: 1px solid #ccc;
