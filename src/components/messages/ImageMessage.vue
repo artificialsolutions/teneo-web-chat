@@ -30,9 +30,8 @@ export default {
 </script>
 
 <style>
-  .image-message img {
-    margin-bottom: 12px;
-    max-width: 100%;
-    max-height: 200px;
-  }
+.image-message img {
+  max-width: 100%;
+  max-height: 200px;
+}
 </style>

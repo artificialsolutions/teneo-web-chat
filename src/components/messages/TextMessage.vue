@@ -44,14 +44,14 @@ export default {
 </script>
 
 <style>
-  .text-message {
-    padding: 6px 18px;
-    border-radius: 10px;
-    font-weight: 300;
-    font-size: 0.9em;
-    line-height: 1.4;
-    white-space: pre-wrap;
-    -webkit-font-smoothing: subpixel-antialiased;
+.text-message {
+  padding: 6px 18px;
+  border-radius: 10px;
+  font-weight: 300;
+  font-size: 0.9em;
+  line-height: 1.4;
+  white-space: pre-wrap;
+  -webkit-font-smoothing: subpixel-antialiased;
 }
 .text-message.bot {
   color: var(--bot-message-fg-color);
@@ -73,5 +73,4 @@ export default {
   word-wrap: break-word;
   border-bottom-right-radius: 0px;
 }
-
 </style>

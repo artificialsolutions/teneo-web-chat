@@ -1,5 +1,5 @@
 <template>
-  <div class="attachment-message" :class="messageSource">
+  <div class="clickablelist" :class="messageSource">
     <ul class="clickablelist-message" :class="{ replied: replySent}">
       <li
         v-for="(reply, idx) in clickablelistitems"
@@ -7,9 +7,7 @@
         class="clickablelist-message__item"
         :class="{ selected: replySent && selected === idx }"
         @click="onSelect(reply, idx)"
-      >
-        {{ reply.title }}
-      </li>
+      >{{ reply.title }}</li>
     </ul>
   </div>
 </template>
@@ -51,7 +49,9 @@ export default {
       if (!this.replySent) {
         const numMessages = this.$teneoApi.messageList.length;
         const messages = this.$teneoApi.messageList.slice(0, numMessages - 1);
-        const clickablelistMessage = this.$teneoApi.messageList[numMessages - 1];
+        const clickablelistMessage = this.$teneoApi.messageList[
+          numMessages - 1
+        ];
 
         const selectedItem = { ...clickablelistMessage, selected: idx };
 
@@ -66,21 +66,21 @@ export default {
 
 
 <style>
-  .clickablelist-message {
-    display: flex;
-    flex-direction: column;
-    justify-content: center;
-    list-style: none;
-    padding: 0;
-    margin: 0;
-  }
+.clickablelist-message {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  list-style: none;
+  padding: 0;
+  margin: 0;
+}
 
-  .attachment-message.bot {
-    background-color: #fff;
-    margin-right: 40px;
-    border: none;
-    width:100%;
-  }
+.clickablelist.bot {
+  background-color: #fff;
+  margin-right: 40px;
+  border: none;
+  width: 100%;
+}
 </style>
 
 <style scoped>
@@ -118,5 +118,4 @@ export default {
   font-size: 1rem;
   float: right;
 }
-
 </style>

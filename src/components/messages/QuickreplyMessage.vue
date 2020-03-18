@@ -6,9 +6,7 @@
       class="quickreply-message__item"
       :class="{ selected: replySent && selected === idx }"
       @click="onSelect(reply, idx)"
-    >
-      {{ reply.title }}
-    </li>
+    >{{ reply.title }}</li>
   </ul>
 </template>
 
@@ -70,7 +68,6 @@ export default {
 <style>
 .quickreply-message {
   --expired-quickreply-color: #a9a9a9;
-
   width: 90%;
   display: flex;
   flex-direction: row;
@@ -78,6 +75,7 @@ export default {
   list-style: none;
   padding: 0;
   margin: 0;
+  margin-bottom: 10px;
 }
 
 .quickreply-message__item {

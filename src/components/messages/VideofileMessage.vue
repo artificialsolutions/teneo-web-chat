@@ -1,10 +1,8 @@
 <template>
   <div class="twc_videofile">
-      <div class="plyr__video-embed">
-        <video controls="1">
-          <source :src="videoUrl" type="video/mp4" />
-        </video>
-      </div>
+    <video controls="1">
+      <source :src="videoUrl" type="video/mp4" />
+    </video>
   </div>
 </template>
 
@@ -27,7 +25,7 @@ export default {
   },
   computed: {
     videoUrl() {
-      return this.message.data.video_url + "#t=0.1";
+      return this.message.data.video_url + '#t=0.1';
     },
   },
 };

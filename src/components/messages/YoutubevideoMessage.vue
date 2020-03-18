@@ -1,5 +1,5 @@
 <template>
-  <div class="video-message">
+  <div class="twc_youtubevideo">
     <iframe
       :src="videoUrl"
       frameborder="0"
