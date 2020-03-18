@@ -1,72 +1,64 @@
 <template>
-  <div class="attachment-message" :class="messageSource">
-    <ul class="clickablelist-message" :class="{ replied: replySent}">
-      <li v-for="(message, idx) in dynamiclistitems" :key="idx">
-        <div v-if="message.type==='text'">
-          <div class="text-message" :class="messageSource">
-            <p class="text-message__text" v-html="message.text"></p>
+  <ul class="dynamiclist" :class="{ replied: replySent}">
+    <li v-for="(message, idx) in dynamiclistitems" :key="idx">
+      <div class="dynamiclist-message" v-if="message.type==='text'">
+        <div class="text-message" :class="messageSource">
+          <p class="text-message__text" v-html="message.text"></p>
+        </div>
+      </div>
+
+      <div class="dynamiclist-message" v-if="message.alt">
+        <div class="text-message" :class="messageSource">
+          <p class="text-message__text" v-html="message.alt"></p>
+        </div>
+      </div>
+
+      <div class="dynamiclist-message" v-if="message.type==='quickreply'">
+        <ul class="quickreply-message" :class="{ expired: replySent || isExpired }">
+          <li
+            v-for="(reply, idx) in message.quick_replies"
+            :key="idx"
+            class="quickreply-message__item"
+            :class="{ selected: replySent && selected === idx }"
+            @click="onSelect(reply, idx)"
+          >{{ reply.title }}</li>
+        </ul>
+      </div>
+
+      <div class="dynamiclist-message" v-if="message.type==='image'">
+        <div class="image-message">
+          <img :src="message.image_url" />
+        </div>
+      </div>
+
+      <div class="dynamiclist-message" v-if="message.type==='youtubevideo'">
+        <div class="twc_youtubevideo">
+          <iframe
+            :src="message.video_url"
+            frameborder="0"
+            allow="accelerometer; autoplay; encrypted-media; gyroscope; picture-in-picture"
+            allowfullscreen
+          ></iframe>
+        </div>
+      </div>
+
+      <div class="dynamiclist-message" v-if="message.type==='videofile'">
+        <div class="twc_videofile">
+          <div class="plyr__video-embed">
+            <video controls="1">
+              <source :src="videoUrl(message.video_url)" type="video/mp4" />
+            </video>
           </div>
         </div>
+      </div>
 
-        <div v-if="message.alt">
-          <div class="text-message" :class="messageSource">
-            <p class="text-message__text" v-html="message.alt"></p>
-          </div>
+      <div v-if="message.type==='vimeo'">
+        <div class="twc_vimeovideo">
+          <iframe :src="message.video_url" frameborder="0" allowfullscreen allowtransparency allow></iframe>
         </div>
-
-        <div v-if="message.type==='quickreply'">
-          <ul class="quickreply-message" :class="{ expired: replySent || isExpired }">
-            <li
-              v-for="(reply, idx) in message.quick_replies"
-              :key="idx"
-              class="quickreply-message__item"
-              :class="{ selected: replySent && selected === idx }"
-              @click="onSelect(reply, idx)"
-            >{{ reply.title }}</li>
-          </ul>
-        </div>
-
-        <div v-if="message.type==='image'">
-          <div class="image-message">
-            <img :src="message.image_url" />
-          </div>
-        </div>
-
-        <div v-if="message.type==='youtubevideo'">
-          <div class="twc_youtubevideo">
-            <iframe
-              :src="message.video_url"
-              frameborder="0"
-              allow="accelerometer; autoplay; encrypted-media; gyroscope; picture-in-picture"
-              allowfullscreen
-            ></iframe>
-          </div>
-        </div>
-
-        <div v-if="message.type==='videofile'">
-          <div class="twc_videofile">
-            <div class="plyr__video-embed">
-              <video controls="1">
-                <source :src="videoUrl(message.video_url)" type="video/mp4" />
-              </video>
-            </div>
-          </div>
-        </div>
-
-        <div v-if="message.type==='vimeo'">
-          <div class="twc_vimeovideo">
-            <iframe
-              :src="message.video_url"
-              frameborder="0"
-              allowfullscreen
-              allowtransparency
-              allow
-            ></iframe>
-          </div>
-        </div>
-      </li>
-    </ul>
-  </div>
+      </div>
+    </li>
+  </ul>
 </template>
 
 <script>
@@ -134,29 +126,31 @@ export default {
 </script>
 
 <style scoped>
-.twc_videofile {
-  margin-bottom: 12px;
+.dynamiclist {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  list-style: none;
+  padding: 0;
+  margin: 0;
+}
+
+.dynamiclist-message {
+  width: 90%;
+  min-width: 300px;
+  padding-bottom: 10px;
+  display: flex;
+}
+
+.twc_videofile,
+.twc_vimeovideo,
+.twc_youtubevideo {
   width: 90%;
   min-width: 300px;
 }
+
 video {
   width: 100%;
   max-height: 100%;
-}
-
-.twc_vimeovideo {
-  margin-bottom: 12px;
-  margin-top: 12px;
-  width: 90%;
-  min-width: 300px;
-}
-
-.text-message {
-  margin-bottom: 12px;
-}
-
-.twc_youtubevideo {
-  margin-bottom: 12px;
-  margin-top: 12px;
 }
 </style>

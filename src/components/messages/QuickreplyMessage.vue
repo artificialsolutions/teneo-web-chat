@@ -75,7 +75,6 @@ export default {
   list-style: none;
   padding: 0;
   margin: 0;
-  margin-bottom: 10px;
 }
 
 .quickreply-message__item {
