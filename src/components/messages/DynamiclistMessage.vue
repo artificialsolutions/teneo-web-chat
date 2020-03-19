@@ -50,15 +50,15 @@
         </div>
       </div>
 
-      <div class="dynamiclist-message" v-if="message.type==='videofile'">
+      <div class="dynamiclist-message" v-if="message.type==='mp4video'">
         <div class="twc_videofile">
           <video controls="1">
             <source :src="videoUrl(message.video_url)" type="video/mp4" />
           </video>
         </div>
       </div>
-
-      <div v-if="message.type==='vimeo'">
+      
+      <div class="dynamiclist-message" v-if="message.type==='vimeovideo'">
         <div class="twc_vimeovideo">
           <iframe :src="message.video_url" frameborder="0" allowfullscreen allowtransparency allow></iframe>
         </div>

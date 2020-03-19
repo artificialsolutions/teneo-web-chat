@@ -16,7 +16,7 @@ export default {
       validator: (message) => {
         return (
           message &&
-          message.type === 'videofile' &&
+          message.type === 'mp4video' &&
           message.data &&
           message.data.video_url
         );

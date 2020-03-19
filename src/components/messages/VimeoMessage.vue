@@ -18,7 +18,7 @@ export default {
       validator: (message) => {
         return (
           message &&
-          message.type === 'vimeo' &&
+          message.type === 'vimeovideo' &&
           message.data &&
           message.data.video_url
         );
