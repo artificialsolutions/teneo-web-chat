@@ -33,3 +33,15 @@ export default {
   },
 };
 </script>
+
+<style>
+.twc_youtubevideo {
+  width: 100%;
+  margin-right: 40px;
+  min-width: 260px;
+}
+iframe {
+  width: 100%;
+  max-height: 100%;
+}
+</style>

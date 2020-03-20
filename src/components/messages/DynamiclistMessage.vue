@@ -63,6 +63,67 @@
           <iframe :src="message.video_url" frameborder="0" allowfullscreen allowtransparency allow></iframe>
         </div>
       </div>
+
+      <div class="dynamiclist-message" v-if="message.type==='buttons'">
+        <div class="buttons" :class="{ expired: replySent || isExpired}">
+            <h5 class="buttons-title" v-if="message.title">{{ message.title }}</h5>
+            <div>
+              <a
+                role="button"
+                v-for="(button, idx) in message.button_items"
+                :key="idx"
+                class="btn"
+                :class="{ selected: replySent && selected === idx, 'primary': button.style == 'primary', 'secondary': button.style == 'secondary', 'success': button.style == 'success', 'danger': button.style == 'danger', 'warning': button.style == 'warning', 'info': button.style == 'info'}"
+                @click="onSelect(button, idx)"
+              >{{ button.title }}</a>
+            </div>
+          </div>
+      </div>
+
+      <div class="dynamiclist-message" v-if="message.type==='card'">
+        <div class="card" :class="messageSource">
+            <div class="card-img" v-if="message.image">
+              <img :src="message.image.image_url" :alt="message.image.alt" />
+            </div>
+            <div class="card-body" v-if="message.title || message.subtitle || message.text">
+              <h5 class="card-title" v-if="message.title">{{ message.title }}</h5>
+              <h6 class="card-subtitle" v-if="message.subtitle">{{ message.subtitle }}</h6>
+              <p class="card-text" v-if="message.text">{{ message.text }}</p>
+            </div>
+            <div class="clickablelist" v-if="message.list_items">
+              <ul class="clickablelist-message" :class="{ replied: replySent}">
+                <li
+                  v-for="(reply, idx) in message.list_items"
+                  :key="idx"
+                  class="clickablelist-message__item"
+                  :class="{ selected: replySent && selected === idx }"
+                  @click="onSelect(reply, idx)"
+                >{{ reply.title }}</li>
+              </ul>
+            </div>
+            <div class="buttons" :class="{ expired: replySent || isExpired}" v-if="message.button_items">
+              <div>
+                <a
+                  role="button"
+                  v-for="(button, idx) in message.button_items"
+                  :key="idx"
+                  class="btn"
+                  :class="{ selected: replySent && selected === idx, 'primary': button.style == 'primary', 'secondary': button.style == 'secondary', 'success': button.style == 'success', 'danger': button.style == 'danger', 'warning': button.style == 'warning', 'info': button.style == 'info'}"
+                  @click="onSelect(button, idx)"
+                >{{ button.title }}</a>
+              </div>
+            </div>
+            <div class="links" v-if="message.link_items">
+              <div>
+                <a
+                  v-for="(link, idx) in message.link_items"
+                  :href="link.url"
+                  :key="idx"
+                >{{ link.title }}</a>
+              </div>
+            </div>
+          </div>
+      </div>
     </li>
   </ul>
 </template>
@@ -138,11 +199,12 @@ export default {
   justify-content: center;
   list-style: none;
   padding: 0;
-  margin: 0;
+  margin: 0 0 -10px 0;
+  width: 100%;
 }
 
 .dynamiclist-message {
-  width: 90%;
+  width: 100%;
   min-width: 300px;
   padding-bottom: 10px;
   display: flex;
@@ -158,5 +220,9 @@ export default {
 video {
   width: 100%;
   max-height: 100%;
+}
+
+.buttons {
+  margin: -3px;
 }
 </style>

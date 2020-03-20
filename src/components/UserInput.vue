@@ -134,7 +134,7 @@ export default {
 .user-input.active {
   box-shadow: none;
   background-color: white;
-  box-shadow: 0px -5px 20px 0px rgba(150, 165, 190, 0.2);
+  box-shadow: 0px -2px 10px 0px rgba(150, 165, 190, 0.2);
 }
 
 .user-input__button label {

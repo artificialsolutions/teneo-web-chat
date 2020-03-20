@@ -67,7 +67,6 @@ export default {
 
 <style>
 .quickreply-message {
-  --expired-quickreply-color: #a9a9a9;
   width: 90%;
   display: flex;
   flex-direction: row;
@@ -78,10 +77,10 @@ export default {
 }
 
 .quickreply-message__item {
-  border: 1px solid var(--user-message-bg-color);
-  border-radius: 12px;
+  border: 1px solid var(--quickreply-border-color);
+  border-radius: 16px;
   padding: 8px 14px 8px 14px;
-  color: var(--user-message-bg-color);
+  color: var(--quickreply-fg-color);
   cursor: pointer;
   margin-right: 10px;
   margin-left: 5px;
@@ -90,19 +89,26 @@ export default {
 
 .quickreply-message__item.selected,
 .quickreply-message:not(.expired) .quickreply-message__item:hover {
-  background: var(--user-message-bg-color);
-  color: var(--user-message-fg-color);
+  background: var(--quickreply-bg-color);
+  color: var(--quickreply-fg-color);
 }
 
 .quickreply-message__item.selected,
 .quickreply-message:not(.expired) .quickreply-message__item:hover {
-  background: var(--user-message-bg-color);
-  color: var(--user-message-fg-color);
+  background: var(--quickreply-fg-color);
+  color: var(--quickreply-bg-color);
 }
 
 .quickreply-message.expired .quickreply-message__item:not(.selected) {
   cursor: default;
-  color: var(--expired-quickreply-color);
-  border-color: var(--expired-quickreply-color);
+  color: var(--quickreply-expired-color);
+  border-color: var(--quickreply-expired-color);
+}
+
+.quickreply-message.expired .quickreply-message__item.selected {
+  cursor: default;
+  background: var(--quickreply-expired-color);
+  color: var(--quickreply-bg-color);
+  border-color: var(--quickreply-expired-color);
 }
 </style>

@@ -19,6 +19,27 @@
         >{{ reply.title }}</li>
       </ul>
     </div>
+    <div class="buttons" :class="{ expired: replySent || isExpired}" v-if="buttonitems">
+      <div>
+        <a
+          role="button"
+          v-for="(button, idx) in buttonitems"
+          :key="idx"
+          class="btn"
+          :class="{ selected: replySent && selected === idx, 'primary': button.style == 'primary', 'secondary': button.style == 'secondary', 'success': button.style == 'success', 'danger': button.style == 'danger', 'warning': button.style == 'warning', 'info': button.style == 'info'}"
+          @click="onSelect(button, idx)"
+        >{{ button.title }}</a>
+      </div>
+    </div>
+    <div class="links" v-if="linkitems">
+      <div>
+        <a
+          v-for="(link, idx) in linkitems"
+          :href="link.url"
+          :key="idx"
+        >{{ link.title }}</a>
+      </div>
+    </div>
   </div>
 </template>
 
@@ -33,11 +54,7 @@ export default {
       type: Object,
       required: true,
       validator: (message) => {
-        return (
-          message &&
-          message.type === 'card' &&
-          message.data
-        );
+        return message && message.type === 'card' && message.data;
       },
     },
   },
@@ -53,18 +70,12 @@ export default {
       }
     },
     imageUrl() {
-      if (
-        this.message.data.image &&
-        this.message.data.image.image_url
-      ) {
+      if (this.message.data.image && this.message.data.image.image_url) {
         return this.message.data.image.image_url;
       }
     },
     altText() {
-      if (
-        this.message.data.image &&
-        this.message.data.image.alt
-      ) {
+      if (this.message.data.image && this.message.data.image.alt) {
         return this.message.data.image.alt;
       }
     },
@@ -78,11 +89,23 @@ export default {
         return this.message.data.list_items;
       }
     },
+    buttonitems() {
+      return this.message.data.button_items;
+    },
+    linkitems() {
+      return this.message.data.link_items;
+    },
     replySent() {
       return !!this.message.selected || this.message.selected === 0;
     },
     selected() {
       return this.message.selected;
+    },
+    isExpired() {
+      const { messageList } = this.$teneoApi;
+      const latestMessage = messageList[messageList.length - 1];
+
+      return latestMessage && latestMessage !== this.message;
     },
     messageSource() {
       return this.message.author;
@@ -112,7 +135,7 @@ export default {
 };
 </script>
 
-<style scoped>
+<style>
 .card {
   width: 90%;
   min-width: 0;
@@ -122,16 +145,18 @@ export default {
   -ms-flex-direction: column;
   flex-direction: column;
   word-wrap: break-word;
-  background-color: #fff;
+  background-color: var(--card-bg-color);
   background-clip: border-box;
-  border: 1px solid rgba(0, 0, 0, 0.125);
+  border: 1px solid var(--card-border-color);
   border-radius: 0.25rem;
+  border-bottom-left-radius: 0px;
 }
-.card-img  {
+.card-img {
   display: flex;
 }
 
 .card-img img {
+  object-fit: cover;
   width: 100%;
   height: 180px;
   border-top-left-radius: calc(0.25rem - 1px);
@@ -139,7 +164,7 @@ export default {
 }
 
 .card-body {
-  padding: 18px 18px 6px 18px;
+  padding: 14px 14px 6px 14px;
 }
 
 .card-body h5,
@@ -188,5 +213,36 @@ export default {
   border-bottom-left-radius: initial;
   border-bottom-right-radius: initial;
   border-bottom: none;
+}
+
+.card .buttons {
+  text-align: center;
+  border-top: 1px solid var( --card-border-color);
+  padding: 12px;
+}
+
+.card .links {
+  border-top: 1px solid var( --card-border-color);
+  padding: 12px;
+}
+
+.card .links a {
+  color: var(--card-link-color);
+  font-size: 0.9rem;
+  padding-right: 10px;
+  text-decoration: none;
+}
+
+.card .links a:hover {
+  text-decoration: underline;
+}
+
+.card .links a:last-child {
+  padding-right: 0px;
+}
+
+.card .btn {
+  min-width: 50px !important;
+  margin-top: 3px;
 }
 </style>

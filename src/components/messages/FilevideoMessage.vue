@@ -1,16 +1,14 @@
 <template>
-  <div class="twc_vimeovideo">
-        <iframe
-          :src="videoUrl"
-          frameborder="0"
-          allowfullscreen allowtransparency allow="">
-        </iframe>
+  <div class="twc_videofile">
+    <video controls="1">
+      <source :src="videoUrl" type="video/mp4" />
+    </video>
   </div>
 </template>
 
 <script>
 export default {
-  name: 'VimeoMessage',
+  name: 'FilevideoMessage',
   props: {
     message: {
       type: Object,
@@ -18,7 +16,7 @@ export default {
       validator: (message) => {
         return (
           message &&
-          message.type === 'vimeovideo' &&
+          message.type === 'filevideo' &&
           message.data &&
           message.data.video_url
         );
@@ -27,15 +25,20 @@ export default {
   },
   computed: {
     videoUrl() {
-      return this.message.data.video_url;
+      return this.message.data.video_url + '#t=0.1';
     },
   },
 };
 </script>
 
 <style>
-.twc_vimeovideo {
-  width: 90%;
-  min-width: 300px;
+.twc_videofile {
+  width: 100%;
+  margin-right: 40px;
+  min-width: 260px;
+}
+video {
+  width: 100%;
+  max-height: 100%;
 }
 </style>

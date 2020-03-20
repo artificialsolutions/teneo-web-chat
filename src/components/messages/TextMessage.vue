@@ -73,4 +73,13 @@ export default {
   word-wrap: break-word;
   border-bottom-right-radius: 0px;
 }
+
+.text-message a {
+  color: var(--text-link-color);
+  text-decoration: none;
+}
+
+.text-message a:hover {
+  text-decoration: underline;
+}
 </style>

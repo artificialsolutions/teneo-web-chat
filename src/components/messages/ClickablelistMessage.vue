@@ -76,44 +76,42 @@ export default {
 }
 
 .clickablelist.bot {
-  background-color: #fff;
-  margin-right: 40px;
+  background-color: var(--clickablelist-bg-color);
   border: none;
-  width: 100%;
+  width: 90%;
 }
 
 .clickablelist-message__item {
-  border-bottom: 1px solid #ccc;
-  border-right: 1px solid #ccc;
-  border-left: 1px solid #ccc;
+  border-bottom: 1px solid var(--card-border-color);
+  border-right: 1px solid var(--card-border-color);
+  border-left: 1px solid var(--card-border-color);
   padding: 8px 14px 8px 14px;
-  color: #323e48;
+  color: var(--clickablelist-fg-color);
   cursor: pointer;
-  font-size: 0.8rem;
+  font-size: 0.9rem;
 }
 
 .clickablelist-message__item:first-child {
-  border-top: 1px solid #ccc;
-  border-top-left-radius: 12px;
-  border-top-right-radius: 12px;
+  border-top: 1px solid var(--card-border-color);
+  border-top-left-radius: 0.25rem;
+  border-top-right-radius: 0.25rem;
 }
 
 .clickablelist-message__item:last-child {
   border-bottom-left-radius: 0px;
-  border-bottom-right-radius: 12px;
+  border-bottom-right-radius: 0.25rem;
 }
 
 .clickablelist-message__item.selected,
 .clickablelist-message:not(.replied) .clickablelist-message__item:hover {
-  background-color: #eceff1;
+  /* background-color: #eceff1; */
+  background-color: var(--clickablelist-selected-bg-color);
+  color: var(--clickablelist-selected-fg-color);
 }
 
 .clickablelist-message.replied .clickablelist-message__item {
   cursor: default;
+  color: var(--expired-color);
 }
 
-.clickablelist-message__item i.material-icons {
-  font-size: 1rem;
-  float: right;
-}
 </style>
