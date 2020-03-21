@@ -3,7 +3,7 @@
     <ChatWindow
       v-if="isChatOpen"
       :on-close="closeChat"
-      :title="serviceName"
+      :title="serviceName ? serviceName : 'Teneo Web Chat'"
       :image-url="imageUrl"
     />
     <LaunchButton :open="openChat" :close="closeChat" :is-open="isChatOpen" />
