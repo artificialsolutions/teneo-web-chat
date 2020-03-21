@@ -71,6 +71,7 @@ export default {
   --expired-color: #a9a9a9;
   --text-link-color: #007bff;
   --user-input-bg-color: #f4f7f9;
+  --sendicon-fg-color: var(--dark-fg-color);
   --launchicon-bg-color: var(--light-fg-color);
   --launchicon-bg-color: var(--primary-color);
   --header-bg-color: var(--primary-color);

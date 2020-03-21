@@ -41,7 +41,7 @@ export default {
 };
 </script>
 
-<style scope>
+<style scoped>
 .chat-window {
   font-family: 'Helvetica Neue', Helvetica, Arial, sans-serif;
   width: 370px;

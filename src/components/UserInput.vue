@@ -20,7 +20,7 @@
 </template>
 
 <script>
-import SendIcon from '../icons/SendIcon.vue';
+import SendIcon from '../icons/send.vue';
 import { PARTICIPANT_USER } from '../utils/constants.js';
 import { EventBus, events } from '../utils/event-bus.js';
 

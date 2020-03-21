@@ -193,7 +193,7 @@ export default {
 };
 </script>
 
-<style scoped>
+<style>
 .dynamiclist {
   display: flex;
   flex-direction: column;
@@ -211,6 +211,9 @@ export default {
   display: flex;
 }
 
+</style>
+
+<style scoped>
 .buttons {
   margin: -3px;
   margin-right: 40px;
@@ -220,5 +223,4 @@ export default {
 .btn {
   min-width: 66px;
 }
-
 </style>
