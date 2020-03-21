@@ -65,7 +65,7 @@ export default {
   --warning-color: #ffc107;
   --info-color: #17a2b8;
   --expired-color: #a9a9a9;
-  --text-link-color: var(--primary-color);
+  --text-link-color: #007bff;
   --user-input-bg-color: #f4f7f9;
   --bot-message-fg-color: var(--dark-fg-color);
   --bot-message-bg-color: #eceff1;
@@ -78,7 +78,7 @@ export default {
   --quickreply-expired-color: var(--expired-color);
   --card-border-color: #ccc;
   --card-bg-color: var(--light-fg-color);
-  --card-link-color: var(--primary-color);
+  --card-link-color: var(--text-link-color);
   --clickablelist-bg-color: var(--light-fg-color);
   --clickablelist-fg-color: var(--dark-fg-color);
   --clickablelist-selected-bg-color: var(--bot-message-bg-color);
