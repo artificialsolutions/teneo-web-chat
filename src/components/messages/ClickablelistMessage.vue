@@ -1,5 +1,5 @@
 <template>
-  <div class="clickablelist" :class="messageSource">
+  <div class="clickablelist" :class="{ expired: replySent || isExpired }">
     <ul class="clickablelist-message" :class="{ replied: replySent}">
       <li
         v-for="(reply, idx) in clickablelistitems"
@@ -40,8 +40,11 @@ export default {
     selected() {
       return this.message.selected;
     },
-    messageSource() {
-      return this.message.author;
+    isExpired() {
+      const { messageList } = this.$teneoApi;
+      const latestMessage = messageList[messageList.length - 1];
+
+      return latestMessage && latestMessage !== this.message;
     },
   },
   methods: {
@@ -75,10 +78,11 @@ export default {
   margin: 0;
 }
 
-.clickablelist.bot {
+.clickablelist {
   background-color: var(--clickablelist-bg-color);
   border: none;
-  width: 90%;
+  width: 100%;
+  margin-right: 40px;
 }
 
 .clickablelist-message__item {
@@ -104,13 +108,26 @@ export default {
 
 .clickablelist-message__item.selected,
 .clickablelist-message:not(.replied) .clickablelist-message__item:hover {
-  /* background-color: #eceff1; */
   background-color: var(--clickablelist-selected-bg-color);
   color: var(--clickablelist-selected-fg-color);
 }
 
 .clickablelist-message.replied .clickablelist-message__item {
   cursor: default;
+  color: var(--expired-color);
+}
+
+.clickablelist.expired .clickablelist-message__item,
+.clickablelist.expired .clickablelist-message__item:hover {
+  cursor: default;
+  color: var(--expired-color);
+  background-color: var(--clickablelist-bg-color);
+}
+
+.clickablelist.expired .clickablelist-message__item.selected,
+.clickablelist.expired .clickablelist-message__item.selected:hover {
+  cursor: default;
+  background-color: var(--clickablelist-selected-bg-color);
   color: var(--expired-color);
 }
 

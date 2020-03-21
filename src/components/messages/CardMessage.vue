@@ -1,5 +1,5 @@
 <template>
-  <div class="card" :class="messageSource">
+  <div class="card" :class="{ expired: replySent || isExpired }">
     <div class="card-img" v-if="imageUrl">
       <img :src="imageUrl" :alt="altText" />
     </div>
@@ -8,7 +8,7 @@
       <h6 class="card-subtitle" v-if="cardSubtitle">{{ cardSubtitle }}</h6>
       <p class="card-text" v-if="messageText">{{ messageText }}</p>
     </div>
-    <div class="clickablelist" v-if="clickablelistitems">
+    <div class="clickablelist" :class="{ expired: replySent || isExpired}" v-if="clickablelistitems">
       <ul class="clickablelist-message" :class="{ replied: replySent}">
         <li
           v-for="(reply, idx) in clickablelistitems"
@@ -107,12 +107,6 @@ export default {
 
       return latestMessage && latestMessage !== this.message;
     },
-    messageSource() {
-      return this.message.author;
-    },
-    isBot() {
-      return this.message.author === PARTICIPANT_BOT;
-    },
     sanitizedHtmlText() {
       return sanitizeHtml(this.message.data.text);
     },
@@ -137,7 +131,8 @@ export default {
 
 <style>
 .card {
-  width: 90%;
+  width: 100%;
+  margin-right: 40px;
   min-width: 0;
   display: flex;
   -webkit-box-orient: vertical;

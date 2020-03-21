@@ -20,14 +20,14 @@
       </div>
 
       <div class="dynamiclist-message" v-if="message.type==='clickablelist'">
-        <div class="clickablelist" :class="messageSource">
+        <div class="clickablelist">
           <ul class="clickablelist-message" :class="{ replied: replySent || isExpired}">
             <li
               v-for="(reply, idx) in message.list_items"
-              :key="idx"
+              :key="idx +'ql'"
               class="clickablelist-message__item"
-              :class="{ selected: replySent && selected === idx }"
-              @click="onSelect(reply, idx)"
+              :class="{ selected: replySent && selected === idx +'ql' }"
+              @click="onSelect(reply, idx +'ql')"
             >{{ reply.title }}</li>
           </ul>
         </div>
@@ -71,10 +71,10 @@
               <a
                 role="button"
                 v-for="(button, idx) in message.button_items"
-                :key="idx"
+                :key="idx +'btn'"
                 class="btn"
-                :class="{ selected: replySent && selected === idx, 'primary': button.style == 'primary', 'secondary': button.style == 'secondary', 'success': button.style == 'success', 'danger': button.style == 'danger', 'warning': button.style == 'warning', 'info': button.style == 'info'}"
-                @click="onSelect(button, idx)"
+                :class="{ selected: replySent && selected === idx +'btn', 'primary': button.style == 'primary', 'secondary': button.style == 'secondary', 'success': button.style == 'success', 'danger': button.style == 'danger', 'warning': button.style == 'warning', 'info': button.style == 'info'}"
+                @click="onSelect(button, idx +'btn')"
               >{{ button.title }}</a>
             </div>
           </div>
@@ -90,14 +90,14 @@
               <h6 class="card-subtitle" v-if="message.subtitle">{{ message.subtitle }}</h6>
               <p class="card-text" v-if="message.text">{{ message.text }}</p>
             </div>
-            <div class="clickablelist" v-if="message.list_items">
+            <div class="clickablelist" :class="{ expired: replySent || isExpired}" v-if="message.list_items">
               <ul class="clickablelist-message" :class="{ replied: replySent}">
                 <li
                   v-for="(reply, idx) in message.list_items"
-                  :key="idx"
+                  :key="idx +'cql'"
                   class="clickablelist-message__item"
-                  :class="{ selected: replySent && selected === idx }"
-                  @click="onSelect(reply, idx)"
+                  :class="{ selected: replySent && selected === idx +'cql' }"
+                  @click="onSelect(reply, idx +'cql')"
                 >{{ reply.title }}</li>
               </ul>
             </div>
@@ -106,10 +106,10 @@
                 <a
                   role="button"
                   v-for="(button, idx) in message.button_items"
-                  :key="idx"
+                  :key="idx +'cbtn'"
                   class="btn"
-                  :class="{ selected: replySent && selected === idx, 'primary': button.style == 'primary', 'secondary': button.style == 'secondary', 'success': button.style == 'success', 'danger': button.style == 'danger', 'warning': button.style == 'warning', 'info': button.style == 'info'}"
-                  @click="onSelect(button, idx)"
+                  :class="{ selected: replySent && selected === idx +'cbtn', 'primary': button.style == 'primary', 'secondary': button.style == 'secondary', 'success': button.style == 'success', 'danger': button.style == 'danger', 'warning': button.style == 'warning', 'info': button.style == 'info'}"
+                  @click="onSelect(button, idx +'cbtn')"
                 >{{ button.title }}</a>
               </div>
             </div>
@@ -210,19 +210,14 @@ export default {
   display: flex;
 }
 
-.twc_videofile,
-.twc_vimeovideo,
-.twc_youtubevideo {
-  width: 90%;
-  min-width: 300px;
-}
-
-video {
-  width: 100%;
-  max-height: 100%;
-}
-
 .buttons {
   margin: -3px;
+  margin-right: 40px;
+  text-align: center;
 }
+
+.btn {
+  min-width: 66px;
+}
+
 </style>

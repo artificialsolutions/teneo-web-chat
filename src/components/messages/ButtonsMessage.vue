@@ -76,10 +76,15 @@ export default {
 
 <style scoped>
 .buttons {
+  width: 100%;
   margin: -3px;
+  margin-right: 37px;
+  text-align: center;
 }
 </style>
+
 <style>
+
 .btn {
   border: 1px solid var(--user-message-bg-color);
   background: var(--user-message-bg-color);
@@ -97,7 +102,7 @@ export default {
   font-size: 0.9rem;
   line-height: 1.5;
   border-radius: 0.25rem;
-  min-width: 70px;
+  min-width: 66px;
   display: inline-block;
   margin: 3px;
   text-decoration: none;
