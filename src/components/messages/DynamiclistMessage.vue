@@ -8,15 +8,18 @@
       </div>
 
       <div class="dynamiclist-message" v-if="message.type==='quickreply'">
-        <ul class="quickreply-message" :class="{ expired: replySent || isExpired }">
-          <li
-            v-for="(reply, idx) in message.quick_replies"
-            :key="idx +'qr'"
-            class="quickreply-message__item"
-            :class="{ selected: replySent && selected === idx + 'qr'}"
-            @click="onSelect(reply, idx + 'qr')"
-          >{{ reply.title }}</li>
-        </ul>
+        <div class="quickreply-message" :class="{ expired: replySent || isExpired }">
+          <div>
+            <a
+              v-for="(reply, idx) in message.quick_replies"
+              :key="idx"
+              role="button"
+              class="quickreply-message__item"
+              :class="{ selected: replySent && selected === idx, 'primary': reply.style == 'primary', 'secondary': reply.style == 'secondary', 'success': reply.style == 'success', 'danger': reply.style == 'danger', 'warning': reply.style == 'warning', 'info': reply.style == 'info'}"
+              @click="onSelect(reply, idx)"
+            >{{ reply.title }}</a>
+          </div>
+        </div>
       </div>
 
       <div class="dynamiclist-message" v-if="message.type==='clickablelist'">
