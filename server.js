@@ -4,10 +4,10 @@ const app = express();
 const dotenv = require('dotenv');
 dotenv.config();
 const {
-  TITLE,
-  LOGO_URL,
+  HEADER_TITLE,
   TENEO_ENGINE_URL,
-  CLOSE_TIE_SESSION_ON_EXIT
+  CLOSE_TIE_SESSION_ON_EXIT,
+  HEADER_ICON
 } = process.env;
 const port = process.env.PORT || 9000;
 
@@ -22,10 +22,10 @@ app.use(express.static('./dist/'));
 
 app.get('/', (req, res) =>
   res.render('index', {
-    TITLE,
-    LOGO_URL,
+    HEADER_TITLE,
     TENEO_ENGINE_URL,
-    CLOSE_TIE_SESSION_ON_EXIT
+    CLOSE_TIE_SESSION_ON_EXIT,
+    HEADER_ICON
   })
 );
 
