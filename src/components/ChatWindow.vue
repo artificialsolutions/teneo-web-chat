@@ -1,6 +1,6 @@
 <template>
   <div class="chat-window">
-    <Header :title="title" :image-url="titleImageUrl" :on-close="onClose" />
+    <Header :title="title" :image-url="imageUrl" :on-close="onClose" />
     <MessageList :message-list="$teneoApi.messageList" />
     <UserInput :on-submit="sendMessage" />
   </div>
@@ -18,7 +18,7 @@ export default {
       type: Function,
       required: true,
     },
-    titleImageUrl: {
+    imageUrl: {
       type: String,
       required: true,
     },

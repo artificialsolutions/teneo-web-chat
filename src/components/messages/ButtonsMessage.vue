@@ -86,9 +86,9 @@ export default {
 <style>
 
 .btn {
-  border: 1px solid var(--user-message-bg-color);
-  background: var(--user-message-bg-color);
-  color: var(--user-message-fg-color);
+  border: 1px solid var(--button-bg-color);
+  background: var(--button-bg-color);
+  color: var(--button-fg-color);
   cursor: pointer;
   font-weight: 400;
   text-align: center;
@@ -110,26 +110,26 @@ export default {
 
 .btn.selected,
 .btn:not(.expired) .btn:hover {
-  color: var(--user-message-bg-color);
-  background: var(--user-message-fg-color);
+  color: var(--button-bg-color);
+  background: var(--button-fg-color);
 }
 
 .buttons.selected,
 .buttons:not(.expired) .btn:hover {
-  color: var(--user-message-bg-color);
-  background: var(--user-message-fg-color);
+  color: var(--button-bg-color);
+  background: var(--button-fg-color);
 }
 
 .buttons.expired .btn {
   cursor: default;
   color: var(--expired-color);
-  background: var(--user-message-fg-color);
+  background: var(--button-fg-color);
   border: 1px solid var(--expired-color);
 }
 
 .buttons.expired .btn.selected {
   cursor: default;
-  color: var(--user-message-fg-color);
+  color: var(--button-fg-color);
   background: var(--expired-color);
   border: 1px solid var(--expired-color);
 }
@@ -142,7 +142,7 @@ export default {
   margin-bottom: 0.6rem;
   font-size: 1rem;
   font-weight: 500;
-  color: var(--bot-message-fg-color);
+  color: var(--buttons-title-color);
 }
 
 .buttons.expired h5 {

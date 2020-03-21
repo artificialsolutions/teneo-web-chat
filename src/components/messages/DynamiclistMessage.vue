@@ -20,7 +20,8 @@
       </div>
 
       <div class="dynamiclist-message" v-if="message.type==='clickablelist'">
-        <div class="clickablelist">
+        <div class="clickablelist" :class="{ expired: replySent || isExpired}">
+          <h5 class="clickablelist-title" v-if="message.title">{{ message.title }}</h5>
           <ul class="clickablelist-message" :class="{ replied: replySent || isExpired}">
             <li
               v-for="(reply, idx) in message.list_items"

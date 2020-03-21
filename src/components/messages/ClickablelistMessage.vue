@@ -1,5 +1,6 @@
 <template>
   <div class="clickablelist" :class="{ expired: replySent || isExpired }">
+    <h5 class="clickablelist-title" v-if="clickablelistTitle">{{ clickablelistTitle }}</h5>
     <ul class="clickablelist-message" :class="{ replied: replySent}">
       <li
         v-for="(reply, idx) in clickablelistitems"
@@ -31,6 +32,11 @@ export default {
     },
   },
   computed: {
+    clickablelistTitle() {
+      if (this.message.data.title) {
+        return this.message.data.title;
+      }
+    },
     clickablelistitems() {
       return this.message.data.list_items;
     },
@@ -69,6 +75,28 @@ export default {
 
 
 <style>
+.clickablelist {
+  background-color: var(--clickablelist-bg-color);
+  border: none;
+  width: 100%;
+  margin-right: 40px;
+}
+
+.clickablelist h5 {
+  text-align: center;
+  font-family: inherit;
+  line-height: 1.2;
+  margin-top: 0;
+  margin-bottom: 0.6rem;
+  font-size: 1rem;
+  font-weight: 500;
+  color: var(--clickablelist-title-color);
+}
+
+.clickablelist.expired h5 {
+  color: var(--expired-color);
+}
+
 .clickablelist-message {
   display: flex;
   flex-direction: column;
@@ -78,17 +106,10 @@ export default {
   margin: 0;
 }
 
-.clickablelist {
-  background-color: var(--clickablelist-bg-color);
-  border: none;
-  width: 100%;
-  margin-right: 40px;
-}
-
 .clickablelist-message__item {
-  border-bottom: 1px solid var(--card-border-color);
-  border-right: 1px solid var(--card-border-color);
-  border-left: 1px solid var(--card-border-color);
+  border-bottom: 1px solid var(--light-border-color);
+  border-right: 1px solid var(--light-border-color);
+  border-left: 1px solid var(--light-border-color);
   padding: 8px 14px 8px 14px;
   color: var(--clickablelist-fg-color);
   cursor: pointer;
@@ -96,7 +117,7 @@ export default {
 }
 
 .clickablelist-message__item:first-child {
-  border-top: 1px solid var(--card-border-color);
+  border-top: 1px solid var(--light-border-color);
   border-top-left-radius: 0.25rem;
   border-top-right-radius: 0.25rem;
 }

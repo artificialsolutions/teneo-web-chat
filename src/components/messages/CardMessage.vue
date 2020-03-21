@@ -142,7 +142,7 @@ export default {
   word-wrap: break-word;
   background-color: var(--card-bg-color);
   background-clip: border-box;
-  border: 1px solid var(--card-border-color);
+  border: 1px solid var(--light-border-color);
   border-radius: 0.25rem;
   border-bottom-left-radius: 0px;
 }
@@ -199,7 +199,7 @@ export default {
 }
 
 .card .clickablelist-message__item:first-child {
-  border-top: 1px solid #ccc;
+  border-top: 1px solid var(--light-border-color);
   border-top-left-radius: initial;
   border-top-right-radius: initial;
 }
@@ -212,12 +212,12 @@ export default {
 
 .card .buttons {
   text-align: center;
-  border-top: 1px solid var( --card-border-color);
+  border-top: 1px solid var( --light-border-color);
   padding: 12px;
 }
 
 .card .links {
-  border-top: 1px solid var( --card-border-color);
+  border-top: 1px solid var( --light-border-color);
   padding: 12px;
 }
 

@@ -3,8 +3,8 @@
     <ChatWindow
       v-if="isChatOpen"
       :on-close="closeChat"
-      :title-image-url="titleImageUrl"
       :title="serviceName"
+      :image-url="imageUrl"
     />
     <LaunchButton :open="openChat" :close="closeChat" :is-open="isChatOpen" />
   </div>
@@ -24,6 +24,10 @@ export default {
     LaunchButton,
   },
   props: {
+    imageUrl: {
+      type: String,
+      required: true,
+    },
     serviceName: {
       type: String,
       required: true,
@@ -35,8 +39,6 @@ export default {
   },
   data() {
     return {
-      titleImageUrl:
-        'https://a.slack-edge.com/66f9/img/avatars-teams/ava_0001-34.png',
       isChatOpen: false,
     };
   },
@@ -57,6 +59,8 @@ export default {
 <style scoped>
 .teneo-web-chat {
   --light-fg-color: #ffffff;
+  --light-bg-color: #eceff1;
+  --light-border-color: #c9c9c9;
   --dark-fg-color: #263238;
   --primary-color: #4e8cff;
   --secondary-color: #6c757d;
@@ -67,22 +71,28 @@ export default {
   --expired-color: #a9a9a9;
   --text-link-color: #007bff;
   --user-input-bg-color: #f4f7f9;
+  --launchicon-bg-color: var(--light-fg-color);
+  --launchicon-bg-color: var(--primary-color);
+  --header-bg-color: var(--primary-color);
+  --header-fg-color: var(--light-fg-color);
   --bot-message-fg-color: var(--dark-fg-color);
-  --bot-message-bg-color: #eceff1;
+  --bot-message-bg-color: var(--light-bg-color);
   --user-message-bg-color: var(--primary-color);
   --user-message-fg-color: var(--light-fg-color);
-  --header-bg-color: var(--user-message-bg-color);
-  --quickreply-fg-color: var(--user-message-bg-color);
-  --quickreply-bg-color: var(--light-fg-color);
-  --quickreply-border-color: var(--user-message-bg-color);
-  --quickreply-expired-color: var(--expired-color);
-  --card-border-color: #ccc;
+  --buttons-title-color: var(--dark-fg-color);
+  --button-fg-color: var(--light-fg-color);
+  --button-bg-color: var(--primary-color);
   --card-bg-color: var(--light-fg-color);
   --card-link-color: var(--text-link-color);
+  --clickablelist-title-color: var(--dark-fg-color);
   --clickablelist-bg-color: var(--light-fg-color);
   --clickablelist-fg-color: var(--dark-fg-color);
   --clickablelist-selected-bg-color: var(--bot-message-bg-color);
   --clickablelist-selected-fg-color: var(--dark-fg-color);
+  --quickreply-fg-color: var(--primary-color);
+  --quickreply-bg-color: var(--light-fg-color);
+  --quickreply-border-color: var(--primary-color);
+  --quickreply-expired-color: var(--expired-color);
 
   width: 100%;
   height: 100%;

@@ -47,18 +47,18 @@ export default {
   box-sizing: border-box;
   display: flex;
   align-items: center;
-  color: #e1e1e1;
 }
 
 .header__img {
   border-radius: 100%;
   height: 32px;
   width: 32px;
+  color: var(--header-fg-color);
 }
 
 .header__title {
-  margin-left: 12px;
-  color: #fff;
+  color: var(--header-fg-color);
+  margin-left: 5px;
 }
 
 .header__close-button {
@@ -73,7 +73,7 @@ export default {
 .header__close-icon {
   height: 32px;
   width: 32px;
-  color: var(--light-fg-color);
+  color: var(--header-fg-color);
 }
 
 .header__close-icon {
