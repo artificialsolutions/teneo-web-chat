@@ -48,7 +48,7 @@ export default {
     },
     closeChat() {
       this.isChatOpen = false
-      if(this.closeTieSessionOnExit === "true" ){
+      if(this.closeTieSessionOnExit === "true" || this.closeTieSessionOnExit === "yes" ){
           this.$teneoApi.closeSession()
       }
     },

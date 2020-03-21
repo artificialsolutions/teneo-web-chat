@@ -6,7 +6,7 @@ import VuePlyr from "vue-plyr";
 
 // eslint-disable-next-line
 window['TeneoWebChat'] = {
-  initialize(element, serviceName, teneoEngineUrl, closeTieSessionOnExit, imageUrl = '') {
+  initialize(element, serviceName, teneoEngineUrl, closeTieSessionOnExit = 'no', imageUrl = '') {
     Vue.use(VuePlyr)
     Vue.use(teneoApiPlugin(teneoEngineUrl));
 

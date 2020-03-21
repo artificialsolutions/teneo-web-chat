@@ -7,7 +7,7 @@ const {
   HEADER_TITLE,
   TENEO_ENGINE_URL,
   CLOSE_TIE_SESSION_ON_EXIT,
-  HEADER_ICON
+  HEADER_ICON_URL
 } = process.env;
 const port = process.env.PORT || 9000;
 
@@ -25,7 +25,7 @@ app.get('/', (req, res) =>
     HEADER_TITLE,
     TENEO_ENGINE_URL,
     CLOSE_TIE_SESSION_ON_EXIT,
-    HEADER_ICON
+    HEADER_ICON_URL
   })
 );
 
