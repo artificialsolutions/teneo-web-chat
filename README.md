@@ -114,7 +114,7 @@ In addition to the input entered by the user, requests to the Teneo Engine also 
 The following ouput parameters can be included in responses from Engine.
 
 ### teneowebclient
-The output parameter can contain JSON that is used to display attachments, like images, videos, buttons, cards etc. For more details on the compontent that are supported, please see: [teneo.ai](https://www.teneo.ai/engine/channels/web-chat).
+The output parameter `teneowebclient` can contain JSON that is used to display attachments, like images, videos, buttons, cards etc. For more details on the compontent that are supported, please see: [teneo.ai](https://www.teneo.ai/engine/channels/web-chat).
 
 ## Extending
 The web chat UI can be extended by adding additional `.vue` files in the [/src/components/messages/](/src/components/messages/) folder. This file should parse the JSON that is included in an output parameter called `teneowebclient` in the engine response. The .vue file should display the data accordingly.
