@@ -1,13 +1,13 @@
 <template>
-  <ul class="dynamiclist" :class="{ replied: replySent}">
-    <li v-for="(message, idx) in dynamiclistitems" :key="idx">
-      <div class="dynamiclist-message" v-if="message.type==='text'">
+  <ul class="combo" :class="{ replied: replySent}">
+    <li v-for="(message, idx) in comboitems" :key="idx">
+      <div class="combo-message" v-if="message.type==='text'">
         <div class="text-message" :class="messageSource">
           <p class="text-message__text" v-html="message.text"></p>
         </div>
       </div>
 
-      <div class="dynamiclist-message" v-if="message.type==='quickreply'">
+      <div class="combo-message" v-if="message.type==='quickreply'">
         <div class="quickreply-message" :class="{ expired: replySent || isExpired }">
           <div>
             <a
@@ -22,7 +22,7 @@
         </div>
       </div>
 
-      <div class="dynamiclist-message" v-if="message.type==='clickablelist'">
+      <div class="combo-message" v-if="message.type==='clickablelist'">
         <div class="clickablelist" :class="{ expired: replySent || isExpired}">
           <h5 class="clickablelist-title" v-if="message.title">{{ message.title }}</h5>
           <ul class="clickablelist-message" :class="{ replied: replySent || isExpired}">
@@ -37,13 +37,13 @@
         </div>
       </div>
 
-      <div class="dynamiclist-message" v-if="message.type==='image'">
+      <div class="combo-message" v-if="message.type==='image'">
         <div class="image-message">
           <img :src="message.image_url" :alt="message.alt" />
         </div>
       </div>
 
-      <div class="dynamiclist-message" v-if="message.type==='youtubevideo'">
+      <div class="combo-message" v-if="message.type==='youtubevideo'">
         <div class="twc_youtubevideo">
           <iframe
             :src="message.video_url"
@@ -54,7 +54,7 @@
         </div>
       </div>
 
-      <div class="dynamiclist-message" v-if="message.type==='mp4video'">
+      <div class="combo-message" v-if="message.type==='mp4video'">
         <div class="twc_videofile">
           <video controls="1">
             <source :src="videoUrl(message.video_url)" type="video/mp4" />
@@ -62,13 +62,13 @@
         </div>
       </div>
       
-      <div class="dynamiclist-message" v-if="message.type==='vimeovideo'">
+      <div class="combo-message" v-if="message.type==='vimeovideo'">
         <div class="twc_vimeovideo">
           <iframe :src="message.video_url" frameborder="0" allowfullscreen allowtransparency allow></iframe>
         </div>
       </div>
 
-      <div class="dynamiclist-message" v-if="message.type==='buttons'">
+      <div class="combo-message" v-if="message.type==='buttons'">
         <div class="buttons" :class="{ expired: replySent || isExpired}">
             <h5 class="buttons-title" v-if="message.title">{{ message.title }}</h5>
             <div>
@@ -84,8 +84,8 @@
           </div>
       </div>
 
-      <div class="dynamiclist-message" v-if="message.type==='card'">
-        <div class="card" :class="messageSource">
+      <div class="combo-message" v-if="message.type==='card'">
+        <div class="card">
             <div class="card-img" v-if="message.image">
               <img :src="message.image.image_url" :alt="message.image.alt" />
             </div>
@@ -136,7 +136,7 @@
 import { PARTICIPANT_BOT } from '../../utils/constants.js';
 
 export default {
-  name: 'DynamiclistMessage',
+  name: 'ComboMessage',
   props: {
     message: {
       type: Object,
@@ -144,17 +144,17 @@ export default {
       validator: (message) => {
         return (
           message &&
-          message.type === 'dynamiclist' &&
+          message.type === 'combo' &&
           message.data &&
-          message.data.list_items &&
-          message.data.list_items.length > 0
+          message.data.components &&
+          message.data.components.length > 0
         );
       },
     },
   },
   computed: {
-    dynamiclistitems() {
-      return this.message.data.list_items;
+    comboitems() {
+      return this.message.data.components;
     },
     replySent() {
       return !!this.message.selected || this.message.selected === 0;
@@ -164,9 +164,6 @@ export default {
     },
     messageSource() {
       return this.message.author;
-    },
-    isBot() {
-      return this.message.author === PARTICIPANT_BOT;
     },
     isExpired() {
       const { messageList } = this.$teneoApi;
@@ -180,9 +177,9 @@ export default {
       if (!this.replySent) {
         const numMessages = this.$teneoApi.messageList.length;
         const messages = this.$teneoApi.messageList.slice(0, numMessages - 1);
-        const dynamiclistMessage = this.$teneoApi.messageList[numMessages - 1];
+        const comboMessage = this.$teneoApi.messageList[numMessages - 1];
 
-        const selectedItem = { ...dynamiclistMessage, selected: idx };
+        const selectedItem = { ...comboMessage, selected: idx };
 
         this.$teneoApi.messageList = [...messages, selectedItem];
 
@@ -197,7 +194,7 @@ export default {
 </script>
 
 <style>
-.dynamiclist {
+.combo {
   display: flex;
   flex-direction: column;
   justify-content: center;
@@ -207,7 +204,7 @@ export default {
   width: 100%;
 }
 
-.dynamiclist-message {
+.combo-message {
   width: 100%;
   min-width: 300px;
   padding-bottom: 10px;
@@ -218,8 +215,8 @@ export default {
 
 <style scoped>
 .buttons {
-  margin: -3px;
-  margin-right: 40px;
+  width: 100%;
+  margin: -3px 47px -3px -3px;
   text-align: center;
 }
 
