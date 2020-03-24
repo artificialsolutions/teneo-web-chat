@@ -11,6 +11,7 @@
     "test:mocha": "mocha-webpack --webpack-config webpack.dev.js --require 'test/setup.js' 'test/**/*.test.js'",
     "test:dev": "npm run test:mocha -- --watch",
     "lint": "eslint '{src,test}/**/*.{js,vue}'"
+
   },
   "repository": {
     "type": "git",
