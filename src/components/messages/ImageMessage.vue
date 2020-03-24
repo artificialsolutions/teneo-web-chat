@@ -1,6 +1,6 @@
 <template>
   <div class="image-message">
-    <img :src="imageUrl" />
+    <img :src="imageUrl" :alt="altText"/>
   </div>
 </template>
 
@@ -25,13 +25,20 @@ export default {
     imageUrl() {
       return this.message.data.image_url;
     },
+    altText() {
+      return this.message.data.alt;
+    },
   },
 };
 </script>
 
-<style scoped>
+<style>
+.image-message {
+  width: 100%;
+  margin-right: 40px;
+}
 .image-message img {
-  margin: 12px;
-  max-width: 80%;
+  max-width: 100%;
+  max-height: 200px;
 }
 </style>

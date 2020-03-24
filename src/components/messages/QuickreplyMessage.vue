@@ -1,15 +1,16 @@
 <template>
-  <ul class="quickreply-message" :class="{ expired: replySent || isExpired }">
-    <li
+  <div class="quickreply-message" :class="{ expired: replySent || isExpired }">
+    <div>
+    <a
       v-for="(reply, idx) in quickreplies"
       :key="idx"
+      role="button"
       class="quickreply-message__item"
-      :class="{ selected: replySent && selected === idx }"
+      :class="{ selected: replySent && selected === idx, 'primary': reply.style == 'primary', 'secondary': reply.style == 'secondary', 'success': reply.style == 'success', 'danger': reply.style == 'danger', 'warning': reply.style == 'warning', 'info': reply.style == 'info'}"
       @click="onSelect(reply, idx)"
-    >
-      {{ reply.title }}
-    </li>
-  </ul>
+    >{{ reply.title }}</a>
+    </div>
+  </div>
 </template>
 
 <script>
@@ -67,45 +68,98 @@ export default {
 };
 </script>
 
-<style scoped>
+<style>
 .quickreply-message {
-  --expired-quickreply-color: #a9a9a9;
-
-  width: 90%;
-  display: flex;
-  flex-direction: row;
-  justify-content: center;
-  list-style: none;
-  padding: 0;
-  margin: 0;
+  width: 100%;
+  margin-right: 40px;
+  display: inline-block;
+  text-align: center;
 }
 
 .quickreply-message__item {
-  border: 1px solid var(--user-message-bg-color);
-  border-radius: 12px;
+  border: 1px solid var(--quickreply-border-color);
+  border-radius: 16px;
   padding: 8px 14px 8px 14px;
-  color: var(--user-message-bg-color);
+  color: var(--quickreply-fg-color);
   cursor: pointer;
-  margin-right: 10px;
-  margin-left: 5px;
   font-size: 0.8rem;
+  display: inline-block;
+  margin: 3px;
 }
 
 .quickreply-message__item.selected,
 .quickreply-message:not(.expired) .quickreply-message__item:hover {
-  background: var(--user-message-bg-color);
-  color: var(--user-message-fg-color);
+  background: var(--quickreply-bg-color);
+  color: var(--quickreply-fg-color);
 }
 
 .quickreply-message__item.selected,
 .quickreply-message:not(.expired) .quickreply-message__item:hover {
-  background: var(--user-message-bg-color);
-  color: var(--user-message-fg-color);
+  background: var(--quickreply-fg-color);
+  color: var(--quickreply-bg-color);
 }
 
 .quickreply-message.expired .quickreply-message__item:not(.selected) {
   cursor: default;
-  color: var(--expired-quickreply-color);
-  border-color: var(--expired-quickreply-color);
+  color: var(--quickreply-expired-color);
+  border-color: var(--quickreply-expired-color);
 }
+
+.quickreply-message.expired .quickreply-message__item.selected {
+  cursor: default;
+  background: var(--quickreply-expired-color);
+  color: var(--quickreply-bg-color);
+  border-color: var(--quickreply-expired-color);
+}
+
+.quickreply-message__item.secondary {
+  color: var(--secondary-color);
+  border-color: var(--secondary-color);
+}
+
+.quickreply-message:not(.expired) .quickreply-message__item.secondary:hover {
+  color: var(--quickreply-bg-color) !important;
+  background: var(--secondary-color);
+}
+
+.quickreply-message__item.success {
+  color: var(--success-color);
+  border-color: var(--success-color);
+}
+
+.quickreply-message:not(.expired) .quickreply-message__item.success:hover {
+  color: var(--quickreply-bg-color) !important;
+  background: var(--success-color);
+}
+
+.quickreply-message__item.warning {
+  border-color: var(--warning-color);
+  color: #e0a800;
+}
+
+.quickreply-message:not(.expired) .quickreply-message__item.warning:hover {
+  color: var(--dark-fg-color);
+  background: var(--warning-color);
+}
+
+.quickreply-message__item.danger {
+  color: var(--danger-color);
+  border-color: var(--danger-color);
+}
+
+.quickreply-message:not(.expired) .quickreply-message__item.danger:hover {
+  color: var(--quickreply-bg-color);
+  background: var(--danger-color);
+}
+
+.quickreply-message__item.info {
+  color: var(--info-color);
+  border-color: var(--info-color);
+}
+
+.quickreply-message:not(.expired) .quickreply-message__item.info:hover {
+  color: var(--quickreply-bg-color);
+  background: var(--info-color);
+}
+
 </style>

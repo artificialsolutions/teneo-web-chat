@@ -12,7 +12,15 @@
             "required":true
         },
         "CLOSE_TIE_SESSION_ON_EXIT": {
-            "description": "If set to true, the Teneo Engine session will be ended when the chat UI is closed",
+            "description": "If set to true, the Teneo Engine session will be ended when the chat UI is closed.",
+            "required":false
+        },
+        "HEADER_TITLE": {
+            "description": "Title shown in the header of the chat window. If empty 'Teneo Web Chat' is used.",
+            "required":false
+        },
+        "HEADER_ICON_URL": {
+            "description": "Can be used to specify a custom icon (with a size of 24x24 pixels) shown in the header. If empty a default icon is used.",
             "required":false
         }
     }

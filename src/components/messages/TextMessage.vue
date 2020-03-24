@@ -43,7 +43,7 @@ export default {
 };
 </script>
 
-<style scoped>
+<style>
 .text-message {
   padding: 6px 18px;
   border-radius: 10px;
@@ -52,6 +52,12 @@ export default {
   line-height: 1.4;
   white-space: pre-wrap;
   -webkit-font-smoothing: subpixel-antialiased;
+}
+.text-message.bot {
+  color: var(--bot-message-fg-color);
+  background-color: var(--bot-message-bg-color);
+  margin-right: 40px;
+  border-bottom-left-radius: 0px;
 }
 
 .text-message__text {
@@ -68,10 +74,12 @@ export default {
   border-bottom-right-radius: 0px;
 }
 
-.text-message.bot {
-  color: var(--bot-message-fg-color);
-  background-color: var(--bot-message-bg-color);
-  margin-right: 40px;
-  border-bottom-left-radius: 0px;
+.text-message a {
+  color: var(--text-link-color);
+  text-decoration: none;
+}
+
+.text-message a:hover {
+  text-decoration: underline;
 }
 </style>

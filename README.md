@@ -7,17 +7,18 @@ This web chat UI is an example implementation of a chat GUI that can be embedded
 * When extending the UI, a basic understanding of [Vue.js](https://vuejs.org) is required.
 
 ## Setup instructions
-The quickest way to interact with your bot using this web chat UI is to deploy it to Heroku. If you want to modify the UI or add additional extensions, you can run the code locally as well.
+The quickest way to interact with your bot using this web chat UI is to deploy it to Heroku. If you want to make modifications or add additional extensions, you can run the code locally.
 
 ### Deploy to Heroku
 Click the button below to create a new Heroku app that hosts the web chat:
 
-[![Deploy](https://www.herokucdn.com/deploy/button.svg?classes=heroku)](https://heroku.com/deploy?template=https://github.com/artificialsolutions/teneo-web-chat)
+[![Deploy Branch](https://www.herokucdn.com/deploy/button.svg?classes=heroku)](https://heroku.com/deploy?template=https://github.com/artificialsolutions/teneo-web-chat/tree/extensions)
 
 1. Give the app a name (lowercase, no spaces)
 2. In the 'Config Vars' section, add the following:
     * **TENEO_ENGINE_URL:** The engine url.
     * **CLOSE_TIE_SESSION_ON_EXIT:** Optional. If set to true, the Teneo engine session will be killed when the chat UI is closed.
+    * **HEADER_TITLE:** Optional. Title shown in the header of the chat window. Defaults to 'Teneo Web Chat' if empty.
 3. Click 'Deploy app'.
 
 When Heroku has finished deploying, click 'View app'. You should now be able to use the web chat ui to talk to your bot.
@@ -36,8 +37,9 @@ If you want to run the code locally, proceed as follows:
     Note: if you're using Windows and get an error "'NODE_ENV' is not recognized as an internal or external command, operable program or batch file.", you may want to install a module called [win-node-env](https://github.com/laggingreflex/win-node-env) and run npm install again.
 3. Create a `.env` file in the `teneo-web-chat` folder with following (replace the dummy url with Teneo Engine url of your bot):
     ```
-    TENEO_ENGINE_URL=https://some.engine/instance/
-    CLOSE_TIE_SESSION_ON_EXIT=false
+    TENEO_ENGINE_URL="https://some.engine/instance/"
+    CLOSE_TIE_SESSION_ON_EXIT="no"
+    HEADER_TITLE="Teneo Web Chat"
     ```
 4. Start the application:
     ```
@@ -77,36 +79,49 @@ Make the following changes to each page where you want the web chat window to ap
           typeof window.TeneoWebChat.initialize === 'function'
       ) {
           var element = document.getElementById('teneo-web-chat');
-          var closeEngineSessionOnExit = false;
+
+          var teneoEngineUrl = 'https://some.teneo/engine-instance/'
+          var closeEngineSessionOnExit = 'no';
+          var headerTitle = ''
+          var headerIconUrl = ''
+          
 
           window.TeneoWebChat.initialize(
               element,
-              'Teneo Web Chat',
-              'https://some.teneo/engine-instance/',
-              closeEngineSessionOnExit
+              headerTitle,
+              teneoEngineUrl,
+              closeEngineSessionOnExit,
+              headerIconUrl
           );
       }
   }
 </script>
 ```
 When adding the script to your site, note the following:
-* You can change the title that is displayed in header of the web chat window. In the script above it is specified as 'Teneo Web Chat'.
-* The url `https://some.teneo/engine-instance/` should be updated to match the url of your engine.
-* The variable 'closeEngineSessionOnExit' specifies if the Teneo Engine session should be ended when the chat UI is closed. It is advised to keep this value as is, to prevent your bot from losing the conversation history when the user closes the chat UI.
 * Make sure the line `var element = document.getElementById('teneo-web-chat');` references the id of the div specified in step 3.
+* The value of 'teneoEngineUrl' should be updated to match the url of your engine.
+* The variable 'closeEngineSessionOnExit' specifies if the Teneo Engine session should be ended when the chat UI is closed. It is advised to keep this value as is, to prevent your bot from losing the conversation history when the user closes the chat UI.
+* The value of 'headerTitle' specifies the title shown in the header of the chat window. If empty, 'Teneo Web Chat' is used.
+* The variable 'headerIconUrl' can be used to specify a custom icon () in the header. It's an image with a size of 24x24 px.
 
-## Channel
+### Engine input parameters
+The following input parameters are included in requests to Engine.
+
+## channel
 In addition to the input entered by the user, requests to the Teneo Engine also contain an input paramter 'channel' with value 'teneo-webchat'. This allows you to change the behavior of your bot, depending on the channel used. For information on how to retrieve the value of an input parameter in Teneo Studio, see [Store input parameters](https://www.teneo.ai/studio/scripting/how-to/store-input-parameters) on the Teneo Developers website.
 
+### Engine output parameters
+The following ouput parameters can be included in responses from Engine.
+
+### teneowebclient
+The output parameter `teneowebclient` can contain JSON that is used to display attachments, like images, videos, buttons, cards etc. For more details on the compontent that are supported, please see: [teneo.ai](https://www.teneo.ai/engine/channels/teneo-web-chat).
+
 ## Extending
+The web chat UI can be extended by adding additional `.vue` files in the [/src/components/messages/](/src/components/messages/) folder. This file should parse the JSON that is included in an output parameter called `teneowebclient` in the engine response. The .vue file should display the data accordingly.
 
-The web chat UI can be extended by adding additional `.vue` files in the [/src/components/messages/](/src/components/messages/) folder. This file should parse the JSON that is included in an output parameter called `teneowebclient` in the engine response. The .vue file should  display the data accordingly.
+### Example: ImageMessage.vue
 
-There are two example extensions included in the project.
-
-### Example: displaying an image
-
-This example extention displays an image below the bot's answer text.
+The ImageMessasge.vue extension displays an image below the bot's answer text.
 
 #### Engine JSON
 
@@ -115,7 +130,7 @@ The JSON that should be included in the `teneowebclient` output parameter should
 ``` json
 {
     "type": "image",
-    "image_url": "https://url.to/an/image.png"
+    "url": "https://url.to/an/image.png"
 }
 ```
 
@@ -128,7 +143,7 @@ Because the type is `image`, the web chat code looks for a component in a file c
 ``` html
 <template>
   <div class="image-message">
-    <img :src="imageUrl" />
+    <img :src="imageUrl" :alt="altText"/>
   </div>
 </template>
 
@@ -153,14 +168,17 @@ export default {
     imageUrl() {
       return this.message.data.image_url;
     },
+    altText() {
+      return this.message.data.alt;
+    },
   },
 };
 </script>
 
-<style scoped>
+<style>
 .image-message img {
-  margin: 12px;
-  max-width: 80%;
+  max-width: 100%;
+  max-height: 200px;
 }
 </style>
 ```
@@ -176,7 +194,7 @@ A second example extension shows how buttons can be displayed below the bot answ
 
 #### Engine JSON
 
-To display three buttons (Small, Medium and Large), the JSON that needs to be included in the `teneowebclient` output parameter should look as follows:
+To display three buttons (Small, Medium and Large), the JSON that needs to be included in the `teneowebclient` output parameter can look as follows:
 
 ``` json
 {
@@ -217,9 +235,6 @@ To add custom extensions, these are the steps to take:
 3. Create a .vue file for the message type
 4. In the view file create the template, scripts and applicable styles
 5. Test the result by connecting your web chat UI to the the engine with the example flow.
-
-### Extensions repository
-A repostory with additional example extensions can be found here: [https://github.com/artificialsolutions/teneo-web-chat-extensions](https://github.com/artificialsolutions/teneo-web-chat-extensions).
 
 ## Cross-Origin Resource Sharing (CORS)
 

@@ -1,7 +1,7 @@
 <template>
   <div class="header">
     <img v-if="imageUrl" class="header__img" :src="imageUrl" />
-    <HeaderImagePlaceholder v-else class="header__img" />
+    <BubbleIcon v-else class="header__img" />
     <div class="header__title">{{ title }}</div>
     <button class="header__close-button" @click="onClose">
       <XIcon class="header__close-icon" />
@@ -11,12 +11,12 @@
 
 <script>
 import XIcon from '../icons/x.vue';
-import HeaderImagePlaceholder from '../icons/titleImage.vue';
+import BubbleIcon from '../icons/bubble.vue';
 
 export default {
   components: {
     XIcon,
-    HeaderImagePlaceholder,
+    BubbleIcon,
   },
   props: {
     imageUrl: {
@@ -47,18 +47,17 @@ export default {
   box-sizing: border-box;
   display: flex;
   align-items: center;
-  color: #e1e1e1;
 }
 
 .header__img {
-  border-radius: 100%;
-  height: 32px;
-  width: 32px;
+  height: 24px;
+  width: 24px;
+  margin: 0 8px 0 8px;
+  color: var(--header-fg-color);
 }
 
 .header__title {
-  margin-left: 12px;
-  color: #fff;
+  color: var(--header-fg-color);
 }
 
 .header__close-button {
@@ -73,7 +72,7 @@ export default {
 .header__close-icon {
   height: 32px;
   width: 32px;
-  color: var(--light-fg-color);
+  color: var(--header-fg-color);
 }
 
 .header__close-icon {
