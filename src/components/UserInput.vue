@@ -112,6 +112,7 @@ export default {
   bottom: 0;
   overflow-x: hidden;
   overflow-y: auto;
+  cursor: text;
 }
 
 .user-input__text:empty:before {
