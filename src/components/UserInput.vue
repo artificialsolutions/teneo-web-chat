@@ -93,7 +93,7 @@ export default {
 }
 
 .user-input__text {
-  width: 300px;
+  width: 320px;
   resize: none;
   border: none;
   outline: none;
@@ -123,7 +123,7 @@ export default {
 
 .user-input__button {
   width: 40px;
-  height: 55px;
+  max-height: 200px;
   margin-left: 2px;
   margin-right: 2px;
   display: flex;
