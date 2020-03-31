@@ -122,6 +122,14 @@ export default {
   outline: none;
 }
 
+/* fix placeholder issue on Edge browsers */
+@supports (-ms-ime-align:auto) {
+    [placeholder]:empty:focus::before {
+      content: "";
+      margin-top: 14px;
+    }
+}
+
 .user-input__button {
   width: 40px;
   max-height: 200px;
