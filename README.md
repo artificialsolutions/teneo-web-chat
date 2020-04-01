@@ -60,7 +60,7 @@ When adding the script to your site, note the following:
 
 
 ### Deploy to Heroku
-If you are looking for a quick way to interact with your bot using this web chat UI but you don't have a website to host it yet, you can deploy it to Heroku. Click the button below to create a new Heroku app that hosts the web chat:
+If you are looking for a quick way to interact with your bot using Teneo Web Chat but you don't have a website to host it yet, you can deploy it to Heroku. Click the button below to create a new Heroku app that hosts the web chat:
 
 [![Deploy Branch](https://www.herokucdn.com/deploy/button.svg?classes=heroku)](https://heroku.com/deploy?template=https://github.com/artificialsolutions/teneo-web-chat/tree/extensions)
 
@@ -111,7 +111,7 @@ The following input parameters are included in requests to Engine.
 In addition to the input entered by the user, requests to the Teneo Engine also contain an input paramter 'channel' with value 'teneo-webchat'. This allows you to change the behavior of your bot, depending on the channel used. For information on how to retrieve the value of an input parameter in Teneo Studio, see [Store input parameters](https://www.teneo.ai/studio/scripting/how-to/store-input-parameters) on the Teneo Developers website.
 
 ### Extra parameters
-An optional map of parameters can included when Teneo Web Chat is initialised. The keys in this map will be included as individual input parameters in all requests to the Teneo Engine. 
+An optional map of parameters can included when Teneo Web Chat is initialised. The keys (and their values) in this map will be included as individual input parameters in all requests to the Teneo Engine. 
 
 ## Engine output parameters
 The following ouput parameters can be included in responses from Engine.
