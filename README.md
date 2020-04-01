@@ -22,7 +22,7 @@ Download the file main.js from the [latest release of teneo-web-chat](https://gi
 Make the following changes to *each* page where you want the web chat window to appear.
 Add the following code before the closing &lt;/body&gt; tag to each page where you want the web chat window to appear.
 
-```
+```javascript
 <script type="text/javascript" src="/path/to/webchat/main.js"></script>
 <div id="teneo-web-chat"></div>
 <script>
