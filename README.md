@@ -179,6 +179,10 @@ export default {
 </script>
 
 <style>
+.image-message {
+  width: 100%;
+  margin-right: 40px;
+}
 .image-message img {
   max-width: 100%;
   max-height: 200px;
