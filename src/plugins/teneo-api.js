@@ -23,10 +23,20 @@ export default function teneoApiPlugin(teneoApiUrl) {
     async sendMessage(message) {
       this.messageList = [...this.messageList, message];
 
-      const response = await teneoApi.sendInput(sessionId, {
+      // set text and channel
+      var messageDetails = {
         text: message.data.text,
         channel : CHANNEL_PARAM
-      });
+      }
+
+      // if available, add extra params to messageDetails
+      var extraParams = tmpVm.$extraEngineParams;
+      if (Object.keys(extraParams).length > 0 && extraParams.constructor === Object) {
+        messageDetails = Object.assign(messageDetails, extraParams);
+      }
+
+      // send to engine
+      const response = await teneoApi.sendInput(sessionId, messageDetails);
 
       // eslint-disable-next-line prefer-destructuring
       sessionId = response.sessionId;
@@ -41,10 +51,20 @@ export default function teneoApiPlugin(teneoApiUrl) {
     },
     async sendSilentMessage(text) {
 
-      const response = await teneoApi.sendInput(sessionId,{
-        text,
-        channel: CHANNEL_PARAM
-      });
+      // set text and channel
+      var messageDetails = {
+        text: text,
+        channel : CHANNEL_PARAM
+      }
+
+      // if available, add extra params to messageDetails
+      var extraParams = tmpVm.$extraEngineParams;
+      if (Object.keys(extraParams).length > 0 && extraParams.constructor === Object) {
+        messageDetails = Object.assign(messageDetails, extraParams);
+      }
+
+      // send to engine
+      const response = await teneoApi.sendInput(sessionId, messageDetails);
 
       // eslint-disable-next-line prefer-destructuring
       sessionId = response.sessionId;
