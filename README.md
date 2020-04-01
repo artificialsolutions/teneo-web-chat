@@ -111,7 +111,7 @@ The following input parameters are included in requests to Engine.
 In addition to the input entered by the user, requests to the Teneo Engine also contain an input paramter 'channel' with value 'teneo-webchat'. This allows you to change the behavior of your bot, depending on the channel used. For information on how to retrieve the value of an input parameter in Teneo Studio, see [Store input parameters](https://www.teneo.ai/studio/scripting/how-to/store-input-parameters) on the Teneo Developers website.
 
 ### Extra parameters
-An optional map of parameters can included when Teneo Web Chat is initialised. The keys (and their values) in this map will be included as individual input parameters in all requests to the Teneo Engine. 
+An optional map of parameters can be included when Teneo Web Chat is initialized. The keys in this map (and their values) will be included as individual input parameters in all requests to the Teneo Engine. 
 
 ## Engine output parameters
 The following ouput parameters can be included in responses from Engine.
