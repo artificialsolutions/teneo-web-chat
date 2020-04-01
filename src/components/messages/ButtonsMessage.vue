@@ -102,7 +102,7 @@ export default {
   font-size: 0.9rem;
   line-height: 1.5;
   border-radius: 0.25rem;
-  min-width: 66px;
+  min-width: 62px;
   display: inline-block;
   margin: 3px;
   text-decoration: none;

@@ -93,7 +93,7 @@ export default {
 }
 
 .user-input__text {
-  width: 300px;
+  width: 320px;
   resize: none;
   border: none;
   outline: none;
@@ -112,6 +112,7 @@ export default {
   bottom: 0;
   overflow-x: hidden;
   overflow-y: auto;
+  cursor: text;
 }
 
 .user-input__text:empty:before {
@@ -121,9 +122,17 @@ export default {
   outline: none;
 }
 
+/* fix placeholder issue on Edge browsers */
+@supports (-ms-ime-align:auto) {
+    [placeholder]:empty:focus::before {
+      content: "";
+      margin-top: 14px;
+    }
+}
+
 .user-input__button {
   width: 40px;
-  height: 55px;
+  max-height: 200px;
   margin-left: 2px;
   margin-right: 2px;
   display: flex;
