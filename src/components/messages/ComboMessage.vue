@@ -221,6 +221,6 @@ export default {
 }
 
 .btn {
-  min-width: 66px;
+  min-width: 62px;
 }
 </style>
