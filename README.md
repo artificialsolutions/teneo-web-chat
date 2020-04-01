@@ -1,16 +1,66 @@
 # Teneo Web Chat
 
-This web chat UI is an example implementation of a chat GUI that can be embedded in websites. It is built using the [Vue.js](https://vuejs.org/) javascript framework and based on [Vue Beautiful Chat](https://github.com/mattmezza/vue-beautiful-chat) by Matteo Merola.
+Teneo Web Chat is a chat interface that can be embedded in websites.  It is built using the [Vue.js](https://vuejs.org/) javascript framework and based on [Vue Beautiful Chat](https://github.com/mattmezza/vue-beautiful-chat) by Matteo Merola.
+
+Support for various components like buttons, quick replies, images, videos and cards is built-in and additonal components can easily be added. For more details, see [the Teneo Web Chat page on teneo.ai](https://stagingcontent.teneo.ai/engine/channels/teneo-web-chat).
+
+Teneo Web Chat works on modern browsers, like Chrome, Edge, Firefox, Opera and Safari.
 
 ## Prerequisites
 * Your bot needs to be published and you need to know the engine URL.
 * When extending the UI, a basic understanding of [Vue.js](https://vuejs.org) is required.
 
 ## Setup instructions
-The quickest way to interact with your bot using this web chat UI is to deploy it to Heroku. If you want to make modifications or add additional extensions, you can run the code locally.
+
+### Adding the web chat UI to your site
+To add Teneo Web Chat to your site, proceed as follows:
+
+#### Download main.js
+Download the file main.js from the [latest release of teneo-web-chat](https://github.com/artificialsolutions/teneo-web-chat/releases/) and add it to your site.
+
+#### Update pages
+Make the following changes to *each* page where you want the web chat window to appear.
+Add the following code before the closing &lt;/body&gt; tag to each page where you want the web chat window to appear.
+
+```
+<script type="text/javascript" src="/path/to/webchat/main.js"></script>
+<div id="teneo-web-chat"></div>
+<script>
+  window.onload = function () {
+      if (
+          window.TeneoWebChat &&
+          typeof window.TeneoWebChat.initialize === 'function'
+      ) {
+          var element = document.getElementById('teneo-web-chat')
+          var teneoEngineUrl = 'https://some.teneo/engine-instance/'
+          var closeEngineSessionOnExit = 'no'
+          var headerTitle = ''
+          var headerIconUrl = ''
+          var extraEngineInputParams = {}
+
+          window.TeneoWebChat.initialize(
+              element,
+              headerTitle,
+              teneoEngineUrl,
+              closeEngineSessionOnExit,
+              headerIconUrl,
+              extraEngineInputParams
+          );
+      }
+  }
+</script>
+```
+When adding the script to your site, note the following:
+* Make sure `/path/to/webchat/main.js` in the first line is replaced with the correct path.
+* The value of 'teneoEngineUrl' should be updated to match the url of your Teneo Engine.
+* The variable 'closeEngineSessionOnExit' specifies if the Teneo Engine session should be ended when the chat UI is closed. It is advised to keep this value as is, to prevent your bot from losing the conversation history when the user closes the chat UI.
+* The value of 'headerTitle' specifies the title shown in the header of the chat window. If empty, 'Teneo Web Chat' is used.
+* The variable 'headerIconUrl' can be used to specify a custom icon () in the header. It's an image with a size of 24x24 px.
+* The variable 'extraEngineInputParams' can be populated with additional input parameters that need to be included in each Teneo Engine request. Note that both the keys and the values in the map should be strings.
+
 
 ### Deploy to Heroku
-Click the button below to create a new Heroku app that hosts the web chat:
+If you are looking for a quick way to interact with your bot using this web chat UI but you don't have a website to host it yet, you can deploy it to Heroku. Click the button below to create a new Heroku app that hosts the web chat:
 
 [![Deploy Branch](https://www.herokucdn.com/deploy/button.svg?classes=heroku)](https://heroku.com/deploy?template=https://github.com/artificialsolutions/teneo-web-chat/tree/extensions)
 
@@ -19,12 +69,13 @@ Click the button below to create a new Heroku app that hosts the web chat:
     * **TENEO_ENGINE_URL:** The engine url.
     * **CLOSE_TIE_SESSION_ON_EXIT:** Optional. If set to true, the Teneo engine session will be killed when the chat UI is closed.
     * **HEADER_TITLE:** Optional. Title shown in the header of the chat window. Defaults to 'Teneo Web Chat' if empty.
+    * **HEADER_ICON_URL:** Optional. Can be used to specify a custom icon (with a size of 24x24 pixels) shown in the header.
 3. Click 'Deploy app'.
 
 When Heroku has finished deploying, click 'View app'. You should now be able to use the web chat ui to talk to your bot.
 
 ### Running locally
-If you want to run the code locally, proceed as follows:
+If you want to run the code locally, for example to extend or update it, proceed as follows:
 
 1. Clone the project:
     ```
@@ -38,8 +89,6 @@ If you want to run the code locally, proceed as follows:
 3. Create a `.env` file in the `teneo-web-chat` folder with following (replace the dummy url with Teneo Engine url of your bot):
     ```
     TENEO_ENGINE_URL="https://some.engine/instance/"
-    CLOSE_TIE_SESSION_ON_EXIT="no"
-    HEADER_TITLE="Teneo Web Chat"
     ```
 4. Start the application:
     ```
@@ -48,69 +97,23 @@ If you want to run the code locally, proceed as follows:
 
 The page should be loaded on [http://localhost:9000](http://localhost:9000) now.
 
-## Embedding in a website
-
-To add the web chat UI to your site, proceed as follows:
-
-### Build main.js
+#### Building main.js
 To build the bundle, run:
 ```
 npm run-script build
 ```
-This will add a file `main.js` in the `/dist` folder of the project. Add `main.js` to your site.
+This will add a file `main.js` in the `/dist` folder of the project. You can use this `main.js` to add to your site.
 
-### Update pages
-Make the following changes to each page where you want the web chat window to appear.
-
-1.  Add a link to `main.js`:
-```
-<script type="text/javascript" src="/path/to/webchat/main.js"></script>
-```  
-2. Add an empty `<div>` (or something with an id that can be referenced in the initialization script), for example:
-```
-<div id="teneo-web-chat"></div>
-```
-3. Add the following initialization script before the closing `</body>` tag:
-```
-<script>
-  window.onload = function () {
-      if (
-          window.TeneoWebChat &&
-          typeof window.TeneoWebChat.initialize === 'function'
-      ) {
-          var element = document.getElementById('teneo-web-chat');
-
-          var teneoEngineUrl = 'https://some.teneo/engine-instance/'
-          var closeEngineSessionOnExit = 'no';
-          var headerTitle = ''
-          var headerIconUrl = ''
-          
-
-          window.TeneoWebChat.initialize(
-              element,
-              headerTitle,
-              teneoEngineUrl,
-              closeEngineSessionOnExit,
-              headerIconUrl
-          );
-      }
-  }
-</script>
-```
-When adding the script to your site, note the following:
-* Make sure the line `var element = document.getElementById('teneo-web-chat');` references the id of the div specified in step 3.
-* The value of 'teneoEngineUrl' should be updated to match the url of your engine.
-* The variable 'closeEngineSessionOnExit' specifies if the Teneo Engine session should be ended when the chat UI is closed. It is advised to keep this value as is, to prevent your bot from losing the conversation history when the user closes the chat UI.
-* The value of 'headerTitle' specifies the title shown in the header of the chat window. If empty, 'Teneo Web Chat' is used.
-* The variable 'headerIconUrl' can be used to specify a custom icon () in the header. It's an image with a size of 24x24 px.
-
-### Engine input parameters
+## Engine input parameters
 The following input parameters are included in requests to Engine.
 
-## channel
+### channel
 In addition to the input entered by the user, requests to the Teneo Engine also contain an input paramter 'channel' with value 'teneo-webchat'. This allows you to change the behavior of your bot, depending on the channel used. For information on how to retrieve the value of an input parameter in Teneo Studio, see [Store input parameters](https://www.teneo.ai/studio/scripting/how-to/store-input-parameters) on the Teneo Developers website.
 
-### Engine output parameters
+### Extra parameters
+An optional map of parameters can included when Teneo Web Chat is initialised. The keys in this map will be included as individual input parameters in all requests to the Teneo Engine. 
+
+## Engine output parameters
 The following ouput parameters can be included in responses from Engine.
 
 ### teneowebclient
