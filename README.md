@@ -10,7 +10,7 @@ Teneo Web Chat works on modern browsers, like Chrome, Edge, Firefox, Opera and S
 * Your bot needs to be published and you need to know the engine URL.
 * When extending the UI, a basic understanding of [Vue.js](https://vuejs.org) is required.
 
-## Setup instructions
+## Setup options
 
 ### Adding the web chat UI to your site
 To add Teneo Web Chat to your site, proceed as follows:
