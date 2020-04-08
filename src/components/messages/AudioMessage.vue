@@ -1,0 +1,35 @@
+<template>
+  <div>
+    <audio controls>
+      <source :src="audioUrl"/>
+    </audio>
+  </div>
+</template>
+
+<script>
+export default {
+  name: 'AudioMessage',
+  props: {
+    message: {
+      type: Object,
+      required: true,
+      validator: (message) => {
+        return (
+          message &&
+          message.type === 'audio' &&
+          message.data &&
+          message.data.audio_url
+        );
+      },
+    },
+  },
+  computed: {
+    audioUrl() {
+      return this.message.data.audio_url;
+    },
+    isAudio() {
+      return this.message.data.audio_url.endsWith('.mp3');
+    }
+  },
+};
+</script>
