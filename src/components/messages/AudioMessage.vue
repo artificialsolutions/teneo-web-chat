@@ -1,5 +1,5 @@
 <template>
-  <div>
+  <div class="audio-message">
     <audio controls>
       <source :src="audioUrl"/>
     </audio>
@@ -33,3 +33,14 @@ export default {
   },
 };
 </script>
+
+<style>
+.audio-message {
+  width: 100%;
+  margin-right: 40px;
+}
+.audio-message audio {
+  width: 100%;
+  outline: none;
+}
+</style>

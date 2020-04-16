@@ -8,9 +8,11 @@
       </div>
 
       <div class="combo-message" v-if="message.type==='audio'">
-        <audio controls>
-          <source :src="audioUrl"/>
-        </audio>
+        <div class="audio-message">
+          <audio controls>
+            <source :src="message.audio_url"/>
+          </audio>
+        </div>
       </div>
 
       <div class="combo-message" v-if="message.type==='quickreply'">
