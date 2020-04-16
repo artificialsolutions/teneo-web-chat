@@ -17,7 +17,16 @@ export default function parseTeneoResponse(teneoResponse) {
 
   const messageParams = parameters && parameters[TENEO_PARAM_KEY];
 
-  const data = messageParams && JSON.parse(messageParams);
+  let data;
+  try {
+    if (messageParams) {
+      data = JSON.parse(messageParams);
+    }
+  } catch(err) {
+    // console.log('Error: Unable to parse JSON string')
+  }
+
+
 
   if (data) {
     messages.push({
