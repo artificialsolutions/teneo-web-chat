@@ -7,6 +7,12 @@
         </div>
       </div>
 
+      <div class="combo-message" v-if="message.type==='audio'">
+        <audio controls>
+          <source :src="audioUrl"/>
+        </audio>
+      </div>
+
       <div class="combo-message" v-if="message.type==='quickreply'">
         <div class="quickreply-message" :class="{ expired: replySent || isExpired }">
           <div>
