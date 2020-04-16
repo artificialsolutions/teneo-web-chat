@@ -18,7 +18,9 @@ export default {
   },
   computed: {
     messageType() {
-      return messageComponentName(this.message.type);
+      if (messageComponentName(this.message.type) && this.$options.components[messageComponentName(this.message.type)]) {
+        return messageComponentName(this.message.type);
+      }
     },
     messageText() {
       return this.message.data.text;
