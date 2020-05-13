@@ -140,9 +140,9 @@ export default {
   -ms-flex-direction: column;
   flex-direction: column;
   word-wrap: break-word;
-  background-color: var(--card-bg-color);
+  background-color: var(--card-bg-color, #ffffff);
   background-clip: border-box;
-  border: 1px solid var(--light-border-color);
+  border: 1px solid var(--light-border-color, #c9c9c9);
   border-radius: 0.25rem;
   border-bottom-left-radius: 0px;
 }
@@ -173,7 +173,7 @@ export default {
 .card-body h5 {
   font-size: 1.25rem;
   font-weight: 500;
-  color: var(--bot-message-fg-color);
+  color: var(--bot-message-fg-color, #263238);
 }
 
 .card-body h6 {
@@ -188,7 +188,7 @@ export default {
   line-height: 1.6;
   white-space: pre-wrap;
   -webkit-font-smoothing: subpixel-antialiased;
-  color: var(--bot-message-fg-color);
+  color: var(--bot-message-fg-color, #263238);
   margin-top: 0.6rem;
   margin-bottom: 0.6rem;
 }
@@ -199,7 +199,7 @@ export default {
 }
 
 .card .clickablelist-message__item:first-child {
-  border-top: 1px solid var(--light-border-color);
+  border-top: 1px solid var(--light-border-color, #c9c9c9);
   border-top-left-radius: initial;
   border-top-right-radius: initial;
 }
@@ -212,17 +212,17 @@ export default {
 
 .card .buttons {
   text-align: center;
-  border-top: 1px solid var( --light-border-color);
+  border-top: 1px solid var( --light-border-color, #c9c9c9);
   padding: 12px;
 }
 
 .card .links {
-  border-top: 1px solid var( --light-border-color);
+  border-top: 1px solid var( --light-border-color, #c9c9c9);
   padding: 12px;
 }
 
 .card .links a {
-  color: var(--card-link-color);
+  color: var(--card-link-color, #007bff);
   font-size: 0.9rem;
   padding-right: 10px;
   text-decoration: none;

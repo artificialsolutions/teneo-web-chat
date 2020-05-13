@@ -76,7 +76,7 @@ export default {
 
 <style>
 .clickablelist {
-  background-color: var(--clickablelist-bg-color);
+  background-color: var(--clickablelist-bg-color, #ffffff);
   border: none;
   width: 100%;
   margin-right: 40px;
@@ -90,11 +90,11 @@ export default {
   margin-bottom: 0.6rem;
   font-size: 1rem;
   font-weight: 500;
-  color: var(--clickablelist-title-color);
+  color: var(--clickablelist-title-color, #263238);
 }
 
 .clickablelist.expired h5 {
-  color: var(--expired-color);
+  color: var(--expired-color, #a9a9a9);
 }
 
 .clickablelist-message {
@@ -107,17 +107,17 @@ export default {
 }
 
 .clickablelist-message__item {
-  border-bottom: 1px solid var(--light-border-color);
-  border-right: 1px solid var(--light-border-color);
-  border-left: 1px solid var(--light-border-color);
+  border-bottom: 1px solid var(--light-border-color, #c9c9c9);
+  border-right: 1px solid var(--light-border-color, #c9c9c9);
+  border-left: 1px solid var(--light-border-color, #c9c9c9);
   padding: 8px 14px 8px 14px;
-  color: var(--clickablelist-fg-color);
+  color: var(--clickablelist-fg-color, #263238);
   cursor: pointer;
   font-size: 0.9rem;
 }
 
 .clickablelist-message__item:first-child {
-  border-top: 1px solid var(--light-border-color);
+  border-top: 1px solid var(--light-border-color, #c9c9c9);
   border-top-left-radius: 0.25rem;
   border-top-right-radius: 0.25rem;
 }
@@ -129,27 +129,27 @@ export default {
 
 .clickablelist-message__item.selected,
 .clickablelist-message:not(.replied) .clickablelist-message__item:hover {
-  background-color: var(--clickablelist-selected-bg-color);
-  color: var(--clickablelist-selected-fg-color);
+  background-color: var(--clickablelist-selected-bg-color, #eceff1);
+  color: var(--clickablelist-selected-fg-color, #263238);
 }
 
 .clickablelist-message.replied .clickablelist-message__item {
   cursor: default;
-  color: var(--expired-color);
+  color: var(--expired-color, #a9a9a9);
 }
 
 .clickablelist.expired .clickablelist-message__item,
 .clickablelist.expired .clickablelist-message__item:hover {
   cursor: default;
-  color: var(--expired-color);
-  background-color: var(--clickablelist-bg-color);
+  color: var(--expired-color, #a9a9a9);
+  background-color: var(--clickablelist-bg-color, #ffffff);
 }
 
 .clickablelist.expired .clickablelist-message__item.selected,
 .clickablelist.expired .clickablelist-message__item.selected:hover {
   cursor: default;
-  background-color: var(--clickablelist-selected-bg-color);
-  color: var(--expired-color);
+  background-color: var(--clickablelist-selected-bg-color, #eceff1);
+  color: var(--expired-color, #a9a9a9);
 }
 
 </style>
