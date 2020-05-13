@@ -1,5 +1,6 @@
 import Vue from 'vue';
-import TIE from '@artificialsolutions/tie-api-client';
+// import TIE from '@artificialsolutions/tie-api-client';
+import TIE from '../utils/tie-client.js';
 
 import MessageListCache from '../utils/message-list-cache.js';
 import parseTeneoResponse from '../utils/parse-teneo-response.js';

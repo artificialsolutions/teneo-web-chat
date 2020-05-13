@@ -77,10 +77,10 @@ export default {
 }
 
 .quickreply-message__item {
-  border: 1px solid var(--quickreply-border-color);
+  border: 1px solid var(--quickreply-border-color, #4e8cff);
   border-radius: 16px;
   padding: 8px 14px 8px 14px;
-  color: var(--quickreply-fg-color);
+  color: var(--quickreply-fg-color, #4e8cff);
   cursor: pointer;
   font-size: 0.8rem;
   display: inline-block;
@@ -89,77 +89,77 @@ export default {
 
 .quickreply-message__item.selected,
 .quickreply-message:not(.expired) .quickreply-message__item:hover {
-  background: var(--quickreply-bg-color);
-  color: var(--quickreply-fg-color);
+  background: var(--quickreply-bg-color, #ffffff);
+  color: var(--quickreply-fg-color, #4e8cff);
 }
 
 .quickreply-message__item.selected,
 .quickreply-message:not(.expired) .quickreply-message__item:hover {
-  background: var(--quickreply-fg-color);
-  color: var(--quickreply-bg-color);
+  background: var(--quickreply-fg-color, #4e8cff);
+  color: var(--quickreply-bg-color, #ffffff);
 }
 
 .quickreply-message.expired .quickreply-message__item:not(.selected) {
   cursor: default;
-  color: var(--quickreply-expired-color);
-  border-color: var(--quickreply-expired-color);
+  color: var(--quickreply-expired-color, #a9a9a9);
+  border-color: var(--quickreply-expired-color, #a9a9a9);
 }
 
 .quickreply-message.expired .quickreply-message__item.selected {
   cursor: default;
-  background: var(--quickreply-expired-color);
-  color: var(--quickreply-bg-color);
-  border-color: var(--quickreply-expired-color);
+  background: var(--quickreply-expired-color, #a9a9a9);
+  color: var(--quickreply-bg-color, #ffffff);
+  border-color: var(--quickreply-expired-color, #a9a9a9);
 }
 
 .quickreply-message__item.secondary {
-  color: var(--secondary-color);
-  border-color: var(--secondary-color);
+  color: var(--secondary-color, #6c757d);
+  border-color: var(--secondary-color, #6c757d);
 }
 
 .quickreply-message:not(.expired) .quickreply-message__item.secondary:hover {
-  color: var(--quickreply-bg-color) !important;
-  background: var(--secondary-color);
+  color: var(--quickreply-bg-color, #ffffff) !important;
+  background: var(--secondary-color, #6c757d);
 }
 
 .quickreply-message__item.success {
-  color: var(--success-color);
-  border-color: var(--success-color);
+  color: var(--success-color, #28a745);
+  border-color: var(--success-color, #28a745);
 }
 
 .quickreply-message:not(.expired) .quickreply-message__item.success:hover {
-  color: var(--quickreply-bg-color) !important;
-  background: var(--success-color);
+  color: var(--quickreply-bg-color, #ffffff) !important;
+  background: var(--success-color, #28a745);
 }
 
 .quickreply-message__item.warning {
-  border-color: var(--warning-color);
+  border-color: var(--warning-color, #ffc107);
   color: #e0a800;
 }
 
 .quickreply-message:not(.expired) .quickreply-message__item.warning:hover {
-  color: var(--dark-fg-color);
-  background: var(--warning-color);
+  color: var(--dark-fg-color, #263238);
+  background: var(--warning-color, #ffc107);
 }
 
 .quickreply-message__item.danger {
-  color: var(--danger-color);
-  border-color: var(--danger-color);
+  color: var(--danger-color, #dc3545);
+  border-color: var(--danger-color, #dc3545);
 }
 
 .quickreply-message:not(.expired) .quickreply-message__item.danger:hover {
-  color: var(--quickreply-bg-color);
-  background: var(--danger-color);
+  color: var(--quickreply-bg-color, #ffffff);
+  background: var(--danger-color, #dc3545);
 }
 
 .quickreply-message__item.info {
-  color: var(--info-color);
-  border-color: var(--info-color);
+  color: var(--info-color, #17a2b8);
+  border-color: var(--info-color, #17a2b8);
 }
 
 .quickreply-message:not(.expired) .quickreply-message__item.info:hover {
-  color: var(--quickreply-bg-color);
-  background: var(--info-color);
+  color: var(--quickreply-bg-color, #ffffff);
+  background: var(--info-color, #17a2b8);
 }
 
 </style>

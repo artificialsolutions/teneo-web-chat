@@ -54,8 +54,8 @@ export default {
   -webkit-font-smoothing: subpixel-antialiased;
 }
 .text-message.bot {
-  color: var(--bot-message-fg-color);
-  background-color: var(--bot-message-bg-color);
+  color: var(--bot-message-fg-color, #263238);
+  background-color: var(--bot-message-bg-color, #eceff1);
   margin-right: 40px;
   border-bottom-left-radius: 0px;
 }
@@ -67,15 +67,15 @@ export default {
 }
 
 .text-message.user {
-  background: var(--user-message-bg-color);
-  color: var(--user-message-fg-color);
+  background: var(--user-message-bg-color, #4e8cff);
+  color: var(--user-message-fg-color, #ffffff);
   max-width: calc(100% - 120px);
   word-wrap: break-word;
   border-bottom-right-radius: 0px;
 }
 
 .text-message a {
-  color: var(--text-link-color);
+  color: var(--text-link-color, #007bff);
   text-decoration: none;
 }
 
