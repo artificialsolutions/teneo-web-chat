@@ -19,7 +19,7 @@ module.exports = {
               {
                 "corejs": 3,
                 "useBuiltIns": "usage",
-                "debug": true
+                "debug": false
               }
             ]
           ],
