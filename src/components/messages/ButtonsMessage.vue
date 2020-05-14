@@ -86,9 +86,9 @@ export default {
 <style>
 
 .btn {
-  border: 1px solid var(--button-bg-color);
-  background: var(--button-bg-color);
-  color: var(--button-fg-color);
+  border: 1px solid var(--button-bg-color, #4e8cff);
+  background: var(--button-bg-color, #4e8cff);
+  color: var(--button-fg-color, #ffffff);
   cursor: pointer;
   font-weight: 400;
   text-align: center;
@@ -110,28 +110,28 @@ export default {
 
 .btn.selected,
 .btn:not(.expired) .btn:hover {
-  color: var(--button-bg-color);
-  background: var(--button-fg-color);
+  color: var(--button-bg-color, #4e8cff);
+  background: var(--button-fg-color, #ffffff);
 }
 
 .buttons.selected,
 .buttons:not(.expired) .btn:hover {
-  color: var(--button-bg-color);
-  background: var(--button-fg-color);
+  color: var(--button-bg-color, #4e8cff);
+  background: var(--button-fg-color, #ffffff);
 }
 
 .buttons.expired .btn {
   cursor: default;
-  color: var(--expired-color);
-  background: var(--button-fg-color);
-  border: 1px solid var(--expired-color);
+  color: var(--expired-color, #a9a9a9);
+  background: var(--button-fg-color, #ffffff);
+  border: 1px solid var(--expired-color, #a9a9a9);
 }
 
 .buttons.expired .btn.selected {
   cursor: default;
-  color: var(--button-fg-color);
-  background: var(--expired-color);
-  border: 1px solid var(--expired-color);
+  color: var(--button-fg-color, #ffffff);
+  background: var(--expired-color, #a9a9a9);
+  border: 1px solid var(--expired-color, #a9a9a9);
 }
 
 .buttons h5 {
@@ -142,11 +142,11 @@ export default {
   margin-bottom: 0.6rem;
   font-size: 1rem;
   font-weight: 500;
-  color: var(--buttons-title-color);
+  color: var(--buttons-title-color, #263238);
 }
 
 .buttons.expired h5 {
-  color: var(--expired-color);
+  color: var(--expired-color, #a9a9a9);
 }
 
 /* a.btn:first-child {
@@ -158,49 +158,49 @@ a.btn:last-child {
 } */
 
 .btn.secondary {
-  background: var(--secondary-color);
-  border-color: var(--secondary-color);
+  background: var(--secondary-color, #6c757d);
+  border-color: var(--secondary-color, #6c757d);
 }
 
 .buttons:not(.expired) .btn.secondary:hover {
-  color: var(--secondary-color) !important;
+  color: var(--secondary-color, #6c757d) !important;
 }
 
 .btn.success {
-  background: var(--success-color);
-  border-color: var(--success-color);
+  background: var(--success-color, #28a745);
+  border-color: var(--success-color, #28a745);
 }
 
 .buttons:not(.expired) .btn.success:hover {
-  color: var(--success-color) !important;
+  color: var(--success-color, #28a745) !important;
 }
 
 .btn.warning {
-  background: var(--warning-color);
-  border-color: var(--warning-color);
-  color: var(--dark-fg-color);
+  background: var(--warning-color, #ffc107);
+  border-color: var(--warning-color, #ffc107);
+  color: var(--dark-fg-color, #263238);
 }
 
 .buttons:not(.expired) .btn.warning:hover {
-  color: var(--warning-color) !important;
+  color: var(--warning-color, #ffc107) !important;
 }
 
 .btn.danger {
-  background: var(--danger-color);
-  border-color: var(--danger-color);
+  background: var(--danger-color, #dc3545);
+  border-color: var(--danger-color, #dc3545);
 }
 
 .buttons:not(.expired) .btn.danger:hover {
-  color: var(--danger-color) !important;
+  color: var(--danger-color, #dc3545) !important;
 }
 
 .btn.info {
-  background: var(--info-color);
-  border-color: var(--info-color);
+  background: var(--info-color, #17a2b8);
+  border-color: var(--info-color, #17a2b8);
 }
 
 .buttons:not(.expired) .btn.info:hover {
-  color: var(--info-color) !important;
+  color: var(--info-color, #17a2b8) !important;
 }
 
 </style>

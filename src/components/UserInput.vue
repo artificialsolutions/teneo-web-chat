@@ -86,7 +86,7 @@ export default {
   bottom: 0;
   display: flex;
   justify-content: space-between;
-  background-color: var(--user-input-bg-color);
+  background-color: var(--user-input-bg-color, #f4f7f9);
   border-bottom-left-radius: 10px;
   border-bottom-right-radius: 10px;
   transition: background-color 0.2s ease, box-shadow 0.2s ease;
@@ -127,6 +127,19 @@ export default {
     [placeholder]:empty:focus::before {
       content: "";
       margin-top: 14px;
+    }
+}
+
+/* fix placeholder issue on IE11 browsers */
+@media all and (-ms-high-contrast:none) {
+    [placeholder]:empty:focus::before {
+      content: "";
+      margin-bottom: 0px;
+      /* height: auto; */
+    }
+
+   [placeholder]:empty.user-input__text::before {
+      height: 0px;
     }
 }
 

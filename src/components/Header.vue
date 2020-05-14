@@ -37,7 +37,7 @@ export default {
 
 <style scoped>
 .header {
-  background: var(--header-bg-color);
+  background: var(--header-bg-color, #4e8cff);
   min-height: 64px;
   border-top-left-radius: 9px;
   border-top-right-radius: 9px;
@@ -53,11 +53,11 @@ export default {
   height: 24px;
   width: 24px;
   margin: 0 8px 0 8px;
-  color: var(--header-fg-color);
+  color: var(--header-fg-color, #ffffff);
 }
 
 .header__title {
-  color: var(--header-fg-color);
+  color: var(--header-fg-color, #ffffff);
 }
 
 .header__close-button {
@@ -72,7 +72,7 @@ export default {
 .header__close-icon {
   height: 32px;
   width: 32px;
-  color: var(--header-fg-color);
+  color: var(--header-fg-color, #ffffff);
 }
 
 .header__close-icon {

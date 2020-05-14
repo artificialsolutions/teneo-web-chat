@@ -35,7 +35,7 @@ export default {
 </script>
 <style scoped>
 .launch-button {
-  background-color: var(--header-bg-color);
+  background-color: var(--header-bg-color, #4e8cff);
   width: 60px;
   height: 60px;
   background-position: center;
@@ -55,14 +55,14 @@ export default {
 .launch-button__open-icon {
   height: 26px;
   width: 26px;
-  color: var(--light-fg-color);
+  color: var(--light-fg-color, #ffffff);
 }
 
 .launch-button__close-icon {
   stroke-width: 1;
   height: 32px;
   width: 32px;
-  color: var(--light-fg-color);
+  color: var(--light-fg-color, #ffffff);
 }
 
 .launch-button:hover {
