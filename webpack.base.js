@@ -1,6 +1,7 @@
 const VueLoaderPlugin = require('vue-loader/lib/plugin');
 const path = require('path');
 
+
 module.exports = {
   module: {
     rules: [
@@ -11,10 +12,19 @@ module.exports = {
       {
         test: /\.js$/,
         loader: 'babel-loader',
+        exclude: /node_modules\/(?!@artificialsolutions\/tie-api-client)/,
         options: {
-          include: [
-              path.resolve('node_modules/@artificialsolutions/tie-api-client'),
+          "presets": [
+            [
+              "@babel/preset-env",
+              {
+                "corejs": 3,
+                "useBuiltIns": "usage",
+                "debug": true
+              }
+            ]
           ],
+          plugins: ["@babel/plugin-transform-modules-commonjs"],
         }
       },
       {

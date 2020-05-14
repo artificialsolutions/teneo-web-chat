@@ -130,6 +130,19 @@ export default {
     }
 }
 
+/* fix placeholder issue on IE11 browsers */
+@media all and (-ms-high-contrast:none) {
+    [placeholder]:empty:focus::before {
+      content: "";
+      margin-bottom: 0px;
+      /* height: auto; */
+    }
+
+   [placeholder]:empty.user-input__text::before {
+      height: 0px;
+    }
+}
+
 .user-input__button {
   width: 40px;
   max-height: 200px;
