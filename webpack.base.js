@@ -1,5 +1,4 @@
 const VueLoaderPlugin = require('vue-loader/lib/plugin');
-const path = require('path');
 
 module.exports = {
   module: {
@@ -11,7 +10,7 @@ module.exports = {
       {
         test: /\.js$/,
         loader: 'babel-loader',
-        exclude: /node_modules\/(?!@artificialsolutions\/tie-api-client)/,
+        exclude: /node_modules/,
         options: {
           "presets": [
             [
