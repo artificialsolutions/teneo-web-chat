@@ -62,7 +62,7 @@ When adding the script to your site, note the following:
 ### Deploy to Heroku
 If you are looking for a quick way to interact with your bot using Teneo Web Chat but you don't have a website to host it yet, you can deploy it to Heroku. Click the button below to create a new Heroku app that hosts the web chat:
 
-[![Deploy Branch](https://www.herokucdn.com/deploy/button.svg?classes=heroku)](https://heroku.com/deploy?template=https://github.com/artificialsolutions/teneo-web-chat/tree/extensions)
+[![Deploy Branch](https://www.herokucdn.com/deploy/button.svg?classes=heroku)](https://heroku.com/deploy?template=https://github.com/artificialsolutions/teneo-web-chat/)
 
 1. Give the app a name (lowercase, no spaces)
 2. In the 'Config Vars' section, add the following:
