@@ -14,6 +14,7 @@
 import registerMessageComponents from './utils/register-message-components.js';
 import ChatWindow from './components/ChatWindow.vue';
 import LaunchButton from './components/LaunchButton.vue';
+import { EventBus, events } from './utils/event-bus.js';
 
 registerMessageComponents();
 
@@ -42,6 +43,12 @@ export default {
       isChatOpen: false,
     };
   },
+  mounted() {
+          EventBus.$on(events.RESET_SESSION, () => {
+            this.isChatOpen = false;
+            this.$teneoApi.closeSession()
+          });
+    },
   methods: {
     openChat() {
       this.isChatOpen = true;
