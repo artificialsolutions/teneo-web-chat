@@ -119,6 +119,15 @@ The following ouput parameters can be included in responses from Engine.
 ### teneowebclient
 The output parameter `teneowebclient` can contain JSON that is used to display attachments, like images, videos, buttons, cards etc. For more details on the compontent that are supported, please see: [teneo.ai](https://www.teneo.ai/engine/channels/teneo-web-chat).
 
+## Programatically resetting the chat window
+You can programatically reset the chat window by calling the `resetChat()` function, for example in an onclick event on your website:
+
+```html
+<button onclick="window.TeneoWebChat.resetChat()">Reset Chat</button>
+```
+
+This will end the session with the Teneo Engine, clear the chat history and close the chat window.
+
 ## Extending
 The web chat UI can be extended by adding additional `.vue` files in the [/src/components/messages/](/src/components/messages/) folder. This file should parse the JSON that is included in an output parameter called `teneowebclient` in the engine response. The .vue file should display the data accordingly.
 
