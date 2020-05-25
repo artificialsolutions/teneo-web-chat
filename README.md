@@ -119,7 +119,7 @@ The following ouput parameters can be included in responses from Engine.
 ### teneowebclient
 The output parameter `teneowebclient` can contain JSON that is used to display attachments, like images, videos, buttons, cards etc. For more details on the compontent that are supported, please see: [teneo.ai](https://www.teneo.ai/engine/channels/teneo-web-chat).
 
-## Programatically resetting the chat window
+## Programmatically resetting the chat window
 You can programatically reset the chat window by calling the `resetChat()` function, for example in an onclick event on your website:
 
 ```html
