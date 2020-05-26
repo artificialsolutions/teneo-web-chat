@@ -1,6 +1,10 @@
 <template>
   <div class="chat-window">
     <Header :title="title" :image-url="imageUrl" :on-close="onClose" />
+    <loading :active.sync="spinnerIsLoading" 
+        :can-cancel="true" 
+        :on-cancel="stopSpinner"
+        :is-full-page="false"></loading>
     <MessageList :message-list="$teneoApi.messageList" />
     <UserInput :on-submit="sendMessage" />
   </div>
@@ -10,6 +14,9 @@
 import Header from './Header.vue';
 import MessageList from './MessageList.vue';
 import UserInput from './UserInput.vue';
+import Loading from 'vue-loading-overlay';
+import 'vue-loading-overlay/dist/vue-loading.css';
+import { EventBus, events } from '../utils/event-bus.js';
 
 export default {
   components: { Header, MessageList, UserInput },
@@ -27,16 +34,28 @@ export default {
       required: true,
     },
   },
+  data() {
+    return {
+      spinnerIsLoading: false,
+    };
+  },
   mounted() {
+    EventBus.$on(events.ENGINE_REPLIED, () => {
+      this.stopSpinner();
+    });
     // Send an empty init message to trigger a welcoming message from Teneo
     if (this.$teneoApi.messageList.length === 0) {
       this.$teneoApi.sendSilentMessage('');
     }
   },
   methods: {
-    sendMessage(message) {
-      this.$teneoApi.sendMessage(message);
-    },
+      sendMessage(message) {
+        this.spinnerIsLoading=true;
+        this.$teneoApi.sendMessage(message);
+      },
+      stopSpinner() {
+        this.spinnerIsLoading=false;
+      },
   },
 };
 </script>
