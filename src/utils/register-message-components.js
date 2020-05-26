@@ -9,8 +9,6 @@ export default function registerMessageComponents() {
     /Message/
   );
 
-  Vue.component('loading', Loading);
-
   requireComponent.keys().forEach((fileName) => {
     let messageComponentConfig = requireComponent(fileName);
 
