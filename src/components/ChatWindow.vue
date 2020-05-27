@@ -15,8 +15,6 @@
 import Header from './Header.vue';
 import MessageList from './MessageList.vue';
 import UserInput from './UserInput.vue';
-import Loading from 'vue-loading-overlay';
-import 'vue-loading-overlay/dist/vue-loading.css';
 import { EventBus, events } from '../utils/event-bus.js';
 
 export default {
