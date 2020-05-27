@@ -51,7 +51,7 @@ export default function teneoApiPlugin(teneoApiUrl) {
       EventBus.$emit(events.MESSAGE_SENT);
     },
     async sendSilentMessage(text) {
-
+      
       // set text and channel
       var messageDetails = {
         text: text,
@@ -79,6 +79,7 @@ export default function teneoApiPlugin(teneoApiUrl) {
       EventBus.$emit(events.MESSAGE_SENT);
     },
     _onMessageReceived(message) {
+      EventBus.$emit(events.ENGINE_REPLIED);
       if (!message) {
         return;
       }
