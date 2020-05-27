@@ -1,4 +1,29 @@
-# v.2.0.0
+# v2.4.0
+## 27-05-2020
+* Showing spinner while waiting for engine response
+* Updated dependencies
+
+# v2.3.0
+## 25-05-2020
+* The chat window can now be reset programmatically, by calling the resetChat() function
+
+# v2.2.0
+## 15-05-2020
+* IE11 support
+
+# v2.1.0
+## 16-04-2020
+* Added new component for Audio playback
+* Ignore line breaks in answer texts
+* Gracefully handle invalid component JSON
+
+# v2.0.1
+## 01-04-2020
+* Improved browser support
+* An optional map of parameters can now be included when Teneo Web Chat is initialized. These parameters will be included as input parameters in requests to engine
+* Minor UI improvements
+
+# v2.0.0
 ## 24-03-2020
 * Udpated existing components/extensions and added many new components that can be used in the bot's response
     * Buttons
