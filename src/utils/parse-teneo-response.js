@@ -1,4 +1,4 @@
-import { PARTICIPANT_BOT, TENEO_PARAM_KEY, TENEO_BREAKPOINTS_PARAM } from './constants.js';
+import { PARTICIPANT_BOT, TENEO_PARAM_KEY, TENEO_OUTPUTTEXTSEGMENTS_PARAM } from './constants.js';
 
 const defaultMessageType = 'text';
 
@@ -7,29 +7,29 @@ export default function parseTeneoResponse(teneoResponse) {
 
   const messages = [];
 
-  // get breakpoints param for speech bubbles
+  // get ouputTextSegments parameter for speech bubbles
   // it is a list with start and end indexes that looks like this
   // [[0, 39], [40, 67], [68, 96], [97, 97]]
-  const breakpointsparam = parameters && parameters[TENEO_BREAKPOINTS_PARAM];
-  let breakpoints;
+  const ouputTextSegmentsParam = parameters && parameters[TENEO_OUTPUTTEXTSEGMENTS_PARAM];
+  let outputTextSegmentIndexes;
   try {
-    if (breakpointsparam) {
-      breakpoints = JSON.parse(breakpointsparam);
+    if (ouputTextSegmentsParam) {
+      outputTextSegmentIndexes = JSON.parse(ouputTextSegmentsParam);
     }
   } catch(err) {
-    // console.log('Error: Unable to parse breakpointsparam JSON string')
+    // console.log('Error: Unable to parse ouputTextSegmentsParam JSON string')
   }
 
-  if (breakpoints && Array.isArray(breakpoints)) {
+  if (outputTextSegmentIndexes && Array.isArray(outputTextSegmentIndexes)) {
 
     if (text) {
-      // each breakpoint in the list is a bubble
-      for (var i = 0; i < breakpoints.length; ++i) {
+      // each segment (a list that contians a start and an end index) in the list is a bubble
+      for (var i = 0; i < outputTextSegmentIndexes.length; ++i) {
 
         try {
           // get the start and end index for this bubble
-          var bubbleStartIndex = breakpoints[i][0];
-          var bubbleEndIndex = breakpoints[i][1];
+          var bubbleStartIndex = outputTextSegmentIndexes[i][0];
+          var bubbleEndIndex = outputTextSegmentIndexes[i][1];
 
           if (!isNaN(bubbleStartIndex) && !isNaN(bubbleEndIndex)) {
             // get the substring that needs to appear in a bubble
