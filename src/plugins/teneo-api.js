@@ -44,6 +44,7 @@ export default function teneoApiPlugin(teneoApiUrl) {
       console.log("response: "+JSON.stringify(response)); //.text
       //{"status":0,"input":{"text":"hi","parameters":{"clientOrigin":"http://localhost:9000","channel":"teneo-webchat"}},"output":{"text":"Well hello to you.","emotion":"laughing","link":"","parameters":
       Speech.speakMessage(response.output.text);
+      Speech.speakOnApp(response.output.text);
 
       //data.text
       //{"author":"user","type":"text","data":{"text":"what time is it"}}

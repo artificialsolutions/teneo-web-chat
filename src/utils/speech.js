@@ -10,6 +10,7 @@ var start_timestamp;
 var timeoutVar;
 
 export const Speech = {
+
     speakMessage: function(message) {
         if ('speechSynthesis' in window) {
             window.speechSynthesis.cancel();
@@ -29,6 +30,24 @@ export const Speech = {
               }
             };
             
+        }
+    },
+
+    speakOnApp: function(message) {
+        // Android
+        try {
+            //message = message.replace(/<\/?[^>]+(>|$)/g, "");
+            console.log("TTS Message: " + message)
+            Android.speak('<speak>' + message + '</speak>');
+        } catch (Exception) {
+            // ignore
+        }
+        
+        // iOS
+        try {
+            webkit.messageHandlers.speak.postMessage(message);
+        } catch (Exception) {
+            // ignore
         }
     }
   };
