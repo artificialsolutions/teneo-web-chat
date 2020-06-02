@@ -25,6 +25,7 @@ export const Speech = {
             msg.onend = function(e) {
             
               console.log('Finished in ' + event.elapsedTime + ' seconds.');
+              alert('Finished in ' + event.elapsedTime + ' seconds.')
               if (openMicAfterTTS) {
                   appStartASR();
               }
@@ -47,7 +48,8 @@ export const Speech = {
         try {
             webkit.messageHandlers.speak.postMessage(message);
         } catch (Exception) {
-            // ignore
+            alert('webKit Error');
+            alert(Exception);
         }
     }
   };
