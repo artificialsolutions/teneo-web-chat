@@ -6,7 +6,6 @@ import MessageListCache from '../utils/message-list-cache.js';
 import parseTeneoResponse from '../utils/parse-teneo-response.js';
 import { CHANNEL_PARAM } from '../utils/constants.js';
 import { EventBus, events } from '../utils/event-bus.js';
-import {Speech} from '../utils/speech.js';
 
 export default function teneoApiPlugin(teneoApiUrl) {
   const teneoApi = TIE.init(teneoApiUrl);
@@ -41,14 +40,6 @@ export default function teneoApiPlugin(teneoApiUrl) {
       const response = await teneoApi.sendInput(sessionId, messageDetails);
       // eslint-disable-next-line prefer-destructuring
 
-      console.log("response: "+JSON.stringify(response)); //.text
-      //{"status":0,"input":{"text":"hi","parameters":{"clientOrigin":"http://localhost:9000","channel":"teneo-webchat"}},"output":{"text":"Well hello to you.","emotion":"laughing","link":"","parameters":
-      Speech.speakMessage(response.output.text);
-      Speech.speakOnApp(response.output.text);
-
-      //data.text
-      //{"author":"user","type":"text","data":{"text":"what time is it"}}
-
       sessionId = response.sessionId;
 
       const messages = parseTeneoResponse(response);
@@ -75,10 +66,7 @@ export default function teneoApiPlugin(teneoApiUrl) {
 
       // send to engine
       const response = await teneoApi.sendInput(sessionId, messageDetails);
-      
-      // eslint-disable-next-line prefer-destructuring
       sessionId = response.sessionId;
-
       const messages = parseTeneoResponse(response);
 
       messages.forEach((msg) => {
