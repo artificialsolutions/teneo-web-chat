@@ -1,15 +1,21 @@
 import { PARTICIPANT_BOT, TENEO_PARAM_KEY, TENEO_OUTPUTTEXTSEGMENTS_PARAM } from './constants.js';
+import { EventBus, events } from '../utils/event-bus.js';
 
 const defaultMessageType = 'text';
 
-export default function parseTeneoResponse(teneoResponse) {
-  const { parameters, text } = teneoResponse.output;
+export default async function parseTeneoResponse(teneoResponse) {
 
+  var timeout = function (ms){
+    return new Promise(resolve => setTimeout(resolve, ms));
+  }
+
+  const { parameters, text } = teneoResponse.output;
   const messages = [];
 
   // get ouputTextSegments parameter for speech bubbles
   // it is a list with start and end indexes that looks like this
   // [[0, 39], [40, 67], [68, 96], [97, 97]]
+  
   const ouputTextSegmentsParam = parameters && parameters[TENEO_OUTPUTTEXTSEGMENTS_PARAM];
   let outputTextSegmentIndexes;
   try {
@@ -25,7 +31,6 @@ export default function parseTeneoResponse(teneoResponse) {
     if (text) {
       // each segment (a list that contians a start and an end index) in the list is a bubble
       for (var i = 0; i < outputTextSegmentIndexes.length; ++i) {
-
         try {
           // get the start and end index for this bubble
           var bubbleStartIndex = outputTextSegmentIndexes[i][0];
@@ -43,8 +48,14 @@ export default function parseTeneoResponse(teneoResponse) {
                 data: {'text': bubbleText },
               });
             }
+            
+            // Emit event to update UI with new bubble, with a delay timer
+            await Promise.all([   
+              EventBus.$emit(events.PUSH_BUBBLE,messages[messages.length-1]),
+              timeout(800),
+            ]);
+
           }
-          
         } catch (err) {
           // console.log('Error: unexpected breakpoints value')
         }
