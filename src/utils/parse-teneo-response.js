@@ -26,6 +26,17 @@ export default async function parseTeneoResponse(teneoResponse) {
     // console.log('Error: Unable to parse ouputTextSegmentsParam JSON string')
   }
 
+  // handle 'attachments'
+  const messageParams = parameters && parameters[TENEO_PARAM_KEY];
+  let data;
+  try {
+    if (messageParams) {
+      data = JSON.parse(messageParams);
+    }
+  } catch(err) {
+    // console.log('Error: Unable to parse JSON string')
+  }
+
   if (outputTextSegmentIndexes && Array.isArray(outputTextSegmentIndexes)) {
 
     if (text) {
@@ -51,6 +62,7 @@ export default async function parseTeneoResponse(teneoResponse) {
             
             // Emit event to update UI with new bubble, with a delay timer
             await Promise.all([   
+              console.log('emit bubble'),
               EventBus.$emit(events.PUSH_BUBBLE,messages[messages.length-1]),
               timeout(800),
             ]);
@@ -68,18 +80,16 @@ export default async function parseTeneoResponse(teneoResponse) {
         type: 'text',
         data: { text },
       });
-    }
-  }
 
-  // handle 'attachments'
-  const messageParams = parameters && parameters[TENEO_PARAM_KEY];
-  let data;
-  try {
-    if (messageParams) {
-      data = JSON.parse(messageParams);
+      await Promise.all([   
+        EventBus.$emit(events.PUSH_BUBBLE,messages[messages.length-1]),
+        timeout(800),
+      ]);
+     
+      if(!messageParams){
+        EventBus.$emit(events.ENGINE_REPLIED);
+      }
     }
-  } catch(err) {
-    // console.log('Error: Unable to parse JSON string')
   }
 
   if (data) {
@@ -88,6 +98,8 @@ export default async function parseTeneoResponse(teneoResponse) {
       type: data.type || defaultMessageType,
       data,
     });
+    // Emit event that updates UI with new bubble, with a delay timer
+    EventBus.$emit(events.PUSH_BUBBLE,messages[messages.length-1]);
   }
 
   return messages;

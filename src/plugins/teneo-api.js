@@ -51,12 +51,8 @@ export default function teneoApiPlugin(teneoApiUrl) {
       });
       
       const messages = await parseTeneoResponse(response);
-
       if(messages){
         EventBus.$emit(events.ENGINE_REPLIED);
-      }
-      if(messages.length==1){
-        this._onMessageReceived(messages[0]);
       }
     },
     async sendSilentMessage(text) {
@@ -73,16 +69,18 @@ export default function teneoApiPlugin(teneoApiUrl) {
         messageDetails = Object.assign(messageDetails, extraParams);
       }
 
+      EventBus.$off(events.PUSH_BUBBLE);
+      EventBus.$on(events.PUSH_BUBBLE, (msg) => {
+        this._onMessageReceived(msg)
+      });
       // send to engine
       const response = await teneoApi.sendInput(sessionId, messageDetails);
       sessionId = response.sessionId;
       const messages = await parseTeneoResponse(response);
-      messages.forEach((msg) => {
-        this._onMessageReceived(msg);
+
+      if(messages){
         EventBus.$emit(events.ENGINE_REPLIED);
-      });
-      
-      EventBus.$emit(events.MESSAGE_SENT);
+      }
     },
     _onMessageReceived(message) {
       if (!message) {
