@@ -1,3 +1,8 @@
+# v2.5.0
+## 10-06-2020
+* Support for splitting output into multiple text bubbles
+* Updated dependencies
+
 # v2.4.0
 ## 27-05-2020
 * Showing spinner while waiting for engine response
