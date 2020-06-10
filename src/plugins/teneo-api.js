@@ -13,7 +13,11 @@ export default function teneoApiPlugin(teneoApiUrl) {
   const tmpVm = new Vue({ data: { messageList: messageListCache.get() } });
   let sessionId = null;
 
+
   const plugin = {
+    pushBubble(api, msg){
+      api._onMessageReceived(msg);
+   },
     get messageList() {
       return tmpVm.messageList;
     },
@@ -39,16 +43,17 @@ export default function teneoApiPlugin(teneoApiUrl) {
       // send to engine
       const response = await teneoApi.sendInput(sessionId, messageDetails);
 
-      // eslint-disable-next-line prefer-destructuring
       sessionId = response.sessionId;
 
-      const messages = parseTeneoResponse(response);
-
-      messages.forEach((msg) => {
-        this._onMessageReceived(msg);
+      EventBus.$off(events.PUSH_BUBBLE);
+      EventBus.$on(events.PUSH_BUBBLE, (msg) => {
+        this._onMessageReceived(msg)
       });
-
-      EventBus.$emit(events.MESSAGE_SENT);
+      
+      const messages = await parseTeneoResponse(response);
+      if(messages){
+        EventBus.$emit(events.ENGINE_REPLIED);
+      }
     },
     async sendSilentMessage(text) {
       
@@ -64,26 +69,23 @@ export default function teneoApiPlugin(teneoApiUrl) {
         messageDetails = Object.assign(messageDetails, extraParams);
       }
 
+      EventBus.$off(events.PUSH_BUBBLE);
+      EventBus.$on(events.PUSH_BUBBLE, (msg) => {
+        this._onMessageReceived(msg)
+      });
       // send to engine
       const response = await teneoApi.sendInput(sessionId, messageDetails);
-
-      // eslint-disable-next-line prefer-destructuring
       sessionId = response.sessionId;
+      const messages = await parseTeneoResponse(response);
 
-      const messages = parseTeneoResponse(response);
-
-      messages.forEach((msg) => {
-        this._onMessageReceived(msg);
-      });
-
-      EventBus.$emit(events.MESSAGE_SENT);
+      if(messages){
+        EventBus.$emit(events.ENGINE_REPLIED);
+      }
     },
     _onMessageReceived(message) {
-      EventBus.$emit(events.ENGINE_REPLIED);
       if (!message) {
         return;
       }
-
       this.messageList = [...this.messageList, message];
     },
     async closeSession(){
