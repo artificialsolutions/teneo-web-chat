@@ -128,6 +128,18 @@ You can programmatically reset the chat window by calling the `resetChat()` func
 
 This will end the session with the Teneo Engine, clear the chat history and close the chat window.
 
+## Splitting answers into 'bubbles'
+Sometimes you may wish to provide an answer using multiple text bubbles. This can be achieved by including an output parameter called `outputTextSegmentIndexes`. This output parameter should contain a list of index pairs, to indicate where the output text can be split into separate bubbles. The value of the `outputTextSegmentIndexes` should be structured like this (linebreaks are added for readability):
+```
+[
+	[startIndexOfFirstBubble, endIndexOfFirstBubble],
+  [startIndexOfSecondBubble, endIndexOfSecondBubble],
+    ...
+]
+```
+
+For more details on how to generate the value of `outputTextSegmentIndexes` in Teneo Studio, please refer to [Splitting answers into bubbles](https://www.teneo.ai/engine/channels/teneo-web-chat#splitting-answers-into-bubbles).
+
 ## Extending
 The web chat UI can be extended by adding additional `.vue` files in the [/src/components/messages/](/src/components/messages/) folder. This file should parse the JSON that is included in an output parameter called `teneowebclient` in the engine response. The .vue file should display the data accordingly.
 
