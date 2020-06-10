@@ -1,4 +1,4 @@
-import { PARTICIPANT_BOT, TENEO_PARAM_KEY, TENEO_OUTPUTTEXTSEGMENTS_PARAM } from './constants.js';
+import { PARTICIPANT_BOT, TENEO_PARAM_KEY, TENEO_OUTPUTTEXTSEGMENTS_PARAM, BUBBLE_DELAY } from './constants.js';
 import { EventBus, events } from '../utils/event-bus.js';
 
 const defaultMessageType = 'text';
@@ -61,10 +61,9 @@ export default async function parseTeneoResponse(teneoResponse) {
             }
             
             // Emit event to update UI with new bubble, with a delay timer
-            await Promise.all([   
-              console.log('emit bubble'),
+            await Promise.all([
               EventBus.$emit(events.PUSH_BUBBLE,messages[messages.length-1]),
-              timeout(800),
+              timeout(BUBBLE_DELAY),
             ]);
 
           }
@@ -81,12 +80,19 @@ export default async function parseTeneoResponse(teneoResponse) {
         data: { text },
       });
 
-      await Promise.all([   
-        EventBus.$emit(events.PUSH_BUBBLE,messages[messages.length-1]),
-        timeout(800),
-      ]);
+      //Push bubble with delay only if more than a single bubble is expected
+      if(messages.length > 1){
+        await Promise.all([   
+          EventBus.$emit(events.PUSH_BUBBLE,messages[messages.length-1]),
+          timeout(BUBBLE_DELAY),
+        ]);
+      }
+      else{
+        EventBus.$emit(events.PUSH_BUBBLE,messages[messages.length-1])
+      }
      
-      if(!messageParams){
+      //Signal engine reply if no more data is expected.
+      if(!data){
         EventBus.$emit(events.ENGINE_REPLIED);
       }
     }
