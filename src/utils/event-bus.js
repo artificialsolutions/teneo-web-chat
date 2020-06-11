@@ -5,6 +5,7 @@ export const events = {
   RESET_SESSION: 'reset-session',
   ENGINE_REPLIED: 'engine-replied',
   PUSH_BUBBLE: 'push-bubble',
+  START_SPINNER: 'start-spinner',
 };
 
 export const EventBus = new Vue();

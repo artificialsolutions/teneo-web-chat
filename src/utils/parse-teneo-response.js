@@ -80,8 +80,8 @@ export default async function parseTeneoResponse(teneoResponse) {
         data: { text },
       });
 
-      //Push bubble with delay only if more than a single bubble is expected
-      if(messages.length > 1){
+      //Use delay if multiple bubbles, or a bubble + attachment, is expected
+      if((messages.length > 1)||((messages.length===1) && data)){
         await Promise.all([   
           EventBus.$emit(events.PUSH_BUBBLE,messages[messages.length-1]),
           timeout(BUBBLE_DELAY),
@@ -99,6 +99,7 @@ export default async function parseTeneoResponse(teneoResponse) {
   }
 
   if (data) {
+    console.log('data exists: '+JSON.stringify(data));
     messages.push({
       author: PARTICIPANT_BOT,
       type: data.type || defaultMessageType,

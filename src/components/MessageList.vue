@@ -20,13 +20,6 @@ export default {
       required: true,
     },
   },
-  mounted() {
-    // Additional scroll down after images etc have loaded
-    setTimeout(this._scrollDown.bind(this), 700);
-
-    // Scroll down to bottom
-    this._scrollDown();
-  },
   updated() {
     if (this.shouldScrollToBottom()) {
       this.$nextTick(this._scrollDown);
