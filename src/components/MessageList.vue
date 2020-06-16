@@ -20,6 +20,9 @@ export default {
       required: true,
     },
   },
+  mounted () {
+      this._scrollDownInstantly();
+  },
   updated() {
     if (this.shouldScrollToBottom()) {
       this.$nextTick(this._scrollDown);
@@ -35,6 +38,18 @@ export default {
       if (latestMessage && typeof latestMessage.scrollIntoView === 'function') {
         latestMessage.scrollIntoView({
           behavior: 'smooth',
+          block: 'end',
+        });
+      } else {
+        this.$refs.scrollList.scrollTop = this.$refs.scrollList.scrollHeight;
+      }
+    },
+    _scrollDownInstantly() {
+      const latestMessage = document.querySelector('.message:last-child');
+
+      if (latestMessage && typeof latestMessage.scrollIntoView === 'function') {
+        latestMessage.scrollIntoView({
+          behavior: 'auto',
           block: 'end',
         });
       } else {
