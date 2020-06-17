@@ -40,11 +40,13 @@ export default {
   },
   mounted() {
     EventBus.$on(events.ENGINE_REPLIED, () => {
-      this.spinnerIsLoading=false;
+      this.spinnerIsLoading = false;
+    });
+    EventBus.$on(events.START_SPINNER, () => {
+      this.spinnerIsLoading = true;
     });
     // Send an empty init message to trigger a welcoming message from Teneo
     if (this.$teneoApi.messageList.length === 0) {
-      this.spinnerIsLoading=true;
       this.$teneoApi.sendSilentMessage('');
     }
   },

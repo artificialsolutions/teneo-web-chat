@@ -20,12 +20,8 @@ export default {
       required: true,
     },
   },
-  mounted() {
-    // Additional scroll down after images etc have loaded
-    setTimeout(this._scrollDown.bind(this), 700);
-
-    // Scroll down to bottom
-    this._scrollDown();
+  mounted () {
+      this._scrollDownInstantly();
   },
   updated() {
     if (this.shouldScrollToBottom()) {
@@ -42,6 +38,18 @@ export default {
       if (latestMessage && typeof latestMessage.scrollIntoView === 'function') {
         latestMessage.scrollIntoView({
           behavior: 'smooth',
+          block: 'end',
+        });
+      } else {
+        this.$refs.scrollList.scrollTop = this.$refs.scrollList.scrollHeight;
+      }
+    },
+    _scrollDownInstantly() {
+      const latestMessage = document.querySelector('.message:last-child');
+
+      if (latestMessage && typeof latestMessage.scrollIntoView === 'function') {
+        latestMessage.scrollIntoView({
+          behavior: 'auto',
           block: 'end',
         });
       } else {

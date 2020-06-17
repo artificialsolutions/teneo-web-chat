@@ -1,3 +1,8 @@
+# v2.5.1
+## 17-06-2020
+* Fix: don't show scrolling animation when reopening chat window but start at bottom instantantly
+* Improvement: show spinner after clicking buttons, quick replies etc
+
 # v2.5.0
 ## 10-06-2020
 * Support for splitting output into multiple text bubbles

@@ -57,6 +57,7 @@ export default function teneoApiPlugin(teneoApiUrl) {
     },
     async sendSilentMessage(text) {
       
+      EventBus.$emit(events.START_SPINNER);
       // set text and channel
       var messageDetails = {
         text: text,
