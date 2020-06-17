@@ -1,6 +1,6 @@
 # v2.5.1
 ## 17-06-2020
-* Fix: don't show scrolling animation when reopening chat window but start at bottom instantantly
+* Fix: don't show scrolling animation when reopening chat window but start at bottom instantly
 * Improvement: show spinner after clicking buttons, quick replies etc
 
 # v2.5.0
