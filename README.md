@@ -132,9 +132,9 @@ This will end the session with the Teneo Engine, clear the chat history and clos
 Sometimes you may wish to provide an answer using multiple text bubbles. This can be achieved by including an output parameter called `outputTextSegmentIndexes`. This output parameter should contain a list of index pairs, to indicate where the output text can be split into separate bubbles. The value of the `outputTextSegmentIndexes` should be structured like this (linebreaks are added for readability):
 ```
 [
-	[startIndexOfFirstBubble, endIndexOfFirstBubble],
-  [startIndexOfSecondBubble, endIndexOfSecondBubble],
-    ...
+ 	[startIndexOfFirstBubble, endIndexOfFirstBubble],
+	[startIndexOfSecondBubble, endIndexOfSecondBubble],
+	...
 ]
 ```
 
