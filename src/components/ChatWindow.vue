@@ -54,13 +54,17 @@ export default {
   },
   methods: {
       sendMessage(message) {
-        //Run user-defined 'sendMessage' method, if available
+        console.log("Chatwindow.vue sendMessage: ", message)
+        //Run user-defined 'input_submitted' method, if available
         if(tmpVm.$extensionMethods.get('sendMessage')){
-          var overridenSendMessage = tmpVm.$extensionMethods.get('sendMessage');
-          overridenSendMessage(message,this.sendMessageBase); //pass Base "sendMessage" method
+          var sendMessageFunction = tmpVm.$extensionMethods.get('sendMessage');
+          var newMessage = sendMessageFunction(message)
+          if (newMessage) {
+            this.sendMessageBase(newMessage);
+          }
         }
         else{
-          console.log('sendMessage NOT found in MAP, executing BASE method....')
+          console.log('input_submitted NOT found in MAP, executing BASE method....')
           this.sendMessageBase(message);
         }
       },

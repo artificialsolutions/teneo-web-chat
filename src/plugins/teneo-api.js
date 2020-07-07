@@ -40,8 +40,8 @@ export default function teneoApiPlugin(teneoApiUrl) {
         messageDetails = Object.assign(messageDetails, extraParams);
       }
 
-      var onEvent = await tmpVm.$extensionMethods.get('onEvent');
-      onEvent('sendMessage was called');
+      // var onEvent = await tmpVm.$extensionMethods.get('onEvent');
+      // onEvent('sendMessage was called');
 
       // send to engine
       const response = await teneoApi.sendInput(sessionId, messageDetails);
@@ -79,8 +79,8 @@ export default function teneoApiPlugin(teneoApiUrl) {
       });
 
       //Report result to onEvent
-      var onEvent = await tmpVm.$extensionMethods.get('onEvent');
-      onEvent('sendSilentMessage was called');
+      // var onEvent = await tmpVm.$extensionMethods.get('onEvent');
+      // onEvent('sendSilentMessage was called');
 
       // send to engine
       const response = await teneoApi.sendInput(sessionId, messageDetails);

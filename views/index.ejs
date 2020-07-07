@@ -39,19 +39,22 @@
           var onEvent = function(msg){ //Example: teneo-api.js L44, L84
             console.log('OnEvent: '+msg)
           }
-          var sendMessage = function(msg, baseSendMessage){ //Example: ChatWindow.vue L56
+          var sendMessage = function(msg){ //Example: ChatWindow.vue L56
             console.log('@Override function sendMessage');
 
             //reverse the text input of the message
-            msg.data.text = reverseString(msg.data.text)
-            baseSendMessage(msg);
+            //msg.data.text = reverseString(msg.data.text)
+
+            // add exclamation mark to input
+            msg.data.text = msg.data.text + "!"
+            return msg
           }
           var onVisiblilityChanged = function(data){
             console.log(data);
           }
 
       
-          window.TeneoWebChat.on('onEvent',onEvent);
+          //window.TeneoWebChat.on('onEvent',onEvent);
           window.TeneoWebChat.on('sendMessage',sendMessage);
           
           window.TeneoWebChat.initialize(
