@@ -65,6 +65,8 @@ export default {
     _submitText() {
       const text = this.$refs.userInput.textContent;
 
+      
+
       if (text && text.length > 0) {
         this.onSubmit({
           author: PARTICIPANT_USER,

@@ -53,12 +53,12 @@ export default {
     }
   },
   methods: {
-      sendMessage(message) {
+      async sendMessage(message) {
         console.log("Chatwindow.vue sendMessage: ", message)
         //Run user-defined 'input_submitted' method, if available
         if(tmpVm.$extensionMethods.get('sendMessage')){
           var sendMessageFunction = tmpVm.$extensionMethods.get('sendMessage');
-          var newMessage = sendMessageFunction(message)
+          var newMessage = await sendMessageFunction(message)
           if (newMessage) {
             this.sendMessageBase(newMessage);
           }
