@@ -6,6 +6,7 @@ export const events = {
   ENGINE_REPLIED: 'engine-replied',
   PUSH_BUBBLE: 'push-bubble',
   START_SPINNER: 'start-spinner',
+  MAXIMIZE_WINDOW: 'maximize',
 };
 
 export const EventBus = new Vue();
