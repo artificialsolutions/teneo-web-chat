@@ -7,6 +7,7 @@ export const events = {
   PUSH_BUBBLE: 'push-bubble',
   START_SPINNER: 'start-spinner',
   MAXIMIZE_WINDOW: 'maximize',
+  MINIMIZE_WINDOW: 'maximize',
 };
 
 export const EventBus = new Vue();

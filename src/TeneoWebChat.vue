@@ -48,6 +48,14 @@ export default {
         this.isChatOpen = false;
         this.$teneoApi.closeSession()
       });
+
+      EventBus.$on(events.MAXIMIZE_WINDOW, () => {
+            this.isChatOpen = true;
+      });
+
+      EventBus.$on(events.MINIMIZE_WINDOW, () => {
+            this.isChatOpen = false;
+      });
     },
   methods: {
     openChat() {
