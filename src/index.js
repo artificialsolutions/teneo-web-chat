@@ -34,11 +34,12 @@ window['TeneoWebChat'] = {
     switch (function_name) {
       case API_FUNCTION_CALL_MAXIMIZE:
         // handle function
-        
+        EventBus.$emit(events.MAXIMIZE_WINDOW)
         break
   
       case API_FUNCTION_CALL_MINIMIZE:
         // handle function
+        EventBus.$emit(events.MINIMIZE_WINDOW)
         break
 
       case API_FUNCTION_CALL_SEND_INPUT:
