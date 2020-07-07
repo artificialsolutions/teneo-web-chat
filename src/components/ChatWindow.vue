@@ -12,10 +12,12 @@
 </template>
 
 <script>
+import Vue from 'vue';
 import Header from './Header.vue';
 import MessageList from './MessageList.vue';
 import UserInput from './UserInput.vue';
 import { EventBus, events } from '../utils/event-bus.js';
+const tmpVm = new Vue();
 
 export default {
   components: { Header, MessageList, UserInput },
@@ -52,6 +54,17 @@ export default {
   },
   methods: {
       sendMessage(message) {
+        //Run user-defined 'sendMessage' method, if available
+        if(tmpVm.$extensionMethods.get('sendMessage')){
+          var overridenSendMessage = tmpVm.$extensionMethods.get('sendMessage');
+          overridenSendMessage(message,this.sendMessageBase); //pass Base "sendMessage" method
+        }
+        else{
+          console.log('sendMessage NOT found in MAP, executing BASE method....')
+          this.sendMessageBase(message);
+        }
+      },
+      sendMessageBase(message) {
         this.spinnerIsLoading=true;
         this.$teneoApi.sendMessage(message);
       },

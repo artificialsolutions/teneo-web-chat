@@ -40,14 +40,14 @@ export default {
   },
   data() {
     return {
-      isChatOpen: false,
+    isChatOpen: false,
     };
   },
   mounted() {
-          EventBus.$on(events.RESET_SESSION, () => {
-            this.isChatOpen = false;
-            this.$teneoApi.closeSession()
-          });
+      EventBus.$on(events.RESET_SESSION, () => {
+        this.isChatOpen = false;
+        this.$teneoApi.closeSession()
+      });
     },
   methods: {
     openChat() {

@@ -23,13 +23,46 @@
         ) {
           var element = document.getElementById('teneo-web-chat');
 
+
+          // EXTENSIONS
+
+          // just any string processing method
+          function reverseString(str) { 
+            var splitString = str.split("");
+            var reverseArray = splitString.reverse();
+            var joinArray = reverseArray.join("");
+            return joinArray; 
+          }
+
+          // Override methods
+
+          var onEvent = function(msg){ //Example: teneo-api.js L44, L84
+            console.log('OnEvent: '+msg)
+          }
+          var sendMessage = function(msg, baseSendMessage){ //Example: ChatWindow.vue L56
+            console.log('@Override function sendMessage');
+
+            //reverse the text input of the message
+            msg.data.text = reverseString(msg.data.text)
+            baseSendMessage(msg);
+          }
+          var onVisiblilityChanged = function(data){
+            console.log(data);
+          }
+
+      
+          window.TeneoWebChat.on('onEvent',onEvent);
+          window.TeneoWebChat.on('sendMessage',sendMessage);
+          
           window.TeneoWebChat.initialize(
             element,
             '<%= process.env.HEADER_TITLE %>',
             '<%= process.env.TENEO_ENGINE_URL %>',
             '<%= process.env.CLOSE_TIE_SESSION_ON_EXIT %>',
-            '<%= process.env.HEADER_ICON_URL %>'
+            '<%= process.env.HEADER_ICON_URL %>',
           );
+          //END EXTENSIONS MODS
+
         }
       }
     </script>
