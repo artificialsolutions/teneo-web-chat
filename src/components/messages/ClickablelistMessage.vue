@@ -14,6 +14,10 @@
 </template>
 
 <script>
+
+import Vue from 'vue'
+var tmpVue = new Vue;
+
 export default {
   name: 'ClickablelistMessage',
   props: {
@@ -64,6 +68,10 @@ export default {
 
         const selectedItem = { ...clickablelistMessage, selected: idx };
 
+        if(tmpVue.$extensionMethods.get('new_message')){
+          var newMessageFunction = tmpVue.$extensionMethods.get('new_message');
+          newMessageFunction(clickablelistMessage);
+        }
         this.$teneoApi.messageList = [...messages, selectedItem];
 
         await this.$teneoApi.sendSilentMessage(reply.postback);

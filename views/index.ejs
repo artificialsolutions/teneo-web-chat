@@ -52,10 +52,28 @@
           var onVisiblilityChanged = function(data){
             console.log(data);
           }
+          
+          var onNewMessage = function onNewMessage(message) {
+            console.log('onNewMessage.messageType: '+message.type);
+            switch (message.type) {
+              case 'text':
+                // handle new text message event
+                //console.log("text message detected");
+                break;
 
-      
-          //window.TeneoWebChat.on('onEvent',onEvent);
-          window.TeneoWebChat.on('sendMessage',sendMessage);
+              case 'card':
+                // handle new card message event
+                //console.log("card message Detected")
+                break
+
+              default:
+                break;
+            }
+          }
+
+         //window.TeneoWebChat.on('sendMessage',sendMessage);
+          window.TeneoWebChat.on('send_input',sendMessage);
+          window.TeneoWebChat.on('new_message', onNewMessage);
           
           window.TeneoWebChat.initialize(
             element,

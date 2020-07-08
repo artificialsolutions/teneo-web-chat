@@ -142,6 +142,8 @@
 
 <script>
 import { PARTICIPANT_BOT } from '../../utils/constants.js';
+import Vue from 'vue';
+var tmpVue = new Vue();
 
 export default {
   name: 'ComboMessage',
@@ -189,6 +191,10 @@ export default {
 
         const selectedItem = { ...comboMessage, selected: idx };
 
+        if(tmpVue.$extensionMethods.get('new_message')){
+          var newMessageFunction = tmpVue.$extensionMethods.get('new_message');
+          newMessageFunction(comboMessage);
+        }
         this.$teneoApi.messageList = [...messages, selectedItem];
 
         await this.$teneoApi.sendSilentMessage(reply.postback);

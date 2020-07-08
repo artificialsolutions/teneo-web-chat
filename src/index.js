@@ -7,19 +7,19 @@ import { API_FUNCTION_CALL_MAXIMIZE, API_FUNCTION_CALL_MINIMIZE, API_FUNCTION_CA
 
 // eslint-disable-next-line
 var functionMap = new Map();
-
+var tmpVue;
 window['TeneoWebChat'] = {
   initialize(element, serviceName, teneoEngineUrl, closeTieSessionOnExit = 'no', imageUrl = '', extraEngineParams = {}) {
     Vue.use(teneoApiPlugin(teneoEngineUrl));
     Vue.prototype.$extraEngineParams = extraEngineParams;
     Vue.prototype.$extensionMethods = functionMap;
 
-    console.log('**VUE extension MAP: ')
+    console.log('**VUE extension MAP: ') //just logging
     for (var [key, value] of Vue.prototype.$extensionMethods) {
       console.log(key + " = " + value);
     }
 
-    new Vue({
+    tmpVue = new Vue({
       render: (h) => h(TeneoWebChat, { props: { serviceName, closeTieSessionOnExit, imageUrl} }),
 
     }).$mount(element);

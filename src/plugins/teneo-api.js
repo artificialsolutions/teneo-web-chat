@@ -26,6 +26,10 @@ export default function teneoApiPlugin(teneoApiUrl) {
       messageListCache.update(newVal);
     },
     async sendMessage(message) {
+      if(tmpVm.$extensionMethods.get('new_message')){
+        var newMessageFunction = tmpVm.$extensionMethods.get('new_message');
+        newMessageFunction(message);
+      }
       this.messageList = [...this.messageList, message];
 
       // set text and channel
@@ -78,9 +82,6 @@ export default function teneoApiPlugin(teneoApiUrl) {
         this._onMessageReceived(msg)
       });
 
-      //Report result to onEvent
-      // var onEvent = await tmpVm.$extensionMethods.get('onEvent');
-      // onEvent('sendSilentMessage was called');
 
       // send to engine
       const response = await teneoApi.sendInput(sessionId, messageDetails);
@@ -94,6 +95,10 @@ export default function teneoApiPlugin(teneoApiUrl) {
     _onMessageReceived(message) {
       if (!message) {
         return;
+      }
+      if(tmpVm.$extensionMethods.get('new_message')){
+        var newMessageFunction = tmpVm.$extensionMethods.get('new_message');
+        newMessageFunction(message);
       }
       this.messageList = [...this.messageList, message];
     },

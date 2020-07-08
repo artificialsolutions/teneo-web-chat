@@ -46,6 +46,8 @@
 <script>
 import { PARTICIPANT_BOT } from '../../utils/constants.js';
 import sanitizeHtml from '../../utils/sanitize-html.js';
+import Vue from 'vue'
+var tmpVue = new Vue();
 
 export default {
   name: 'CardMessage',
@@ -120,6 +122,10 @@ export default {
 
         const selectedItem = { ...dynamiclistMessage, selected: idx };
 
+        if(tmpVue.$extensionMethods.get('new_message')){
+          var newMessageFunction = tmpVue.$extensionMethods.get('new_message');
+          newMessageFunction(dynamiclistMessage);
+        }
         this.$teneoApi.messageList = [...messages, selectedItem];
 
         await this.$teneoApi.sendSilentMessage(reply.postback);

@@ -15,6 +15,10 @@
 </template>
 
 <script>
+
+import Vue from 'vue';
+var tmpVue = new Vue();
+
 export default {
   name: 'ButtonsMessage',
   props: {
@@ -65,6 +69,11 @@ export default {
       const quickreplyMessage = this.$teneoApi.messageList[numMessages - 1];
 
       const selectedQuickReply = { ...quickreplyMessage, selected: idx };
+
+      if(tmpVue.$extensionMethods.get('new_message')){
+        var newMessageFunction = tmpVue.$extensionMethods.get('new_message');
+        newMessageFunction(quickreplyMessage);
+      }
 
       this.$teneoApi.messageList = [...messages, selectedQuickReply];
 

@@ -64,7 +64,6 @@ export default {
           }
         }
         else{
-          console.log('input_submitted NOT found in MAP, executing BASE method....')
           this.sendMessageBase(message);
         }
       },

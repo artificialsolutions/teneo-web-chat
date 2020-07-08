@@ -99,7 +99,7 @@ export default async function parseTeneoResponse(teneoResponse) {
   }
 
   if (data) {
-    console.log('data exists: '+JSON.stringify(data));
+    //console.log('data exists: '+JSON.stringify(data));
     messages.push({
       author: PARTICIPANT_BOT,
       type: data.type || defaultMessageType,
