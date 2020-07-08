@@ -68,10 +68,6 @@ export default {
 
         const selectedItem = { ...clickablelistMessage, selected: idx };
 
-        if(tmpVue.$extensionMethods.get('new_message')){
-          var newMessageFunction = tmpVue.$extensionMethods.get('new_message');
-          newMessageFunction(clickablelistMessage);
-        }
         this.$teneoApi.messageList = [...messages, selectedItem];
 
         await this.$teneoApi.sendSilentMessage(reply.postback);

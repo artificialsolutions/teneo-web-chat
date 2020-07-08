@@ -26,8 +26,8 @@ export default function teneoApiPlugin(teneoApiUrl) {
       messageListCache.update(newVal);
     },
     async sendMessage(message) {
-      if(tmpVm.$extensionMethods.get('new_message')){
-        var newMessageFunction = tmpVm.$extensionMethods.get('new_message');
+      if(tmpVm.$extensionMethods.get(API_FUNCTION_ON_NEW_MESSAGE)){
+        var newMessageFunction = tmpVm.$extensionMethods.get(API_FUNCTION_ON_NEW_MESSAGE);
         newMessageFunction(message);
       }
       this.messageList = [...this.messageList, message];
@@ -96,8 +96,8 @@ export default function teneoApiPlugin(teneoApiUrl) {
       if (!message) {
         return;
       }
-      if(tmpVm.$extensionMethods.get('new_message')){
-        var newMessageFunction = tmpVm.$extensionMethods.get('new_message');
+      if(tmpVm.$extensionMethods.get(API_FUNCTION_ON_NEW_MESSAGE)){
+        var newMessageFunction = tmpVm.$extensionMethods.get(API_FUNCTION_ON_NEW_MESSAGE);
         newMessageFunction(message);
       }
       this.messageList = [...this.messageList, message];

@@ -122,10 +122,6 @@ export default {
 
         const selectedItem = { ...dynamiclistMessage, selected: idx };
 
-        if(tmpVue.$extensionMethods.get('new_message')){
-          var newMessageFunction = tmpVue.$extensionMethods.get('new_message');
-          newMessageFunction(dynamiclistMessage);
-        }
         this.$teneoApi.messageList = [...messages, selectedItem];
 
         await this.$teneoApi.sendSilentMessage(reply.postback);

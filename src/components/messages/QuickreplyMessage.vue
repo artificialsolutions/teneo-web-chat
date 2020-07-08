@@ -64,11 +64,6 @@ export default {
 
       const selectedQuickReply = { ...quickreplyMessage, selected: idx };
 
-      if(tmpVue.$extensionMethods.get('new_message')){
-        var newMessageFunction = tmpVue.$extensionMethods.get('new_message');
-        newMessageFunction(quickreplyMessage);
-      }
-
       this.$teneoApi.messageList = [...messages, selectedQuickReply];
 
       await this.$teneoApi.sendSilentMessage(reply.postback);

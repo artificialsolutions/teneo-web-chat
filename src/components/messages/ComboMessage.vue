@@ -191,10 +191,6 @@ export default {
 
         const selectedItem = { ...comboMessage, selected: idx };
 
-        if(tmpVue.$extensionMethods.get('new_message')){
-          var newMessageFunction = tmpVue.$extensionMethods.get('new_message');
-          newMessageFunction(comboMessage);
-        }
         this.$teneoApi.messageList = [...messages, selectedItem];
 
         await this.$teneoApi.sendSilentMessage(reply.postback);
