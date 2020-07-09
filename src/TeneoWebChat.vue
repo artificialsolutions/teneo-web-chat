@@ -17,9 +17,6 @@ import LaunchButton from './components/LaunchButton.vue';
 import { EventBus, events } from './utils/event-bus.js';
 import { API_STATE_MAXIMIZED, API_STATE_MINIMIZED, 
          API_FUNCTION_CALL_MAXIMIZE, API_FUNCTION_CALL_MINIMIZE, API_FUNCTION_ON_VISIBILITY_CHANGED } from './utils/constants';
-import Vue from 'vue';
-var tmpVue = new Vue();
-
 registerMessageComponents();
 
 export default {
@@ -66,19 +63,11 @@ export default {
       this.isChatOpen = true;
       //Update 'state', run 'onVisibilityChanged (if available)'
       EventBus.$emit(API_STATE_MAXIMIZED);
-      if(tmpVue.$extensionMethods.get(API_FUNCTION_ON_VISIBILITY_CHANGED)){
-        var onVisibilityChangedFunction = tmpVue.$extensionMethods.get(API_FUNCTION_ON_VISIBILITY_CHANGED);
-        onVisibilityChangedFunction(API_STATE_MAXIMIZED);
-      }
     },
     minimize(){
       this.isChatOpen = false
       //Update 'state' and , call 'onVisibilityChanged (if available)'
       EventBus.$emit(API_STATE_MINIMIZED);
-      if(tmpVue.$extensionMethods.get(API_FUNCTION_ON_VISIBILITY_CHANGED)){
-        var onVisibilityChangedFunction = tmpVue.$extensionMethods.get(API_FUNCTION_ON_VISIBILITY_CHANGED);
-        onVisibilityChangedFunction(API_STATE_MINIMIZED);
-      }
     },
     closeChat() { //minimizes and (possibly) closes session
       this.minimize();

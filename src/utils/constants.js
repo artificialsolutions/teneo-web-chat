@@ -16,8 +16,8 @@ export const API_FUNCTION_CALL_RESET = "reset";
 export const API_FUNCTION_GET_STATE = "state";
 
 // api getter
-export const API_STATE_MAXIMIZED = 'maximized';
-export const API_STATE_MINIMIZED = 'minimized';
+export const API_STATE_MAXIMIZED = "maximized";
+export const API_STATE_MINIMIZED = "minimized";
 
 // api callacks
 export const API_FUNCTION_ON_READY = "ready";
@@ -26,3 +26,6 @@ export const API_FUNCTION_ON_INPUT_SUBMITTED = "input_submitted";
 export const API_FUNCTION_ON_ENGINE_REQUEST = "engine_request";
 export const API_FUNCTION_ON_ENGINE_RESPONSE = "engine_response";
 export const API_FUNCTION_ON_NEW_MESSAGE = "new_message";
+
+//Map keys
+export const API_KEY_VISIBILITY = "visibility";

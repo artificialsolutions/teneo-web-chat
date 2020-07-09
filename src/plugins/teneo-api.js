@@ -94,8 +94,10 @@ export default function teneoApiPlugin(teneoApiUrl) {
       if (!message) {
         return;
       }
-      if(tmpVue.$extensionMethods.get(API_FUNCTION_ON_NEW_MESSAGE)){
-        var newMessageFunction = tmpVue.$extensionMethods.get(API_FUNCTION_ON_NEW_MESSAGE);
+      //if(tmpVue.$extensionMethods.get(API_FUNCTION_ON_NEW_MESSAGE)){
+      //  var newMessageFunction = tmpVue.prototype.$extensionMethods.get(API_FUNCTION_ON_NEW_MESSAGE);
+      if(Vue.prototype.$extensionMethods.get(API_FUNCTION_ON_NEW_MESSAGE)){
+        var newMessageFunction = Vue.prototype.$extensionMethods.get(API_FUNCTION_ON_NEW_MESSAGE);
         newMessageFunction(message);
       }
       this.messageList = [...this.messageList, message];

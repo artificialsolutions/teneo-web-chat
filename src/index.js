@@ -3,17 +3,21 @@ import Vue from 'vue';
 import TeneoWebChat from './TeneoWebChat.vue';
 import teneoApiPlugin from './plugins/teneo-api.js';
 import { EventBus, events } from '../src/utils/event-bus.js';
-import { API_FUNCTION_CALL_MAXIMIZE, API_FUNCTION_CALL_MINIMIZE, API_FUNCTION_CALL_SEND_INPUT, API_FUNCTION_CALL_END_SESSION, API_FUNCTION_CALL_CLEAR_HISTORY, API_FUNCTION_CALL_RESET, API_FUNCTION_GET_STATE, API_STATE_MINIMIZED, API_STATE_MAXIMIZED, API_FUNCTION_ON_VISIBILITY_CHANGED } from '../src/utils/constants.js';
+import { API_FUNCTION_CALL_MAXIMIZE, API_FUNCTION_CALL_MINIMIZE, API_FUNCTION_CALL_SEND_INPUT, API_FUNCTION_CALL_END_SESSION, API_FUNCTION_CALL_CLEAR_HISTORY, API_FUNCTION_CALL_RESET, API_FUNCTION_GET_STATE, API_FUNCTION_ON_VISIBILITY_CHANGED,
+         API_STATE_MINIMIZED, API_STATE_MAXIMIZED,
+         API_KEY_VISIBILITY } from '../src/utils/constants.js';
 
 var functionMap = new Map();
-var state = API_STATE_MINIMIZED; //keeps track of state
+var state = API_STATE_MINIMIZED;
+var stateMap = new Map();
+stateMap.set(API_KEY_VISIBILITY, API_STATE_MINIMIZED);
 
 window['TeneoWebChat'] = {
   initialize(element, serviceName, teneoEngineUrl, closeTieSessionOnExit = 'no', imageUrl = '', extraEngineParams = {}) {
     Vue.use(teneoApiPlugin(teneoEngineUrl));
     Vue.prototype.$extraEngineParams = extraEngineParams;
     Vue.prototype.$extensionMethods = functionMap;
-
+    //state.set(API_KEY_VISIBILITY, API_STATE_MINIMIZED);
     /*console.log('**VUE extension MAP: ') //just logging
     for (var [key, value] of Vue.prototype.$extensionMethods) {
       console.log(key + " = " + value);
@@ -25,19 +29,25 @@ window['TeneoWebChat'] = {
 
     //These to listeners keep 'state' updated and trigger onVisibilityChanged
     EventBus.$on(API_STATE_MAXIMIZED, () => {
-      state = API_STATE_MAXIMIZED;
-      if(tmpVue.$extensionMethods.get(API_FUNCTION_ON_VISIBILITY_CHANGED)){
-        var onVisibilityChangedFunction = tmpVue.$extensionMethods.get(API_FUNCTION_ON_VISIBILITY_CHANGED);
-        var data = {'state' : state};
-        onVisibilityChangedFunction(data);
+      if(stateMap.get(API_KEY_VISIBILITY) != API_STATE_MAXIMIZED){
+        stateMap.set(API_KEY_VISIBILITY, API_STATE_MAXIMIZED);
+        if(tmpVue.$extensionMethods.get(API_FUNCTION_ON_VISIBILITY_CHANGED)){
+          var onVisibilityChangedFunction = tmpVue.$extensionMethods.get(API_FUNCTION_ON_VISIBILITY_CHANGED);
+          var data = {};
+          data[API_KEY_VISIBILITY] = stateMap.get(API_KEY_VISIBILITY);
+          onVisibilityChangedFunction(data);
+        }
       }
     }); 
     EventBus.$on(API_STATE_MINIMIZED, () => {
-      state = API_STATE_MINIMIZED;
-      if(tmpVue.$extensionMethods.get(API_FUNCTION_ON_VISIBILITY_CHANGED)){
-        var onVisibilityChangedFunction = tmpVue.$extensionMethods.get(API_FUNCTION_ON_VISIBILITY_CHANGED);
-        var data = {'state': state};
-        onVisibilityChangedFunction(data);
+      if(stateMap.get(API_KEY_VISIBILITY) != API_STATE_MINIMIZED){
+        stateMap.set(API_KEY_VISIBILITY, API_STATE_MINIMIZED);
+        if(tmpVue.$extensionMethods.get(API_FUNCTION_ON_VISIBILITY_CHANGED)){
+          var onVisibilityChangedFunction = tmpVue.$extensionMethods.get(API_FUNCTION_ON_VISIBILITY_CHANGED);
+          var data = {};
+          data[API_KEY_VISIBILITY] = stateMap.get(API_KEY_VISIBILITY);
+          onVisibilityChangedFunction(data);
+        }
       }
     });
   },
@@ -50,8 +60,11 @@ window['TeneoWebChat'] = {
   get(param){
     switch (param) {
       case API_FUNCTION_GET_STATE:
-        console.log('get(' + param + ') is: '+state);
-        return state;
+        console.log('getState(): ' + state);
+        for (var [key, value] of stateMap) {
+          console.log(key + " = " + value);
+        }
+        return JSON.stringify(stateMap);
         break;
     }
   },

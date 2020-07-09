@@ -52,9 +52,6 @@
             msg.data.text = msg.data.text + "!"
             return msg
           }
-          var onVisiblilityChanged = function(data){
-            console.log(data);
-          }
           
           var onNewMessage = function(message) {
             //console.log('onNewMessage.messageType: '+message.type);
@@ -75,7 +72,7 @@
           }
 
           var onVisibilityChanged = function(data){
-            switch (data.state){
+            switch (data.visibility){
               case 'minimized':
                 console.log('onVisibilityChanged: minimized');
                 break;
