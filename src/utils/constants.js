@@ -13,9 +13,11 @@ export const API_FUNCTION_CALL_SEND_INPUT = "send_input";
 export const API_FUNCTION_CALL_END_SESSION = "end_session";
 export const API_FUNCTION_CALL_CLEAR_HISTORY = "clear_history";
 export const API_FUNCTION_CALL_RESET = "reset";
+export const API_FUNCTION_GET_STATE = "state";
 
 // api getter
-export const API_FUNCTION_GET_STATE = "state";
+export const API_STATE_MAXIMIZED = 'maximized';
+export const API_STATE_MINIMIZED = 'minimized';
 
 // api callacks
 export const API_FUNCTION_ON_READY = "ready";

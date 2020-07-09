@@ -6,8 +6,8 @@ export const events = {
   ENGINE_REPLIED: 'engine-replied',
   PUSH_BUBBLE: 'push-bubble',
   START_SPINNER: 'start-spinner',
-  MAXIMIZE_WINDOW: 'maximize',
-  MINIMIZE_WINDOW: 'minimize',
+  MAXIMIZE_WINDOW: 'maximize',  //check usage
+  MINIMIZE_WINDOW: 'minimize',  //check usage
 };
 
 export const EventBus = new Vue();

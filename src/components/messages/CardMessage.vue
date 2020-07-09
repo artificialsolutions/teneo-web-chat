@@ -46,9 +46,6 @@
 <script>
 import { PARTICIPANT_BOT } from '../../utils/constants.js';
 import sanitizeHtml from '../../utils/sanitize-html.js';
-import Vue from 'vue'
-var tmpVue = new Vue();
-
 export default {
   name: 'CardMessage',
   props: {

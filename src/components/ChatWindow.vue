@@ -17,7 +17,7 @@ import Header from './Header.vue';
 import MessageList from './MessageList.vue';
 import UserInput from './UserInput.vue';
 import { EventBus, events } from '../utils/event-bus.js';
-const tmpVm = new Vue();
+const tmpVue = new Vue();
 
 export default {
   components: { Header, MessageList, UserInput },
@@ -56,8 +56,8 @@ export default {
       async sendMessage(message) {
         console.log("Chatwindow.vue sendMessage: ", message)
         //Run user-defined 'input_submitted' method, if available
-        if(tmpVm.$extensionMethods.get('sendMessage')){
-          var sendMessageFunction = tmpVm.$extensionMethods.get('sendMessage');
+        if(tmpVue.$extensionMethods.get(API_FUNCTION_CALL_SEND_INPUT)){
+          var sendMessageFunction = tmpVue.$extensionMethods.get(API_FUNCTION_CALL_SEND_INPUT);
           var newMessage = await sendMessageFunction(message)
           if (newMessage) {
             this.sendMessageBase(newMessage);

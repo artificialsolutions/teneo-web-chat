@@ -15,6 +15,10 @@ import registerMessageComponents from './utils/register-message-components.js';
 import ChatWindow from './components/ChatWindow.vue';
 import LaunchButton from './components/LaunchButton.vue';
 import { EventBus, events } from './utils/event-bus.js';
+import { API_STATE_MAXIMIZED, API_STATE_MINIMIZED, 
+         API_FUNCTION_CALL_MAXIMIZE, API_FUNCTION_CALL_MINIMIZE, API_FUNCTION_ON_VISIBILITY_CHANGED } from './utils/constants';
+import Vue from 'vue';
+var tmpVue = new Vue();
 
 registerMessageComponents();
 
@@ -49,20 +53,35 @@ export default {
         this.$teneoApi.closeSession()
       });
 
-      EventBus.$on(events.MAXIMIZE_WINDOW, () => {
-            this.isChatOpen = true;
+      EventBus.$on(API_FUNCTION_CALL_MAXIMIZE, () => {
+        this.openChat()
       });
 
-      EventBus.$on(events.MINIMIZE_WINDOW, () => {
-            this.isChatOpen = false;
+      EventBus.$on(API_FUNCTION_CALL_MINIMIZE, () => {
+        this.minimize();
       });
     },
   methods: {
-    openChat() {
+    openChat() {  //same as maximize
       this.isChatOpen = true;
+      //Update 'state', run 'onVisibilityChanged (if available)'
+      EventBus.$emit(API_STATE_MAXIMIZED);
+      if(tmpVue.$extensionMethods.get(API_FUNCTION_ON_VISIBILITY_CHANGED)){
+        var onVisibilityChangedFunction = tmpVue.$extensionMethods.get(API_FUNCTION_ON_VISIBILITY_CHANGED);
+        onVisibilityChangedFunction(API_STATE_MAXIMIZED);
+      }
     },
-    closeChat() {
+    minimize(){
       this.isChatOpen = false
+      //Update 'state' and , call 'onVisibilityChanged (if available)'
+      EventBus.$emit(API_STATE_MINIMIZED);
+      if(tmpVue.$extensionMethods.get(API_FUNCTION_ON_VISIBILITY_CHANGED)){
+        var onVisibilityChangedFunction = tmpVue.$extensionMethods.get(API_FUNCTION_ON_VISIBILITY_CHANGED);
+        onVisibilityChangedFunction(API_STATE_MINIMIZED);
+      }
+    },
+    closeChat() { //minimizes and (possibly) closes session
+      this.minimize();
       if(this.closeTieSessionOnExit === "true" || this.closeTieSessionOnExit === "yes" ){
           this.$teneoApi.closeSession()
       }

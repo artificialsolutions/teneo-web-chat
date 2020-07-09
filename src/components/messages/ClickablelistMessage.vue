@@ -15,9 +15,6 @@
 
 <script>
 
-import Vue from 'vue'
-var tmpVue = new Vue;
-
 export default {
   name: 'ClickablelistMessage',
   props: {

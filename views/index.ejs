@@ -13,6 +13,9 @@
 
   <body>
     <button onclick="window.TeneoWebChat.resetChat()">Reset Chat</button>
+    <button onclick="window.TeneoWebChat.call('maximize')">Maximize</button>
+    <button onclick="window.TeneoWebChat.call('minimize')">Minimize</button>
+    <button onclick="window.TeneoWebChat.get('state')">Get State</button>
     <div id="teneo-web-chat"></div>
     <script src="main.js"></script>
     <script>
@@ -53,17 +56,17 @@
             console.log(data);
           }
           
-          var onNewMessage = function onNewMessage(message) {
-            console.log('onNewMessage.messageType: '+message.type);
+          var onNewMessage = function(message) {
+            //console.log('onNewMessage.messageType: '+message.type);
             switch (message.type) {
               case 'text':
                 // handle new text message event
-                //console.log("text message detected");
+                console.log("Text message detected");
                 break;
 
               case 'card':
                 // handle new card message event
-                //console.log("card message Detected")
+                console.log("Card message Detected")
                 break
 
               default:
@@ -71,9 +74,25 @@
             }
           }
 
+          var onVisibilityChanged = function(data){
+            switch (data.state){
+              case 'minimized':
+                console.log('onVisibilityChanged: minimized');
+                break;
+              case 'maximized':
+                console.log('onVisibilityChanged: maximized');
+                break;
+              default:
+                break;
+            }
+            return data;
+          }
+
          //window.TeneoWebChat.on('sendMessage',sendMessage);
           window.TeneoWebChat.on('send_input',sendMessage);
           window.TeneoWebChat.on('new_message', onNewMessage);
+          window.TeneoWebChat.on('visibility_changed', onVisibilityChanged);
+
           
           window.TeneoWebChat.initialize(
             element,

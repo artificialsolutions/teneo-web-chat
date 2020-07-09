@@ -139,12 +139,8 @@
     </li>
   </ul>
 </template>
-
 <script>
 import { PARTICIPANT_BOT } from '../../utils/constants.js';
-import Vue from 'vue';
-var tmpVue = new Vue();
-
 export default {
   name: 'ComboMessage',
   props: {

@@ -6,11 +6,12 @@ import MessageListCache from '../utils/message-list-cache.js';
 import parseTeneoResponse from '../utils/parse-teneo-response.js';
 import { CHANNEL_PARAM } from '../utils/constants.js';
 import { EventBus, events } from '../utils/event-bus.js';
+import { API_FUNCTION_ON_NEW_MESSAGE } from '../utils/constants.js';
 
 export default function teneoApiPlugin(teneoApiUrl) {
   const teneoApi = TIE.init(teneoApiUrl);
   const messageListCache = new MessageListCache();
-  const tmpVm = new Vue({ data: { messageList: messageListCache.get() } });
+  const tmpVue = new Vue({ data: { messageList: messageListCache.get() } });
   let sessionId = null;
 
 
@@ -19,15 +20,15 @@ export default function teneoApiPlugin(teneoApiUrl) {
       api._onMessageReceived(msg);
    },
     get messageList() {
-      return tmpVm.messageList;
+      return tmpVue.messageList;
     },
     set messageList(newVal) {
-      tmpVm.messageList = newVal;
+      tmpVue.messageList = newVal;
       messageListCache.update(newVal);
     },
     async sendMessage(message) {
-      if(tmpVm.$extensionMethods.get(API_FUNCTION_ON_NEW_MESSAGE)){
-        var newMessageFunction = tmpVm.$extensionMethods.get(API_FUNCTION_ON_NEW_MESSAGE);
+      if(tmpVue.$extensionMethods.get(API_FUNCTION_ON_NEW_MESSAGE)){
+        var newMessageFunction = tmpVue.$extensionMethods.get(API_FUNCTION_ON_NEW_MESSAGE);
         newMessageFunction(message);
       }
       this.messageList = [...this.messageList, message];
@@ -39,13 +40,10 @@ export default function teneoApiPlugin(teneoApiUrl) {
       }
 
       // if available, add extra params to messageDetails
-      var extraParams = tmpVm.$extraEngineParams;
+      var extraParams = tmpVue.$extraEngineParams;
       if (Object.keys(extraParams).length > 0 && extraParams.constructor === Object) {
         messageDetails = Object.assign(messageDetails, extraParams);
       }
-
-      // var onEvent = await tmpVm.$extensionMethods.get('onEvent');
-      // onEvent('sendMessage was called');
 
       // send to engine
       const response = await teneoApi.sendInput(sessionId, messageDetails);
@@ -72,7 +70,7 @@ export default function teneoApiPlugin(teneoApiUrl) {
       }
 
       // if available, add extra params to messageDetails
-      var extraParams = tmpVm.$extraEngineParams;
+      var extraParams = tmpVue.$extraEngineParams;
       if (Object.keys(extraParams).length > 0 && extraParams.constructor === Object) {
         messageDetails = Object.assign(messageDetails, extraParams);
       }
@@ -96,8 +94,8 @@ export default function teneoApiPlugin(teneoApiUrl) {
       if (!message) {
         return;
       }
-      if(tmpVm.$extensionMethods.get(API_FUNCTION_ON_NEW_MESSAGE)){
-        var newMessageFunction = tmpVm.$extensionMethods.get(API_FUNCTION_ON_NEW_MESSAGE);
+      if(tmpVue.$extensionMethods.get(API_FUNCTION_ON_NEW_MESSAGE)){
+        var newMessageFunction = tmpVue.$extensionMethods.get(API_FUNCTION_ON_NEW_MESSAGE);
         newMessageFunction(message);
       }
       this.messageList = [...this.messageList, message];

@@ -14,10 +14,6 @@
 </template>
 
 <script>
-
-import Vue from 'vue';
-const tmpVue = new Vue();
-
 export default {
   name: 'QuickreplyMessage',
   props: {
