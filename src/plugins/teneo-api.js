@@ -104,11 +104,14 @@ export default function teneoApiPlugin(teneoApiUrl) {
     },
     async closeSession(){
       TIE.close(teneoApiUrl,sessionId);
+      
+    },
+    async clearHistory() {
       this.messageList = []
       if(this.messageListCache){
          this.messageListCache.update([]);
       }
-    },
+    }
   };
 
   plugin.install = function install() {

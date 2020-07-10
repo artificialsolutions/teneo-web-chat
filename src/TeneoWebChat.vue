@@ -70,10 +70,14 @@ export default {
       //Update 'state' and , call 'onVisibilityChanged (if available)'
       EventBus.$emit(API_STATE_MINIMIZED);
     },
+    clearHistory() {
+      this.$teneoApi.clearHistory()
+    },
     closeChat() { //minimizes and (possibly) closes session
       this.minimize();
       if(this.closeTieSessionOnExit === "true" || this.closeTieSessionOnExit === "yes" ){
           this.$teneoApi.closeSession()
+          this.$teneoApi.clearHistory()
       }
     },
   },
