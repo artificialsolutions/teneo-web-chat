@@ -79,6 +79,7 @@ window['TeneoWebChat'] = {
 
       case API_FUNCTION_CALL_RESET:
         // handle function
+        EventBus.$emit(events.RESET_SESSION);
         break                      
 
       default:
