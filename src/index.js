@@ -5,7 +5,8 @@ import teneoApiPlugin from './plugins/teneo-api.js';
 import { EventBus, events } from '../src/utils/event-bus.js';
 import { API_FUNCTION_CALL_MAXIMIZE, API_FUNCTION_CALL_MINIMIZE, API_FUNCTION_CALL_SEND_INPUT, API_FUNCTION_CALL_END_SESSION, API_FUNCTION_CALL_CLEAR_HISTORY, API_FUNCTION_CALL_RESET, API_FUNCTION_GET_STATE, API_FUNCTION_ON_VISIBILITY_CHANGED,
          API_STATE_MINIMIZED, API_STATE_MAXIMIZED,
-         API_KEY_VISIBILITY } from '../src/utils/constants.js';
+         API_KEY_VISIBILITY, 
+         API_VERSION} from '../src/utils/constants.js';
 
 var functionMap = new Map();
 var stateMap = {'visibility': API_STATE_MINIMIZED};
@@ -87,6 +88,9 @@ window['TeneoWebChat'] = {
       default:
         break
     }
+  },
+  version() {
+    return API_VERSION;
   },
   resetChat(){
     EventBus.$emit(events.RESET_SESSION);

@@ -6,6 +6,9 @@ export const TITLE_IMAGE_URL = '';
 export const CHANNEL_PARAM = 'teneo-webchat';
 export const BUBBLE_DELAY = 600;
 
+// api version
+export const API_VERSION = "2.5.1";
+
 // api methods
 export const API_FUNCTION_CALL_MAXIMIZE = "maximize";
 export const API_FUNCTION_CALL_MINIMIZE = "minimize";
