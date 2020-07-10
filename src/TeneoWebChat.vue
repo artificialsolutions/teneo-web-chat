@@ -47,7 +47,10 @@ export default {
   mounted() {
       EventBus.$on(events.RESET_SESSION, () => {
         this.minimize()
-        //this.isChatOpen = false;
+        this.$teneoApi.closeSession()
+      });
+
+      EventBus.$on(events.END_SESSION, () => {
         this.$teneoApi.closeSession()
       });
 
