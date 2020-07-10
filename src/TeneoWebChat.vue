@@ -47,11 +47,16 @@ export default {
   mounted() {
       EventBus.$on(events.RESET_SESSION, () => {
         this.minimize()
-        this.$teneoApi.closeSession()
+        this.clearHistory()
+        this.closeSession()
       });
 
       EventBus.$on(events.END_SESSION, () => {
-        this.$teneoApi.closeSession()
+        this.closeSession()
+      });
+
+      EventBus.$on(events.CLEAR_HISTORY, () => {
+        this.clearHistory()
       });
 
       EventBus.$on(API_FUNCTION_CALL_MAXIMIZE, () => {
@@ -76,11 +81,14 @@ export default {
     clearHistory() {
       this.$teneoApi.clearHistory()
     },
-    closeChat() { //minimizes and (possibly) closes session
+    closeSession() {
+      this.$teneoApi.closeSession()
+    },
+    closeChat() { //minimizes and (possibly) resets the caht
       this.minimize();
       if(this.closeTieSessionOnExit === "true" || this.closeTieSessionOnExit === "yes" ){
-          this.$teneoApi.closeSession()
-          this.$teneoApi.clearHistory()
+          this.closeSession()
+          this.clearHistory()
       }
     },
   },

@@ -76,6 +76,7 @@ window['TeneoWebChat'] = {
 
       case API_FUNCTION_CALL_CLEAR_HISTORY:
         // handle function
+        EventBus.$emit(events.CLEAR_HISTORY);
         break
 
       case API_FUNCTION_CALL_RESET:

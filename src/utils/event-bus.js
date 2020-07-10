@@ -4,6 +4,7 @@ export const events = {
   MESSAGE_SENT: 'message-sent',
   RESET_SESSION: 'reset-session',
   END_SESSION: 'end-session',
+  CLEAR_HISTORY: 'clear-history',
   ENGINE_REPLIED: 'engine-replied',
   PUSH_BUBBLE: 'push-bubble',
   START_SPINNER: 'start-spinner',
