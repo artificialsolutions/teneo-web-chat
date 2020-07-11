@@ -6,7 +6,7 @@ import { EventBus, events } from '../src/utils/event-bus.js';
 import { API_FUNCTION_CALL_MAXIMIZE, API_FUNCTION_CALL_MINIMIZE, API_FUNCTION_CALL_SEND_INPUT, API_FUNCTION_CALL_END_SESSION, API_FUNCTION_CALL_CLEAR_HISTORY, API_FUNCTION_CALL_RESET, API_FUNCTION_GET_STATE, API_FUNCTION_ON_VISIBILITY_CHANGED,
          API_STATE_MINIMIZED, API_STATE_MAXIMIZED,
          API_KEY_VISIBILITY, 
-         API_VERSION} from '../src/utils/constants.js';
+         API_VERSION, API_FUNCTION_CALL_ADD_MESSAGE} from '../src/utils/constants.js';
 
 var functionMap = new Map();
 var stateMap = {'visibility': API_STATE_MINIMIZED};
@@ -55,16 +55,17 @@ window['TeneoWebChat'] = {
         break;
     }
   },
-  call(function_name) {
+  call(function_name, data = undefined) {
+    console.log("Data", data)
     switch (function_name) {
       case API_FUNCTION_CALL_MAXIMIZE:
         // handle function
-        EventBus.$emit(API_FUNCTION_CALL_MAXIMIZE);
+        EventBus.$emit(events.MAXIMIZE_WINDOW);
         break
   
       case API_FUNCTION_CALL_MINIMIZE:
         // handle function
-        EventBus.$emit(API_FUNCTION_CALL_MINIMIZE);
+        EventBus.$emit(events.MINIMIZE_WINDOW);
         break
       case API_FUNCTION_CALL_SEND_INPUT:
         // handle function
@@ -83,9 +84,16 @@ window['TeneoWebChat'] = {
       case API_FUNCTION_CALL_RESET:
         // handle function
         EventBus.$emit(events.RESET_SESSION);
-        break                      
+        break
+        
+      case API_FUNCTION_CALL_ADD_MESSAGE:
+        // handle function
+        console.log('Triggering add message')
+        EventBus.$emit(events.ADD_MESSAGE, data);
+        return data
 
       default:
+        console.log("Function name: ", function_name);
         break
     }
   },
