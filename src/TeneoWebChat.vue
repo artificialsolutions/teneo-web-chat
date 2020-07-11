@@ -59,12 +59,17 @@ export default {
         this.clearHistory()
       });
 
-      EventBus.$on(API_FUNCTION_CALL_MAXIMIZE, () => {
+      EventBus.$on(events.MAXIMIZE_WINDOW, () => {
         this.openChat()
       });
 
-      EventBus.$on(API_FUNCTION_CALL_MINIMIZE, () => {
+      EventBus.$on(events.MINIMIZE_WINDOW, () => {
         this.minimize();
+      });
+
+      EventBus.$on(events.ADD_MESSAGE, (message) => {
+        console.log('Event triggered')
+        this.$teneoApi._onMessageReceived(message);
       });
     },
   methods: {

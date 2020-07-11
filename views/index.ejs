@@ -19,6 +19,8 @@
     <button onclick="window.TeneoWebChat.call('end_session')">End session</button>
     <button onclick="window.TeneoWebChat.call('clear_history')">Clear history</button>
     <button onclick="console.log(TeneoWebChat.version())">Version</button>
+    <button onclick="TeneoWebChat.call('add_message',{'author': 'bot', 'type': 'text', 'data': {'text': 'Funky!'}})">Add message</button>
+    
     <div id="teneo-web-chat"></div>
     <script src="main.js"></script>
     <script>
@@ -57,6 +59,7 @@
           }
           
           var onNewMessage = function(message) {
+            console.log("onNewMessage", message)
             //console.log('onNewMessage.messageType: '+message.type);
             switch (message.type) {
               case 'text':
@@ -88,20 +91,9 @@
             return data;
           }
 
-          var onEngineRequest = function(data) {
-            if (data.text) {
-              data.extraParameter = "hello from OnEngineRequest"
-            }
-            if (data.channel){ }
-            console.log('onEngineRequest: '+JSON.stringify(data));
-            return data
-          }
-          var onEngineResponse = function(response) {
-            // handle engine response event
-            console.log('onEngineResponse: '+JSON.stringify(response));
-            return response;
-          }
+          const myMessage = {'author': 'user', 'type': 'text', 'data': {'text': 'Funky!'}}
 
+         //window.TeneoWebChat.on('sendMessage',sendMessage);
           window.TeneoWebChat.on('send_input',sendMessage);
           window.TeneoWebChat.on('new_message', onNewMessage);
           window.TeneoWebChat.on('visibility_changed', onVisibilityChanged);
@@ -121,5 +113,6 @@
         }
       }
     </script>
+    
   </body>
 </html>

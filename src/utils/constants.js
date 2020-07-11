@@ -16,6 +16,7 @@ export const API_FUNCTION_CALL_SEND_INPUT = "send_input";
 export const API_FUNCTION_CALL_END_SESSION = "end_session";
 export const API_FUNCTION_CALL_CLEAR_HISTORY = "clear_history";
 export const API_FUNCTION_CALL_RESET = "reset";
+export const API_FUNCTION_CALL_ADD_MESSAGE = "add_message";
 export const API_FUNCTION_GET_STATE = "state";
 
 // api getter

@@ -10,6 +10,7 @@ export const events = {
   START_SPINNER: 'start-spinner',
   MAXIMIZE_WINDOW: 'maximize',  //check usage
   MINIMIZE_WINDOW: 'minimize',  //check usage
+  ADD_MESSAGE: 'add_message',
 };
 
 export const EventBus = new Vue();
