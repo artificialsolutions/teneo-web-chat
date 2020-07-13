@@ -55,8 +55,20 @@ window['TeneoWebChat'] = {
         break;
     }
   },
-  call(function_name, data = undefined) {
-    console.log("Data", data)
+  call(function_name, param1 = undefined, param2 = undefined, param3 = undefined) {
+
+    if (param1) {
+      console.log("param1", param1)
+    }
+
+    if (param2) {
+      console.log("param2", param2)
+    }
+
+    if (param3) {
+      console.log("param3", param3)
+    }
+    
     switch (function_name) {
       case API_FUNCTION_CALL_MAXIMIZE:
         // handle function
@@ -69,7 +81,9 @@ window['TeneoWebChat'] = {
         break
       case API_FUNCTION_CALL_SEND_INPUT:
         // handle function
-        break
+        // TO DO: check if params are of correct type
+        EventBus.$emit(events.SEND_INPUT, param1, param2, param3);
+        return
 
       case API_FUNCTION_CALL_END_SESSION:
         // handle function
@@ -89,8 +103,9 @@ window['TeneoWebChat'] = {
       case API_FUNCTION_CALL_ADD_MESSAGE:
         // handle function
         console.log('Triggering add message')
-        EventBus.$emit(events.ADD_MESSAGE, data);
-        return data
+        // TO DO: make sure we check the format of param1
+        EventBus.$emit(events.ADD_MESSAGE, param1);
+        return param1
 
       default:
         console.log("Function name: ", function_name);

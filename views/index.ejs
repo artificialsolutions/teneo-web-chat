@@ -20,6 +20,8 @@
     <button onclick="window.TeneoWebChat.call('clear_history')">Clear history</button>
     <button onclick="console.log(TeneoWebChat.version())">Version</button>
     <button onclick="TeneoWebChat.call('add_message',{'author': 'bot', 'type': 'text', 'data': {'text': 'Funky!'}})">Add message</button>
+    <button onclick="TeneoWebChat.call('send_input', 'What do you think about jimi hendriks?', {'userCountryCode':'NL'}, false)">Send message</button>
+    <button onclick="TeneoWebChat.call('send_input', 'Do you like silent messages?', {'userCountryCode':'NL'}, true)">Send silent message</button>
     
     <div id="teneo-web-chat"></div>
     <script src="main.js"></script>
@@ -80,7 +82,7 @@
             return new Promise(resolve => { 
               setTimeout(() => { 
                 resolve(text)
-               }, 2000);
+               }, 500);
             });         
           }
 

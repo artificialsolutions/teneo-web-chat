@@ -11,6 +11,7 @@ export const events = {
   MAXIMIZE_WINDOW: 'maximize',  //check usage
   MINIMIZE_WINDOW: 'minimize',  //check usage
   ADD_MESSAGE: 'add_message',
+  SEND_INPUT: 'send_input',
 };
 
 export const EventBus = new Vue();

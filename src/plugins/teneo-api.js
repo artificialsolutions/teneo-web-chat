@@ -26,17 +26,13 @@ export default function teneoApiPlugin(teneoApiUrl) {
       tmpVue.messageList = newVal;
       messageListCache.update(newVal);
     },
-    async sendMessage(message) {
-      if(tmpVue.$extensionMethods.get(API_FUNCTION_ON_NEW_MESSAGE)){
-        var newMessageFunction = tmpVue.$extensionMethods.get(API_FUNCTION_ON_NEW_MESSAGE);
-        newMessageFunction(message);
-      }
-      this.messageList = [...this.messageList, message];
+
+    async sendBaseMessage(text, parameters, isSilent) {
 
       // set text and channel
       var messageDetails = {
-        text: message.data.text,
-        channel : CHANNEL_PARAM
+        'text': text,
+        'channel' : CHANNEL_PARAM
       }
 
       // if available, add extra params to messageDetails
@@ -45,17 +41,40 @@ export default function teneoApiPlugin(teneoApiUrl) {
         messageDetails = Object.assign(messageDetails, extraParams);
       }
 
-      // send to engine
+      // if available add extra params from method
+      if (Object.keys(parameters).length > 0 && parameters.constructor === Object) {
+        messageDetails = Object.assign(messageDetails, parameters);
+      }
+
+      EventBus.$emit(events.START_SPINNER);
+
+      if (!isSilent) {
+
+        // add messsage to history
+        var tmpMessage = {'author': 'user', 'type': 'text', 'data': {'text': text}}
+
+        // check if there is an extension that want to intercept the new messsage
+        if(tmpVue.$extensionMethods.get(API_FUNCTION_ON_NEW_MESSAGE)){
+          var newMessageFunction = tmpVue.$extensionMethods.get(API_FUNCTION_ON_NEW_MESSAGE);
+          tmpMessage = await newMessageFunction(tmpMessage);
+        }
+        this.messageList = [...this.messageList, tmpMessage];
+      }
+
+      // send request to engine
+
+      // check if there is an extension that want to intercept the request to engine
       var onEngineRequest = tmpVue.$extensionMethods.get(API_FUNCTION_ON_ENGINE_REQUEST)
       if(onEngineRequest){
-        messageDetails = onEngineRequest(messageDetails);
+        messageDetails = await onEngineRequest(messageDetails);
       }
       
       var response = await teneoApi.sendInput(sessionId, messageDetails);
 
+      // check if there is an extension that want to intercept the response from engine
       var onEngineResponse = tmpVue.$extensionMethods.get(API_FUNCTION_ON_ENGINE_RESPONSE);
       if(onEngineResponse){
-        response=onEngineResponse(response);
+        response = await onEngineResponse(response);
       }
 
       sessionId = response.sessionId;
@@ -69,48 +88,15 @@ export default function teneoApiPlugin(teneoApiUrl) {
       if(messages){
         EventBus.$emit(events.ENGINE_REPLIED);
       }
+
+
+    },
+
+    async sendMessage(message) {
+      await this.sendBaseMessage(message.data.text, {}, false)
     },
     async sendSilentMessage(text) {
-      
-      EventBus.$emit(events.START_SPINNER);
-      // set text and channel
-      var messageDetails = {
-        text: text,
-        channel : CHANNEL_PARAM
-      }
-
-      // if available, add extra params to messageDetails
-      var extraParams = tmpVue.$extraEngineParams;
-      if (Object.keys(extraParams).length > 0 && extraParams.constructor === Object) {
-        messageDetails = Object.assign(messageDetails, extraParams);
-      }
-
-      EventBus.$off(events.PUSH_BUBBLE);
-      EventBus.$on(events.PUSH_BUBBLE, (msg) => {
-        this._onMessageReceived(msg)
-      });
-
-      // check if there is an extension that want to intervene before sending the input to engine
-      var onEngineRequest = tmpVue.$extensionMethods.get(API_FUNCTION_ON_ENGINE_REQUEST)
-      if(onEngineRequest){
-        messageDetails = onEngineRequest(messageDetails);
-      }
-
-      // send to engine
-      var response = await teneoApi.sendInput(sessionId, messageDetails);
-
-      // check if there is an extension that want to intervene before processing the engine response
-      var onEngineResponse = tmpVue.$extensionMethods.get(API_FUNCTION_ON_ENGINE_RESPONSE);
-      if(onEngineResponse){
-        response=onEngineResponse(response);
-      }
-
-      sessionId = response.sessionId;
-      const messages = await parseTeneoResponse(response);
-
-      if(messages){
-        EventBus.$emit(events.ENGINE_REPLIED);
-      }
+      await this.sendBaseMessage(text, {}, true)
     },
     _onMessageReceived(message) {
       if (!message) {

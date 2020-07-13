@@ -68,8 +68,11 @@ export default {
       });
 
       EventBus.$on(events.ADD_MESSAGE, (message) => {
-        console.log('Event triggered')
         this.$teneoApi._onMessageReceived(message);
+      });
+
+      EventBus.$on(events.SEND_INPUT, (text,parameters,isSilent) => {
+        this.$teneoApi.sendBaseMessage(text,parameters,isSilent);
       });
     },
   methods: {
