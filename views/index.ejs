@@ -61,7 +61,7 @@
             switch (message.type) {
               case 'text':
                 // handle new text message event
-                console.log("Text message detected");
+                console.log("onNewMessage: Text message detected");
                 break;
 
               case 'card':
@@ -88,10 +88,18 @@
             return data;
           }
 
-         //window.TeneoWebChat.on('sendMessage',sendMessage);
+          var onEngineRequest = function(data) {
+            if (data.text) {
+              data.extraParameter = "hello from OnEngineRequest"
+            }
+            if (data.channel){ }
+            return data
+          }
+
           window.TeneoWebChat.on('send_input',sendMessage);
           window.TeneoWebChat.on('new_message', onNewMessage);
           window.TeneoWebChat.on('visibility_changed', onVisibilityChanged);
+          window.TeneoWebChat.on('engine_request', onEngineRequest)
 
           
           window.TeneoWebChat.initialize(

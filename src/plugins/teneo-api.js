@@ -4,7 +4,7 @@ import TIE from '../utils/tie-client.js';
 
 import MessageListCache from '../utils/message-list-cache.js';
 import parseTeneoResponse from '../utils/parse-teneo-response.js';
-import { CHANNEL_PARAM } from '../utils/constants.js';
+import { CHANNEL_PARAM, API_FUNCTION_ON_ENGINE_REQUEST } from '../utils/constants.js';
 import { EventBus, events } from '../utils/event-bus.js';
 import { API_FUNCTION_ON_NEW_MESSAGE } from '../utils/constants.js';
 
@@ -46,6 +46,12 @@ export default function teneoApiPlugin(teneoApiUrl) {
       }
 
       // send to engine
+      console.log('Initial Engine Request: '+JSON.stringify(messageDetails));
+      var onEngineRequest = tmpVue.$extensionMethods.get(API_FUNCTION_ON_ENGINE_REQUEST)
+      if(onEngineRequest){
+        messageDetails = onEngineRequest(messageDetails);
+      }
+      console.log('Customized Engine Request: '+JSON.stringify(messageDetails));
       const response = await teneoApi.sendInput(sessionId, messageDetails);
 
       sessionId = response.sessionId;
