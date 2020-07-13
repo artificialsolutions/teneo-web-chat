@@ -20,9 +20,11 @@
 </template>
 
 <script>
+import Vue from 'vue';
 import SendIcon from '../icons/send.vue';
-import { PARTICIPANT_USER } from '../utils/constants.js';
+import { PARTICIPANT_USER, API_FUNCTION_ON_INPUT_SUBMITTED } from '../utils/constants.js';
 import { EventBus, events } from '../utils/event-bus.js';
+const tmpVue = new Vue();
 
 export default {
   components: {
@@ -62,10 +64,14 @@ export default {
         event.preventDefault();
       }
     },
-    _submitText() {
-      const text = this.$refs.userInput.textContent;
+    async _submitText() {
+      var text = this.$refs.userInput.textContent;
+      this.$refs.userInput.innerHTML = '';
 
-      
+      var onInputSubmitted = tmpVue.$extensionMethods.get(API_FUNCTION_ON_INPUT_SUBMITTED)
+      if(onInputSubmitted){
+        text = await onInputSubmitted(text);
+      }
 
       if (text && text.length > 0) {
         this.onSubmit({
@@ -73,7 +79,6 @@ export default {
           type: 'text',
           data: { text },
         });
-        this.$refs.userInput.innerHTML = '';
       }
     },
   },
