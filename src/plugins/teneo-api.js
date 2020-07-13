@@ -46,7 +46,6 @@ export default function teneoApiPlugin(teneoApiUrl) {
       }
 
       // send to engine
-      console.log('Initial Engine Request: '+JSON.stringify(messageDetails));
       var onEngineRequest = tmpVue.$extensionMethods.get(API_FUNCTION_ON_ENGINE_REQUEST)
       if(onEngineRequest){
         messageDetails = onEngineRequest(messageDetails);
@@ -91,9 +90,21 @@ export default function teneoApiPlugin(teneoApiUrl) {
         this._onMessageReceived(msg)
       });
 
+      // check if there is an extension that want to intervene before sending the input to engine
+      var onEngineRequest = tmpVue.$extensionMethods.get(API_FUNCTION_ON_ENGINE_REQUEST)
+      if(onEngineRequest){
+        messageDetails = onEngineRequest(messageDetails);
+      }
 
       // send to engine
-      const response = await teneoApi.sendInput(sessionId, messageDetails);
+      var response = await teneoApi.sendInput(sessionId, messageDetails);
+
+      // check if there is an extension that want to intervene before processing the engine response
+      var onEngineResponse = tmpVue.$extensionMethods.get(API_FUNCTION_ON_ENGINE_RESPONSE);
+      if(onEngineResponse){
+        response=onEngineResponse(response);
+      }
+
       sessionId = response.sessionId;
       const messages = await parseTeneoResponse(response);
 
@@ -102,7 +113,6 @@ export default function teneoApiPlugin(teneoApiUrl) {
       }
     },
     _onMessageReceived(message) {
-      console.log("onMessageReceived")
       if (!message) {
         return;
       }

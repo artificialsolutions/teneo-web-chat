@@ -56,7 +56,7 @@ export default {
   },
   methods: {
       async sendMessage(message) {
-        console.log("Chatwindow.vue sendMessage: ", message)
+        // console.log("Chatwindow.vue sendMessage: ", message)
         //Run user-defined 'input_submitted' method, if available
         if(tmpVue.$extensionMethods.get(API_FUNCTION_CALL_SEND_INPUT)){
           var sendMessageFunction = tmpVue.$extensionMethods.get(API_FUNCTION_CALL_SEND_INPUT);

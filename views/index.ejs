@@ -35,66 +35,51 @@
           // EXTENSIONS
 
           // just any string processing method
-          function reverseString(str) { 
-            var splitString = str.split("");
-            var reverseArray = splitString.reverse();
-            var joinArray = reverseArray.join("");
-            return joinArray; 
-          }
+          // function reverseString(str) { 
+          //   var splitString = str.split("");
+          //   var reverseArray = splitString.reverse();
+          //   var joinArray = reverseArray.join("");
+          //   return joinArray; 
+          // }
 
           // Override methods
 
-          var onEvent = function(msg){ //Example: teneo-api.js L44, L84
-            console.log('OnEvent: '+msg)
+          // var sendMessage = function(msg){ //Example: ChatWindow.vue L56
+          //   console.log('@Override function sendMessage');
+
+          //   //reverse the text input of the message
+          //   //msg.data.text = reverseString(msg.data.text)
+
+          //   // add exclamation mark to input
+          //   msg.data.text = msg.data.text + "!"
+          //   return msg
+          // }
+          
+          function onNewMessage(message) {
+            console.log("onNewMessage", message)
+            return message
           }
-          var sendMessage = function(msg){ //Example: ChatWindow.vue L56
-            console.log('@Override function sendMessage');
 
-            //reverse the text input of the message
-            //msg.data.text = reverseString(msg.data.text)
-
-            // add exclamation mark to input
-            msg.data.text = msg.data.text + "!"
-            return msg
+          function onVisibilityChanged(data) {
+            console.log("onVisibilityChanged", data)
+            return data
           }
           
-          var onNewMessage = function(message) {
-            console.log("onNewMessage", message)
-            //console.log('onNewMessage.messageType: '+message.type);
-            switch (message.type) {
-              case 'text':
-                // handle new text message event
-                console.log("onNewMessage: Text message detected");
-                break;
-
-              case 'card':
-                // handle new card message event
-                console.log("Card message Detected")
-                break
-
-              default:
-                break;
-            }
+          function onEngineRequest(request) {
+            console.log("onEngineRequest", request)
+            return request
           }
 
-          var onVisibilityChanged = function(data){
-            switch (data.visibility){
-              case 'minimized':
-                console.log('onVisibilityChanged: minimized');
-                break;
-              case 'maximized':
-                console.log('onVisibilityChanged: maximized');
-                break;
-              default:
-                break;
-            }
-            return data;
+          function onEngineResponse(response) {
+            console.log("onEngineResponse", response)
+            return response
           }
+
 
           const myMessage = {'author': 'user', 'type': 'text', 'data': {'text': 'Funky!'}}
 
          //window.TeneoWebChat.on('sendMessage',sendMessage);
-          window.TeneoWebChat.on('send_input',sendMessage);
+          //window.TeneoWebChat.on('send_input',sendMessage);
           window.TeneoWebChat.on('new_message', onNewMessage);
           window.TeneoWebChat.on('visibility_changed', onVisibilityChanged);
           window.TeneoWebChat.on('engine_request', onEngineRequest);
