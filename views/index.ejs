@@ -93,13 +93,20 @@
               data.extraParameter = "hello from OnEngineRequest"
             }
             if (data.channel){ }
+            console.log('onEngineRequest: '+JSON.stringify(data));
             return data
+          }
+          var onEngineResponse = function(response) {
+            // handle engine response event
+            console.log('onEngineResponse: '+JSON.stringify(response));
+            return response;
           }
 
           window.TeneoWebChat.on('send_input',sendMessage);
           window.TeneoWebChat.on('new_message', onNewMessage);
           window.TeneoWebChat.on('visibility_changed', onVisibilityChanged);
-          window.TeneoWebChat.on('engine_request', onEngineRequest)
+          window.TeneoWebChat.on('engine_request', onEngineRequest);
+          window.TeneoWebChat.on('engine_response', onEngineResponse);
 
           
           window.TeneoWebChat.initialize(
