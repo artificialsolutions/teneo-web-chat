@@ -102,6 +102,7 @@ export default function teneoApiPlugin(teneoApiUrl) {
       }
     },
     _onMessageReceived(message) {
+      console.log("onMessageReceived")
       if (!message) {
         return;
       }
