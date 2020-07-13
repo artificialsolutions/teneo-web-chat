@@ -74,6 +74,15 @@
             });         
           }
 
+          function onButtonClicked(button) {
+            console.log("onButtonClicked", button.postback)
+            return new Promise(resolve => { 
+              setTimeout(() => { 
+                resolve(button)
+               }, 500);
+            });         
+          }
+
 
           const myMessage = {'author': 'user', 'type': 'text', 'data': {'text': 'Funky!'}}
 
@@ -84,6 +93,7 @@
           window.TeneoWebChat.on('engine_request', onEngineRequest);
           window.TeneoWebChat.on('engine_response', onEngineResponse);
           window.TeneoWebChat.on('input_submitted', onInputSubmitted);
+          window.TeneoWebChat.on('button_clicked', onButtonClicked);
 
           
           window.TeneoWebChat.initialize(

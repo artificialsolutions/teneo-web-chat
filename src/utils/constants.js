@@ -30,6 +30,7 @@ export const API_FUNCTION_ON_INPUT_SUBMITTED = "input_submitted";
 export const API_FUNCTION_ON_ENGINE_REQUEST = "engine_request";
 export const API_FUNCTION_ON_ENGINE_RESPONSE = "engine_response";
 export const API_FUNCTION_ON_NEW_MESSAGE = "new_message";
+export const API_FUNCTION_ON_BUTTON_CLICK = "button_clicked";
 
 //Map keys
 export const API_KEY_VISIBILITY = "visibility";

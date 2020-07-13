@@ -46,6 +46,8 @@
 <script>
 import { PARTICIPANT_BOT } from '../../utils/constants.js';
 import sanitizeHtml from '../../utils/sanitize-html.js';
+import handleButtonClick from '../../utils/handle-button-click.js';
+
 export default {
   name: 'CardMessage',
   props: {
@@ -113,15 +115,7 @@ export default {
   methods: {
     async onSelect(reply, idx) {
       if (!this.replySent) {
-        const numMessages = this.$teneoApi.messageList.length;
-        const messages = this.$teneoApi.messageList.slice(0, numMessages - 1);
-        const dynamiclistMessage = this.$teneoApi.messageList[numMessages - 1];
-
-        const selectedItem = { ...dynamiclistMessage, selected: idx };
-
-        this.$teneoApi.messageList = [...messages, selectedItem];
-
-        await this.$teneoApi.sendSilentMessage(reply.postback);
+        await handleButtonClick(reply, idx, this.$teneoApi)
       }
     },
   },

@@ -55,23 +55,6 @@ export default {
 
   },
   methods: {
-
-      //async sendMessage(text, parameters, isSilent);
-
-      // async sendMessage(message) {
-      //   console.log("Chatwindow.vue sendMessage: ", message)
-      //   //Run user-defined 'input_submitted' method, if available
-      //   if(tmpVue.$extensionMethods.get(API_FUNCTION_CALL_SEND_INPUT)){
-      //     var sendMessageFunction = tmpVue.$extensionMethods.get(API_FUNCTION_CALL_SEND_INPUT);
-      //     var newMessage = await sendMessageFunction(message)
-      //     if (newMessage) {
-      //       this.sendMessageBase(newMessage);
-      //     }
-      //   }
-      //   else{
-      //     this.sendMessageBase(message);
-      //   }
-      // },
       sendMessage(message) {
         this.spinnerIsLoading=true;
         this.$teneoApi.sendMessage(message);
