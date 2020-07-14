@@ -74,9 +74,6 @@
             });         
           }
 
-          function onReady(initialData) {
-            console.log('onReady.state'+initialData.state);
-          }
           function onButtonClicked(button) {
             console.log("onButtonClicked", button.postback)
             return new Promise(resolve => { 
@@ -96,7 +93,6 @@
           window.TeneoWebChat.on('engine_request', onEngineRequest);
           window.TeneoWebChat.on('engine_response', onEngineResponse);
           window.TeneoWebChat.on('input_submitted', onInputSubmitted);
-          window.TeneoWebChat.on('ready', onReady);
           window.TeneoWebChat.on('button_clicked', onButtonClicked);
 
           
