@@ -17,12 +17,10 @@ export const API_FUNCTION_CALL_END_SESSION = "end_session";
 export const API_FUNCTION_CALL_CLEAR_HISTORY = "clear_history";
 export const API_FUNCTION_CALL_RESET = "reset";
 export const API_FUNCTION_CALL_ADD_MESSAGE = "add_message";
-export const API_FUNCTION_GET_STATE = "state";
+
 
 // api getter
-export const API_STATE_MAXIMIZED = "maximized";
-export const API_STATE_MINIMIZED = "minimized";
-export const API_STATE_READY = "ready"
+export const API_FUNCTION_GET_STATE = "state";
 
 // api callacks
 export const API_FUNCTION_ON_READY = "ready";
@@ -33,5 +31,5 @@ export const API_FUNCTION_ON_ENGINE_RESPONSE = "engine_response";
 export const API_FUNCTION_ON_NEW_MESSAGE = "new_message";
 export const API_FUNCTION_ON_BUTTON_CLICK = "component_button_clicked";
 
-//Map keys
+// state object keys
 export const API_KEY_VISIBILITY = "visibility";

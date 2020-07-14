@@ -3,13 +3,10 @@ import Vue from 'vue';
 import TeneoWebChat from './TeneoWebChat.vue';
 import teneoApiPlugin from './plugins/teneo-api.js';
 import { EventBus, events } from '../src/utils/event-bus.js';
-import { API_FUNCTION_CALL_MAXIMIZE, API_FUNCTION_CALL_MINIMIZE, API_FUNCTION_CALL_SEND_INPUT, API_FUNCTION_CALL_END_SESSION, API_FUNCTION_CALL_CLEAR_HISTORY, API_FUNCTION_CALL_RESET, API_FUNCTION_GET_STATE, API_FUNCTION_ON_VISIBILITY_CHANGED,
-         API_STATE_MINIMIZED, API_STATE_MAXIMIZED, API_STATE_READY,
-         API_KEY_VISIBILITY, 
-         API_VERSION, API_FUNCTION_CALL_ADD_MESSAGE, API_FUNCTION_ON_READY} from '../src/utils/constants.js';
+import * as constants from '../src/utils/constants.js';
 
 var functionMap = new Map();
-var stateMap = {'visibility': API_STATE_MINIMIZED};
+var stateMap = {'visibility': events.API_STATE_MINIMIZED};
 
 window['TeneoWebChat'] = {
   initialize(element, serviceName, teneoEngineUrl, closeTieSessionOnExit = 'no', imageUrl = '', extraEngineParams = {}) {
@@ -17,8 +14,8 @@ window['TeneoWebChat'] = {
     Vue.prototype.$extraEngineParams = extraEngineParams;
     Vue.prototype.$extensionMethods = functionMap;
 
-    EventBus.$on(API_STATE_READY, (initialState) => {
-      var onReadyMethod = Vue.prototype.$extensionMethods.get(API_FUNCTION_ON_READY)
+    EventBus.$on(events.API_STATE_READY, (initialState) => {
+      var onReadyMethod = Vue.prototype.$extensionMethods.get(constants.API_FUNCTION_ON_READY)
       if(onReadyMethod){
         onReadyMethod(initialState);
       }
@@ -29,22 +26,22 @@ window['TeneoWebChat'] = {
     }).$mount(element);
 
     function handleVisibilityChange(event){
-      if(stateMap[API_KEY_VISIBILITY] != event){
-        stateMap[API_KEY_VISIBILITY] = event;
-        if(tmpVue.$extensionMethods.get(API_FUNCTION_ON_VISIBILITY_CHANGED)){
-          const onVisibilityChangedFunction = tmpVue.$extensionMethods.get(API_FUNCTION_ON_VISIBILITY_CHANGED);
+      if(stateMap[constants.API_KEY_VISIBILITY] != event){
+        stateMap[constants.API_KEY_VISIBILITY] = event;
+        if(tmpVue.$extensionMethods.get(constants.API_FUNCTION_ON_VISIBILITY_CHANGED)){
+          const onVisibilityChangedFunction = tmpVue.$extensionMethods.get(constants.API_FUNCTION_ON_VISIBILITY_CHANGED);
           const data = {};
-          data[API_KEY_VISIBILITY] = stateMap[API_KEY_VISIBILITY];
+          data[constants.API_KEY_VISIBILITY] = stateMap[constants.API_KEY_VISIBILITY];
           onVisibilityChangedFunction(data);
         }
       }
     }
     //These listeners keep 'state' updated and trigger onVisibilityChanged.
-    EventBus.$on(API_STATE_MAXIMIZED, () => {
-      handleVisibilityChange(API_STATE_MAXIMIZED);
+    EventBus.$on(events.API_STATE_MAXIMIZED, () => {
+      handleVisibilityChange(events.API_STATE_MAXIMIZED);
     });
-    EventBus.$on(API_STATE_MINIMIZED, () => {
-      handleVisibilityChange(API_STATE_MINIMIZED);
+    EventBus.$on(events.API_STATE_MINIMIZED, () => {
+      handleVisibilityChange(events.API_STATE_MINIMIZED);
     });
 
   },
@@ -56,7 +53,7 @@ window['TeneoWebChat'] = {
   },
   get(param){
     switch (param) {
-      case API_FUNCTION_GET_STATE:
+      case constants.API_FUNCTION_GET_STATE:
         console.log('stateMap: '+JSON.stringify(stateMap));
         return stateMap;
         break;
@@ -77,38 +74,38 @@ window['TeneoWebChat'] = {
     }
     
     switch (function_name) {
-      case API_FUNCTION_CALL_MAXIMIZE:
+      case constants.API_FUNCTION_CALL_MAXIMIZE:
         // handle function
         EventBus.$emit(events.MAXIMIZE_WINDOW);
         break
   
-      case API_FUNCTION_CALL_MINIMIZE:
+      case constants.API_FUNCTION_CALL_MINIMIZE:
         // handle function
         EventBus.$emit(events.MINIMIZE_WINDOW);
         break
         
-      case API_FUNCTION_CALL_SEND_INPUT:
+      case constants.API_FUNCTION_CALL_SEND_INPUT:
         // handle function
         // TO DO: check if params are of correct type
         EventBus.$emit(events.SEND_INPUT, param1, param2, param3);
         break
 
-      case API_FUNCTION_CALL_END_SESSION:
+      case constants.API_FUNCTION_CALL_END_SESSION:
         // handle function
         EventBus.$emit(events.END_SESSION);
         break
 
-      case API_FUNCTION_CALL_CLEAR_HISTORY:
+      case constants.API_FUNCTION_CALL_CLEAR_HISTORY:
         // handle function
         EventBus.$emit(events.CLEAR_HISTORY);
         break
 
-      case API_FUNCTION_CALL_RESET:
+      case constants.API_FUNCTION_CALL_RESET:
         // handle function
         EventBus.$emit(events.RESET_SESSION);
         break
         
-      case API_FUNCTION_CALL_ADD_MESSAGE:
+      case constants.API_FUNCTION_CALL_ADD_MESSAGE:
         // handle function
         console.log('Triggering add message')
         // TO DO: make sure we check the format of param1
@@ -121,7 +118,7 @@ window['TeneoWebChat'] = {
     }
   },
   version() {
-    return API_VERSION;
+    return constants.API_VERSION;
   },
   resetChat(){
     EventBus.$emit(events.RESET_SESSION);

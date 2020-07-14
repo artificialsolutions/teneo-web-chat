@@ -8,10 +8,13 @@ export const events = {
   ENGINE_REPLIED: 'engine-replied',
   PUSH_BUBBLE: 'push-bubble',
   START_SPINNER: 'start-spinner',
-  MAXIMIZE_WINDOW: 'maximize',  //check usage
-  MINIMIZE_WINDOW: 'minimize',  //check usage
+  MAXIMIZE_WINDOW: 'maximize',
+  MINIMIZE_WINDOW: 'minimize',
   ADD_MESSAGE: 'add_message',
   SEND_INPUT: 'send_input',
+  API_STATE_MAXIMIZED: 'maximized',
+  API_STATE_MINIMIZED: 'minimized',
+  API_STATE_READY: 'ready',
 };
 
 export const EventBus = new Vue();

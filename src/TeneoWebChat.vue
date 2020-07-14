@@ -15,8 +15,6 @@ import registerMessageComponents from './utils/register-message-components.js';
 import ChatWindow from './components/ChatWindow.vue';
 import LaunchButton from './components/LaunchButton.vue';
 import { EventBus, events } from './utils/event-bus.js';
-import { API_STATE_MAXIMIZED, API_STATE_MINIMIZED, API_STATE_READY,
-         API_FUNCTION_CALL_MAXIMIZE, API_FUNCTION_CALL_MINIMIZE, API_FUNCTION_ON_VISIBILITY_CHANGED } from './utils/constants';
 registerMessageComponents();
 
 export default {
@@ -75,18 +73,18 @@ export default {
         this.$teneoApi.sendBaseMessage(text,parameters,isSilent);
       });
 
-      EventBus.$emit(API_STATE_READY,{'state':'ready'});
+      EventBus.$emit(events.API_STATE_READY,{'state':'ready'});
     },
   methods: {
     openChat() {  //same as maximize
       this.isChatOpen = true;
       //Update 'state', run 'onVisibilityChanged (if available)'
-      EventBus.$emit(API_STATE_MAXIMIZED);
+      EventBus.$emit(events.API_STATE_MAXIMIZED);
     },
     minimize(){
       this.isChatOpen = false
       //Update 'state' and , call 'onVisibilityChanged (if available)'
-      EventBus.$emit(API_STATE_MINIMIZED);
+      EventBus.$emit(events.API_STATE_MINIMIZED);
     },
     clearHistory() {
       this.$teneoApi.clearHistory()
