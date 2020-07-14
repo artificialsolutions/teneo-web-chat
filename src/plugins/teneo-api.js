@@ -6,6 +6,7 @@ import MessageListCache from '../utils/message-list-cache.js';
 import parseTeneoResponse from '../utils/parse-teneo-response.js';
 import { CHANNEL_PARAM, API_ON_ENGINE_REQUEST, API_ON_ENGINE_RESPONSE, API_ON_NEW_MESSAGE } from '../utils/constants.js';
 import { EventBus, events } from '../utils/event-bus.js';
+import handleExtension from '../utils/handle-extension.js';
 
 export default function teneoApiPlugin(teneoApiUrl) {
   const teneoApi = TIE.init(teneoApiUrl);
@@ -49,32 +50,25 @@ export default function teneoApiPlugin(teneoApiUrl) {
 
       if (!isSilent) {
 
-        // add messsage to history
+        // add user messsage to history
         var tmpMessage = {'author': 'user', 'type': 'text', 'data': {'text': text}}
 
-        // check if there is an extension that want to intercept the new messsage
-        if(tmpVue.$extensionMethods.get(API_ON_NEW_MESSAGE)){
-          var newMessageFunction = tmpVue.$extensionMethods.get(API_ON_NEW_MESSAGE);
-          tmpMessage = await newMessageFunction(tmpMessage);
-        }
+        // check if there is an extension that want to intercept the message before it is added
+        tmpMessage = await handleExtension(API_ON_NEW_MESSAGE, tmpMessage);
+
         this.messageList = [...this.messageList, tmpMessage];
       }
 
       // send request to engine
 
       // check if there is an extension that want to intercept the request to engine
-      var onEngineRequest = tmpVue.$extensionMethods.get(API_ON_ENGINE_REQUEST)
-      if(onEngineRequest){
-        messageDetails = await onEngineRequest(messageDetails);
-      }
-      
+      messageDetails = await handleExtension(API_ON_ENGINE_REQUEST, messageDetails);
+
+      // send the input to engine
       var response = await teneoApi.sendInput(sessionId, messageDetails);
 
       // check if there is an extension that want to intercept the response from engine
-      var onEngineResponse = tmpVue.$extensionMethods.get(API_ON_ENGINE_RESPONSE);
-      if(onEngineResponse){
-        response = await onEngineResponse(response);
-      }
+      response = await handleExtension(API_ON_ENGINE_RESPONSE, response);
 
       sessionId = response.sessionId;
 
@@ -88,7 +82,6 @@ export default function teneoApiPlugin(teneoApiUrl) {
         EventBus.$emit(events.ENGINE_REPLIED);
       }
 
-
     },
 
     async sendMessage(message) {
@@ -97,14 +90,14 @@ export default function teneoApiPlugin(teneoApiUrl) {
     async sendSilentMessage(text) {
       await this.sendBaseMessage(text, {}, true)
     },
-    _onMessageReceived(message) {
+    async _onMessageReceived(message) {
       if (!message) {
         return;
       }
-      if(Vue.prototype.$extensionMethods.get(API_ON_NEW_MESSAGE)){
-        var newMessageFunction = Vue.prototype.$extensionMethods.get(API_ON_NEW_MESSAGE);
-        newMessageFunction(message);
-      }
+      // check if there is an extension that want to intercept the message
+      message = await handleExtension(API_ON_NEW_MESSAGE, message);
+
+      // add message to list
       this.messageList = [...this.messageList, message];
     },
     async closeSession(){

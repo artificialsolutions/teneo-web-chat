@@ -24,6 +24,7 @@ import Vue from 'vue';
 import SendIcon from '../icons/send.vue';
 import { PARTICIPANT_USER, API_ON_INPUT_SUBMITTED } from '../utils/constants.js';
 import { EventBus, events } from '../utils/event-bus.js';
+import handleExtension from '../utils/handle-extension.js';
 const tmpVue = new Vue();
 
 export default {
@@ -68,10 +69,9 @@ export default {
       var text = this.$refs.userInput.textContent;
       this.$refs.userInput.innerHTML = '';
 
-      var onInputSubmitted = tmpVue.$extensionMethods.get(API_ON_INPUT_SUBMITTED)
-      if(onInputSubmitted){
-        text = await onInputSubmitted(text);
-      }
+      // check if there is an extension that want to intercept the user input
+      text = await handleExtension(API_ON_INPUT_SUBMITTED,text);
+
 
       if (text && text.length > 0) {
         this.onSubmit({
