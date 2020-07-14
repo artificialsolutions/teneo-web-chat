@@ -15,7 +15,7 @@ import registerMessageComponents from './utils/register-message-components.js';
 import ChatWindow from './components/ChatWindow.vue';
 import LaunchButton from './components/LaunchButton.vue';
 import { EventBus, events } from './utils/event-bus.js';
-import { API_STATE_MAXIMIZED, API_STATE_MINIMIZED, 
+import { API_STATE_MAXIMIZED, API_STATE_MINIMIZED, API_STATE_READY,
          API_FUNCTION_CALL_MAXIMIZE, API_FUNCTION_CALL_MINIMIZE, API_FUNCTION_ON_VISIBILITY_CHANGED } from './utils/constants';
 registerMessageComponents();
 
@@ -74,6 +74,8 @@ export default {
       EventBus.$on(events.SEND_INPUT, (text,parameters,isSilent) => {
         this.$teneoApi.sendBaseMessage(text,parameters,isSilent);
       });
+
+      EventBus.$emit(API_STATE_READY,{'state':'ready'});
     },
   methods: {
     openChat() {  //same as maximize

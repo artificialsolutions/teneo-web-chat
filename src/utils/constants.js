@@ -22,6 +22,7 @@ export const API_FUNCTION_GET_STATE = "state";
 // api getter
 export const API_STATE_MAXIMIZED = "maximized";
 export const API_STATE_MINIMIZED = "minimized";
+export const API_STATE_READY = "ready"
 
 // api callacks
 export const API_FUNCTION_ON_READY = "ready";

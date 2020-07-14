@@ -4,9 +4,9 @@ import TeneoWebChat from './TeneoWebChat.vue';
 import teneoApiPlugin from './plugins/teneo-api.js';
 import { EventBus, events } from '../src/utils/event-bus.js';
 import { API_FUNCTION_CALL_MAXIMIZE, API_FUNCTION_CALL_MINIMIZE, API_FUNCTION_CALL_SEND_INPUT, API_FUNCTION_CALL_END_SESSION, API_FUNCTION_CALL_CLEAR_HISTORY, API_FUNCTION_CALL_RESET, API_FUNCTION_GET_STATE, API_FUNCTION_ON_VISIBILITY_CHANGED,
-         API_STATE_MINIMIZED, API_STATE_MAXIMIZED,
+         API_STATE_MINIMIZED, API_STATE_MAXIMIZED, API_STATE_READY,
          API_KEY_VISIBILITY, 
-         API_VERSION, API_FUNCTION_CALL_ADD_MESSAGE} from '../src/utils/constants.js';
+         API_VERSION, API_FUNCTION_CALL_ADD_MESSAGE, API_FUNCTION_ON_READY} from '../src/utils/constants.js';
 
 var functionMap = new Map();
 var stateMap = {'visibility': API_STATE_MINIMIZED};
@@ -16,6 +16,13 @@ window['TeneoWebChat'] = {
     Vue.use(teneoApiPlugin(teneoEngineUrl));
     Vue.prototype.$extraEngineParams = extraEngineParams;
     Vue.prototype.$extensionMethods = functionMap;
+
+    EventBus.$on(API_STATE_READY, (initialState) => {
+      var onReadyMethod = Vue.prototype.$extensionMethods.get(API_FUNCTION_ON_READY)
+      if(onReadyMethod){
+        onReadyMethod(initialState);
+      }
+    });
 
     var tmpVue = new Vue({
       render: (h) => h(TeneoWebChat, { props: { serviceName, closeTieSessionOnExit, imageUrl} }),
