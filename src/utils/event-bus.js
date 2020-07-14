@@ -15,6 +15,7 @@ export const events = {
   API_STATE_MAXIMIZED: 'maximized',
   API_STATE_MINIMIZED: 'minimized',
   API_STATE_READY: 'ready',
+  SET_WINDOW_TITLE: 'set-window-title',
 };
 
 export const EventBus = new Vue();

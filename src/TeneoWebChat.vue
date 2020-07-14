@@ -28,10 +28,10 @@ export default {
       type: String,
       required: true,
     },
-    serviceName: {
-      type: String,
-      required: true,
-    },
+    // serviceName: {
+    //   type: String,
+    //   required: true,
+    // },
     closeTieSessionOnExit: {
       type: String,
       required: false,
@@ -39,7 +39,8 @@ export default {
   },
   data() {
     return {
-    isChatOpen: false,
+      isChatOpen: false,
+      serviceName: 'Teneo Web Chat',
     };
   },
   mounted() {
@@ -73,6 +74,10 @@ export default {
         this.$teneoApi.sendBaseMessage(text,parameters,isSilent);
       });
 
+      EventBus.$on(events.SET_WINDOW_TITLE, (newTitle) => {
+        this.setWindowTitle(newTitle);
+      });
+
       EventBus.$emit(events.API_STATE_READY);
 
     },
@@ -99,6 +104,9 @@ export default {
           this.closeSession()
           this.clearHistory()
       }
+    },
+    setWindowTitle(newTitle) { 
+      this.serviceName = newTitle
     },
   },
 };

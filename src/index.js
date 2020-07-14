@@ -6,13 +6,20 @@ import { EventBus, events } from '../src/utils/event-bus.js';
 import * as constants from '../src/utils/constants.js';
 
 var functionMap = new Map();
-var stateMap = {'visibility': events.API_STATE_MINIMIZED};
+var stateMap = {'visibility': events.API_STATE_MINIMIZED, 'title':'Funky'};
 
 window['TeneoWebChat'] = {
-  initialize(element, serviceName, teneoEngineUrl, closeTieSessionOnExit = 'no', imageUrl = '', extraEngineParams = {}) {
+  initialize(element, title, teneoEngineUrl, closeTieSessionOnExit = 'no', imageUrl = '', extraEngineParams = {}) {
     Vue.use(teneoApiPlugin(teneoEngineUrl));
     Vue.prototype.$extraEngineParams = extraEngineParams;
     Vue.prototype.$extensionMethods = functionMap;
+
+    console.log('title', title)
+    if (title) {
+      stateMap['title'] = title;
+      EventBus.$emit(events.SET_WINDOW_TITLE, title);
+    }
+    
 
     EventBus.$on(events.API_STATE_READY, () => {
       var onReadyMethod = Vue.prototype.$extensionMethods.get(constants.API_ON_READY)
@@ -21,9 +28,12 @@ window['TeneoWebChat'] = {
       }
     });
 
+    var serviceName = stateMap['title'];
     var tmpVue = new Vue({
-      render: (h) => h(TeneoWebChat, { props: { serviceName, closeTieSessionOnExit, imageUrl} }),
+      render: (h) => h(TeneoWebChat, { props: { closeTieSessionOnExit, imageUrl} }),
     }).$mount(element);
+
+    EventBus.$emit(events.SET_WINDOW_TITLE, title); 
 
     function handleVisibilityChange(event){
       if(stateMap[constants.API_KEY_VISIBILITY] != event){
@@ -51,9 +61,17 @@ window['TeneoWebChat'] = {
   off(function_name){
     functionMap.delete(function_name);
   },
-  get(param){
-    switch (param) {
+  get(function_name){
+    switch (function_name) {
       case constants.API_GET_STATE:
+        return stateMap;
+    }
+  },
+  set(function_name, param1 = undefined) {
+    switch (function_name) {
+      case constants.API_SET_WINDOW_TITLE:
+        EventBus.$emit(events.SET_WINDOW_TITLE, param1);
+        stateMap.title = param1
         return stateMap;
     }
   },

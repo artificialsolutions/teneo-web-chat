@@ -12,16 +12,18 @@
   </head>
 
   <body>
-    <button onclick="TeneoWebChat.call('reset')">Reset Chat</button>
-    <button onclick="TeneoWebChat.call('maximize')">Maximize</button>
-    <button onclick="TeneoWebChat.call('minimize')">Minimize</button>
-    <button onclick="console.log(TeneoWebChat.get('state'))">Get State</button>
-    <button onclick="TeneoWebChat.call('end_session')">End session</button>
-    <button onclick="TeneoWebChat.call('clear_history')">Clear history</button>
-    <button onclick="console.log(TeneoWebChat.version())">Version</button>
-    <button onclick="TeneoWebChat.call('add_message',{'author': 'bot', 'type': 'text', 'data': {'text': 'Funky!'}})">Add message</button>
-    <button onclick="TeneoWebChat.call('send_input', 'What do you think about jimi hendriks?', {'userCountryCode':'NL'}, false)">Send message</button>
-    <button onclick="TeneoWebChat.call('send_input', 'Do you like silent messages?', {'userCountryCode':'NL'}, true)">Send silent message</button>
+    <button onclick="TeneoWebChat.call('reset')">Reset Chat</button><br>
+    <button onclick="TeneoWebChat.call('maximize')">Maximize</button><br>
+    <button onclick="TeneoWebChat.call('minimize')">Minimize</button><br>
+    <button onclick="console.log(TeneoWebChat.get('state'))">Get State</button><br>
+    <button onclick="TeneoWebChat.call('end_session')">End session</button><br>
+    <button onclick="TeneoWebChat.call('clear_history')">Clear history</button><br>
+    <button onclick="console.log(TeneoWebChat.version())">Version</button><br>
+    <button onclick="TeneoWebChat.call('add_message',{'author': 'bot', 'type': 'text', 'data': {'text': 'Funky!'}})">Add message</button><br>
+    <button onclick="TeneoWebChat.call('send_input', 'What do you think about jimi hendriks?', {'userCountryCode':'NL'}, false)">Send message</button><br>
+    <button onclick="TeneoWebChat.call('send_input', 'Do you like silent messages?', {'userCountryCode':'NL'}, true)">Send silent message</button><br>
+    <button onclick="TeneoWebChat.call('add_message',{'author': 'system', 'type': 'system', 'data': {'text': 'This is a system message. You are number <strong>4</strong> in the queue.'}})">Add system message</button><br>
+    <button onclick="console.log(TeneoWebChat.set('window_title', 'Crazy stuff'))">Set window title</button><br>
     
     <div id="teneo-web-chat"></div>
     <script src="main.js"></script>
@@ -34,17 +36,7 @@
           var element = document.getElementById('teneo-web-chat');
 
 
-          // EXTENSIONS
-
-          // just any string processing method
-          // function reverseString(str) { 
-          //   var splitString = str.split("");
-          //   var reverseArray = splitString.reverse();
-          //   var joinArray = reverseArray.join("");
-          //   return joinArray; 
-          // }
-
-          
+          // EXTENSIONS          
           function onNewMessage(message) {
             console.log("onNewMessage", message)
             return message
@@ -87,17 +79,13 @@
             console.log('onReady',initialData);
           }
 
-          const myMessage = {'author': 'user', 'type': 'text', 'data': {'text': 'Funky!'}}
-
-         //window.TeneoWebChat.on('sendMessage',sendMessage);
-          //window.TeneoWebChat.on('send_input',sendMessage);
-          window.TeneoWebChat.on('new_message', onNewMessage);
-          window.TeneoWebChat.on('visibility_changed', onVisibilityChanged);
-          window.TeneoWebChat.on('engine_request', onEngineRequest);
-          window.TeneoWebChat.on('engine_response', onEngineResponse);
-          // window.TeneoWebChat.on('input_submitted', onInputSubmitted);
-          window.TeneoWebChat.on('component_button_clicked', onButtonClicked);
-          window.TeneoWebChat.on('ready', onReady);
+          TeneoWebChat.on('new_message', onNewMessage);
+          TeneoWebChat.on('visibility_changed', onVisibilityChanged);
+          TeneoWebChat.on('engine_request', onEngineRequest);
+          TeneoWebChat.on('engine_response', onEngineResponse);
+          TeneoWebChat.on('input_submitted', onInputSubmitted);
+          TeneoWebChat.on('component_button_clicked', onButtonClicked);
+          TeneoWebChat.on('ready', onReady);
 
 
           

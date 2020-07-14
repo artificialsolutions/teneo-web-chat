@@ -21,6 +21,9 @@ export const API_CALL_ADD_MESSAGE = "add_message";
 // api getter
 export const API_GET_STATE = "state";
 
+// api setter
+export const API_SET_WINDOW_TITLE = "window_title";
+
 // api callacks
 export const API_ON_READY = "ready";
 export const API_ON_VISIBILITY_CHANGED = "visibility_changed";
