@@ -28,7 +28,6 @@ window['TeneoWebChat'] = {
       }
     });
 
-    var serviceName = stateMap['title'];
     var tmpVue = new Vue({
       render: (h) => h(TeneoWebChat, { props: { closeTieSessionOnExit, imageUrl} }),
     }).$mount(element);
