@@ -14,6 +14,7 @@
 </template>
 
 <script>
+import handleButtonClick from '../../utils/handle-button-click.js';
 export default {
   name: 'QuickreplyMessage',
   props: {
@@ -53,16 +54,7 @@ export default {
       if (this.replySent || this.isExpired) {
         return;
       }
-
-      const numMessages = this.$teneoApi.messageList.length;
-      const messages = this.$teneoApi.messageList.slice(0, numMessages - 1);
-      const quickreplyMessage = this.$teneoApi.messageList[numMessages - 1];
-
-      const selectedQuickReply = { ...quickreplyMessage, selected: idx };
-
-      this.$teneoApi.messageList = [...messages, selectedQuickReply];
-
-      await this.$teneoApi.sendSilentMessage(reply.postback);
+      await handleButtonClick(reply, idx, this.$teneoApi)
     },
   },
 };

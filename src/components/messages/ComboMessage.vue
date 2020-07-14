@@ -141,6 +141,7 @@
 </template>
 <script>
 import { PARTICIPANT_BOT } from '../../utils/constants.js';
+import handleButtonClick from '../../utils/handle-button-click.js';
 export default {
   name: 'ComboMessage',
   props: {
@@ -181,15 +182,7 @@ export default {
   methods: {
     async onSelect(reply, idx) {
       if (!this.replySent) {
-        const numMessages = this.$teneoApi.messageList.length;
-        const messages = this.$teneoApi.messageList.slice(0, numMessages - 1);
-        const comboMessage = this.$teneoApi.messageList[numMessages - 1];
-
-        const selectedItem = { ...comboMessage, selected: idx };
-
-        this.$teneoApi.messageList = [...messages, selectedItem];
-
-        await this.$teneoApi.sendSilentMessage(reply.postback);
+        await handleButtonClick(reply, idx, this.$teneoApi)
       }
     },
     videoUrl(url) {

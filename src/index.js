@@ -86,11 +86,12 @@ window['TeneoWebChat'] = {
         // handle function
         EventBus.$emit(events.MINIMIZE_WINDOW);
         break
+        
       case API_FUNCTION_CALL_SEND_INPUT:
         // handle function
         // TO DO: check if params are of correct type
         EventBus.$emit(events.SEND_INPUT, param1, param2, param3);
-        return
+        break
 
       case API_FUNCTION_CALL_END_SESSION:
         // handle function
@@ -112,7 +113,7 @@ window['TeneoWebChat'] = {
         console.log('Triggering add message')
         // TO DO: make sure we check the format of param1
         EventBus.$emit(events.ADD_MESSAGE, param1);
-        return param1
+        break
 
       default:
         console.log("Function name: ", function_name);
