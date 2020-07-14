@@ -1,6 +1,6 @@
 import Vue from 'vue';
 const tmpVue = new Vue();
-import { API_FUNCTION_ON_BUTTON_CLICK } from './constants';
+import { API_ON_BUTTON_CLICK } from './constants';
 
 export default async function handleButtonClick(button, idx, teneoApi) {
     console.log("handleButtonClick", button)
@@ -15,8 +15,8 @@ export default async function handleButtonClick(button, idx, teneoApi) {
 
     console.log("button", button)
     // check if there is an extension that want to intercept the new event
-    if(tmpVue.$extensionMethods.get(API_FUNCTION_ON_BUTTON_CLICK)){
-      var extensionCallback = tmpVue.$extensionMethods.get(API_FUNCTION_ON_BUTTON_CLICK);
+    if(tmpVue.$extensionMethods.get(API_ON_BUTTON_CLICK)){
+      var extensionCallback = tmpVue.$extensionMethods.get(API_ON_BUTTON_CLICK);
       button = await extensionCallback(button);
     }
 

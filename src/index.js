@@ -15,7 +15,7 @@ window['TeneoWebChat'] = {
     Vue.prototype.$extensionMethods = functionMap;
 
     EventBus.$on(events.API_STATE_READY, () => {
-      var onReadyMethod = Vue.prototype.$extensionMethods.get(constants.API_FUNCTION_ON_READY)
+      var onReadyMethod = Vue.prototype.$extensionMethods.get(constants.API_ON_READY)
       if(onReadyMethod){
         onReadyMethod(stateMap);
       }
@@ -28,8 +28,8 @@ window['TeneoWebChat'] = {
     function handleVisibilityChange(event){
       if(stateMap[constants.API_KEY_VISIBILITY] != event){
         stateMap[constants.API_KEY_VISIBILITY] = event;
-        if(tmpVue.$extensionMethods.get(constants.API_FUNCTION_ON_VISIBILITY_CHANGED)){
-          const onVisibilityChangedFunction = tmpVue.$extensionMethods.get(constants.API_FUNCTION_ON_VISIBILITY_CHANGED);
+        if(tmpVue.$extensionMethods.get(constants.API_ON_VISIBILITY_CHANGED)){
+          const onVisibilityChangedFunction = tmpVue.$extensionMethods.get(constants.API_ON_VISIBILITY_CHANGED);
           const data = {};
           data[constants.API_KEY_VISIBILITY] = stateMap[constants.API_KEY_VISIBILITY];
           onVisibilityChangedFunction(data);
@@ -53,7 +53,7 @@ window['TeneoWebChat'] = {
   },
   get(param){
     switch (param) {
-      case constants.API_FUNCTION_GET_STATE:
+      case constants.API_GET_STATE:
         return stateMap;
     }
   },
@@ -72,38 +72,38 @@ window['TeneoWebChat'] = {
     }
     
     switch (function_name) {
-      case constants.API_FUNCTION_CALL_MAXIMIZE:
+      case constants.API_CALL_MAXIMIZE:
         // handle function
         EventBus.$emit(events.MAXIMIZE_WINDOW);
         break
   
-      case constants.API_FUNCTION_CALL_MINIMIZE:
+      case constants.API_CALL_MINIMIZE:
         // handle function
         EventBus.$emit(events.MINIMIZE_WINDOW);
         break
         
-      case constants.API_FUNCTION_CALL_SEND_INPUT:
+      case constants.API_CALL_SEND_INPUT:
         // handle function
         // TO DO: check if params are of correct type
         EventBus.$emit(events.SEND_INPUT, param1, param2, param3);
         break
 
-      case constants.API_FUNCTION_CALL_END_SESSION:
+      case constants.API_CALL_END_SESSION:
         // handle function
         EventBus.$emit(events.END_SESSION);
         break
 
-      case constants.API_FUNCTION_CALL_CLEAR_HISTORY:
+      case constants.API_CALL_CLEAR_HISTORY:
         // handle function
         EventBus.$emit(events.CLEAR_HISTORY);
         break
 
-      case constants.API_FUNCTION_CALL_RESET:
+      case constants.API_CALL_RESET:
         // handle function
         EventBus.$emit(events.RESET_SESSION);
         break
         
-      case constants.API_FUNCTION_CALL_ADD_MESSAGE:
+      case constants.API_CALL_ADD_MESSAGE:
         // handle function
         console.log('Triggering add message')
         // TO DO: make sure we check the format of param1

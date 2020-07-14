@@ -4,7 +4,7 @@ import TIE from '../utils/tie-client.js';
 
 import MessageListCache from '../utils/message-list-cache.js';
 import parseTeneoResponse from '../utils/parse-teneo-response.js';
-import { CHANNEL_PARAM, API_FUNCTION_ON_ENGINE_REQUEST, API_FUNCTION_ON_ENGINE_RESPONSE, API_FUNCTION_ON_NEW_MESSAGE } from '../utils/constants.js';
+import { CHANNEL_PARAM, API_ON_ENGINE_REQUEST, API_ON_ENGINE_RESPONSE, API_ON_NEW_MESSAGE } from '../utils/constants.js';
 import { EventBus, events } from '../utils/event-bus.js';
 
 export default function teneoApiPlugin(teneoApiUrl) {
@@ -53,8 +53,8 @@ export default function teneoApiPlugin(teneoApiUrl) {
         var tmpMessage = {'author': 'user', 'type': 'text', 'data': {'text': text}}
 
         // check if there is an extension that want to intercept the new messsage
-        if(tmpVue.$extensionMethods.get(API_FUNCTION_ON_NEW_MESSAGE)){
-          var newMessageFunction = tmpVue.$extensionMethods.get(API_FUNCTION_ON_NEW_MESSAGE);
+        if(tmpVue.$extensionMethods.get(API_ON_NEW_MESSAGE)){
+          var newMessageFunction = tmpVue.$extensionMethods.get(API_ON_NEW_MESSAGE);
           tmpMessage = await newMessageFunction(tmpMessage);
         }
         this.messageList = [...this.messageList, tmpMessage];
@@ -63,7 +63,7 @@ export default function teneoApiPlugin(teneoApiUrl) {
       // send request to engine
 
       // check if there is an extension that want to intercept the request to engine
-      var onEngineRequest = tmpVue.$extensionMethods.get(API_FUNCTION_ON_ENGINE_REQUEST)
+      var onEngineRequest = tmpVue.$extensionMethods.get(API_ON_ENGINE_REQUEST)
       if(onEngineRequest){
         messageDetails = await onEngineRequest(messageDetails);
       }
@@ -71,7 +71,7 @@ export default function teneoApiPlugin(teneoApiUrl) {
       var response = await teneoApi.sendInput(sessionId, messageDetails);
 
       // check if there is an extension that want to intercept the response from engine
-      var onEngineResponse = tmpVue.$extensionMethods.get(API_FUNCTION_ON_ENGINE_RESPONSE);
+      var onEngineResponse = tmpVue.$extensionMethods.get(API_ON_ENGINE_RESPONSE);
       if(onEngineResponse){
         response = await onEngineResponse(response);
       }
@@ -101,8 +101,8 @@ export default function teneoApiPlugin(teneoApiUrl) {
       if (!message) {
         return;
       }
-      if(Vue.prototype.$extensionMethods.get(API_FUNCTION_ON_NEW_MESSAGE)){
-        var newMessageFunction = Vue.prototype.$extensionMethods.get(API_FUNCTION_ON_NEW_MESSAGE);
+      if(Vue.prototype.$extensionMethods.get(API_ON_NEW_MESSAGE)){
+        var newMessageFunction = Vue.prototype.$extensionMethods.get(API_ON_NEW_MESSAGE);
         newMessageFunction(message);
       }
       this.messageList = [...this.messageList, message];

@@ -12,12 +12,12 @@
   </head>
 
   <body>
-    <button onclick="window.TeneoWebChat.call('reset')">Reset Chat</button>
-    <button onclick="window.TeneoWebChat.call('maximize')">Maximize</button>
-    <button onclick="window.TeneoWebChat.call('minimize')">Minimize</button>
-    <button onclick="window.TeneoWebChat.get('state')">Get State</button>
-    <button onclick="window.TeneoWebChat.call('end_session')">End session</button>
-    <button onclick="window.TeneoWebChat.call('clear_history')">Clear history</button>
+    <button onclick="TeneoWebChat.call('reset')">Reset Chat</button>
+    <button onclick="TeneoWebChat.call('maximize')">Maximize</button>
+    <button onclick="TeneoWebChat.call('minimize')">Minimize</button>
+    <button onclick="console.log(TeneoWebChat.get('state'))">Get State</button>
+    <button onclick="TeneoWebChat.call('end_session')">End session</button>
+    <button onclick="TeneoWebChat.call('clear_history')">Clear history</button>
     <button onclick="console.log(TeneoWebChat.version())">Version</button>
     <button onclick="TeneoWebChat.call('add_message',{'author': 'bot', 'type': 'text', 'data': {'text': 'Funky!'}})">Add message</button>
     <button onclick="TeneoWebChat.call('send_input', 'What do you think about jimi hendriks?', {'userCountryCode':'NL'}, false)">Send message</button>

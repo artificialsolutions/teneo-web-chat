@@ -17,7 +17,7 @@ import Header from './Header.vue';
 import MessageList from './MessageList.vue';
 import UserInput from './UserInput.vue';
 import { EventBus, events } from '../utils/event-bus.js';
-import { API_FUNCTION_CALL_SEND_INPUT } from '../utils/constants';
+import { API_CALL_SEND_INPUT } from '../utils/constants';
 const tmpVue = new Vue();
 
 export default {
