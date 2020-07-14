@@ -14,10 +14,10 @@ window['TeneoWebChat'] = {
     Vue.prototype.$extraEngineParams = extraEngineParams;
     Vue.prototype.$extensionMethods = functionMap;
 
-    EventBus.$on(events.API_STATE_READY, (initialState) => {
+    EventBus.$on(events.API_STATE_READY, () => {
       var onReadyMethod = Vue.prototype.$extensionMethods.get(constants.API_FUNCTION_ON_READY)
       if(onReadyMethod){
-        onReadyMethod(initialState);
+        onReadyMethod(stateMap);
       }
     });
 
@@ -54,9 +54,7 @@ window['TeneoWebChat'] = {
   get(param){
     switch (param) {
       case constants.API_FUNCTION_GET_STATE:
-        console.log('stateMap: '+JSON.stringify(stateMap));
         return stateMap;
-        break;
     }
   },
   call(function_name, param1 = undefined, param2 = undefined, param3 = undefined) {

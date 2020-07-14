@@ -73,7 +73,8 @@ export default {
         this.$teneoApi.sendBaseMessage(text,parameters,isSilent);
       });
 
-      EventBus.$emit(events.API_STATE_READY,{'state':'ready'});
+      EventBus.$emit(events.API_STATE_READY);
+
     },
   methods: {
     openChat() {  //same as maximize

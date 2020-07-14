@@ -52,6 +52,7 @@ export default {
     if (this.$teneoApi.messageList.length === 0) {
       this.$teneoApi.sendSilentMessage('');
     }
+
   },
   methods: {
       sendMessage(message) {
