@@ -36,3 +36,4 @@ export const API_ON_CLOSE_BUTTON_CLICK = "close_button_clicked";
 
 // state object keys
 export const API_KEY_VISIBILITY = "visibility";
+export const API_KEY_TITLE = "title";

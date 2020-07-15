@@ -122,7 +122,9 @@ window['TeneoWebChat'] = {
       case constants.API_CALL_SET_WINDOW_TITLE:
         EventBus.$emit(events.SET_WINDOW_TITLE, param1);
         stateMap.title = param1
-        return stateMap;
+        const data = {};
+        data[constants.API_KEY_TITLE] = stateMap[constants.API_KEY_TITLE];
+        return data;
 
       default:
         console.log("Function name: ", function_name);
