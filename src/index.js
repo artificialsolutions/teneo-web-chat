@@ -23,10 +23,7 @@ window['TeneoWebChat'] = {
     
 
     EventBus.$on(events.API_STATE_READY, () => {
-      var onReadyMethod = Vue.prototype.$extensionMethods.get(constants.API_ON_READY)
-      if(onReadyMethod){
-        onReadyMethod(stateMap);
-      }
+      handleExtension(constants.API_ON_READY, stateMap)
     });
 
     var tmpVue = new Vue({
