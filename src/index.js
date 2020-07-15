@@ -4,6 +4,7 @@ import TeneoWebChat from './TeneoWebChat.vue';
 import teneoApiPlugin from './plugins/teneo-api.js';
 import { EventBus, events } from '../src/utils/event-bus.js';
 import * as constants from '../src/utils/constants.js';
+import handleExtension from '../src/utils/handle-extension.js';
 
 var functionMap = new Map();
 var stateMap = {'visibility': events.API_STATE_MINIMIZED, 'title':'Teneo Web Chat'};
@@ -37,12 +38,11 @@ window['TeneoWebChat'] = {
     function handleVisibilityChange(event){
       if(stateMap[constants.API_KEY_VISIBILITY] != event){
         stateMap[constants.API_KEY_VISIBILITY] = event;
-        if(tmpVue.$extensionMethods.get(constants.API_ON_VISIBILITY_CHANGED)){
-          const onVisibilityChangedFunction = tmpVue.$extensionMethods.get(constants.API_ON_VISIBILITY_CHANGED);
-          const data = {};
-          data[constants.API_KEY_VISIBILITY] = stateMap[constants.API_KEY_VISIBILITY];
-          onVisibilityChangedFunction(data);
-        }
+        const data = {};
+        data[constants.API_KEY_VISIBILITY] = stateMap[constants.API_KEY_VISIBILITY];
+
+        // call extension to notify about visibility change
+        handleExtension(constants.API_ON_VISIBILITY_CHANGED, data);
       }
     }
     //These listeners keep 'state' updated and trigger onVisibilityChanged.
