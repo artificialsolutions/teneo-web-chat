@@ -17,7 +17,7 @@ export const API_CALL_END_SESSION = "end_session";
 export const API_CALL_CLEAR_HISTORY = "clear_history";
 export const API_CALL_RESET = "reset";
 export const API_CALL_ADD_MESSAGE = "add_message";
-export const API_CALL_SET_WINDOW_TITLE = "set_window_title";
+export const API_CALL_SET_WINDOW_TITLE = "set_chat_window_title";
 
 // api getter
 export const API_GET_STATE = "state";
