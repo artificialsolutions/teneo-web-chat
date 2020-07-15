@@ -52,7 +52,12 @@ window['TeneoWebChat'] = {
 
   },
   on(function_name, func){
-    functionMap.set(function_name,func);
+    var currentFunctions = [];
+    if (functionMap.get(function_name)) {
+      currentFunctions = functionMap.get(function_name)
+    } 
+    currentFunctions.push(func)
+    functionMap.set(function_name,currentFunctions);
   },
   off(function_name){
     functionMap.delete(function_name);
