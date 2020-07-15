@@ -6,7 +6,7 @@ import { EventBus, events } from '../src/utils/event-bus.js';
 import * as constants from '../src/utils/constants.js';
 
 var functionMap = new Map();
-var stateMap = {'visibility': events.API_STATE_MINIMIZED, 'title':'Funky'};
+var stateMap = {'visibility': events.API_STATE_MINIMIZED, 'title':'Teneo Web Chat'};
 
 window['TeneoWebChat'] = {
   initialize(element, title, teneoEngineUrl, closeTieSessionOnExit = 'no', imageUrl = '', extraEngineParams = {}) {
@@ -66,14 +66,6 @@ window['TeneoWebChat'] = {
         return stateMap;
     }
   },
-  set(function_name, param1 = undefined) {
-    switch (function_name) {
-      case constants.API_SET_WINDOW_TITLE:
-        EventBus.$emit(events.SET_WINDOW_TITLE, param1);
-        stateMap.title = param1
-        return stateMap;
-    }
-  },
   call(function_name, param1 = undefined, param2 = undefined, param3 = undefined) {
 
     if (param1) {
@@ -126,6 +118,11 @@ window['TeneoWebChat'] = {
         // TO DO: make sure we check the format of param1
         EventBus.$emit(events.ADD_MESSAGE, param1);
         break
+
+      case constants.API_CALL_SET_WINDOW_TITLE:
+        EventBus.$emit(events.SET_WINDOW_TITLE, param1);
+        stateMap.title = param1
+        return stateMap;
 
       default:
         console.log("Function name: ", function_name);

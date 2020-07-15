@@ -23,7 +23,7 @@
     <button onclick="TeneoWebChat.call('send_input', 'What do you think about jimi hendriks?', {'userCountryCode':'NL'}, false)">Send message</button><br>
     <button onclick="TeneoWebChat.call('send_input', 'Do you like silent messages?', {'userCountryCode':'NL'}, true)">Send silent message</button><br>
     <button onclick="TeneoWebChat.call('add_message',{'author': 'system', 'type': 'system', 'data': {'text': 'This is a system message. You are number <strong>4</strong> in the queue.'}})">Add system message</button><br>
-    <button onclick="console.log(TeneoWebChat.set('window_title', 'Crazy stuff'))">Set window title</button><br>
+    <button onclick="console.log(TeneoWebChat.call('set_window_title', 'New title'))">Set window title</button><br>
     
     <div id="teneo-web-chat"></div>
     <script src="main.js"></script>
