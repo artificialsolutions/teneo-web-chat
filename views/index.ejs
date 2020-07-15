@@ -67,12 +67,17 @@
           }
 
           function onButtonClicked(button) {
-            console.log("onButtonClicked", button.postback)
+            console.log("onButtonClicked", button)
             return new Promise(resolve => { 
               setTimeout(() => { 
                 resolve(button)
                }, 500);
             });         
+          }
+
+          function onOpenCloseButtonClicked(state) {
+            console.log("onOpenCloseButtonClicked", state)
+            return state       
           }
 
           function onReady(initialData) {
@@ -85,10 +90,10 @@
           TeneoWebChat.on('engine_response', onEngineResponse);
           TeneoWebChat.on('input_submitted', onInputSubmitted);
           TeneoWebChat.on('component_button_clicked', onButtonClicked);
+          TeneoWebChat.on('open_button_clicked', onOpenCloseButtonClicked);
+          TeneoWebChat.on('close_button_clicked', onOpenCloseButtonClicked);
           TeneoWebChat.on('ready', onReady);
 
-
-          
           window.TeneoWebChat.initialize(
             element,
             '<%= process.env.HEADER_TITLE %>',

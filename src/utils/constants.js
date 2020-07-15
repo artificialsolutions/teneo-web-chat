@@ -30,6 +30,9 @@ export const API_ON_ENGINE_REQUEST = "engine_request";
 export const API_ON_ENGINE_RESPONSE = "engine_response";
 export const API_ON_NEW_MESSAGE = "new_message";
 export const API_ON_BUTTON_CLICK = "component_button_clicked";
+export const API_ON_OPEN_BUTTON_CLICK = "open_button_clicked";
+export const API_ON_CLOSE_BUTTON_CLICK = "close_button_clicked";
+
 
 // state object keys
 export const API_KEY_VISIBILITY = "visibility";

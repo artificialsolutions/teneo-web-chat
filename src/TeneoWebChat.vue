@@ -15,6 +15,8 @@ import registerMessageComponents from './utils/register-message-components.js';
 import ChatWindow from './components/ChatWindow.vue';
 import LaunchButton from './components/LaunchButton.vue';
 import { EventBus, events } from './utils/event-bus.js';
+import handleExtension from './utils/handle-extension.js';
+import { API_ON_OPEN_BUTTON_CLICK, API_ON_CLOSE_BUTTON_CLICK } from './utils/constants.js';
 registerMessageComponents();
 
 export default {
@@ -28,10 +30,6 @@ export default {
       type: String,
       required: true,
     },
-    // serviceName: {
-    //   type: String,
-    //   required: true,
-    // },
     closeTieSessionOnExit: {
       type: String,
       required: false,
@@ -59,7 +57,7 @@ export default {
       });
 
       EventBus.$on(events.MAXIMIZE_WINDOW, () => {
-        this.openChat()
+        this.maximize();
       });
 
       EventBus.$on(events.MINIMIZE_WINDOW, () => {
@@ -82,15 +80,25 @@ export default {
 
     },
   methods: {
-    openChat() {  //same as maximize
-      this.isChatOpen = true;
-      //Update 'state', run 'onVisibilityChanged (if available)'
-      EventBus.$emit(events.API_STATE_MAXIMIZED);
+    async openChat() {  //same as maximize
+
+      var chatWindowTargetState = "maximize";
+      chatWindowTargetState = await handleExtension(API_ON_OPEN_BUTTON_CLICK, chatWindowTargetState);
+      if (chatWindowTargetState === "maximize") {
+        this.maximize();
+      } else {
+        this.minimize();
+      }
     },
     minimize(){
       this.isChatOpen = false
       //Update 'state' and , call 'onVisibilityChanged (if available)'
       EventBus.$emit(events.API_STATE_MINIMIZED);
+    },
+    maximize(){
+      this.isChatOpen = true
+      //Update 'state' and , call 'onVisibilityChanged (if available)'
+      EventBus.$emit(events.API_STATE_MAXIMIZED);
     },
     clearHistory() {
       this.$teneoApi.clearHistory()
@@ -98,11 +106,18 @@ export default {
     closeSession() {
       this.$teneoApi.closeSession()
     },
-    closeChat() { //minimizes and (possibly) resets the caht
-      this.minimize();
-      if(this.closeTieSessionOnExit === "true" || this.closeTieSessionOnExit === "yes" ){
+    async closeChat() { //minimizes and (possibly) resets the chat
+
+      var chatWindowTargetState = "minimize"
+      chatWindowTargetState = await handleExtension(API_ON_CLOSE_BUTTON_CLICK, chatWindowTargetState);
+      if (chatWindowTargetState === "minimize") {
+        this.minimize()
+        if(this.closeTieSessionOnExit === "true" || this.closeTieSessionOnExit === "yes" ){
           this.closeSession()
           this.clearHistory()
+        }
+      } else {
+        this.maximize()
       }
     },
     setWindowTitle(newTitle) { 
