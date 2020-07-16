@@ -3,7 +3,7 @@ import Vue from 'vue';
 import TeneoWebChat from './TeneoWebChat.vue';
 import teneoApiPlugin from './plugins/teneo-api.js';
 import { EventBus, events } from '../src/utils/event-bus.js';
-import * as constants from '../src/utils/constants.js';
+import { API_KEY_VISIBILITY, API_VERSION} from '../src/utils/constants.js';
 import * as apiConstants from '../src/utils/api-function-names.js';
 import handleExtension from '../src/utils/handle-extension.js';
 
@@ -35,10 +35,10 @@ window['TeneoWebChat'] = {
     EventBus.$emit(events.SET_WINDOW_TITLE, title); 
 
     function handleVisibilityChange(event){
-      if(stateMap[constants.API_KEY_VISIBILITY] != event){
-        stateMap[constants.API_KEY_VISIBILITY] = event;
+      if(stateMap[API_KEY_VISIBILITY] != event){
+        stateMap[API_KEY_VISIBILITY] = event;
         const data = {};
-        data[constants.API_KEY_VISIBILITY] = stateMap[constants.API_KEY_VISIBILITY];
+        data[API_KEY_VISIBILITY] = stateMap[API_KEY_VISIBILITY];
 
         // call extension to notify about visibility change
         handleExtension(apiConstants.API_ON_VISIBILITY_CHANGED, data);
@@ -153,7 +153,7 @@ window['TeneoWebChat'] = {
     }
   },
   version() {
-    return constants.API_VERSION;
+    return API_VERSION;
   },
   resetChat(){
     EventBus.$emit(events.RESET_SESSION);
