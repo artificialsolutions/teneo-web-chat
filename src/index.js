@@ -92,12 +92,10 @@ window['TeneoWebChat'] = {
 
     switch (function_name) {
       case apiConstants.API_CALL_MAXIMIZE:
-        // handle function
         EventBus.$emit(events.MAXIMIZE_WINDOW);
         break
   
       case apiConstants.API_CALL_MINIMIZE:
-        // handle function
         EventBus.$emit(events.MINIMIZE_WINDOW);
         break
         
@@ -125,17 +123,14 @@ window['TeneoWebChat'] = {
         break
 
       case apiConstants.API_CALL_END_SESSION:
-        // handle function
         EventBus.$emit(events.END_SESSION);
         break
 
       case apiConstants.API_CALL_CLEAR_HISTORY:
-        // handle function
         EventBus.$emit(events.CLEAR_HISTORY);
         break
 
       case apiConstants.API_CALL_RESET:
-        // handle function
         EventBus.$emit(events.RESET_SESSION);
         break
         
