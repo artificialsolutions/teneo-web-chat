@@ -60,7 +60,7 @@ export default {
 }
 
 .text-message.agent {
-  color: var(--bot-message-fg-color, #263238);
+  color: var(--agent-message-fg-color, #263238);
   background-color: var(--agent-message-bg-color, #e4f1e4);
   margin-right: 40px;
   border-bottom-left-radius: 0px;
