@@ -20,8 +20,8 @@
     <button onclick="TeneoWebChat.call('clear_history')">Clear history</button><br>
     <button onclick="console.log(TeneoWebChat.version())">Version</button><br>
     <button onclick="TeneoWebChat.call('add_message',{'author': 'bot', 'type': 'text', 'data': {'text': 'Funky!'}})">Add message</button><br>
-    <button onclick="TeneoWebChat.call('send_input', 'What do you think about jimi hendriks?', {'userCountryCode':'NL'}, false)">Send message</button><br>
-    <button onclick="TeneoWebChat.call('send_input', 'Do you like silent messages?', {'userCountryCode':'NL'}, true)">Send silent message</button><br>
+    <button onclick="TeneoWebChat.call('send_input', {'text':'What do you think about jimi hendriks?', 'parameters': {'userCountryCode':'NL'}})">Send message</button><br>
+    <button onclick="TeneoWebChat.call('send_input', {'text':'This is a silent message', 'parameters': {'userCountryCode':'UK'}, 'silent': true})">Send silent message</button><br>
     <button onclick="TeneoWebChat.call('add_message',{'author': 'system', 'type': 'system', 'data': {'text': 'This is a system message. You are number <strong>4</strong> in the queue.'}})">Add system message</button><br>
     <button onclick="TeneoWebChat.call('set_chat_window_title', 'New title')">Set window title</button><br>
     

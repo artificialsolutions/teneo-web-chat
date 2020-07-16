@@ -88,20 +88,8 @@ window['TeneoWebChat'] = {
         return stateMap;
     }
   },
-  call(function_name, param1 = undefined, param2 = undefined, param3 = undefined) {
+  call(function_name, payload = undefined) {
 
-    if (param1) {
-      console.log("param1", param1)
-    }
-
-    if (param2) {
-      console.log("param2", param2)
-    }
-
-    if (param3) {
-      console.log("param3", param3)
-    }
-    
     switch (function_name) {
       case apiConstants.API_CALL_MAXIMIZE:
         // handle function
@@ -114,9 +102,26 @@ window['TeneoWebChat'] = {
         break
         
       case apiConstants.API_CALL_SEND_INPUT:
-        // handle function
-        // TO DO: check if params are of correct type
-        EventBus.$emit(events.SEND_INPUT, param1, param2, param3);
+        // check if payload is object
+        if (Object.keys(payload).length > 0 && payload.constructor === Object) {
+
+          // key 'text' is mandatory
+          if (payload.text && typeof payload.text === "string") {
+            var text = payload.text;
+            var parameters = {};
+            var isSilent = false;
+
+            if (payload.parameters) {
+              parameters = payload.parameters;
+            }
+
+            if (payload.silent) {
+              isSilent = true;
+            }
+  
+            EventBus.$emit(events.SEND_INPUT, text, parameters, isSilent);
+          }
+        }
         break
 
       case apiConstants.API_CALL_END_SESSION:
@@ -135,19 +140,19 @@ window['TeneoWebChat'] = {
         break
         
       case apiConstants.API_CALL_ADD_MESSAGE:
-        // handle function
-        console.log('Triggering add message')
-        // TO DO: make sure we check the format of param1
-        EventBus.$emit(events.ADD_MESSAGE, param1);
+        if (Object.keys(payload).length > 0 && payload.constructor === Object) {
+          EventBus.$emit(events.ADD_MESSAGE, payload);
+        }
         break
 
       case apiConstants.API_CALL_SET_WINDOW_TITLE:
-        EventBus.$emit(events.SET_WINDOW_TITLE, param1);
-        stateMap.title = param1
+        if (typeof payload === "string") {
+          EventBus.$emit(events.SET_WINDOW_TITLE, payload);
+          stateMap.title = payload
+        }
         break
 
       default:
-        console.log("Function name: ", function_name);
         break
     }
   },
