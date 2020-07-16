@@ -60,7 +60,6 @@ window['TeneoWebChat'] = {
 
     // only continue if function name provided is valid
     if (!validFunctionNames.includes(function_name)) {
-      console.log("Unknown function", function_name)
       return
     }
     
