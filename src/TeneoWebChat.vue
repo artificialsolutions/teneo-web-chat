@@ -16,7 +16,7 @@ import ChatWindow from './components/ChatWindow.vue';
 import LaunchButton from './components/LaunchButton.vue';
 import { EventBus, events } from './utils/event-bus.js';
 import handleExtension from './utils/handle-extension.js';
-import { API_ON_OPEN_BUTTON_CLICK, API_ON_CLOSE_BUTTON_CLICK } from './utils/constants.js';
+import { API_ON_OPEN_BUTTON_CLICK, API_ON_CLOSE_BUTTON_CLICK } from './utils/api-function-names.js';
 registerMessageComponents();
 
 export default {

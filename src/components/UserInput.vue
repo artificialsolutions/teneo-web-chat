@@ -22,7 +22,8 @@
 <script>
 import Vue from 'vue';
 import SendIcon from '../icons/send.vue';
-import { PARTICIPANT_USER, API_ON_INPUT_SUBMITTED } from '../utils/constants.js';
+import { PARTICIPANT_USER } from '../utils/constants.js';
+import { API_ON_INPUT_SUBMITTED } from '../utils/api-function-names.js';
 import { EventBus, events } from '../utils/event-bus.js';
 import handleExtension from '../utils/handle-extension.js';
 const tmpVue = new Vue();

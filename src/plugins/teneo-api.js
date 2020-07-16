@@ -4,7 +4,8 @@ import TIE from '../utils/tie-client.js';
 
 import MessageListCache from '../utils/message-list-cache.js';
 import parseTeneoResponse from '../utils/parse-teneo-response.js';
-import { CHANNEL_PARAM, API_ON_ENGINE_REQUEST, API_ON_ENGINE_RESPONSE, API_ON_NEW_MESSAGE } from '../utils/constants.js';
+import { CHANNEL_PARAM } from '../utils/constants.js';
+import { API_ON_ENGINE_REQUEST, API_ON_ENGINE_RESPONSE, API_ON_NEW_MESSAGE } from '../utils/api-function-names.js';
 import { EventBus, events } from '../utils/event-bus.js';
 import handleExtension from '../utils/handle-extension.js';
 
