@@ -59,10 +59,11 @@ export default {
   border-bottom-left-radius: 0px;
 }
 
-.text-message__text {
-  margin-top: 0.4em;
-  margin-bottom: 0.4em;
-  font-weight: 400;
+.text-message.agent {
+  color: var(--bot-message-fg-color, #263238);
+  background-color: var(--agent-message-bg-color, #e4f1e4);
+  margin-right: 40px;
+  border-bottom-left-radius: 0px;
 }
 
 .text-message.user {
@@ -71,6 +72,12 @@ export default {
   max-width: calc(100% - 120px);
   word-wrap: break-word;
   border-bottom-right-radius: 0px;
+}
+
+.text-message__text {
+  margin-top: 0.4em;
+  margin-bottom: 0.4em;
+  font-weight: 400;
 }
 
 .text-message a {

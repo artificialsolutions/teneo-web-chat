@@ -18,6 +18,7 @@
     <button onclick="TeneoWebChat.call('end_session')">End session</button><br>
     <button onclick="TeneoWebChat.call('clear_history')">Clear history</button><br>
     <button onclick="TeneoWebChat.call('add_message',{'author': 'bot', 'type': 'text', 'data': {'text': 'Funky!'}})">Add message</button><br>
+    <button onclick="TeneoWebChat.call('add_message',{'author': 'agent', 'type': 'text', 'data': {'text': 'Lorem ipsum dolor sit amet!'}})">Add message from agent</button><br>
     <button onclick="TeneoWebChat.call('send_input', {'text':'What do you think about jimi hendriks?', 'parameters': {'userCountryCode':'NL'}})">Send message</button><br>
     <button onclick="TeneoWebChat.call('send_input', {'text':'This is a silent message', 'parameters': {'userCountryCode':'UK'}, 'silent': true})">Send silent message</button><br>
     <button onclick="TeneoWebChat.call('add_message',{'author': 'system', 'type': 'system', 'data': {'text': 'You will be handed over to an agent. You are number <strong>4</strong> in the queue.'}})">Add system message</button><br>
