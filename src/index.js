@@ -3,11 +3,12 @@ import Vue from 'vue';
 import TeneoWebChat from './TeneoWebChat.vue';
 import teneoApiPlugin from './plugins/teneo-api.js';
 import { EventBus, events } from '../src/utils/event-bus.js';
-import * as constants from '../src/utils/constants.js';
+import * as constants from '../src/utils/constants.js'; // TO DO: Put api function names in separate file
 import handleExtension from '../src/utils/handle-extension.js';
 
 var functionMap = new Map();
 var stateMap = {'visibility': events.API_STATE_MINIMIZED, 'title':'Teneo Web Chat'};
+var validFunctionNames = Object.values(constants)
 
 window['TeneoWebChat'] = {
   initialize(element, title, teneoEngineUrl, closeTieSessionOnExit = 'no', imageUrl = '', extraEngineParams = {}) {
@@ -52,12 +53,31 @@ window['TeneoWebChat'] = {
 
   },
   on(function_name, func){
-    var currentFunctions = [];
+
+    // this 'on' method is called each time someone registers
+    // a 'function_name' (ready, visibility_change, engine_response etc)
+
+    // only continue if function name provided is valid
+    if (!validFunctionNames.includes(function_name)) {
+      console.log("Unknown function", function_name)
+      return
+    }
+    
+    // devs may register same function name multiple times 
+    // so we need keep a list of callback functions per 'function_name'
+
+    // fist initialize an empty list
+    var callbackFunctions = [];
+
+    // if we already have callbacks for an api function_name, get them
     if (functionMap.get(function_name)) {
-      currentFunctions = functionMap.get(function_name)
-    } 
-    currentFunctions.push(func)
-    functionMap.set(function_name,currentFunctions);
+      callbackFunctions = functionMap.get(function_name)
+    }
+    // then add the new callback function to the list
+    callbackFunctions.push(func)
+
+    // store the list of callbacks function for this 'function_name'
+    functionMap.set(function_name,callbackFunctions);
   },
   off(function_name){
     functionMap.delete(function_name);

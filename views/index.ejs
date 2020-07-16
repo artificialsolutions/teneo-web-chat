@@ -82,6 +82,12 @@
           function onReady(initialData) {
             console.log('onReady',initialData);
           }
+          function onReady2(initialData) {
+            console.log('onReady2',initialData);
+          }
+          function onReady3(initialData) {
+            console.log('onReady3',initialData);
+          }
 
           TeneoWebChat.on('new_message', onNewMessage);
           TeneoWebChat.on('visibility_changed', onVisibilityChanged);
@@ -92,6 +98,8 @@
           TeneoWebChat.on('open_button_clicked', onOpenCloseButtonClicked);
           TeneoWebChat.on('close_button_clicked', onOpenCloseButtonClicked);
           TeneoWebChat.on('ready', onReady);
+          TeneoWebChat.on('ready', onReady2);
+          TeneoWebChat.on('ready', onReady3);
 
           window.TeneoWebChat.initialize(
             element,
