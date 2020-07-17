@@ -19,7 +19,7 @@ export default async function handleExtension(method_name,payload) {
             updatedPayload = await extension(payload);
 
             // only overwrite payload if it was updated
-            if (updatedPayload) {
+            if (updatedPayload !== undefined) {
                 payload = updatedPayload
             }
         }

@@ -58,6 +58,7 @@ window['TeneoWebChat'] = {
 
     // only continue if function name provided is valid
     if (!validFunctionNames.includes(function_name)) {
+      // TODO: thow error if invalid function_name was provided?
       return
     }
     
@@ -99,6 +100,7 @@ window['TeneoWebChat'] = {
         
       case apiConstants.API_CALL_SEND_INPUT:
         // check if payload is object
+        // TODO: throw error if payload is invalid?
         if (Object.keys(payload).length > 0 && payload.constructor === Object) {
 
           // key 'text' is mandatory
@@ -107,7 +109,7 @@ window['TeneoWebChat'] = {
             var parameters = {};
             var isSilent = false;
 
-            if (payload.parameters) {
+            if (payload.parameters && Object.keys(payload.parameters).length > 0 && payload.parameters.constructor === Object) {
               parameters = payload.parameters;
             }
 
@@ -133,12 +135,14 @@ window['TeneoWebChat'] = {
         break
         
       case apiConstants.API_CALL_ADD_MESSAGE:
+        // TODO: throw error if payload is invalid?
         if (Object.keys(payload).length > 0 && payload.constructor === Object) {
           EventBus.$emit(events.ADD_MESSAGE, payload);
         }
         break
 
       case apiConstants.API_CALL_SET_WINDOW_TITLE:
+        // TODO: throw error if payload is invalid?
         if (typeof payload === "string") {
           EventBus.$emit(events.SET_WINDOW_TITLE, payload);
           stateMap.title = payload

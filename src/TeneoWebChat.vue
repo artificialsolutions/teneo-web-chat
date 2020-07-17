@@ -80,14 +80,31 @@ export default {
 
     },
   methods: {
-    async openChat() {  //same as maximize
-
-      var chatWindowTargetState = "maximize";
+    async openChat() { 
+      var chatWindowTargetState = events.MAXIMIZE_WINDOW;
       chatWindowTargetState = await handleExtension(API_ON_OPEN_BUTTON_CLICK, chatWindowTargetState);
-      if (chatWindowTargetState === "maximize") {
+      // TODO: trow error when value of chatWindowTargetState is not 'minimize' or 'maximize'?
+      if (chatWindowTargetState === events.MAXIMIZE_WINDOW) {
         this.maximize();
-      } else {
+      } 
+      if (chatWindowTargetState === events.MINIMIZE_WINDOW) {
         this.minimize();
+      }
+    },
+    async closeChat() { 
+      var chatWindowTargetState = events.MINIMIZE_WINDOW
+      chatWindowTargetState = await handleExtension(API_ON_CLOSE_BUTTON_CLICK, chatWindowTargetState);
+      // TODO: trow error when value of chatWindowTargetState is not 'minimize' or 'maximize'?
+      if (chatWindowTargetState === events.MINIMIZE_WINDOW) {
+        this.minimize()
+        // check if we need to end session too
+        if(this.closeTieSessionOnExit === "true" || this.closeTieSessionOnExit === "yes" ){
+          this.closeSession()
+          this.clearHistory()
+        }
+      } 
+      if (chatWindowTargetState === events.MAXIMIZE_WINDOW) {
+        this.maximize()
       }
     },
     minimize(){
@@ -105,20 +122,6 @@ export default {
     },
     closeSession() {
       this.$teneoApi.closeSession()
-    },
-    async closeChat() { //minimizes and (possibly) resets the chat
-
-      var chatWindowTargetState = "minimize"
-      chatWindowTargetState = await handleExtension(API_ON_CLOSE_BUTTON_CLICK, chatWindowTargetState);
-      if (chatWindowTargetState === "minimize") {
-        this.minimize()
-        if(this.closeTieSessionOnExit === "true" || this.closeTieSessionOnExit === "yes" ){
-          this.closeSession()
-          this.clearHistory()
-        }
-      } else {
-        this.maximize()
-      }
     },
     setWindowTitle(newTitle) { 
       this.serviceName = newTitle

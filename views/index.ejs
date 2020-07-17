@@ -59,25 +59,27 @@
 
           function onInputSubmitted(text) {
             console.log("onInputSubmitted", text)
+            return text
             return new Promise(resolve => { 
               setTimeout(() => { 
                 resolve(text)
-               }, 1000);
+               }, 500);
             });         
           }
 
           function onButtonClicked(button) {
             console.log("onButtonClicked", button)
-            return new Promise(resolve => { 
-              setTimeout(() => { 
-                resolve(button)
-               }, 500);
-            });         
+            return button
+            // return new Promise(resolve => { 
+            //   setTimeout(() => { 
+            //     resolve(button)
+            //    }, 500);
+            // });         
           }
 
           function onOpenCloseButtonClicked(state) {
             console.log("onOpenCloseButtonClicked", state)
-            return state       
+            return state
           }
 
           function onReady(initialData) {

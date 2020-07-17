@@ -17,9 +17,9 @@ export default function teneoApiPlugin(teneoApiUrl) {
 
 
   const plugin = {
-    pushBubble(api, msg){
+    pushBubble(api, msg) {
       api._onMessageReceived(msg);
-   },
+    },
     get messageList() {
       return tmpVue.messageList;
     },
@@ -33,7 +33,7 @@ export default function teneoApiPlugin(teneoApiUrl) {
       // set text and channel
       var messageDetails = {
         'text': text,
-        'channel' : CHANNEL_PARAM
+        'channel': CHANNEL_PARAM
       }
 
       // if available, add extra params to messageDetails
@@ -47,23 +47,31 @@ export default function teneoApiPlugin(teneoApiUrl) {
         messageDetails = Object.assign(messageDetails, parameters);
       }
 
-      EventBus.$emit(events.START_SPINNER);
-
       if (!isSilent) {
 
+        // construct user message object
+        var tmpMessage = { 'author': 'user', 'type': 'text', 'data': { 'text': text } }
+
         // add user messsage to history
-        var tmpMessage = {'author': 'user', 'type': 'text', 'data': {'text': text}}
-
-        // check if there is an extension that want to intercept the message before it is added
-        tmpMessage = await handleExtension(API_ON_NEW_MESSAGE, tmpMessage);
-
-        this.messageList = [...this.messageList, tmpMessage];
+        this._onMessageReceived(tmpMessage)
       }
-
-      // send request to engine
 
       // check if there is an extension that want to intercept the request to engine
       messageDetails = await handleExtension(API_ON_ENGINE_REQUEST, messageDetails);
+
+      // only continue if message details is object
+      if (messageDetails.constructor !== Object) {
+        // TODO: throw error?
+        return
+      }
+
+      // only continue if message details contains text key
+      if (!("text" in messageDetails)) {
+        // TODO: throw error?
+        return
+      }
+
+      EventBus.$emit(events.START_SPINNER);
 
       // send the input to engine
       var response = await teneoApi.sendInput(sessionId, messageDetails);
@@ -71,17 +79,29 @@ export default function teneoApiPlugin(teneoApiUrl) {
       // check if there is an extension that want to intercept the response from engine
       response = await handleExtension(API_ON_ENGINE_RESPONSE, response);
 
+
+      EventBus.$emit(events.ENGINE_REPLIED);
+
+      // stop further processing if response is not an object
+      if (Object.keys(response).length == 0 || response.constructor !== Object) {
+        // TODO: throw error?
+        return
+      }
+
+      // stop further processing if response does not have status or proper keys in 'output' part of the response
+      if (!"status" in response || response.status !== 0 || !"output" in response || !"text" in response.output || !"parameters" in response.output) {
+        // TODO: throw error?
+        return
+      }
+
       sessionId = response.sessionId;
 
       EventBus.$off(events.PUSH_BUBBLE);
       EventBus.$on(events.PUSH_BUBBLE, (msg) => {
         this._onMessageReceived(msg)
       });
-      
-      const messages = await parseTeneoResponse(response);
-      if(messages){
-        EventBus.$emit(events.ENGINE_REPLIED);
-      }
+
+      await parseTeneoResponse(response);
 
     },
 
@@ -92,23 +112,25 @@ export default function teneoApiPlugin(teneoApiUrl) {
       await this.sendBaseMessage(text, {}, true)
     },
     async _onMessageReceived(message) {
+      // TODO: throw error if payload is invalid?
       if (!message) {
         return;
       }
       // check if there is an extension that want to intercept the message
       message = await handleExtension(API_ON_NEW_MESSAGE, message);
+      // TODO: throw error if message returned by extension is invalid?
 
       // add message to list
       this.messageList = [...this.messageList, message];
     },
-    async closeSession(){
-      TIE.close(teneoApiUrl,sessionId);
-      
+    async closeSession() {
+      TIE.close(teneoApiUrl, sessionId);
+
     },
     async clearHistory() {
       this.messageList = []
-      if(this.messageListCache){
-         this.messageListCache.update([]);
+      if (this.messageListCache) {
+        this.messageListCache.update([]);
       }
     }
   };
