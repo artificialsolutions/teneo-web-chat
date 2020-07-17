@@ -17,13 +17,11 @@ window['TeneoWebChat'] = {
     Vue.prototype.$extraEngineParams = extraEngineParams;
     Vue.prototype.$extensionMethods = functionMap;
 
-    console.log('title', title)
     if (title) {
       stateMap['title'] = title;
       EventBus.$emit(events.SET_WINDOW_TITLE, title);
     }
     
-
     EventBus.$on(events.API_STATE_READY, () => {
       handleExtension(apiConstants.API_ON_READY, stateMap)
     });

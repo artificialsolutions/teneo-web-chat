@@ -4,8 +4,6 @@ import { API_ON_BUTTON_CLICK } from './constants';
 import handleExtension from './handle-extension.js';
 
 export default async function handleButtonClick(button, idx, teneoApi) {
-    console.log("handleButtonClick", button)
-
     const numMessages = teneoApi.messageList.length;
     const messages =  teneoApi.messageList.slice(0, numMessages - 1);
     const buttonMessage = teneoApi.messageList[numMessages - 1];
