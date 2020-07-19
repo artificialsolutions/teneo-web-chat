@@ -1,9 +1,13 @@
 <template>
-  <div class="text-message" :class="messageSource">
+<div class="wrap" :class="messageSource">
     <!-- eslint-disable-next-line vue/no-v-html -->
-    <p v-if="isBot" class="text-message__text" v-html="sanitizedHtmlText"></p>
-    <p v-else class="text-message__text">{{ messageText }}</p>
-  </div>
+    <p class="dateline" :class="messageSource" v-if="dateline" v-html="dateline"></p>
+    <div class="text-message" :class="messageSource">
+      <!-- eslint-disable-next-line vue/no-v-html -->
+      <p v-if="isBot" class="text-message__text" v-html="sanitizedHtmlText"></p>
+      <p v-else class="text-message__text">{{ messageText }}</p>
+    </div>
+</div>
 </template>
 
 <script>
@@ -33,6 +37,11 @@ export default {
     messageSource() {
       return this.message.author;
     },
+    dateline() {
+      if (this.message.data.dateline) {
+        return sanitizeHtml(this.message.data.dateline)
+      }
+    },
     isBot() {
       return this.message.author === PARTICIPANT_BOT;
     },
@@ -44,6 +53,22 @@ export default {
 </script>
 
 <style>
+.wrap.user {
+  max-width: calc(100% - 120px);
+}
+.dateline {
+  font-weight: 400;
+  font-size: 0.7em;
+  padding: 0;
+  margin-bottom: 0.25rem;
+  margin-top: 0rem;
+  width: 100%;
+  -webkit-font-smoothing: subpixel-antialiased;
+  color: var(--secondary-color, #6c757d);
+}
+.dateline.user {
+  text-align: right;
+}
 .text-message {
   padding: 6px 18px;
   border-radius: 10px;
@@ -69,7 +94,7 @@ export default {
 .text-message.user {
   background: var(--user-message-bg-color, #4e8cff);
   color: var(--user-message-fg-color, #ffffff);
-  max-width: calc(100% - 120px);
+  /* max-width: calc(100% - 120px); */
   word-wrap: break-word;
   border-bottom-right-radius: 0px;
 }
