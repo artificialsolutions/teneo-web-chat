@@ -1,6 +1,6 @@
 import Vue from 'vue';
-// import TIE from '@artificialsolutions/tie-api-client';
-import TIE from '../utils/tie-client.js';
+// import TIE from '@artificialsolutions/tie-api-client'; // Disabled to fix error on IE11
+import TIE from '../utils/tie-client.js'; // import tie client SDK like this to fix error on IE11
 
 import MessageListCache from '../utils/message-list-cache.js';
 import parseTeneoResponse from '../utils/parse-teneo-response.js';
@@ -132,7 +132,10 @@ export default function teneoApiPlugin(teneoApiUrl) {
       if (this.messageListCache) {
         this.messageListCache.update([]);
       }
-    }
+    },
+    async getMessageList() {
+      return this.messageList;
+    },
   };
 
   plugin.install = function install() {

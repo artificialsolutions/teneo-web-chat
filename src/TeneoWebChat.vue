@@ -17,6 +17,7 @@ import LaunchButton from './components/LaunchButton.vue';
 import { EventBus, events } from './utils/event-bus.js';
 import handleExtension from './utils/handle-extension.js';
 import { API_ON_OPEN_BUTTON_CLICK, API_ON_CLOSE_BUTTON_CLICK } from './utils/api-function-names.js';
+import { DEFAULT_TITLE } from './utils/constants.js';
 registerMessageComponents();
 
 export default {
@@ -38,7 +39,7 @@ export default {
   data() {
     return {
       isChatOpen: false,
-      serviceName: 'Teneo Web Chat',
+      serviceName: DEFAULT_TITLE,
     };
   },
   mounted() {

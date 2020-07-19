@@ -3,13 +3,15 @@ import Vue from 'vue';
 import TeneoWebChat from './TeneoWebChat.vue';
 import teneoApiPlugin from './plugins/teneo-api.js';
 import { EventBus, events } from '../src/utils/event-bus.js';
-import { API_KEY_VISIBILITY, API_VERSION} from '../src/utils/constants.js';
+import { API_KEY_VISIBILITY, API_VERSION, DEFAULT_TITLE} from '../src/utils/constants.js';
 import * as apiConstants from '../src/utils/api-function-names.js';
 import handleExtension from '../src/utils/handle-extension.js';
+import messageListCache from '../src/utils/message-list-cache.js';
 
 var functionMap = new Map();
-var stateMap = {'visibility': events.API_STATE_MINIMIZED, 'title':'Teneo Web Chat'};
-var validFunctionNames = Object.values(apiConstants)
+var stateMap = {'visibility': events.API_STATE_MINIMIZED, 'title':DEFAULT_TITLE};
+const validFunctionNames = Object.values(apiConstants)
+const messageList = new messageListCache();
 
 window['TeneoWebChat'] = {
   initialize(element, title, teneoEngineUrl, closeTieSessionOnExit = 'no', imageUrl = '', extraEngineParams = {}) {
@@ -85,6 +87,9 @@ window['TeneoWebChat'] = {
     switch (function_name) {
       case apiConstants.API_GET_STATE:
         return stateMap;
+
+      case apiConstants.API_GET_CHAT_HISTORY:
+        return messageList.get();
     }
   },
   call(function_name, payload = undefined) {
@@ -126,7 +131,7 @@ window['TeneoWebChat'] = {
         EventBus.$emit(events.END_SESSION);
         break
 
-      case apiConstants.API_CALL_CLEAR_HISTORY:
+      case apiConstants.API_CALL_CLEAR_CHAT_HISTORY:
         EventBus.$emit(events.CLEAR_HISTORY);
         break
 

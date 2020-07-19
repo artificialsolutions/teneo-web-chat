@@ -3,13 +3,14 @@ export const API_CALL_MAXIMIZE = "maximize";
 export const API_CALL_MINIMIZE = "minimize";
 export const API_CALL_SEND_INPUT = "send_input";
 export const API_CALL_END_SESSION = "end_session";
-export const API_CALL_CLEAR_HISTORY = "clear_history";
+export const API_CALL_CLEAR_CHAT_HISTORY = "clear_chat_history";
 export const API_CALL_RESET = "reset";
 export const API_CALL_ADD_MESSAGE = "add_message";
 export const API_CALL_SET_WINDOW_TITLE = "set_chat_window_title";
 
-// api getter
+// api getters
 export const API_GET_STATE = "state";
+export const API_GET_CHAT_HISTORY = "chat_history";
 
 // api callacks
 export const API_ON_READY = "ready";
