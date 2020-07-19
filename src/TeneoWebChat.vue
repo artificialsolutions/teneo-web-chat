@@ -154,8 +154,7 @@ export default {
   --bot-message-fg-color: var(--dark-fg-color);
   --bot-message-bg-color: var(--light-bg-color);
   --agent-message-fg-color: var(--light-fg-color);
-  /* --agent-message-bg-color: #e4f1e4; */
-  --agent-message-bg-color: #03a9f4;
+  --agent-message-bg-color: #47b2fd;
   --user-message-bg-color: var(--primary-color);
   --user-message-fg-color: var(--light-fg-color);
   --buttons-title-color: var(--dark-fg-color);
