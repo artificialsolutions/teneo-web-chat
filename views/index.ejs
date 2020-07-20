@@ -18,20 +18,21 @@
     <button onclick="TeneoWebChat.call('minimize')">Minimize</button><br>
     <button onclick="TeneoWebChat.call('end_session')">End session</button><br>
     <button onclick="TeneoWebChat.call('clear_chat_history')">Clear chat history</button><br>
-    <button onclick="TeneoWebChat.call('set_chat_window_title', 'New title')">Set window title</button><br>
+    <button onclick="TeneoWebChat.call('set_chat_window_title', 'Connecting...')">Set window title</button><br>
 
     <h5>Message</h5>
     
     
-    <button onclick="TeneoWebChat.call('add_message',{'author': 'user', 'type': 'text', 'data': {'text': 'Message from the user'}})">Add message from user</button><br>
-    <button onclick="TeneoWebChat.call('add_message',{'author': 'bot', 'type': 'text', 'data': {'text': 'Message from the bot.'}})">Add message from bot</button><br>
-    <button onclick="TeneoWebChat.call('add_message',{'author': 'agent', 'type': 'text', 'data': {'text': 'Message from the agent'}})">Add message from agent</button><br>
+    <button onclick="TeneoWebChat.call('add_message',{'author': 'bot', 'type': 'text', 'data': {'text': 'Message from the bot.'}})">Text message from bot</button><br>
+    <button onclick="TeneoWebChat.call('add_message',{'author': 'user', 'type': 'text', 'data': {'text': 'Message from the user'}})">Text message from user</button><br>
+    <button onclick="TeneoWebChat.call('add_message',{'author': 'agent', 'type': 'text', 'data': {'text': 'Message from the agent'}})">Text message from agent</button><br>
     <br>
-    <button onclick="TeneoWebChat.call('add_message',{'author': 'user', 'type': 'text', 'data': {'text': 'Message from the user','dateline':'<strong>Jack</strong> - 14:35'}})">Add message from user with dateline</button><br>
-    <button onclick="TeneoWebChat.call('add_message',{'author': 'bot', 'type': 'text', 'data': {'text': 'Message from the bot.','dateline':'<strong>Sara</strong> - 14:36'}})">Add message from bot with dateline</button><br>
-    <button onclick="TeneoWebChat.call('add_message',{'author': 'agent', 'type': 'text', 'data': {'text': 'Message from the agent','dateline':'<strong>Ahmed</strong> - 14:37'}})">Add message from agent with dateline</button><br><br>
-    <button onclick="TeneoWebChat.call('add_message',{'author': 'system', 'type': 'system', 'data': {'text': 'You will be handed over to an agent. You are number <strong>4</strong> in the queue.'}})">Add system message</button><br>
-    
+    <button onclick="TeneoWebChat.call('add_message',{'author': 'bot', 'type': 'text', 'data': {'text': 'Message from the bot.','dateline':'<strong>Sara</strong> - 14:36'}})">Text message from bot with dateline</button><br>
+    <button onclick="TeneoWebChat.call('add_message',{'author': 'user', 'type': 'text', 'data': {'text': 'Message from the user','dateline':'<strong>Jack</strong> - 14:35'}})">Text message from user with dateline</button><br>
+    <button onclick="TeneoWebChat.call('add_message',{'author': 'agent', 'type': 'text', 'data': {'text': 'Message from the agent','dateline':'<strong>Ahmed</strong> - 14:37'}})">Text message from agent with dateline</button><br>
+    <br>
+    <button onclick="TeneoWebChat.call('add_message',{'type': 'system', 'data': {'text': 'You will be handed over to an agent. You are number <strong>4</strong> in the queue.'}})">System message</button><br>
+
 
     <h5>Sending inputs to engine</h5>
     <button onclick="TeneoWebChat.call('send_input', {'text':'What do you think about jimi hendriks?', 'parameters': {'userCountryCode':'NL'}})">Send input</button><br>
