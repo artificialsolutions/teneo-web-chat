@@ -36,7 +36,6 @@ window['TeneoWebChat'] = {
       store.commit('teneoEngineParams',twcProps.teneoEngineParams);
     }
     if (twcProps.showCloseButton === true || twcProps.showCloseButton === "true") {
-      // TODO: Check if twcProps.teneoEngineParams is a bool
       store.commit('showCloseButton',twcProps.showCloseButton);
     }
 
