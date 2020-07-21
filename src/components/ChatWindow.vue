@@ -31,14 +31,6 @@ export default {
       type: Function,
       required: true,
     },
-    // imageUrl: {
-    //   type: String,
-    //   required: true,
-    // },
-    // title: {
-    //   type: String,
-    //   required: true,
-    // },
   },
   data() {
     return {
@@ -78,7 +70,7 @@ export default {
   bottom: 25px;
   box-sizing: border-box;
   box-shadow: 0 2px 10px 0 rgba(0, 0, 0, 0.15);
-  background: white;
+  background: var(--chat-window-bg-color, #ffffff);
   display: flex;
   flex-direction: column;
   justify-content: space-between;

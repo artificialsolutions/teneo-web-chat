@@ -11,7 +11,6 @@
     stroke-linejoin="round"
     class="feather feather-x"
   >
-    <title>Minimize</title>
     <line class="st0" x1="18" y1="18" x2="6" y2="18"/>
   </svg>
 </template>

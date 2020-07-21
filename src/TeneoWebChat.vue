@@ -25,12 +25,6 @@ export default {
     ChatWindow,
     LaunchButton,
   },
-  props: {
-    closeTieSessionOnExit: {
-      type: String,
-      required: false,
-    },
-  },
   data() {
     return {
       isChatOpen: false,
@@ -71,32 +65,7 @@ export default {
 
     },
   methods: {
-    async openChat() { 
-      var chatWindowTargetState = events.MAXIMIZE_WINDOW;
-      chatWindowTargetState = await handleExtension(API_ON_OPEN_BUTTON_CLICK, chatWindowTargetState);
-      // TODO: trow error when value of chatWindowTargetState is not 'minimize' or 'maximize'?
-      if (chatWindowTargetState === events.MAXIMIZE_WINDOW) {
-        this.maximize();
-      } 
-      if (chatWindowTargetState === events.MINIMIZE_WINDOW) {
-        this.minimize();
-      }
-    },
-    async minimizeChat() { 
-      var chatWindowTargetState = events.MINIMIZE_WINDOW
-      chatWindowTargetState = await handleExtension(API_ON_MINIMIZE_BUTTON_CLICK, chatWindowTargetState);
-      // TODO: trow error when value of chatWindowTargetState is not 'minimize' or 'maximize'?
-      if (chatWindowTargetState === events.MINIMIZE_WINDOW) {
-        this.minimize();
-      } 
-      if (chatWindowTargetState === events.MAXIMIZE_WINDOW) {
-        this.minimize();
-      }
-    },
-    async closeChat() { 
-      var chatWindowTargetState = events.CLOSE_WINDOW
-      chatWindowTargetState = await handleExtension(API_ON_CLOSE_BUTTON_CLICK, chatWindowTargetState);
-      // TODO: throw error when value of chatWindowTargetState is not 'minimize' or 'maximize'?
+    changeWindowState(chatWindowTargetState) {
       if (chatWindowTargetState === events.CLOSE_WINDOW) {
         this.minimize()
         this.closeSession()
@@ -109,18 +78,36 @@ export default {
         this.maximize()
       }
     },
+    async openChat() { 
+      var chatWindowTargetState = events.MAXIMIZE_WINDOW;
+      chatWindowTargetState = await handleExtension(API_ON_OPEN_BUTTON_CLICK, chatWindowTargetState);
+      // TODO: trow error when value of chatWindowTargetState is not 'minimize' or 'maximize'?
+      this.changeWindowState(chatWindowTargetState)
+    },
+    async minimizeChat() { 
+      var chatWindowTargetState = events.MINIMIZE_WINDOW
+      chatWindowTargetState = await handleExtension(API_ON_MINIMIZE_BUTTON_CLICK, chatWindowTargetState);
+      // TODO: trow error when value of chatWindowTargetState is not 'minimize' or 'maximize'?
+      this.changeWindowState(chatWindowTargetState)
+    },
+    async closeChat() { 
+      var chatWindowTargetState = events.CLOSE_WINDOW
+      chatWindowTargetState = await handleExtension(API_ON_CLOSE_BUTTON_CLICK, chatWindowTargetState);
+      // TODO: throw error when value of chatWindowTargetState is not 'minimize' or 'maximize'?
+      this.changeWindowState(chatWindowTargetState)
+    },
     async minimize(){
       if (this.$store.getters.visibility == API_STATE_MAXIMIZED) {
         this.$store.commit('visibility',API_STATE_MINIMIZED);
         this.isChatOpen = false
-        await this.handleVisibilityChange();
+        await this.apiOnVisibilityChange();
       }
     },
     async maximize(){
       if (this.$store.getters.visibility == API_STATE_MINIMIZED) {
         this.$store.commit('visibility',API_STATE_MAXIMIZED);
         this.isChatOpen = true
-        await this.handleVisibilityChange();
+        await this.apiOnVisibilityChange();
       }
     },
     clearHistory() {
@@ -132,7 +119,7 @@ export default {
     setWindowTitle(newTitle) { 
       this.serviceName = newTitle
     },
-    async handleVisibilityChange() {
+    async apiOnVisibilityChange() {
         const data = {};
         data[API_KEY_VISIBILITY] = this.$store.getters.visibility;
         await handleExtension(API_ON_VISIBILITY_CHANGED, data);
@@ -161,6 +148,7 @@ export default {
   --launchicon-bg-color: var(--primary-color);
   --header-bg-color: var(--primary-color);
   --header-fg-color: var(--light-fg-color);
+  --chat-window-bg-color: #ffffff;
   --bot-message-fg-color: var(--dark-fg-color);
   --bot-message-bg-color: var(--light-bg-color);
   --agent-message-fg-color: var(--light-fg-color);

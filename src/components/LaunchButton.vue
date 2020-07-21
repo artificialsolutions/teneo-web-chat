@@ -11,13 +11,11 @@
 <script>
 import BubbleIcon from '../icons/bubble.vue';
 // import XIcon from '../icons/x.vue';
-// import MinmizeArrows from '../icons/minimizeArrows.vue';
 
 export default {
   components: {
     BubbleIcon,
     // XIcon,
-    // MinmizeArrows
   },
   props: {
     isOpen: {

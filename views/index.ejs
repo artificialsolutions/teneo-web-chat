@@ -121,8 +121,7 @@
             'teneoEngineUrl': '<%= process.env.TENEO_ENGINE_URL %>',
             'title':'<%= process.env.HEADER_TITLE %>',
             'titleIconUrl': '<%= process.env.HEADER_ICON_URL %>',
-            'teneoEngineParams' : {"myParam":"myValue"},
-            'showCloseButton' : true,
+            'showCloseButton' : '<%= process.env.SHOW_CLOSE_BUTTON %>',
           }
 
           window.TeneoWebChat.initialize(element, teneoProps);
