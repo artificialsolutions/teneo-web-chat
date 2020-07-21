@@ -86,27 +86,24 @@
 
           function onButtonClicked(button) {
             console.log("onButtonClicked", button)
-            return button
-            // return new Promise(resolve => { 
-            //   setTimeout(() => { 
-            //     resolve(button)
-            //    }, 500);
-            // });         
+            return button  
           }
 
-          function onOpenCloseButtonClicked(state) {
-            console.log("onOpenCloseButtonClicked", state)
+          function onOpenButtonClicked(state) {
+            console.log("onOpenButtonClicked", state)
+            return state
+          }
+          function onCloseButtonClicked(state) {
+            console.log("onCloseButtonClicked", state)
+            return state
+          }
+          function onMinimizeButtonClicked(state) {
+            console.log("onMinimizeButtonClicked", state)
             return state
           }
 
           function onReady(initialData) {
             console.log('onReady',initialData);
-          }
-          function onReady2(initialData) {
-            console.log('onReady2',initialData);
-          }
-          function onReady3(initialData) {
-            console.log('onReady3',initialData);
           }
 
           TeneoWebChat.on('new_message', onNewMessage);
@@ -115,24 +112,25 @@
           TeneoWebChat.on('engine_response', onEngineResponse);
           TeneoWebChat.on('input_submitted', onInputSubmitted);
           TeneoWebChat.on('message_button_clicked', onButtonClicked);
-          TeneoWebChat.on('open_button_clicked', onOpenCloseButtonClicked);
-          TeneoWebChat.on('close_button_clicked', onOpenCloseButtonClicked);
+          TeneoWebChat.on('open_button_clicked', onOpenButtonClicked);
+          TeneoWebChat.on('close_button_clicked', onCloseButtonClicked);
+          TeneoWebChat.on('minimize_button_clicked', onMinimizeButtonClicked);
           TeneoWebChat.on('ready', onReady);
-          TeneoWebChat.on('ready', onReady2);
-          TeneoWebChat.on('ready', onReady3);
 
-          window.TeneoWebChat.initialize(
-            element,
-            '<%= process.env.HEADER_TITLE %>',
-            '<%= process.env.TENEO_ENGINE_URL %>',
-            '<%= process.env.CLOSE_TIE_SESSION_ON_EXIT %>',
-            '<%= process.env.HEADER_ICON_URL %>',
-          );
+          const teneoProps = {
+            'teneoEngineUrl': '<%= process.env.TENEO_ENGINE_URL %>',
+            'title':'<%= process.env.HEADER_TITLE %>',
+            'titleIconUrl': '<%= process.env.HEADER_ICON_URL %>',
+            'teneoEngineParams' : {"myParam":"myValue"},
+            'showCloseButton' : true,
+          }
+
+          window.TeneoWebChat.initialize(element, teneoProps);
           //END EXTENSIONS MODS
 
         }
       }
+
     </script>
-    
   </body>
 </html>

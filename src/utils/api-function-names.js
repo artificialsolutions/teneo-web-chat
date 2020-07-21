@@ -22,3 +22,4 @@ export const API_ON_NEW_MESSAGE = "new_message";
 export const API_ON_BUTTON_CLICK = "message_button_clicked";
 export const API_ON_OPEN_BUTTON_CLICK = "open_button_clicked";
 export const API_ON_CLOSE_BUTTON_CLICK = "close_button_clicked";
+export const API_ON_MINIMIZE_BUTTON_CLICK = "minimize_button_clicked";

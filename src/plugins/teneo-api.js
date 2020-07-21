@@ -37,7 +37,7 @@ export default function teneoApiPlugin(teneoApiUrl) {
       }
 
       // if available, add extra params to messageDetails
-      var extraParams = tmpVue.$extraEngineParams;
+      var extraParams = tmpVue.$store.getters.teneoEngineParams;
       if (Object.keys(extraParams).length > 0 && extraParams.constructor === Object) {
         messageDetails = Object.assign(messageDetails, extraParams);
       }

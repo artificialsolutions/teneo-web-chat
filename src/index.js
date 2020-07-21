@@ -3,54 +3,65 @@ import Vue from 'vue';
 import TeneoWebChat from './TeneoWebChat.vue';
 import teneoApiPlugin from './plugins/teneo-api.js';
 import { EventBus, events } from '../src/utils/event-bus.js';
-import { API_KEY_VISIBILITY, API_VERSION, DEFAULT_TITLE} from '../src/utils/constants.js';
+import { API_VERSION, DEFAULT_TITLE, API_STATE_MINIMIZED} from '../src/utils/constants.js';
 import * as apiConstants from '../src/utils/api-function-names.js';
 import handleExtension from '../src/utils/handle-extension.js';
 import messageListCache from '../src/utils/message-list-cache.js';
+import { store } from '../src/store/store.js';
+
 
 var functionMap = new Map();
-var stateMap = {'visibility': events.API_STATE_MINIMIZED, 'title':DEFAULT_TITLE};
+var stateMap = {'visibility': API_STATE_MINIMIZED, 'title':DEFAULT_TITLE};
 const validFunctionNames = Object.values(apiConstants)
 const messageList = new messageListCache();
 
 window['TeneoWebChat'] = {
-  initialize(element, title, teneoEngineUrl, closeTieSessionOnExit = 'no', imageUrl = '', extraEngineParams = {}) {
-    Vue.use(teneoApiPlugin(teneoEngineUrl));
-    Vue.prototype.$extraEngineParams = extraEngineParams;
-    Vue.prototype.$extensionMethods = functionMap;
+  // initialize(element, title, teneoEngineUrl, closeTieSessionOnExit = 'no', imageUrl = '', extraEngineParams = {}, twcProps) {
+  initialize(element, twcProps) {
+    Vue.prototype.$store = store;
 
-    if (title) {
-      stateMap['title'] = title;
-      EventBus.$emit(events.SET_WINDOW_TITLE, title);
+    // store properties in storage
+    if (twcProps.teneoEngineUrl) {
+      // TODO: Check if teneoEngineUrl is a string and a url
+      store.commit('teneoEngineUrl',twcProps.teneoEngineUrl);
     }
+    if (twcProps.title) {
+      // TODO: Check if title is a string
+      store.commit('title',twcProps.title);
+    }
+    if (twcProps.titleIconUrl) {
+      // TODO: Check if titleIconUrl is a string and a url
+      store.commit('titleIconUrl',twcProps.titleIconUrl);
+    }
+    if (twcProps.teneoEngineParams) {
+      // TODO: Check if twcProps.teneoEngineParams is a map
+      store.commit('teneoEngineParams',twcProps.teneoEngineParams);
+    }
+    if (twcProps.showCloseButton) {
+      // TODO: Check if twcProps.teneoEngineParams is a bool
+      store.commit('showCloseButton',twcProps.showCloseButton);
+    }
+
+    // check required properties
+    if (!store.getters.teneoEngineUrl) {
+      console.log("teneoEngineUrl missing")
+      return
+    }
+
+    Vue.use(teneoApiPlugin(store.getters.teneoEngineUrl));
+    Vue.prototype.$extensionMethods = functionMap;
+    
+
     
     EventBus.$on(events.API_STATE_READY, () => {
-      handleExtension(apiConstants.API_ON_READY, stateMap)
+      handleExtension(apiConstants.API_ON_READY, store.getters.state);
     });
 
+    const closeTieSessionOnExit = 'no' // TEMP
+    const imageUrl = '' // TEMP
     var tmpVue = new Vue({
       render: (h) => h(TeneoWebChat, { props: { closeTieSessionOnExit, imageUrl} }),
     }).$mount(element);
-
-    EventBus.$emit(events.SET_WINDOW_TITLE, title); 
-
-    function handleVisibilityChange(event){
-      if(stateMap[API_KEY_VISIBILITY] != event){
-        stateMap[API_KEY_VISIBILITY] = event;
-        const data = {};
-        data[API_KEY_VISIBILITY] = stateMap[API_KEY_VISIBILITY];
-
-        // call extension to notify about visibility change
-        handleExtension(apiConstants.API_ON_VISIBILITY_CHANGED, data);
-      }
-    }
-    //These listeners keep 'state' updated and trigger onVisibilityChanged.
-    EventBus.$on(events.API_STATE_MAXIMIZED, () => {
-      handleVisibilityChange(events.API_STATE_MAXIMIZED);
-    });
-    EventBus.$on(events.API_STATE_MINIMIZED, () => {
-      handleVisibilityChange(events.API_STATE_MINIMIZED);
-    });
 
   },
   on(function_name, func){
@@ -86,7 +97,7 @@ window['TeneoWebChat'] = {
   get(function_name){
     switch (function_name) {
       case apiConstants.API_GET_STATE:
-        return stateMap;
+        return store.getters.state;
 
       case apiConstants.API_GET_CHAT_HISTORY:
         return messageList.get();
@@ -96,6 +107,7 @@ window['TeneoWebChat'] = {
 
     switch (function_name) {
       case apiConstants.API_CALL_MAXIMIZE:
+        console.log("Call maximize")
         EventBus.$emit(events.MAXIMIZE_WINDOW);
         break
   
@@ -149,8 +161,9 @@ window['TeneoWebChat'] = {
       case apiConstants.API_CALL_SET_WINDOW_TITLE:
         // TODO: throw error if payload is invalid?
         if (typeof payload === "string") {
-          EventBus.$emit(events.SET_WINDOW_TITLE, payload);
-          stateMap.title = payload
+          store.commit('title',"New Title");
+          // EventBus.$emit(events.SET_WINDOW_TITLE, payload);
+          // stateMap.title = payload
         }
         break
 
@@ -162,6 +175,7 @@ window['TeneoWebChat'] = {
     return API_VERSION;
   },
   resetChat(){
+    console.log("Deprecated. Use TeneoWebChat.call('reset')")
     EventBus.$emit(events.RESET_SESSION);
   },
 };

@@ -5,17 +5,19 @@
     @click.prevent="isOpen ? close() : open()"
   >
     <BubbleIcon v-if="!isOpen" class="launch-button__open-icon" />
-    <XIcon v-if="isOpen" class="launch-button__close-icon" />
+    <!-- <MinmizeArrows v-if="isOpen" class="launch-button__close-icon" /> -->
   </div>
 </template>
 <script>
 import BubbleIcon from '../icons/bubble.vue';
-import XIcon from '../icons/x.vue';
+// import XIcon from '../icons/x.vue';
+// import MinmizeArrows from '../icons/minimizeArrows.vue';
 
 export default {
   components: {
     BubbleIcon,
-    XIcon,
+    // XIcon,
+    // MinmizeArrows
   },
   props: {
     isOpen: {

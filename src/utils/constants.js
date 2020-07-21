@@ -13,3 +13,5 @@ export const API_VERSION = "2.5.1";
 // state object keys
 export const API_KEY_VISIBILITY = "visibility";
 export const API_KEY_TITLE = "title";
+export const API_STATE_MINIMIZED = "minimized"
+export const API_STATE_MAXIMIZED = "maximized"

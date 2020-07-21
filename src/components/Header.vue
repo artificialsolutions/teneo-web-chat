@@ -1,9 +1,12 @@
 <template>
   <div class="header">
-    <img v-if="imageUrl" class="header__img" :src="imageUrl" />
+    <img v-if="titleIconUrl" class="header__img" :src="titleIconUrl" />
     <BubbleIcon v-else class="header__img" />
     <div class="header__title">{{ title }}</div>
-    <button class="header__close-button" @click="onClose">
+    <button class="header__minimize-button" @click="onMinimize">
+      <MinimizeIcon class="header__minimize-icon" />
+    </button>
+    <button v-if="showCloseButton" class="header__close-button" @click="onClose">
       <XIcon class="header__close-icon" />
     </button>
   </div>
@@ -11,27 +14,41 @@
 
 <script>
 import XIcon from '../icons/x.vue';
+import MinimizeIcon from '../icons/minimize.vue';
 import BubbleIcon from '../icons/bubble.vue';
+import { mapState } from 'vuex';
 
 export default {
   components: {
     XIcon,
+    MinimizeIcon,
     BubbleIcon,
   },
   props: {
-    imageUrl: {
-      type: String,
-      required: true,
-    },
-    title: {
-      type: String,
-      required: true,
-    },
+    // imageUrl: {
+    //   type: String,
+    //   required: true,
+    // },
+    // title: {
+    //   type: String,
+    //   required: true,
+    // },
     onClose: {
       type: Function,
       required: true,
     },
+    onMinimize: {
+      type: Function,
+      required: true,
+    },
   },
+  computed: {
+    ...mapState([
+        'title',
+        'titleIconUrl',
+        'showCloseButton'
+    ]),
+  }
 };
 </script>
 
@@ -66,7 +83,7 @@ export default {
   border: none;
   cursor: pointer;
   padding: 0;
-  margin-left: auto;
+  margin-left: 0px;
 }
 
 .header__close-icon {
@@ -76,6 +93,25 @@ export default {
 }
 
 .header__close-icon {
+  stroke-width: 1;
+}
+
+.header__minimize-button {
+  outline: none;
+  background: none;
+  border: none;
+  cursor: pointer;
+  padding: 0;
+  margin-left: auto;
+}
+
+.header__minimize-icon {
+  height: 32px;
+  width: 32px;
+  color: var(--header-fg-color, #ffffff);
+}
+
+.header__minimize-icon {
   stroke-width: 1;
 }
 
