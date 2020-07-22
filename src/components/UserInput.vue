@@ -26,7 +26,6 @@ import { PARTICIPANT_USER } from '../utils/constants.js';
 import { API_ON_INPUT_SUBMITTED } from '../utils/api-function-names.js';
 import { EventBus, events } from '../utils/event-bus.js';
 import handleExtension from '../utils/handle-extension.js';
-const tmpVue = new Vue();
 
 export default {
   components: {

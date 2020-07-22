@@ -1,5 +1,5 @@
-import Vue from 'vue';
-const tmpVue = new Vue();
+// import Vue from 'vue';
+// const tmpVue = new Vue();
 import { API_ON_BUTTON_CLICK } from './api-function-names.js';
 import handleExtension from './handle-extension.js';
 

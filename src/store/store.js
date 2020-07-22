@@ -12,6 +12,9 @@ export const store = new Vuex.Store({
         teneoEngineUrl: "",
         teneoEngineParams: {},
         showCloseButton: false,
+        agentAvatarUrl : "",
+        botAvatarUrl : "",
+        userAvatarUrl : "",
     },
     mutations: {
         visibility(state, newVisibility) {
@@ -34,6 +37,15 @@ export const store = new Vuex.Store({
         },
         showCloseButton(state, showButtonBool) {
             state.showCloseButton = showButtonBool
+        },
+        agentAvatarUrl(state, newUrl) {
+            state.agentAvatarUrl = newUrl
+        },
+        botAvatarUrl(state, newUrl) {
+            state.botAvatarUrl = newUrl
+        },
+        userAvatarUrl(state, newUrl) {
+            state.userAvatarUrl = newUrl
         }
     },
     getters: {
@@ -43,6 +55,9 @@ export const store = new Vuex.Store({
         titleIconUrl: state => state.titleIconUrl,
         teneoEngineParams: state => state.teneoEngineParams,
         showCloseButton: state => state.showCloseButton,
+        agentAvatarUrl: state => state.agentAvatarUrl,
+        botAvatarUrl: state => state.botAvatarUrl,
+        userAvatarUrl: state => state.userAvatarUrl,
         state: state => {
             return {'visibility':state.visibility}
         },

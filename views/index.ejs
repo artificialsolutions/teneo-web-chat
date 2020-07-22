@@ -19,6 +19,7 @@
     <button onclick="TeneoWebChat.call('end_session')">End session</button><br>
     <button onclick="TeneoWebChat.call('clear_chat_history')">Clear chat history</button><br>
     <button onclick="TeneoWebChat.call('set_chat_window_title', 'Connecting...')">Set window title</button><br>
+    <button onclick="TeneoWebChat.call('set_agent_avatar_url', 'http://localhost/twcdemo/user.jpg')">Set agent avatar</button><br>
 
     <h5>Message</h5>
     
@@ -115,6 +116,9 @@
             'title':'<%= process.env.HEADER_TITLE %>',
             'titleIconUrl': '<%= process.env.HEADER_ICON_URL %>',
             'showCloseButton' : '<%= process.env.SHOW_CLOSE_BUTTON %>',
+            'agentAvatarUrl' : '<%= process.env.AGENT_AVATAR_URL %>',
+            'botAvatarUrl' : '<%= process.env.BOT_AVATAR_URL %>',
+            'userAvatarUrl' : '<%= process.env.USER_AVATAR_URL %>',
           }
 
           window.TeneoWebChat.initialize(element, teneoProps);
