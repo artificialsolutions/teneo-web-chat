@@ -4,7 +4,7 @@ const baseConfig = require('./webpack.base.js');
 module.exports = merge(baseConfig, {
   mode: 'production',
   // devtool: 'cheap-module-source-map',
-  // output: {
-  //   filename: 'teneo-web-chat.js',
-  // },
+  output: {
+    filename: 'teneo-web-chat.js',
+  },
 });
