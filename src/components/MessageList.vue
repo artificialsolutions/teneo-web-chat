@@ -41,7 +41,7 @@ export default {
           behavior: 'smooth',
           block: 'end',
         });
-      } else {
+      } else if (this.$refs.scrollList) {
         this.$refs.scrollList.scrollTop = this.$refs.scrollList.scrollHeight;
       }
     },
@@ -54,7 +54,7 @@ export default {
           inline: "nearest",
           block: 'end',
         });
-      } else {
+      } else if (this.$refs.scrollList) {
         this.$refs.scrollList.scrollTop = this.$refs.scrollList.scrollHeight;
       }
     },
