@@ -26,10 +26,6 @@ export default {
       type: Function,
       required: true,
     },
-    close: {
-      type: Function,
-      required: true,
-    },
   },
 };
 </script>

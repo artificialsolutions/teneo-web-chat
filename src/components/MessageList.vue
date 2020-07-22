@@ -21,7 +21,8 @@ export default {
     },
   },
   mounted () {
-      this._scrollDownInstantly();
+      //this._scrollDownInstantly();
+      setTimeout(this._scrollDownInstantly.bind(this), 80);
   },
   updated() {
     if (this.shouldScrollToBottom()) {
@@ -50,6 +51,7 @@ export default {
       if (latestMessage && typeof latestMessage.scrollIntoView === 'function') {
         latestMessage.scrollIntoView({
           behavior: 'auto',
+          inline: "nearest",
           block: 'end',
         });
       } else {

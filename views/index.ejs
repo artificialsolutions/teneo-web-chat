@@ -53,7 +53,6 @@
         ) {
           var element = document.getElementById('teneo-web-chat');
 
-
           // EXTENSIONS          
           function onNewMessage(message) {
             console.log("onNewMessage", message)
@@ -76,12 +75,7 @@
 
           function onInputSubmitted(text) {
             console.log("onInputSubmitted", text)
-            return text
-            return new Promise(resolve => { 
-              setTimeout(() => { 
-                resolve(text)
-               }, 500);
-            });         
+            return text     
           }
 
           function onButtonClicked(button) {

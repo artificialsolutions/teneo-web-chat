@@ -5,7 +5,7 @@
       :on-close="closeChat"
       :on-minimize="minimizeChat"
     />
-    <LaunchButton v-if="!isChatOpen" :open="openChat" :close="minimizeChat" :is-open="isChatOpen" />
+    <LaunchButton v-if="!isChatOpen" :open="openChat" :is-open="isChatOpen" />
   </div>
 </template>
 
