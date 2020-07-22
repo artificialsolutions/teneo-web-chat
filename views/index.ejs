@@ -18,20 +18,20 @@
     <button onclick="TeneoWebChat.call('minimize')">Minimize</button><br>
     <button onclick="TeneoWebChat.call('end_session')">End session</button><br>
     <button onclick="TeneoWebChat.call('clear_chat_history')">Clear chat history</button><br>
-    <button onclick="TeneoWebChat.call('set_chat_window_title', 'New title')">Set window title</button><br>
+    <button onclick="TeneoWebChat.call('set_chat_window_title', 'Connecting...')">Set window title</button><br>
 
     <h5>Message</h5>
     
-    
-    <button onclick="TeneoWebChat.call('add_message',{'author': 'user', 'type': 'text', 'data': {'text': 'Message from the user'}})">Add message from user</button><br>
-    <button onclick="TeneoWebChat.call('add_message',{'author': 'bot', 'type': 'text', 'data': {'text': 'Message from the bot.'}})">Add message from bot</button><br>
-    <button onclick="TeneoWebChat.call('add_message',{'author': 'agent', 'type': 'text', 'data': {'text': 'Message from the agent'}})">Add message from agent</button><br>
+    <button onclick="TeneoWebChat.call('add_message',{'author': 'bot', 'type': 'text', 'data': {'text': 'Message from the bot.'}})">Text message from bot</button><br>
+    <button onclick="TeneoWebChat.call('add_message',{'author': 'user', 'type': 'text', 'data': {'text': 'Message from the user'}})">Text message from user</button><br>
+    <button onclick="TeneoWebChat.call('add_message',{'author': 'agent', 'type': 'text', 'data': {'text': 'Message from the agent'}})">Text message from agent</button><br>
     <br>
-    <button onclick="TeneoWebChat.call('add_message',{'author': 'user', 'type': 'text', 'data': {'text': 'Message from the user','dateline':'<strong>Jack</strong> - 14:35'}})">Add message from user with dateline</button><br>
-    <button onclick="TeneoWebChat.call('add_message',{'author': 'bot', 'type': 'text', 'data': {'text': 'Message from the bot.','dateline':'<strong>Sara</strong> - 14:36'}})">Add message from bot with dateline</button><br>
-    <button onclick="TeneoWebChat.call('add_message',{'author': 'agent', 'type': 'text', 'data': {'text': 'Message from the agent','dateline':'<strong>Ahmed</strong> - 14:37'}})">Add message from agent with dateline</button><br><br>
-    <button onclick="TeneoWebChat.call('add_message',{'author': 'system', 'type': 'system', 'data': {'text': 'You will be handed over to an agent. You are number <strong>4</strong> in the queue.'}})">Add system message</button><br>
-    
+    <button onclick="TeneoWebChat.call('add_message',{'author': 'bot', 'type': 'text', 'data': {'text': 'Message from the bot.','dateline':'<strong>Sara</strong> - 14:36'}})">Text message from bot with dateline</button><br>
+    <button onclick="TeneoWebChat.call('add_message',{'author': 'user', 'type': 'text', 'data': {'text': 'Message from the user','dateline':'<strong>Jack</strong> - 14:35'}})">Text message from user with dateline</button><br>
+    <button onclick="TeneoWebChat.call('add_message',{'author': 'agent', 'type': 'text', 'data': {'text': 'Message from the agent','dateline':'<strong>Ahmed</strong> - 14:37'}})">Text message from agent with dateline</button><br>
+    <br>
+    <button onclick="TeneoWebChat.call('add_message',{'type': 'system', 'data': {'text': 'You will be handed over to an agent. You are number <strong>4</strong> in the queue.'}})">System message</button><br>
+
 
     <h5>Sending inputs to engine</h5>
     <button onclick="TeneoWebChat.call('send_input', {'text':'What do you think about jimi hendriks?', 'parameters': {'userCountryCode':'NL'}})">Send input</button><br>
@@ -43,7 +43,7 @@
     <button onclick="console.log(TeneoWebChat.version())">Version</button><br>
     
     <div id="teneo-web-chat"></div>
-    <script src="main.js"></script>
+    <!-- <script src="teneo-web-chat.js"></script> -->
     <script>
       window.onload = function () {
         if (
@@ -51,7 +51,6 @@
             typeof window.TeneoWebChat.initialize === 'function'
         ) {
           var element = document.getElementById('teneo-web-chat');
-
 
           // EXTENSIONS          
           function onNewMessage(message) {
@@ -75,37 +74,29 @@
 
           function onInputSubmitted(text) {
             console.log("onInputSubmitted", text)
-            return text
-            return new Promise(resolve => { 
-              setTimeout(() => { 
-                resolve(text)
-               }, 500);
-            });         
+            return text     
           }
 
           function onButtonClicked(button) {
             console.log("onButtonClicked", button)
-            return button
-            // return new Promise(resolve => { 
-            //   setTimeout(() => { 
-            //     resolve(button)
-            //    }, 500);
-            // });         
+            return button  
           }
 
-          function onOpenCloseButtonClicked(state) {
-            console.log("onOpenCloseButtonClicked", state)
+          function onOpenButtonClicked(state) {
+            console.log("onOpenButtonClicked", state)
+            return state
+          }
+          function onCloseButtonClicked(state) {
+            console.log("onCloseButtonClicked", state)
+            return state
+          }
+          function onMinimizeButtonClicked(state) {
+            console.log("onMinimizeButtonClicked", state)
             return state
           }
 
           function onReady(initialData) {
             console.log('onReady',initialData);
-          }
-          function onReady2(initialData) {
-            console.log('onReady2',initialData);
-          }
-          function onReady3(initialData) {
-            console.log('onReady3',initialData);
           }
 
           TeneoWebChat.on('new_message', onNewMessage);
@@ -113,25 +104,25 @@
           TeneoWebChat.on('engine_request', onEngineRequest);
           TeneoWebChat.on('engine_response', onEngineResponse);
           TeneoWebChat.on('input_submitted', onInputSubmitted);
-          TeneoWebChat.on('component_button_clicked', onButtonClicked);
-          TeneoWebChat.on('open_button_clicked', onOpenCloseButtonClicked);
-          TeneoWebChat.on('close_button_clicked', onOpenCloseButtonClicked);
+          TeneoWebChat.on('message_button_clicked', onButtonClicked);
+          TeneoWebChat.on('open_button_clicked', onOpenButtonClicked);
+          TeneoWebChat.on('close_button_clicked', onCloseButtonClicked);
+          TeneoWebChat.on('minimize_button_clicked', onMinimizeButtonClicked);
           TeneoWebChat.on('ready', onReady);
-          TeneoWebChat.on('ready', onReady2);
-          TeneoWebChat.on('ready', onReady3);
 
-          window.TeneoWebChat.initialize(
-            element,
-            '<%= process.env.HEADER_TITLE %>',
-            '<%= process.env.TENEO_ENGINE_URL %>',
-            '<%= process.env.CLOSE_TIE_SESSION_ON_EXIT %>',
-            '<%= process.env.HEADER_ICON_URL %>',
-          );
+          const teneoProps = {
+            'teneoEngineUrl': '<%= process.env.TENEO_ENGINE_URL %>',
+            'title':'<%= process.env.HEADER_TITLE %>',
+            'titleIconUrl': '<%= process.env.HEADER_ICON_URL %>',
+            'showCloseButton' : '<%= process.env.SHOW_CLOSE_BUTTON %>',
+          }
+
+          window.TeneoWebChat.initialize(element, teneoProps);
           //END EXTENSIONS MODS
 
         }
       }
+
     </script>
-    
   </body>
 </html>

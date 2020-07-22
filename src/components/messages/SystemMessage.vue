@@ -1,5 +1,5 @@
 <template>
-  <div class="system-message" :class="messageSource">
+  <div class="system-message">
     <!-- eslint-disable-next-line vue/no-v-html -->
     <p class="system-message__text" v-html="sanitizedHtmlText"></p>
   </div>
@@ -27,9 +27,6 @@ export default {
   computed: {
     messageText() {
       return this.message.data.text;
-    },
-    messageSource() {
-      return this.message.author;
     },
     sanitizedHtmlText() {
       return sanitizeHtml(this.message.data.text);

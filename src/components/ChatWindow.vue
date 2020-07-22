@@ -1,6 +1,6 @@
 <template>
   <div class="chat-window">
-    <Header :title="title" :image-url="imageUrl" :on-close="onClose" />
+    <Header :on-close="onClose" :on-minimize="onMinimize"/>
     <MessageList :message-list="$teneoApi.messageList" />
     <div v-if="spinnerIsLoading" class="spinner">
       <div class="bounce1"></div>
@@ -27,12 +27,8 @@ export default {
       type: Function,
       required: true,
     },
-    imageUrl: {
-      type: String,
-      required: true,
-    },
-    title: {
-      type: String,
+    onMinimize: {
+      type: Function,
       required: true,
     },
   },
@@ -71,10 +67,10 @@ export default {
   max-height: 590px;
   position: fixed;
   right: 25px;
-  bottom: 100px;
+  bottom: 25px;
   box-sizing: border-box;
   box-shadow: 0 2px 10px 0 rgba(0, 0, 0, 0.15);
-  background: white;
+  background: var(--chat-window-bg-color, #ffffff);
   display: flex;
   flex-direction: column;
   justify-content: space-between;

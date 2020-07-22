@@ -3,10 +3,9 @@
     <ChatWindow
       v-if="isChatOpen"
       :on-close="closeChat"
-      :title="serviceName ? serviceName : 'Teneo Web Chat'"
-      :image-url="imageUrl"
+      :on-minimize="minimizeChat"
     />
-    <LaunchButton :open="openChat" :close="closeChat" :is-open="isChatOpen" />
+    <LaunchButton v-if="!isChatOpen" :open="openChat" :is-open="isChatOpen" />
   </div>
 </template>
 
@@ -16,8 +15,8 @@ import ChatWindow from './components/ChatWindow.vue';
 import LaunchButton from './components/LaunchButton.vue';
 import { EventBus, events } from './utils/event-bus.js';
 import handleExtension from './utils/handle-extension.js';
-import { API_ON_OPEN_BUTTON_CLICK, API_ON_CLOSE_BUTTON_CLICK } from './utils/api-function-names.js';
-import { DEFAULT_TITLE } from './utils/constants.js';
+import { API_ON_OPEN_BUTTON_CLICK, API_ON_CLOSE_BUTTON_CLICK, API_ON_MINIMIZE_BUTTON_CLICK, API_ON_VISIBILITY_CHANGED } from './utils/api-function-names.js';
+import { API_KEY_VISIBILITY, API_STATE_MAXIMIZED, API_STATE_MINIMIZED, DEFAULT_TITLE } from './utils/constants.js';
 registerMessageComponents();
 
 export default {
@@ -26,20 +25,9 @@ export default {
     ChatWindow,
     LaunchButton,
   },
-  props: {
-    imageUrl: {
-      type: String,
-      required: true,
-    },
-    closeTieSessionOnExit: {
-      type: String,
-      required: false,
-    },
-  },
   data() {
     return {
       isChatOpen: false,
-      serviceName: DEFAULT_TITLE,
     };
   },
   mounted() {
@@ -73,50 +61,54 @@ export default {
         this.$teneoApi.sendBaseMessage(text,parameters,isSilent);
       });
 
-      EventBus.$on(events.SET_WINDOW_TITLE, (newTitle) => {
-        this.setWindowTitle(newTitle);
-      });
-
       EventBus.$emit(events.API_STATE_READY);
 
     },
   methods: {
-    async openChat() { 
-      var chatWindowTargetState = events.MAXIMIZE_WINDOW;
-      chatWindowTargetState = await handleExtension(API_ON_OPEN_BUTTON_CLICK, chatWindowTargetState);
-      // TODO: trow error when value of chatWindowTargetState is not 'minimize' or 'maximize'?
-      if (chatWindowTargetState === events.MAXIMIZE_WINDOW) {
-        this.maximize();
+    changeWindowState(chatWindowTargetState) {
+      if (chatWindowTargetState === events.CLOSE_WINDOW) {
+        this.minimize()
+        this.closeSession()
+        this.clearHistory()
       } 
       if (chatWindowTargetState === events.MINIMIZE_WINDOW) {
-        this.minimize();
-      }
-    },
-    async closeChat() { 
-      var chatWindowTargetState = events.MINIMIZE_WINDOW
-      chatWindowTargetState = await handleExtension(API_ON_CLOSE_BUTTON_CLICK, chatWindowTargetState);
-      // TODO: trow error when value of chatWindowTargetState is not 'minimize' or 'maximize'?
-      if (chatWindowTargetState === events.MINIMIZE_WINDOW) {
         this.minimize()
-        // check if we need to end session too
-        if(this.closeTieSessionOnExit === "true" || this.closeTieSessionOnExit === "yes" ){
-          this.closeSession()
-          this.clearHistory()
-        }
       } 
       if (chatWindowTargetState === events.MAXIMIZE_WINDOW) {
         this.maximize()
       }
     },
-    minimize(){
-      this.isChatOpen = false
-      //Update 'state' and , call 'onVisibilityChanged (if available)'
-      EventBus.$emit(events.API_STATE_MINIMIZED);
+    async openChat() { 
+      var chatWindowTargetState = events.MAXIMIZE_WINDOW;
+      chatWindowTargetState = await handleExtension(API_ON_OPEN_BUTTON_CLICK, chatWindowTargetState);
+      // TODO: trow error when value of chatWindowTargetState is not 'minimize' or 'maximize'?
+      this.changeWindowState(chatWindowTargetState)
     },
-    maximize(){
-      this.isChatOpen = true
-      //Update 'state' and , call 'onVisibilityChanged (if available)'
-      EventBus.$emit(events.API_STATE_MAXIMIZED);
+    async minimizeChat() { 
+      var chatWindowTargetState = events.MINIMIZE_WINDOW
+      chatWindowTargetState = await handleExtension(API_ON_MINIMIZE_BUTTON_CLICK, chatWindowTargetState);
+      // TODO: trow error when value of chatWindowTargetState is not 'minimize' or 'maximize'?
+      this.changeWindowState(chatWindowTargetState)
+    },
+    async closeChat() { 
+      var chatWindowTargetState = events.CLOSE_WINDOW
+      chatWindowTargetState = await handleExtension(API_ON_CLOSE_BUTTON_CLICK, chatWindowTargetState);
+      // TODO: throw error when value of chatWindowTargetState is not 'minimize' or 'maximize'?
+      this.changeWindowState(chatWindowTargetState)
+    },
+    async minimize(){
+      if (this.$store.getters.visibility == API_STATE_MAXIMIZED) {
+        this.$store.commit('visibility',API_STATE_MINIMIZED);
+        this.isChatOpen = false
+        await this.apiOnVisibilityChange();
+      }
+    },
+    async maximize(){
+      if (this.$store.getters.visibility == API_STATE_MINIMIZED) {
+        this.$store.commit('visibility',API_STATE_MAXIMIZED);
+        this.isChatOpen = true
+        await this.apiOnVisibilityChange();
+      }
     },
     clearHistory() {
       this.$teneoApi.clearHistory()
@@ -127,6 +119,11 @@ export default {
     setWindowTitle(newTitle) { 
       this.serviceName = newTitle
     },
+    async apiOnVisibilityChange() {
+        const data = {};
+        data[API_KEY_VISIBILITY] = this.$store.getters.visibility;
+        await handleExtension(API_ON_VISIBILITY_CHANGED, data);
+    }
   },
 };
 </script>
@@ -151,6 +148,7 @@ export default {
   --launchicon-bg-color: var(--primary-color);
   --header-bg-color: var(--primary-color);
   --header-fg-color: var(--light-fg-color);
+  --chat-window-bg-color: #ffffff;
   --bot-message-fg-color: var(--dark-fg-color);
   --bot-message-bg-color: var(--light-bg-color);
   --agent-message-fg-color: var(--light-fg-color);

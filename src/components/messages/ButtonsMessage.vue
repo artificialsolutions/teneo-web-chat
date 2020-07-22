@@ -144,14 +144,6 @@ export default {
   color: var(--expired-color, #a9a9a9);
 }
 
-/* a.btn:first-child {
-  margin-left: 0px !important;
-}
-
-a.btn:last-child {
-  margin-right: 0px !important;
-} */
-
 .btn.secondary {
   background: var(--secondary-color, #6c757d);
   border-color: var(--secondary-color, #6c757d);
