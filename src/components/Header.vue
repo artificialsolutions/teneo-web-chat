@@ -14,7 +14,7 @@
 
 <script>
 import XIcon from '../icons/x.vue';
-import MinimizeIcon from '../icons/minimize.vue';
+import MinimizeIcon from '../icons/minimize-caret.vue';
 import BubbleIcon from '../icons/bubble.vue';
 import { mapState } from 'vuex';
 
@@ -82,9 +82,6 @@ export default {
   height: 32px;
   width: 32px;
   color: var(--header-fg-color, #ffffff);
-}
-
-.header__close-icon {
   stroke-width: 1;
 }
 
@@ -101,10 +98,7 @@ export default {
   height: 32px;
   width: 32px;
   color: var(--header-fg-color, #ffffff);
-}
-
-.header__minimize-icon {
-  stroke-width: 1;
+    stroke-width: 1;
 }
 
 @media (max-width: 450px) {
