@@ -74,26 +74,12 @@ export default {
         'agentAvatarUrl',
     ]),
   },
-  // methods: {
-  //   getAvatarUrl (author) {
-  //     if (message.data.avatarUrl) {
-  //       return message.data.avatarUrl
-  //     } else if (author == 'bot' && tmpVue.$store.getters.botAvatarUrl) {
-  //         return tmpVue.$store.getters.botAvatarUrl
-  //     } else if (author == 'agent' && tmpVue.$store.getters.agentAvatarUrl) {
-  //         return tmpVue.$store.getters.botAvatarUrl
-  //     } else if (author == 'user' && tmpVue.$store.getters.userAvatarUrl) {
-  //         return tmpVue.$store.getters.botAvatarUrl
-  //     }
-
-  //   }
-  // },
 };
 </script>
 
 <style>
 .wrap.user {
-  max-width: calc(100% - 120px);
+  max-width: calc(100% - 84px);
 }
 .dateline {
   font-weight: 400;
@@ -107,6 +93,7 @@ export default {
 }
 .dateline.user {
   text-align: right;
+  margin-right: 40px;
 }
 .text-message {
   padding: 6px 18px;
@@ -133,10 +120,10 @@ export default {
 .text-message.user {
   background: var(--user-message-bg-color, #4e8cff);
   color: var(--user-message-fg-color, #ffffff);
-  /* max-width: calc(100% - 120px); */
+  /* max-width: 100%; */
   word-wrap: break-word;
   border-bottom-right-radius: 0px;
-  /* text-align: right; */
+  /* margin-left: 90px; */
 }
 
 .text-message__text {
@@ -163,26 +150,24 @@ export default {
 }
 
 .avatar {
-  width: 32px;
-  height: 32px;
+  width: 34px;
+  height: 34px;
   border-radius: 20px;
   display: flex;
 }
 
 .avatar.bot, .avatar.agent {
-  margin-right: 0.40rem;
-  display: flex;
+  margin-right: 6px;
 }
 
 .avatar.user {
-  margin-left: 0.40rem;
-  display: flex;
+  margin-left: 6px;
 }
 
 .avatar img {
   margin: auto;
-  width: 32px;
-  height: 32px;
+  width: 34px;
+  height: 34px;
   border-radius: 20px;
 }
 </style>
