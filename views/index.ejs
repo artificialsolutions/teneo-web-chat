@@ -19,6 +19,8 @@
     <button onclick="TeneoWebChat.call('end_session')">End session</button><br>
     <button onclick="TeneoWebChat.call('clear_chat_history')">Clear chat history</button><br>
     <button onclick="TeneoWebChat.call('set_chat_window_title', 'Connecting...')">Set window title</button><br>
+    <button onclick="TeneoWebChat.call('set_agent_avatar_url', 'http://localhost/twcdemo/user.jpg')">Set agent avatar</button><br>
+    <button onclick="TeneoWebChat.call('set_agent_avatar_url', '123')">Set invalid agent avatar</button><br>
 
     <h5>Message</h5>
     
@@ -29,6 +31,7 @@
     <button onclick="TeneoWebChat.call('add_message',{'author': 'bot', 'type': 'text', 'data': {'text': 'Message from the bot.','dateline':'<strong>Sara</strong> - 14:36'}})">Text message from bot with dateline</button><br>
     <button onclick="TeneoWebChat.call('add_message',{'author': 'user', 'type': 'text', 'data': {'text': 'Message from the user','dateline':'<strong>Jack</strong> - 14:35'}})">Text message from user with dateline</button><br>
     <button onclick="TeneoWebChat.call('add_message',{'author': 'agent', 'type': 'text', 'data': {'text': 'Message from the agent','dateline':'<strong>Ahmed</strong> - 14:37'}})">Text message from agent with dateline</button><br>
+    <button onclick="TeneoWebChat.call('add_message',{'author': 'agent', 'type': 'text', 'data': {'text': 'Message from the agent','dateline':'<strong>Ahmed</strong> - 14:37', 'avatarUrl':'http://localhost/twcdemo/robot.png'}})">Text message from agent with avatar</button><br>
     <br>
     <button onclick="TeneoWebChat.call('add_message',{'type': 'system', 'data': {'text': 'You will be handed over to an agent. You are number <strong>4</strong> in the queue.'}})">System message</button><br>
 
@@ -115,6 +118,9 @@
             'title':'<%= process.env.HEADER_TITLE %>',
             'titleIconUrl': '<%= process.env.HEADER_ICON_URL %>',
             'showCloseButton' : '<%= process.env.SHOW_CLOSE_BUTTON %>',
+            'agentAvatarUrl' : '<%= process.env.AGENT_AVATAR_URL %>',
+            'botAvatarUrl' : '<%= process.env.BOT_AVATAR_URL %>',
+            'userAvatarUrl' : '<%= process.env.USER_AVATAR_URL %>',
           }
 
           window.TeneoWebChat.initialize(element, teneoProps);

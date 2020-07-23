@@ -1,18 +1,28 @@
 <template>
 <div class="wrap" :class="messageSource">
+    
     <!-- eslint-disable-next-line vue/no-v-html -->
     <p class="dateline" :class="messageSource" v-if="dateline" v-html="dateline"></p>
-    <div class="text-message" :class="messageSource">
-      <!-- eslint-disable-next-line vue/no-v-html -->
-      <p v-if="isBot" class="text-message__text" v-html="sanitizedHtmlText"></p>
-      <p v-else class="text-message__text">{{ messageText }}</p>
+    <div class="textwrap" :class="messageSource">
+      <div v-if="avatarUrl" class="avatar" :class="messageSource"><img :src="avatarUrl"></div>
+      
+      <div class="text-message" :class="messageSource">
+        <!-- eslint-disable-next-line vue/no-v-html -->
+        <p v-if="isBot" class="text-message__text" v-html="sanitizedHtmlText"></p>
+        <p v-else class="text-message__text">{{ messageText }}</p>
+      </div>
     </div>
+    
 </div>
 </template>
 
 <script>
 import { PARTICIPANT_BOT } from '../../utils/constants.js';
 import sanitizeHtml from '../../utils/sanitize-html.js';
+import isValidUrl from '../../utils/validate-url';
+import { mapState } from 'vuex';
+import Vue from 'vue';
+const tmpVue = new Vue();
 
 export default {
   name: 'TextMessage',
@@ -48,21 +58,44 @@ export default {
     sanitizedHtmlText() {
       return sanitizeHtml(this.message.data.text);
     },
+    avatarUrl() {
+      if (this.message.data.avatarUrl && isValidUrl(this.message.data.avatarUrl)) {
+        return this.message.data.avatarUrl
+      } else if (this.message.author == 'bot' && tmpVue.$store.getters.botAvatarUrl) {
+          return tmpVue.$store.getters.botAvatarUrl
+      } else if (this.message.author == 'agent' && tmpVue.$store.getters.agentAvatarUrl) {
+          return tmpVue.$store.getters.agentAvatarUrl
+      } else if (this.message.author == 'user' && tmpVue.$store.getters.userAvatarUrl) {
+          return tmpVue.$store.getters.userAvatarUrl
+      }
+    },
+    ...mapState([
+        'botAvatarUrl',
+        'userAvatarUrl',
+        'agentAvatarUrl',
+    ]),
   },
 };
 </script>
 
 <style>
 .wrap.user {
-  max-width: calc(100% - 120px);
+  max-width: calc(100% - 84px);
 }
+
+_:-ms-fullscreen, :root .wrap.bot {
+  max-width: calc(100% - 1px);
+}
+/* .wrap.bot {
+  max-width: calc(100% - 1px);
+} */
 .dateline {
   font-weight: 400;
   font-size: 0.7em;
   padding: 0;
   margin-bottom: 0.25rem;
   margin-top: 0rem;
-  width: 100%;
+  /* width: 100%; */
   -webkit-font-smoothing: subpixel-antialiased;
   color: var(--secondary-color, #6c757d);
 }
@@ -94,7 +127,6 @@ export default {
 .text-message.user {
   background: var(--user-message-bg-color, #4e8cff);
   color: var(--user-message-fg-color, #ffffff);
-  /* max-width: calc(100% - 120px); */
   word-wrap: break-word;
   border-bottom-right-radius: 0px;
 }
@@ -112,5 +144,37 @@ export default {
 
 .text-message a:hover {
   text-decoration: underline;
+}
+
+.textwrap {
+  display: flex;
+}
+
+.textwrap.user {
+  flex-direction: row-reverse;
+}
+
+.avatar {
+  min-width: 34px;
+  min-height: 34px;
+  width: 34px;
+  height: 34px;
+  border-radius: 20px;
+  display: flex;
+}
+
+.avatar.bot, .avatar.agent {
+  margin-right: 6px;
+}
+
+.avatar.user {
+  margin-left: 6px;
+}
+
+.avatar img {
+  margin: auto;
+  width: 34px;
+  height: 34px;
+  border-radius: 20px;
 }
 </style>
