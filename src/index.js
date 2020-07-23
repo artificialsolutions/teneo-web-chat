@@ -8,6 +8,7 @@ import * as apiConstants from '../src/utils/api-function-names.js';
 import handleExtension from '../src/utils/handle-extension.js';
 import messageListCache from '../src/utils/message-list-cache.js';
 import { store } from '../src/store/store.js';
+import isValidUrl from '../src/utils/validate-url';
 
 
 var functionMap = new Map();
@@ -36,21 +37,21 @@ window['TeneoWebChat'] = {
       store.commit('teneoEngineParams',twcProps.teneoEngineParams);
     }
     if (twcProps.showCloseButton === true || twcProps.showCloseButton === "true") {
-      store.commit('showCloseButton',twcProps.showCloseButton);
+      store.commit('showCloseButton',true);
     }
 
     if (twcProps.agentAvatarUrl) {
-      // TODO: Check if param is a string and a url
+      // TODO: error handling (once store thows error)
       store.commit('agentAvatarUrl',twcProps.agentAvatarUrl);
     }
 
     if (twcProps.botAvatarUrl) {
-      // TODO: Check if param is a string and a url
+      // TODO: error handling (once store thows error)
       store.commit('botAvatarUrl',twcProps.botAvatarUrl);
     }
 
     if (twcProps.userAvatarUrl) {
-      // TODO: Check if param is a string and a url
+      // TODO: error handling (once store thows error)
       store.commit('userAvatarUrl',twcProps.userAvatarUrl);
     }
 
@@ -166,28 +167,28 @@ window['TeneoWebChat'] = {
         break
 
       case apiConstants.API_CALL_SET_WINDOW_TITLE:
-        // TODO: throw error if payload is invalid?
+        // TODO: throw error if payload is invalid or if store throws error
         if (typeof payload === "string") {
           store.commit('title',payload);
         }
         break
       
       case apiConstants.API_CALL_SET_AGENT_AVATAR_URL:
-      // TODO: throw error if payload is invalid?
-      if (typeof payload === "string") {
-        store.commit('agentAvatarUrl',payload);
-      }
+        // TODO: throw error if payload is invalid or if store throws error
+        if (typeof payload === "string") {
+            store.commit('agentAvatarUrl',payload);
+        }
       break
 
       case apiConstants.API_CALL_SET_BOT_AVATAR_URL:
-        // TODO: throw error if payload is invalid?
+        // TODO: throw error if payload is invalid or if store throws error
         if (typeof payload === "string") {
           store.commit('botAvatarUrl',payload);
         }
       break
 
       case apiConstants.API_CALL_SET_USER_AVATAR_URL:
-        // TODO: throw error if payload is invalid?
+        // TODO: throw error if payload is invalid or if store throws error
         if (typeof payload === "string") {
           store.commit('userAvatarUrl',payload);
         }

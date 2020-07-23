@@ -1,6 +1,7 @@
 import Vue from 'vue'
 import Vuex from 'vuex'
 import { DEFAULT_TITLE } from '../utils/constants.js';
+import isValidUrl from '../utils/validate-url';
 
 Vue.use(Vuex)
 
@@ -12,9 +13,9 @@ export const store = new Vuex.Store({
         teneoEngineUrl: "",
         teneoEngineParams: {},
         showCloseButton: false,
-        agentAvatarUrl : "",
-        botAvatarUrl : "",
-        userAvatarUrl : "",
+        agentAvatarUrl: "",
+        botAvatarUrl: "",
+        userAvatarUrl: "",
     },
     mutations: {
         visibility(state, newVisibility) {
@@ -24,28 +25,45 @@ export const store = new Vuex.Store({
             state.title = newTitle
         },
         titleIconUrl(state, newUrl) {
-            state.titleIconUrl = newUrl
+            // TODO: Throw error if url is invalid
+            if (isValidUrl(newUrl)) {
+                state.titleIconUrl = newUrl
+            }
         },
         teneoEngineUrl(state, newUrl) {
-            state.teneoEngineUrl = newUrl
+            // TODO: Throw error if url is invalid
+            if (isValidUrl(newUrl)) {
+                state.teneoEngineUrl = newUrl
+            }
         },
         teneoEngineParams(state, params) {
             state.teneoEngineParams = params
         },
-        setEngineParam(state,paramName,paramValue) {
+        setEngineParam(state, paramName, paramValue) {
             state.teneoEngineParams[paramName] = paramValue
         },
         showCloseButton(state, showButtonBool) {
-            state.showCloseButton = showButtonBool
+            if (typeof showButtonBool === "boolean") {
+                state.showCloseButton = showButtonBool
+            }
         },
         agentAvatarUrl(state, newUrl) {
-            state.agentAvatarUrl = newUrl
+            // TODO: Throw error if url is invalid
+            if (isValidUrl(newUrl)) {
+                state.agentAvatarUrl = newUrl
+            }
         },
         botAvatarUrl(state, newUrl) {
-            state.botAvatarUrl = newUrl
+            // TODO: Throw error if url is invalid
+            if (isValidUrl(newUrl)) {
+                state.botAvatarUrl = newUrl
+            }
         },
         userAvatarUrl(state, newUrl) {
-            state.userAvatarUrl = newUrl
+            // TODO: Throw error if url is invalid
+            if (isValidUrl(newUrl)) {
+                state.userAvatarUrl = newUrl
+            }
         }
     },
     getters: {
@@ -59,7 +77,7 @@ export const store = new Vuex.Store({
         botAvatarUrl: state => state.botAvatarUrl,
         userAvatarUrl: state => state.userAvatarUrl,
         state: state => {
-            return {'visibility':state.visibility}
+            return { 'visibility': state.visibility }
         },
     }
 })
