@@ -87,13 +87,12 @@ export default {
   padding: 0;
   margin-bottom: 0.25rem;
   margin-top: 0rem;
-  width: 100%;
+  /* width: 100%; */
   -webkit-font-smoothing: subpixel-antialiased;
   color: var(--secondary-color, #6c757d);
 }
 .dateline.user {
   text-align: right;
-  margin-right: 40px;
 }
 .text-message {
   padding: 6px 18px;
