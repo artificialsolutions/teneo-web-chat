@@ -19,6 +19,7 @@
 <script>
 import { PARTICIPANT_BOT } from '../../utils/constants.js';
 import sanitizeHtml from '../../utils/sanitize-html.js';
+import isValidUrl from '../../utils/validate-url';
 import { mapState } from 'vuex';
 import Vue from 'vue';
 const tmpVue = new Vue();
@@ -58,7 +59,7 @@ export default {
       return sanitizeHtml(this.message.data.text);
     },
     avatarUrl() {
-      if (this.message.data.avatarUrl) {
+      if (this.message.data.avatarUrl && isValidUrl(this.message.data.avatarUrl)) {
         return this.message.data.avatarUrl
       } else if (this.message.author == 'bot' && tmpVue.$store.getters.botAvatarUrl) {
           return tmpVue.$store.getters.botAvatarUrl

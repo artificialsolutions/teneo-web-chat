@@ -8,8 +8,6 @@ import * as apiConstants from '../src/utils/api-function-names.js';
 import handleExtension from '../src/utils/handle-extension.js';
 import messageListCache from '../src/utils/message-list-cache.js';
 import { store } from '../src/store/store.js';
-import isValidUrl from '../src/utils/validate-url';
-
 
 var functionMap = new Map();
 const validFunctionNames = Object.values(apiConstants)
