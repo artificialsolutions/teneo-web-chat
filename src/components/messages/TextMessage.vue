@@ -82,6 +82,13 @@ export default {
 .wrap.user {
   max-width: calc(100% - 84px);
 }
+
+_:-ms-fullscreen, :root .wrap.bot {
+  max-width: calc(100% - 1px);
+}
+/* .wrap.bot {
+  max-width: calc(100% - 1px);
+} */
 .dateline {
   font-weight: 400;
   font-size: 0.7em;
@@ -120,10 +127,8 @@ export default {
 .text-message.user {
   background: var(--user-message-bg-color, #4e8cff);
   color: var(--user-message-fg-color, #ffffff);
-  /* max-width: 100%; */
   word-wrap: break-word;
   border-bottom-right-radius: 0px;
-  /* margin-left: 90px; */
 }
 
 .text-message__text {
@@ -150,6 +155,8 @@ export default {
 }
 
 .avatar {
+  min-width: 34px;
+  min-height: 34px;
   width: 34px;
   height: 34px;
   border-radius: 20px;
