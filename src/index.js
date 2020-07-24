@@ -171,26 +171,26 @@ window['TeneoWebChat'] = {
         }
         break
       
-      case apiConstants.API_CALL_SET_AGENT_AVATAR_URL:
-        // TODO: throw error if payload is invalid or if store throws error
-        if (typeof payload === "string") {
-            store.commit('agentAvatarUrl',payload);
-        }
-      break
+      // case apiConstants.API_CALL_SET_AGENT_AVATAR_URL:
+      //   // TODO: throw error if payload is invalid or if store throws error
+      //   if (typeof payload === "string") {
+      //       store.commit('agentAvatarUrl',payload);
+      //   }
+      // break
 
-      case apiConstants.API_CALL_SET_BOT_AVATAR_URL:
-        // TODO: throw error if payload is invalid or if store throws error
-        if (typeof payload === "string") {
-          store.commit('botAvatarUrl',payload);
-        }
-      break
+      // case apiConstants.API_CALL_SET_BOT_AVATAR_URL:
+      //   // TODO: throw error if payload is invalid or if store throws error
+      //   if (typeof payload === "string") {
+      //     store.commit('botAvatarUrl',payload);
+      //   }
+      // break
 
-      case apiConstants.API_CALL_SET_USER_AVATAR_URL:
-        // TODO: throw error if payload is invalid or if store throws error
-        if (typeof payload === "string") {
-          store.commit('userAvatarUrl',payload);
-        }
-      break
+      // case apiConstants.API_CALL_SET_USER_AVATAR_URL:
+      //   // TODO: throw error if payload is invalid or if store throws error
+      //   if (typeof payload === "string") {
+      //     store.commit('userAvatarUrl',payload);
+      //   }
+      // break
 
       default:
         break
