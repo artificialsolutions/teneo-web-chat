@@ -1,8 +1,8 @@
 <template>
-  <button class="sc-user-input--send-icon-wrapper" @click.prevent="onClick">
+  <button class="twc-sc-user-input--send-icon-wrapper" @click.prevent="onClick">
     <svg
       version="1.1"
-      class="sc-user-input--send-icon"
+      class="twc-sc-user-input--send-icon"
       xmlns="http://www.w3.org/2000/svg"
       x="0px"
       y="0px"
@@ -36,7 +36,7 @@ export default {
 </script>
 
 <style scoped>
-.sc-user-input--send-icon-wrapper {
+.twc-sc-user-input--send-icon-wrapper {
   background: none;
   border: none;
   padding: 0px;
@@ -45,11 +45,11 @@ export default {
   color: var(--sendicon-fg-color);
 }
 
-.sc-user-input--send-icon-wrapper:focus {
+.twc-sc-user-input--send-icon-wrapper:focus {
   outline: none;
 }
 
-.sc-user-input--send-icon {
+.twc-sc-user-input--send-icon {
   height: 20px;
   width: 20px;
   cursor: pointer;
@@ -57,7 +57,7 @@ export default {
   outline: none;
 }
 
-.sc-user-input--send-icon:hover path {
+.twc-sc-user-input--send-icon:hover path {
   filter: contrast(15%);
 }
 </style>

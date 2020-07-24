@@ -1,5 +1,5 @@
 <template>
-  <div ref="scrollList" class="message-list">
+  <div ref="scrollList" class="twc-message-list">
     <Message
       v-for="(message, idx) in messageList"
       :key="idx"
@@ -67,7 +67,7 @@ export default {
 };
 </script>
 <style scoped>
-.message-list {
+.twc-message-list {
   height: 80%;
   overflow-y: auto;
   background-size: 100%;
