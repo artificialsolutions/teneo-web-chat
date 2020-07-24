@@ -5,7 +5,6 @@
     <p class="twc-dateline" :class="messageSource" v-if="dateline" v-html="dateline"></p>
     <div class="twc-textwrap" :class="messageSource">
       <div v-if="avatarUrl" class="twc-avatar" :class="messageSource"><img :src="avatarUrl"></div>
-      
       <div class="twc-text-message" :class="messageSource">
         <!-- eslint-disable-next-line vue/no-v-html -->
         <p v-if="isBot" class="twc-text-message__text" v-html="sanitizedHtmlText"></p>

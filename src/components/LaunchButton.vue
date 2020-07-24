@@ -5,17 +5,14 @@
     @click.prevent="isOpen ? close() : open()"
   >
     <BubbleIcon v-if="!isOpen" class="twc-launch-button__open-icon" />
-    <!-- <MinmizeArrows v-if="isOpen" class="launch-button__close-icon" /> -->
   </div>
 </template>
 <script>
 import BubbleIcon from '../icons/bubble.vue';
-// import XIcon from '../icons/x.vue';
 
 export default {
   components: {
     BubbleIcon,
-    // XIcon,
   },
   props: {
     isOpen: {
@@ -52,22 +49,21 @@ export default {
   height: 26px;
   width: 26px;
   color: var(--light-fg-color, #ffffff);
-}
-
-.twc-launch-button__close-icon {
-  stroke-width: 1;
-  height: 32px;
-  width: 32px;
-  color: var(--light-fg-color, #ffffff);
+  transform-origin: 50% 50%;
+  transition: transform .4s, filter .5s ease-out;
 }
 
 .twc-launch-button:hover {
   box-shadow: 0 0px 27px 1.5px rgba(0, 0, 0, 0.2);
 }
 
-@media (max-width: 450px) {
+.twc-launch-button:hover .twc-launch-button__open-icon {
+  transform: scale(1.1);
+}
+
+/* @media (max-width: 450px) {
   .twc-launch-button.opened {
     display: none;
   }
-}
+} */
 </style>
