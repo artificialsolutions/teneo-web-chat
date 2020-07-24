@@ -19,7 +19,7 @@ window['TeneoWebChat'] = {
 
     // store properties in storage
     if (twcProps.teneoEngineUrl) {
-      // TODO: Check if teneoEngineUrl is a string and a url
+      // TODO: error handling (once store thows error)
       store.commit('teneoEngineUrl',twcProps.teneoEngineUrl);
     }
     if (twcProps.title) {
@@ -27,7 +27,7 @@ window['TeneoWebChat'] = {
       store.commit('title',twcProps.title);
     }
     if (twcProps.titleIconUrl) {
-      // TODO: Check if titleIconUrl is a string and a url
+      // TODO: error handling (once store thows error)
       store.commit('titleIconUrl',twcProps.titleIconUrl);
     }
     if (twcProps.teneoEngineParams) {

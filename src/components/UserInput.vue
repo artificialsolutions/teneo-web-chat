@@ -10,7 +10,8 @@
         class="user-input__text"
         @focus="setInputActive(true)"
         @blur="setInputActive(false)"
-        @keydown="handleKey"
+        @keydown="handleReturnKey"
+        v-debounce:250="userTyping" :debounce-events="['input']"
       ></div>
       <div class="user-input__button">
         <SendIcon :on-click="_submitText" />
@@ -21,11 +22,14 @@
 
 <script>
 import Vue from 'vue';
+import vueDebounce from 'vue-debounce'
 import SendIcon from '../icons/send.vue';
 import { PARTICIPANT_USER } from '../utils/constants.js';
-import { API_ON_INPUT_SUBMITTED } from '../utils/api-function-names.js';
+import { API_ON_INPUT_SUBMITTED, API_ON_USER_TYPING } from '../utils/api-function-names.js';
 import { EventBus, events } from '../utils/event-bus.js';
 import handleExtension from '../utils/handle-extension.js';
+
+Vue.use(vueDebounce)
 
 export default {
   components: {
@@ -59,11 +63,16 @@ export default {
     setInputActive(onoff) {
       this.inputActive = onoff;
     },
-    handleKey(event) {
+    handleReturnKey(event) {
       if (event.keyCode === 13 && !event.shiftKey) {
         this._submitText(event);
         event.preventDefault();
       }
+    },
+    userTyping() {
+      var text = this.$refs.userInput.textContent 
+      // check if there is an extension that want to be notified about the user typing
+      handleExtension(API_ON_USER_TYPING,text);
     },
     async _submitText() {
       var text = this.$refs.userInput.textContent;
@@ -71,7 +80,6 @@ export default {
 
       // check if there is an extension that want to intercept the user input
       text = await handleExtension(API_ON_INPUT_SUBMITTED,text);
-
 
       if (text && text.length > 0) {
         this.onSubmit({

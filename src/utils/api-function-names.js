@@ -19,6 +19,7 @@ export const API_GET_CHAT_HISTORY = "chat_history";
 export const API_ON_READY = "ready";
 export const API_ON_VISIBILITY_CHANGED = "visibility_changed";
 export const API_ON_INPUT_SUBMITTED = "input_submitted";
+export const API_ON_USER_TYPING = "user_typing";
 export const API_ON_ENGINE_REQUEST = "engine_request";
 export const API_ON_ENGINE_RESPONSE = "engine_response";
 export const API_ON_NEW_MESSAGE = "new_message";

@@ -98,6 +98,10 @@
             return state
           }
 
+          function onUserTyping(text) {
+            console.log("onUserTyping", text)
+          }
+
           function onReady(initialData) {
             console.log('onReady',initialData);
           }
@@ -111,6 +115,7 @@
           TeneoWebChat.on('open_button_clicked', onOpenButtonClicked);
           TeneoWebChat.on('close_button_clicked', onCloseButtonClicked);
           TeneoWebChat.on('minimize_button_clicked', onMinimizeButtonClicked);
+          TeneoWebChat.on('user_typing', onUserTyping);
           TeneoWebChat.on('ready', onReady);
 
           const teneoProps = {
