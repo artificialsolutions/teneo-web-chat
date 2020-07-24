@@ -1,15 +1,14 @@
 <template>
-<div class="wrap" :class="messageSource">
+<div class="twc-wrap" :class="messageSource">
     
     <!-- eslint-disable-next-line vue/no-v-html -->
-    <p class="dateline" :class="messageSource" v-if="dateline" v-html="dateline"></p>
-    <div class="textwrap" :class="messageSource">
-      <div v-if="avatarUrl" class="avatar" :class="messageSource"><img :src="avatarUrl"></div>
-      
-      <div class="text-message" :class="messageSource">
+    <p class="twc-dateline" :class="messageSource" v-if="dateline" v-html="dateline"></p>
+    <div class="twc-textwrap" :class="messageSource">
+      <div v-if="avatarUrl" class="twc-avatar" :class="messageSource"><img :src="avatarUrl"></div>
+      <div class="twc-text-message" :class="messageSource">
         <!-- eslint-disable-next-line vue/no-v-html -->
-        <p v-if="isBot" class="text-message__text" v-html="sanitizedHtmlText"></p>
-        <p v-else class="text-message__text">{{ messageText }}</p>
+        <p v-if="isBot" class="twc-text-message__text" v-html="sanitizedHtmlText"></p>
+        <p v-else class="twc-text-message__text">{{ messageText }}</p>
       </div>
     </div>
     
@@ -79,30 +78,26 @@ export default {
 </script>
 
 <style>
-.wrap.user {
+.twc-wrap.user {
   max-width: calc(100% - 84px);
 }
 
-_:-ms-fullscreen, :root .wrap.bot {
+_:-ms-fullscreen, :root .twc-wrap.bot {
   max-width: calc(100% - 1px);
 }
-/* .wrap.bot {
-  max-width: calc(100% - 1px);
-} */
-.dateline {
+.twc-dateline {
   font-weight: 400;
   font-size: 0.7em;
   padding: 0;
   margin-bottom: 0.25rem;
   margin-top: 0rem;
-  /* width: 100%; */
   -webkit-font-smoothing: subpixel-antialiased;
   color: var(--secondary-color, #6c757d);
 }
-.dateline.user {
+.twc-dateline.user {
   text-align: right;
 }
-.text-message {
+.twc-text-message {
   padding: 6px 18px;
   border-radius: 10px;
   font-weight: 300;
@@ -110,51 +105,51 @@ _:-ms-fullscreen, :root .wrap.bot {
   line-height: 1.4;
   -webkit-font-smoothing: subpixel-antialiased;
 }
-.text-message.bot {
+.twc-text-message.bot {
   color: var(--bot-message-fg-color, #263238);
   background-color: var(--bot-message-bg-color, #eceff1);
   margin-right: 40px;
   border-bottom-left-radius: 0px;
 }
 
-.text-message.agent {
+.twc-text-message.agent {
   color: var(--agent-message-fg-color, #263238);
   background-color: var(--agent-message-bg-color, #e4f1e4);
   margin-right: 40px;
   border-bottom-left-radius: 0px;
 }
 
-.text-message.user {
+.twc-text-message.user {
   background: var(--user-message-bg-color, #4e8cff);
   color: var(--user-message-fg-color, #ffffff);
   word-wrap: break-word;
   border-bottom-right-radius: 0px;
 }
 
-.text-message__text {
+.twc-text-message__text {
   margin-top: 0.4em;
   margin-bottom: 0.4em;
   font-weight: 400;
 }
 
-.text-message a {
+.twc-text-message a {
   color: var(--text-link-color, #007bff);
   text-decoration: none;
 }
 
-.text-message a:hover {
+.twc-text-message a:hover {
   text-decoration: underline;
 }
 
-.textwrap {
+.twc-textwrap {
   display: flex;
 }
 
-.textwrap.user {
+.twc-textwrap.user {
   flex-direction: row-reverse;
 }
 
-.avatar {
+.twc-avatar {
   min-width: 34px;
   min-height: 34px;
   width: 34px;
@@ -163,15 +158,15 @@ _:-ms-fullscreen, :root .wrap.bot {
   display: flex;
 }
 
-.avatar.bot, .avatar.agent {
+.twc-avatar.bot, .twc-avatar.agent {
   margin-right: 6px;
 }
 
-.avatar.user {
+.twc-avatar.user {
   margin-left: 6px;
 }
 
-.avatar img {
+.twc-avatar img {
   margin: auto;
   width: 34px;
   height: 34px;

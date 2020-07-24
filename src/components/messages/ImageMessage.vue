@@ -1,5 +1,5 @@
 <template>
-  <div class="image-message">
+  <div class="twc-image-message">
     <img :src="imageUrl" :alt="altText"/>
   </div>
 </template>
@@ -33,11 +33,11 @@ export default {
 </script>
 
 <style>
-.image-message {
+.twc-image-message {
   width: 100%;
   margin-right: 40px;
 }
-.image-message img {
+.twc-image-message img {
   max-width: 100%;
   max-height: 200px;
 }

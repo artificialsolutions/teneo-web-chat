@@ -1,5 +1,5 @@
 <template>
-  <div class="twc_youtubevideo">
+  <div class="twc-youtube-video">
     <iframe
       :src="videoUrl"
       frameborder="0"
@@ -35,12 +35,12 @@ export default {
 </script>
 
 <style>
-.twc_youtubevideo {
+.twc-youtube-video {
   width: 100%;
   margin-right: 40px;
   min-width: 260px;
 }
-iframe {
+.twc-youtube-video iframe {
   width: 100%;
   max-height: 100%;
 }

@@ -1,11 +1,11 @@
 <template>
-  <div class="chat-window">
+  <div class="twc-chat-window">
     <Header :on-close="onClose" :on-minimize="onMinimize"/>
     <MessageList :message-list="$teneoApi.messageList" />
-    <div v-if="spinnerIsLoading" class="spinner">
-      <div class="bounce1"></div>
-      <div class="bounce2"></div>
-      <div class="bounce3"></div>
+    <div v-if="spinnerIsLoading" class="twc-spinner">
+      <div class="twc-bounce1"></div>
+      <div class="twc-bounce2"></div>
+      <div class="twc-bounce3"></div>
     </div>
     <UserInput :on-submit="sendMessage" />
   </div>
@@ -59,7 +59,7 @@ export default {
 </script>
 
 <style scoped>
-.chat-window {
+.twc-chat-window {
   font-family: 'Helvetica Neue', Helvetica, Arial, sans-serif;
   width: 370px;
   height: calc(100% - 120px);
@@ -78,7 +78,7 @@ export default {
 }
 
 @media (max-width: 450px) {
-  .chat-window {
+  .twc-chat-window {
     width: 100%;
     height: 100%;
     max-height: 100%;
@@ -88,39 +88,39 @@ export default {
   }
 }
 
-.spinner {
+.twc-spinner {
   margin: 18px auto 0;
   width: 70px;
   text-align: center;
 }
 
-.spinner > div {
+.twc-spinner > div {
   width: 9px;
   height: 9px;
   background-color: #aaa;
 
   border-radius: 100%;
   display: inline-block;
-  -webkit-animation: sk-bouncedelay 1.4s infinite ease-in-out both;
-  animation: sk-bouncedelay 1.4s infinite ease-in-out both;
+  -webkit-animation: twc-sk-bouncedelay 1.4s infinite ease-in-out both;
+  animation: twc-sk-bouncedelay 1.4s infinite ease-in-out both;
 }
 
-.spinner .bounce1 {
+.twc-spinner .twc-bounce1 {
   -webkit-animation-delay: -0.32s;
   animation-delay: -0.32s;
 }
 
-.spinner .bounce2 {
+.twc-spinner .twc-bounce2 {
   -webkit-animation-delay: -0.16s;
   animation-delay: -0.16s;
 }
 
-@-webkit-keyframes sk-bouncedelay {
+@-webkit-keyframes twc-sk-bouncedelay {
   0%, 80%, 100% { -webkit-transform: scale(0) }
   40% { -webkit-transform: scale(1.0) }
 }
 
-@keyframes sk-bouncedelay {
+@keyframes twc-sk-bouncedelay {
   0%, 80%, 100% { 
     -webkit-transform: scale(0);
     transform: scale(0);

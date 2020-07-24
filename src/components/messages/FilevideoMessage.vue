@@ -1,5 +1,5 @@
 <template>
-  <div class="twc_videofile">
+  <div class="twc-file-video">
     <video controls="1">
       <source :src="videoUrl" type="video/mp4" />
     </video>
@@ -32,12 +32,12 @@ export default {
 </script>
 
 <style>
-.twc_videofile {
+.twc-file-video {
   width: 100%;
   margin-right: 40px;
   min-width: 260px;
 }
-video {
+.twc-file-video video {
   width: 100%;
   max-height: 100%;
 }

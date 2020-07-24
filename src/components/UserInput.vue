@@ -1,19 +1,19 @@
 <template>
   <div>
-    <form class="user-input" :class="{ active: inputActive }">
+    <form class="twc-user-input" :class="{ active: inputActive }">
       <div
         ref="userInput"
         role="button"
         tabIndex="0"
         contentEditable="true"
         :placeholder="placeholder"
-        class="user-input__text"
+        class="twc-user-input__text"
         @focus="setInputActive(true)"
         @blur="setInputActive(false)"
         @keydown="handleReturnKey"
         v-debounce:250="userTyping" :debounce-events="['input']"
       ></div>
-      <div class="user-input__button">
+      <div class="twc-user-input__button">
         <SendIcon :on-click="_submitText" />
       </div>
     </form>
@@ -94,7 +94,7 @@ export default {
 </script>
 
 <style scoped>
-.user-input {
+.twc-user-input {
   min-height: 55px;
   margin: 0px;
   position: relative;
@@ -107,7 +107,7 @@ export default {
   transition: background-color 0.2s ease, box-shadow 0.2s ease;
 }
 
-.user-input__text {
+.twc-user-input__text {
   width: 320px;
   resize: none;
   border: none;
@@ -130,7 +130,7 @@ export default {
   cursor: text;
 }
 
-.user-input__text:empty:before {
+.twc-user-input__text:empty:before {
   content: attr(placeholder);
   display: block;
   filter: contrast(15%);
@@ -150,15 +150,14 @@ export default {
     [placeholder]:empty:focus::before {
       content: "";
       margin-bottom: 0px;
-      /* height: auto; */
     }
 
-   [placeholder]:empty.user-input__text::before {
+   [placeholder]:empty.twc-user-input__text::before {
       height: 0px;
     }
 }
 
-.user-input__button {
+.twc-user-input__button {
   width: 40px;
   max-height: 200px;
   margin-left: 2px;
@@ -168,24 +167,24 @@ export default {
   justify-content: center;
 }
 
-.user-input.active {
+.twc-user-input.active {
   box-shadow: none;
   background-color: white;
   box-shadow: 0px -2px 10px 0px rgba(150, 165, 190, 0.2);
 }
 
-.user-input__button label {
+.twc-user-input__button label {
   position: relative;
   height: 24px;
   padding-left: 3px;
   cursor: pointer;
 }
 
-.user-input__button label:hover path {
+.twc-user-input__button label:hover path {
   fill: rgba(86, 88, 103, 1);
 }
 
-.user-input__button input {
+.twc-user-input__button input {
   position: absolute;
   left: 0;
   top: 0;

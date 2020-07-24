@@ -1,5 +1,5 @@
 <template>
-  <div class="audio-message">
+  <div class="twc-audio-message">
     <audio controls>
       <source :src="audioUrl"/>
     </audio>
@@ -35,11 +35,11 @@ export default {
 </script>
 
 <style>
-.audio-message {
+.twc-audio-message {
   width: 100%;
   margin-right: 40px;
 }
-.audio-message audio {
+.twc-audio-message audio {
   width: 100%;
   outline: none;
 }

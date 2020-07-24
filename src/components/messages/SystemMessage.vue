@@ -1,7 +1,7 @@
 <template>
-  <div class="system-message">
+  <div class="twc-system-message">
     <!-- eslint-disable-next-line vue/no-v-html -->
-    <p class="system-message__text" v-html="sanitizedHtmlText"></p>
+    <p class="twc-system-message__text" v-html="sanitizedHtmlText"></p>
   </div>
 </template>
 
@@ -36,7 +36,7 @@ export default {
 </script>
 
 <style>
-.system-message {
+.twc-system-message {
   font-weight: 400;
   font-size: 0.9em;
   line-height: 1.4;
@@ -46,17 +46,17 @@ export default {
   text-align: center !important;
 }
 
-.system-message__text {
+.twc-system-message__text {
   margin-top: 0.2em;
   margin-bottom: 0.2em;
 } 
 
-.system-message a {
+.twc-system-message a {
   color: var(--text-link-color, #007bff);
   text-decoration: none;
 }
 
-.system-message a:hover {
+.twc-system-message a:hover {
   text-decoration: underline;
 }
 </style>
