@@ -113,6 +113,7 @@ export default function teneoApiPlugin(teneoApiUrl) {
     },
     async _onMessageReceived(message) {
       // TODO: throw error if payload is invalid?
+      // TODO: check if message type is valid?
       if (!message) {
         return;
       }

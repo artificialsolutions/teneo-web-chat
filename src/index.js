@@ -8,6 +8,7 @@ import * as apiConstants from '../src/utils/api-function-names.js';
 import handleExtension from '../src/utils/handle-extension.js';
 import messageListCache from '../src/utils/message-list-cache.js';
 import { store } from '../src/store/store.js';
+import messageComponentName from '../src/utils/message-component-name.js';
 
 var functionMap = new Map();
 const validFunctionNames = Object.values(apiConstants)
@@ -159,6 +160,7 @@ window['TeneoWebChat'] = {
         
       case apiConstants.API_CALL_ADD_MESSAGE:
         // TODO: throw error if payload is invalid?
+        // TODO: check if message type is valid?
         if (Object.keys(payload).length > 0 && payload.constructor === Object) {
           EventBus.$emit(events.ADD_MESSAGE, payload);
         }

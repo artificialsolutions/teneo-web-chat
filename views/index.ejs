@@ -22,6 +22,8 @@
     <button onclick="TeneoWebChat.call('set_agent_avatar_url', 'https://as-freaky-styley-714c5e.bots.teneo.ai/teneo_web_chat_tes_3gzgctjx5q84x8fztj2bdzxtrh/images/agent.png')">Set agent avatar</button><br>
     <button onclick="TeneoWebChat.call('set_agent_avatar_url', '123')">Set invalid agent avatar</button><br>
 
+    <button onclick="TeneoWebChat.call('add_message',{'author': 'bot', 'type': 'funky', 'data': {'text': 'Message from the bot.'}})">Invalid message type from bot</button><br>
+
     <h5>Message</h5>
     
     <button onclick="TeneoWebChat.call('add_message',{'author': 'bot', 'type': 'text', 'data': {'text': 'Message from the bot.'}})">Text message from bot</button><br>
@@ -45,7 +47,7 @@
     
     <br>
     <button onclick="TeneoWebChat.call('add_message',{'type': 'system', 'data': {'text': 'You will be handed over to an agent. You are number <strong>4</strong> in the queue.'}})">System message</button><br>
-    <button onclick="TeneoWebChat.call('add_message',{'type': 'modal', 'data': {'image': {'image_url':'https://as-freaky-styley-714c5e.bots.teneo.ai/teneo_web_chat_tes_3gzgctjx5q84x8fztj2bdzxtrh/images/information_icon_wide_crying.png','alt':'Super sad'}, 'title': 'Stop this chat?', 'text': 'Are you sure you wish to stop this chat?', 'button_items': [{'style':'secondary','title':'Cancel','postback':'cancel'},{'style':'danger','title':'Stop chat','postback':'Stop'}]}})">Modal message</button><br>
+    <button onclick="TeneoWebChat.call('add_message',{'type': 'modal', 'data': {'image': {'image_url':'https://as-freaky-styley-714c5e.bots.teneo.ai/teneo_web_chat_tes_3gzgctjx5q84x8fztj2bdzxtrh/images/crying_office_worker.png','alt':'Super sad'}, 'title': 'Stop this chat?', 'text': 'Are you sure you wish to stop this chat?', 'button_items': [{'style':'secondary','title':'Cancel','postback':'cancel'},{'style':'danger','title':'Stop chat','postback':'Stop'}]}})">Modal message</button><br>
 
 
     <h5>Sending inputs to engine</h5>

@@ -1,6 +1,6 @@
 <template>
-  <div class="twc-modal" @click="hideModal()" >
-    <div class="twc-modal-content" v-on:click.stop>
+  <div class="twc-modal" v-on:click.stop>
+    <div class="twc-modal-content">
       <div class="twc-modal-img" v-if="imageUrl">
         <img :src="imageUrl" :alt="altText"/>
       </div>
@@ -127,7 +127,9 @@ export default {
 }
 
 .twc-modal-content .twc-modal-img, .twc-modal-content .twc-modal-img img {
-  width: 100% !important;
+  max-width: 100% !important;
+  max-height: 100px;
+  text-align: center;
 }
 
 .twc-modal-content .twc-modal-body {

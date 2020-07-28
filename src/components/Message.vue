@@ -18,6 +18,7 @@ export default {
   },
   computed: {
     messageType() {
+      // TODO: check if message type is valid?
       if (messageComponentName(this.message.type) && this.$options.components[messageComponentName(this.message.type)]) {
         return messageComponentName(this.message.type);
       }
