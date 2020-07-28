@@ -61,6 +61,14 @@ export default {
         this.$teneoApi.sendBaseMessage(text,parameters,isSilent);
       });
 
+      EventBus.$on(events.HIDE_TYPING_INDICATOR, (data)=> {
+        this.$teneoApi.hideTypingIndicator(data);
+      })
+
+      EventBus.$on(events.SHOW_TYPING_INDICATOR, (data)=> {
+        this.$teneoApi.showTypingIndicator(data);
+      })
+
       EventBus.$emit(events.API_STATE_READY);
 
     },

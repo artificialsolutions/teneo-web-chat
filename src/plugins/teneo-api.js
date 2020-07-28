@@ -120,6 +120,8 @@ export default function teneoApiPlugin(teneoApiUrl) {
       message = await handleExtension(API_ON_NEW_MESSAGE, message);
       // TODO: throw error if message returned by extension is invalid?
 
+      
+
       // add message to list
       this.messageList = [...this.messageList, message];
     },
@@ -135,6 +137,14 @@ export default function teneoApiPlugin(teneoApiUrl) {
     },
     async getMessageList() {
       return this.messageList;
+    },
+    hideTypingIndicator(data){
+      //remove messages of type 'typing', from users of author 'data.author'
+      this.messageList = this.messageList.filter(function(item, index, array){ return (!((item.author === data.author)&&(item.type === 'typing')));});
+    },
+    showTypingIndicator(message) {
+      this.hideTypingIndicator(message);
+      this._onMessageReceived(message);
     },
   };
 

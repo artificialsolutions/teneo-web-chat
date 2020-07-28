@@ -27,6 +27,10 @@
     <button onclick="TeneoWebChat.call('add_message',{'author': 'bot', 'type': 'text', 'data': {'text': 'Message from the bot.'}})">Text message from bot</button><br>
     <button onclick="TeneoWebChat.call('add_message',{'author': 'user', 'type': 'text', 'data': {'text': 'Message from the user'}})">Text message from user</button><br>
     <button onclick="TeneoWebChat.call('add_message',{'author': 'agent', 'type': 'text', 'data': {'text': 'Message from the agent'}})">Text message from agent</button><br>
+    <button onclick="TeneoWebChat.call('add_message',{'author': 'agent', 'type': 'typing', 'data': {'text': 'Message from the agent','dateline':'<strong>Agent Jack is typing - 14:36</strong>', 'avatarUrl':'https://as-freaky-styley-714c5e.bots.teneo.ai/teneo_web_chat_tes_3gzgctjx5q84x8fztj2bdzxtrh/images/bot.png'}})">Typing... message.</button><br>
+    <button onclick="TeneoWebChat.call('show_typing_indicator',{'author': 'agent', 'type': 'typing', 'data': {'dateline':'<strong>Agent Jack is typing - 14:36</strong>','avatarUrl':'https://as-freaky-styley-714c5e.bots.teneo.ai/teneo_web_chat_tes_3gzgctjx5q84x8fztj2bdzxtrh/images/user.png'}})">Show Typing Indicator (Maria)</button><br>
+    <button onclick="TeneoWebChat.call('show_typing_indicator',{'author': 'agent', 'type': 'typing', 'data': {'dateline':'<strong>Agent Maria is typing - 14:36</strong>','avatarUrl':'https://as-freaky-styley-714c5e.bots.teneo.ai/teneo_web_chat_tes_3gzgctjx5q84x8fztj2bdzxtrh/images/user.png'}})">Show Typing Indicator (Jack)</button><br>
+    <button onclick="TeneoWebChat.call('hide_typing_indicator',{'author': 'agent'})">Hide Typing Indicator</button><br>
     <br>
     <button onclick="TeneoWebChat.call('add_message',{'author': 'bot', 'type': 'text', 'data': {'text': 'Message from the bot.','dateline':'<strong>Sara</strong> - 14:36'}})">Text message from bot with dateline</button><br>
     <button onclick="TeneoWebChat.call('add_message',{'author': 'user', 'type': 'text', 'data': {'text': 'Message from the user','dateline':'<strong>Jack</strong> - 14:35'}})">Text message from user with dateline</button><br>

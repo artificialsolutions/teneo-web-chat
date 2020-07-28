@@ -164,6 +164,16 @@ window['TeneoWebChat'] = {
         }
         break
 
+      case apiConstants.API_CALL_HIDE_TYPING_INDICATOR:
+        EventBus.$emit(events.HIDE_TYPING_INDICATOR, payload);
+        break
+
+      case apiConstants.API_CALL_SHOW_TYPING_INDICATOR:
+        if (Object.keys(payload).length > 0 && payload.constructor === Object) {
+           EventBus.$emit(events.SHOW_TYPING_INDICATOR, payload);
+        }
+        break
+
       case apiConstants.API_CALL_SET_WINDOW_TITLE:
         // TODO: throw error if payload is invalid or if store throws error
         if (typeof payload === "string") {

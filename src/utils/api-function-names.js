@@ -11,6 +11,11 @@ export const API_CALL_SET_WINDOW_TITLE = "set_chat_window_title";
 // export const API_CALL_SET_BOT_AVATAR_URL = "set_bot_avatar_url";
 // export const API_CALL_SET_USER_AVATAR_URL = "set_user_avatar_url";
 
+//Should be Hide
+//Add dedicated add typing indicator method
+export const API_CALL_HIDE_TYPING_INDICATOR = 'hide_typing_indicator';
+export const API_CALL_SHOW_TYPING_INDICATOR = 'show_typing_indicator';
+
 // api getters
 export const API_GET_STATE = "state";
 export const API_GET_CHAT_HISTORY = "chat_history";

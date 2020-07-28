@@ -12,6 +12,8 @@ export const events = {
   MINIMIZE_WINDOW: 'minimize',
   CLOSE_WINDOW: 'close',
   ADD_MESSAGE: 'add_message',
+  HIDE_TYPING_INDICATOR: 'hide_typing_indicator',
+  SHOW_TYPING_INDICATOR: 'show_typing_indicator',
   SEND_INPUT: 'send_input',
   API_STATE_READY: 'ready',
 };
