@@ -16,7 +16,6 @@
 
 <script>
 
-import { API_ON_BUTTON_CLICK } from '../../utils/constants';
 import handleButtonClick from '../../utils/handle-button-click.js';
 
 export default {
