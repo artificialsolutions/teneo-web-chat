@@ -109,6 +109,7 @@ export default {
   box-sizing: border-box;
   border-radius: 10px;
   transition: 0.3s ease-in-out;
+  box-shadow: 0 2px 10px 0 rgba(0, 0, 0, 0.15);
 }
 
 .twc-modal-content {
@@ -122,6 +123,7 @@ export default {
   background-color: var(--card-bg-color, #ffffff);
   background-clip: border-box;
   border-radius: 0.25rem;
+  box-shadow: 0 2px 10px 0 rgba(0, 0, 0, 0.15);
 }
 
 .twc-modal-content .twc-modal-img, .twc-modal-content .twc-modal-img img {
