@@ -119,15 +119,15 @@ export default function teneoApiPlugin(teneoApiUrl) {
       // check if there is an extension that want to intercept the message
       message = await handleExtension(API_ON_NEW_MESSAGE, message);
       // TODO: throw error if message returned by extension is invalid?
-
       
+      // if there is a typing indicator active for this author, hide it
+      this.hideTypingIndicator(message);
 
       // add message to list
       this.messageList = [...this.messageList, message];
     },
     async closeSession() {
       TIE.close(teneoApiUrl, sessionId);
-
     },
     async clearHistory() {
       this.messageList = []
@@ -144,6 +144,7 @@ export default function teneoApiPlugin(teneoApiUrl) {
     },
     showTypingIndicator(message) {
       this.hideTypingIndicator(message);
+      message.type = "typing"
       this._onMessageReceived(message);
     },
   };

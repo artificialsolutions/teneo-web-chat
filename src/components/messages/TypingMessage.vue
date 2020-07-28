@@ -5,7 +5,7 @@
     <p class="twc-dateline" :class="messageSource" v-if="dateline" v-html="dateline"></p>
     <div class="twc-textwrap" :class="messageSource">
       <div v-if="avatarUrl" class="twc-avatar" :class="messageSource"><img :src="avatarUrl"></div>
-      <div class="twc-text-message" :class="messageSource">        
+      <div class="twc-typing-message" :class="messageSource">        
         <div class="twc-spinner">
           <div class="twc-bounce1"></div>
           <div class="twc-bounce2"></div>
@@ -20,7 +20,6 @@
 
 <script>
 import { PARTICIPANT_BOT } from '../../utils/constants.js';
-import sanitizeHtml from '../../utils/sanitize-html.js';
 import isValidUrl from '../../utils/validate-url';
 import { mapState } from 'vuex';
 import Vue from 'vue';
@@ -36,32 +35,25 @@ export default {
         return (
           message &&
           message.type === 'typing' &&
-          message.data &&
           message.author
         );
       },
     },
   },
   computed: {
-    messageText() {
-      return this.message.data.text;
-    },
     messageSource() {
       return this.message.author;
     },
     dateline() {
-      if (this.message.data.dateline) {
+      if (this.message.data && this.message.data.dateline) {
         return sanitizeHtml(this.message.data.dateline)
       }
     },
     isBot() {
       return this.message.author === PARTICIPANT_BOT;
     },
-    sanitizedHtmlText() {
-      return sanitizeHtml(this.message.data.text);
-    },
     avatarUrl() {
-      if (this.message.data.avatarUrl && isValidUrl(this.message.data.avatarUrl)) {
+      if (this.message.data && this.message.data.avatarUrl && isValidUrl(this.message.data.avatarUrl)) {
         return this.message.data.avatarUrl
       } else if (this.message.author == 'bot' && tmpVue.$store.getters.botAvatarUrl) {
           return tmpVue.$store.getters.botAvatarUrl
@@ -81,29 +73,32 @@ export default {
 </script>
 
 <style>
-.twc-spinner {
-  margin: 6px auto 0;
-  width: 35px;
+.twc-typing-message .twc-spinner {
+  margin: 4px 0 8px 0;
+  width: 26px;
   text-align: center;
 }
 
-.twc-spinner > div {
-  width: 9px;
-  height: 9px;
-  background-color: #fff;
-
+.twc-typing-message  .twc-spinner > div {
+  width: 6px;
+  height: 6px;
+  background-color: var(--light-fg-color, #6c757d);
   border-radius: 100%;
   display: inline-block;
   -webkit-animation: twc-sk-bouncedelay 1.4s infinite ease-in-out both;
   animation: twc-sk-bouncedelay 1.4s infinite ease-in-out both;
 }
 
-.twc-spinner .twc-bounce1 {
+.twc-typing-message.bot  .twc-spinner > div {
+  background-color: var(--secondary-color, #6c757d);
+}
+
+.twc-typing-message .twc-spinner .twc-bounce1 {
   -webkit-animation-delay: -0.32s;
   animation-delay: -0.32s;
 }
 
-.twc-spinner .twc-bounce2 {
+.twc-typing-message .twc-spinner .twc-bounce2 {
   -webkit-animation-delay: -0.16s;
   animation-delay: -0.16s;
 }
@@ -122,11 +117,6 @@ export default {
     transform: scale(1.0);
   }
 }
-
-
-
-
-
 
 .twc-wrap.user {
   max-width: calc(100% - 84px);
@@ -147,79 +137,28 @@ _:-ms-fullscreen, :root .twc-wrap.bot {
 .twc-dateline.user {
   text-align: right;
 }
-.twc-text-message {
+.twc-typing-message {
   padding: 6px 18px;
   border-radius: 10px;
-  font-weight: 300;
   font-size: 0.9em;
   line-height: 1.4;
-  -webkit-font-smoothing: subpixel-antialiased;
 }
-.twc-text-message.bot {
-  color: var(--bot-message-fg-color, #263238);
+.twc-typing-message.bot {
   background-color: var(--bot-message-bg-color, #eceff1);
   margin-right: 40px;
   border-bottom-left-radius: 0px;
 }
 
-.twc-text-message.agent {
-  color: var(--agent-message-fg-color, #263238);
-  background-color: var(--agent-message-bg-color, #e4f1e4);
+.twc-typing-message.agent {
+  background-color: var(--agent-message-bg-color, #47b2fd);
   margin-right: 40px;
   border-bottom-left-radius: 0px;
 }
 
-.twc-text-message.user {
+.twc-typing-message.user {
   background: var(--user-message-bg-color, #4e8cff);
-  color: var(--user-message-fg-color, #ffffff);
   word-wrap: break-word;
   border-bottom-right-radius: 0px;
 }
 
-.twc-text-message__text {
-  margin-top: 0.4em;
-  margin-bottom: 0.4em;
-  font-weight: 400;
-}
-
-.twc-text-message a {
-  color: var(--text-link-color, #007bff);
-  text-decoration: none;
-}
-
-.twc-text-message a:hover {
-  text-decoration: underline;
-}
-
-.twc-textwrap {
-  display: flex;
-}
-
-.twc-textwrap.user {
-  flex-direction: row-reverse;
-}
-
-.twc-avatar {
-  min-width: 34px;
-  min-height: 34px;
-  width: 34px;
-  height: 34px;
-  border-radius: 20px;
-  display: flex;
-}
-
-.twc-avatar.bot, .twc-avatar.agent {
-  margin-right: 6px;
-}
-
-.twc-avatar.user {
-  margin-left: 6px;
-}
-
-.twc-avatar img {
-  margin: auto;
-  width: 34px;
-  height: 34px;
-  border-radius: 20px;
-}
 </style>

@@ -47,7 +47,7 @@ export default {
       return this.message.author;
     },
     dateline() {
-      if (this.message.data.dateline) {
+      if (this.message.data && this.message.data.dateline) {
         return sanitizeHtml(this.message.data.dateline)
       }
     },
@@ -58,7 +58,7 @@ export default {
       return sanitizeHtml(this.message.data.text);
     },
     avatarUrl() {
-      if (this.message.data.avatarUrl && isValidUrl(this.message.data.avatarUrl)) {
+      if (this.message.data && this.message.data.avatarUrl && isValidUrl(this.message.data.avatarUrl)) {
         return this.message.data.avatarUrl
       } else if (this.message.author == 'bot' && tmpVue.$store.getters.botAvatarUrl) {
           return tmpVue.$store.getters.botAvatarUrl
