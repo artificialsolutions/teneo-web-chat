@@ -64,6 +64,11 @@ window['TeneoWebChat'] = {
       store.commit('closeIconUrl',twcProps.closeIconUrl);
     }
 
+    if (twcProps.launchIconUrl) {
+      // TODO: error handling (once store thows error)
+      store.commit('launchIconUrl',twcProps.launchIconUrl);
+    }
+
     // check required properties
     if (!store.getters.teneoEngineUrl) {
       // TODO: thow error if engine url is missing?

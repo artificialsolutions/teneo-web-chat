@@ -21,6 +21,7 @@
 <script>
 import { PARTICIPANT_BOT } from '../../utils/constants.js';
 import isValidUrl from '../../utils/validate-url';
+import sanitizeHtml from '../../utils/sanitize-html.js';
 import { mapState } from 'vuex';
 import Vue from 'vue';
 const tmpVue = new Vue();

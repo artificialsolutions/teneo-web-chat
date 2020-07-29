@@ -4,11 +4,11 @@
     <BubbleIcon v-else class="twc-header__img" />
     <div class="twc-header__title">{{ title }}</div>
     <button class="twc-header__minimize-button" @click="onMinimize">
-      <img v-if="minimizeIconUrl" class="twc-header__img" :src="minimizeIconUrl" />
-      <MinimizeIcon class="twc-header__minimize-icon" />
+      <img v-if="minimizeIconUrl" class="twc-header__minimize-icon" :src="minimizeIconUrl" />
+      <MinimizeIcon v-else class="twc-header__minimize-icon" />
     </button>
     <button v-if="showCloseButton" class="twc-header__close-button" @click="onClose">
-      <img v-if="closeIconUrl" class="twc-header__img" :src="closeIconUrl" />
+      <img v-if="closeIconUrl" class="twc-header__close-icon" :src="closeIconUrl" />
       <XIcon v-else class="twc-header__close-icon" />
     </button>
   </div>
