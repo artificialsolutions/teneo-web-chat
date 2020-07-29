@@ -16,6 +16,9 @@ export const store = new Vuex.Store({
         agentAvatarUrl: "",
         botAvatarUrl: "",
         userAvatarUrl: "",
+        minimizeIconUrl: "",
+        closeIconUrl: "",
+        launchIconUrl: "",
     },
     mutations: {
         visibility(state, newVisibility) {
@@ -64,7 +67,25 @@ export const store = new Vuex.Store({
             if (isValidUrl(newUrl)) {
                 state.userAvatarUrl = newUrl
             }
-        }
+        },
+        minimizeIconUrl(state, newUrl) {
+            // TODO: Throw error if url is invalid
+            if (isValidUrl(newUrl)) {
+                state.minimizeIconUrl = newUrl
+            }
+        },
+        closeIconUrl(state, newUrl) {
+            // TODO: Throw error if url is invalid
+            if (isValidUrl(newUrl)) {
+                state.closeIconUrl = newUrl
+            }
+        },
+        launchIconUrl(state, newUrl) {
+            // TODO: Throw error if url is invalid
+            if (isValidUrl(newUrl)) {
+                state.launchIconUrl = newUrl
+            }
+        },
     },
     getters: {
         teneoEngineUrl: state => state.teneoEngineUrl,
@@ -76,6 +97,9 @@ export const store = new Vuex.Store({
         agentAvatarUrl: state => state.agentAvatarUrl,
         botAvatarUrl: state => state.botAvatarUrl,
         userAvatarUrl: state => state.userAvatarUrl,
+        minimizeIconUrl: state => state.minimizeIconUrl,
+        closeIconUrl: state => state.closeIconUrl,
+        launchIconUrl: state => state.launchIconUrl,
         state: state => {
             return { 'visibility': state.visibility }
         },

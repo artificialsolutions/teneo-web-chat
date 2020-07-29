@@ -54,6 +54,16 @@ window['TeneoWebChat'] = {
       store.commit('userAvatarUrl',twcProps.userAvatarUrl);
     }
 
+    if (twcProps.minimizeIconUrl) {
+      // TODO: error handling (once store thows error)
+      store.commit('minimizeIconUrl',twcProps.minimizeIconUrl);
+    }
+
+    if (twcProps.closeIconUrl) {
+      // TODO: error handling (once store thows error)
+      store.commit('closeIconUrl',twcProps.closeIconUrl);
+    }
+
     // check required properties
     if (!store.getters.teneoEngineUrl) {
       // TODO: thow error if engine url is missing?

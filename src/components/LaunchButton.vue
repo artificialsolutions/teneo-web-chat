@@ -4,11 +4,13 @@
     :class="{ opened: isOpen, closed: !isOpen }"
     @click.prevent="isOpen ? close() : open()"
   >
-    <BubbleIcon v-if="!isOpen" class="twc-launch-button__open-icon" />
+    <img v-if="launchIconUrl" class="twc-launch-button__open-icon" :src="launchIconUrl" />
+    <BubbleIcon v-else class="twc-launch-button__open-icon" />
   </div>
 </template>
 <script>
 import BubbleIcon from '../icons/bubble.vue';
+import { mapState } from 'vuex';
 
 export default {
   components: {
@@ -23,6 +25,11 @@ export default {
       type: Function,
       required: true,
     },
+  },
+  computed: {
+    ...mapState([
+        'launchIconUrl',
+    ]),
   },
 };
 </script>
