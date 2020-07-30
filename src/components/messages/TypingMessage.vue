@@ -76,7 +76,7 @@ export default {
 <style>
 .twc-typing-message .twc-spinner {
   margin: 4px 0 8px 0;
-  width: 26px;
+  width: 28px;
   text-align: center;
 }
 
