@@ -84,14 +84,22 @@ export default function teneoApiPlugin(teneoApiUrl) {
       // send the input to engine
       var response = await teneoApi.sendInput(sessionId, requestPayload.requestDetails);
 
+      const responsePayload = basePayload();
+      responsePayload.responseDetails = response;
+
       // check if there is an extension that want to intercept the response from engine
-      await handleExtension(API_ON_ENGINE_RESPONSE, response);
+      await handleExtension(API_ON_ENGINE_RESPONSE, responsePayload);
 
 
       EventBus.$emit(events.ENGINE_REPLIED);
 
+      // abort if extension says so
+      if(responsePayload.handledState.handled === true) {
+        return
+      } 
+
       // stop further processing if response is not an object
-      if (Object.keys(response).length == 0 || response.constructor !== Object) {
+      if (Object.keys(responsePayload.responseDetails).length == 0 || responsePayload.responseDetails.constructor !== Object) {
         // TODO: throw error?
         return
       }
