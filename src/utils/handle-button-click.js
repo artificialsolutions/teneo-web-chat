@@ -14,18 +14,18 @@ export default async function handleButtonClick(button, idx, teneoApi) {
 
     teneoApi.messageList = [...messages, selectedButton];
 
-    const payload = basePayload();
-    payload.button = button
+    const payload = basePayload()
+    payload.button = JSON.parse(JSON.stringify(button))
+
     // check if there is an extension that want to intercept the new event
     await handleExtension(API_ON_BUTTON_CLICK, payload);
-
-    if(payload.handledState.handled === true) {
-        return
+    if (payload.button) {
+        button = payload.button
     }
 
     // only send silent input of postback exists
-    if (payload.button.postback) {
-        await teneoApi.sendSilentMessage(payload.button.postback);
+    if (!(payload.handledState.handled === true) && button.postback) {
+        await teneoApi.sendSilentMessage(button.postback);
     }
 }
   
