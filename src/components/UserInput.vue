@@ -28,6 +28,7 @@ import { PARTICIPANT_USER } from '../utils/constants.js';
 import { API_ON_INPUT_SUBMITTED, API_ON_USER_TYPING } from '../utils/api-function-names.js';
 import { EventBus, events } from '../utils/event-bus.js';
 import handleExtension from '../utils/handle-extension.js';
+import basePayload from '../utils/base-payload.js';
 
 Vue.use(vueDebounce)
 
@@ -76,13 +77,26 @@ export default {
       handleExtension(API_ON_USER_TYPING,payload);
     },
     async _submitText() {
-      var text = this.$refs.userInput.textContent;
+      // create payload object
+      const payload = basePayload();
+
+      // add user input to base payload
+      payload.text = this.$refs.userInput.textContent;
+
+      // clear input field
       this.$refs.userInput.innerHTML = '';
 
       // check if there is an extension that want to intercept the user input
-      await handleExtension(API_ON_INPUT_SUBMITTED,text);
+      await handleExtension(API_ON_INPUT_SUBMITTED,payload);
 
-      if (text && text.length > 0) {
+      // return if extension wants to handle submit itself
+      if(payload.handledState.handled === true) {
+        return
+      }
+
+
+      if (payload.text && payload.text.length > 0) {
+        const text = payload.text
         this.onSubmit({
           author: PARTICIPANT_USER,
           type: 'text',
