@@ -8,6 +8,7 @@ import { CHANNEL_PARAM } from '../utils/constants.js';
 import { API_ON_ENGINE_REQUEST, API_ON_ENGINE_RESPONSE, API_ON_NEW_MESSAGE } from '../utils/api-function-names.js';
 import { EventBus, events } from '../utils/event-bus.js';
 import handleExtension from '../utils/handle-extension.js';
+import basePayload from '../utils/base-payload.js';
 
 export default function teneoApiPlugin(teneoApiUrl) {
   const teneoApi = TIE.init(teneoApiUrl);
@@ -57,16 +58,23 @@ export default function teneoApiPlugin(teneoApiUrl) {
       }
 
       // check if there is an extension that want to intercept the request to engine
-      await handleExtension(API_ON_ENGINE_REQUEST, messageDetails);
+      const requestPayload = basePayload();
+      requestPayload.message = messageDetails
+      await handleExtension(API_ON_ENGINE_REQUEST, requestPayload);
+
+      // abort if extension says so
+      if(requestPayload.handledState.handled === true) {
+        return
+      }      
 
       // only continue if message details is object
-      if (messageDetails.constructor !== Object) {
+      if (requestPayload.message.constructor !== Object) {
         // TODO: throw error?
         return
       }
 
       // only continue if message details contains text key
-      if (!("text" in messageDetails)) {
+      if (!("text" in requestPayload.message)) {
         // TODO: throw error?
         return
       }
@@ -74,7 +82,7 @@ export default function teneoApiPlugin(teneoApiUrl) {
       EventBus.$emit(events.START_SPINNER);
 
       // send the input to engine
-      var response = await teneoApi.sendInput(sessionId, messageDetails);
+      var response = await teneoApi.sendInput(sessionId, requestPayload.message);
 
       // check if there is an extension that want to intercept the response from engine
       await handleExtension(API_ON_ENGINE_RESPONSE, response);
