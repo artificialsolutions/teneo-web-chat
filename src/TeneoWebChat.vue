@@ -15,6 +15,7 @@ import ChatWindow from './components/ChatWindow.vue';
 import LaunchButton from './components/LaunchButton.vue';
 import { EventBus, events } from './utils/event-bus.js';
 import handleExtension from './utils/handle-extension.js';
+import basePayload from './utils/base-payload.js';
 import { API_ON_OPEN_BUTTON_CLICK, API_ON_CLOSE_BUTTON_CLICK, API_ON_MINIMIZE_BUTTON_CLICK, API_ON_VISIBILITY_CHANGED } from './utils/api-function-names.js';
 import { API_KEY_VISIBILITY, API_STATE_MAXIMIZED, API_STATE_MINIMIZED, DEFAULT_TITLE } from './utils/constants.js';
 registerMessageComponents();
@@ -88,7 +89,9 @@ export default {
     },
     async openChat() { 
       var chatWindowTargetState = events.MAXIMIZE_WINDOW;
-      await handleExtension(API_ON_OPEN_BUTTON_CLICK);
+      var payload = basePayload();
+      console.log(payload)
+      await handleExtension(API_ON_OPEN_BUTTON_CLICK, payload);
       this.changeWindowState(chatWindowTargetState)
     },
     async minimizeChat() { 
