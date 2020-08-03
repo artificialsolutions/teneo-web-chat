@@ -104,9 +104,9 @@
             return button
           }
 
-          function onOpenButtonClicked(state) {
-            console.log("onOpenButtonClicked", state)
-            return state
+          function onOpenButtonClicked(payload) {
+            //const {handledState} = payload
+            console.log("onOpenButtonClicked", payload)
           }
           function onCloseButtonClicked(state) {
             console.log("onCloseButtonClicked", state)
@@ -121,8 +121,8 @@
             console.log("onUserTyping", text)
           }
 
-          function onReady(initialData) {
-            console.log('onReady',initialData);
+          function onReady() {
+            console.log('onReady');
           }
 
           TeneoWebChat.on('new_message', onNewMessage);

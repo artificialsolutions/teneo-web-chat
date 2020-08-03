@@ -8,7 +8,6 @@ import * as apiConstants from '../src/utils/api-function-names.js';
 import handleExtension from '../src/utils/handle-extension.js';
 import messageListCache from '../src/utils/message-list-cache.js';
 import { store } from '../src/store/store.js';
-import messageComponentName from '../src/utils/message-component-name.js';
 
 var functionMap = new Map();
 const validFunctionNames = Object.values(apiConstants)
@@ -79,7 +78,7 @@ window['TeneoWebChat'] = {
     Vue.prototype.$extensionMethods = functionMap;
     
     EventBus.$on(events.API_STATE_READY, () => {
-      handleExtension(apiConstants.API_ON_READY, store.getters.state);
+      handleExtension(apiConstants.API_ON_READY);
     });
 
     var tmpVue = new Vue({
