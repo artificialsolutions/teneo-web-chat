@@ -105,16 +105,15 @@
           }
 
           function onOpenButtonClicked(payload) {
-            //const {handledState} = payload
             console.log("onOpenButtonClicked", payload)
           }
-          function onCloseButtonClicked(state) {
-            console.log("onCloseButtonClicked", state)
-            return state
+          
+          function onCloseButtonClicked(payload) {
+            console.log("onCloseButtonClicked", payload)
           }
-          function onMinimizeButtonClicked(state) {
-            console.log("onMinimizeButtonClicked", state)
-            return state
+
+          function onMinimizeButtonClicked(payload) {
+            console.log("onMinimizeButtonClicked", payload)
           }
 
           function onUserTyping(text) {

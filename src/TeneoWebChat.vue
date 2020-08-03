@@ -88,21 +88,43 @@ export default {
       }
     },
     async openChat() { 
-      var chatWindowTargetState = events.MAXIMIZE_WINDOW;
-      var payload = basePayload();
-      console.log(payload)
+      // add handledState to payload
+      const payload = basePayload();
+
+      // check for extension
       await handleExtension(API_ON_OPEN_BUTTON_CLICK, payload);
-      this.changeWindowState(chatWindowTargetState)
+
+      // proceed if extension does not handle function itself
+      if(!payload.handledState.handled === true) {
+        this.changeWindowState( events.MAXIMIZE_WINDOW);
+      } 
+      
     },
     async minimizeChat() { 
-      var chatWindowTargetState = events.MINIMIZE_WINDOW
-      await handleExtension(API_ON_MINIMIZE_BUTTON_CLICK);
-      this.changeWindowState(chatWindowTargetState)
+
+      // add handledState to payload
+      const payload = basePayload();
+
+      // check for extension
+      await handleExtension(API_ON_MINIMIZE_BUTTON_CLICK, payload);
+
+      // proceed if extension does not handle function itself
+      if(!payload.handledState.handled === true) {
+        this.changeWindowState(events.MINIMIZE_WINDOW);
+      }
     },
     async closeChat() { 
       var chatWindowTargetState = events.CLOSE_WINDOW
-      await handleExtension(API_ON_CLOSE_BUTTON_CLICK);
-      this.changeWindowState(chatWindowTargetState)
+      // add handledState to payload
+      const payload = basePayload();
+
+      // check for extension
+      await handleExtension(API_ON_CLOSE_BUTTON_CLICK, payload);
+
+      // proceed if extension does not handle function itself
+      if(!payload.handledState.handled === true) {
+        this.changeWindowState(events.CLOSE_WINDOW);
+      } 
     },
     async minimize(){
       if (this.$store.getters.visibility == API_STATE_MAXIMIZED) {
