@@ -94,9 +94,10 @@
             console.log("onButtonClicked", payload)
           }
 
-          function onModalButtonClicked(button) {
-            console.log("onModalButtonClicked", button)
-            return button
+          function onModalButtonClicked(payload) {
+            const handledState = payload.handledState
+            handledState.handled = true
+            console.log("onModalButtonClicked", payload)
           }
 
           function onOpenButtonClicked(payload) {

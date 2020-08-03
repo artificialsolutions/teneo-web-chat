@@ -28,6 +28,7 @@
 import { API_ON_MODAL_BUTTON_CLICK } from '../../utils/api-function-names.js';
 import sanitizeHtml from '../../utils/sanitize-html.js';
 import handleExtension from '../../utils/handle-extension.js';
+import basePayload from '../../utils/base-payload.js';
 
 export default {
   name: 'ModalMessage',
@@ -70,16 +71,22 @@ export default {
   },
   methods: {
     async onSelect(reply, idx) {
-      console.log(this)
       if (!this.replySent) {
         // hide modal
         this.hideModal();
         // check if there is an extension that want to intercept the new event
-        await handleExtension(API_ON_MODAL_BUTTON_CLICK, reply);
+        const payload = basePayload();
+        payload.button = JSON.parse(JSON.stringify(reply))
+        await handleExtension(API_ON_MODAL_BUTTON_CLICK, payload);
+
+        // abort if extension says so
+        if (payload.handledState.handled === true) {
+          return
+        }
 
         // only send silent input of postback exists
-        if (reply.postback) {
-            await this.$teneoApi.sendSilentMessage(reply.postback);
+        if (payload.button.postback) {
+          await this.$teneoApi.sendSilentMessage(payload.button.postback);
         }
 
       }
