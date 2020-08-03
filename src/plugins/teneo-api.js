@@ -57,7 +57,7 @@ export default function teneoApiPlugin(teneoApiUrl) {
       }
 
       // check if there is an extension that want to intercept the request to engine
-      messageDetails = await handleExtension(API_ON_ENGINE_REQUEST, messageDetails);
+      await handleExtension(API_ON_ENGINE_REQUEST, messageDetails);
 
       // only continue if message details is object
       if (messageDetails.constructor !== Object) {
@@ -77,7 +77,7 @@ export default function teneoApiPlugin(teneoApiUrl) {
       var response = await teneoApi.sendInput(sessionId, messageDetails);
 
       // check if there is an extension that want to intercept the response from engine
-      response = await handleExtension(API_ON_ENGINE_RESPONSE, response);
+      await handleExtension(API_ON_ENGINE_RESPONSE, response);
 
 
       EventBus.$emit(events.ENGINE_REPLIED);
@@ -118,7 +118,7 @@ export default function teneoApiPlugin(teneoApiUrl) {
         return;
       }
       // check if there is an extension that want to intercept the message
-      message = await handleExtension(API_ON_NEW_MESSAGE, message);
+      await handleExtension(API_ON_NEW_MESSAGE, message);
       // TODO: throw error if message returned by extension is invalid?
       
       // if there is a typing indicator active for this author, hide it

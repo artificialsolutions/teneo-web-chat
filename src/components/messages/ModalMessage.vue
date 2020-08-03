@@ -75,7 +75,7 @@ export default {
         // hide modal
         this.hideModal();
         // check if there is an extension that want to intercept the new event
-        reply = await handleExtension(API_ON_MODAL_BUTTON_CLICK, reply);
+        await handleExtension(API_ON_MODAL_BUTTON_CLICK, reply);
 
         // only send silent input of postback exists
         if (reply.postback) {

@@ -79,7 +79,7 @@ export default {
       this.$refs.userInput.innerHTML = '';
 
       // check if there is an extension that want to intercept the user input
-      text = await handleExtension(API_ON_INPUT_SUBMITTED,text);
+      await handleExtension(API_ON_INPUT_SUBMITTED,text);
 
       if (text && text.length > 0) {
         this.onSubmit({

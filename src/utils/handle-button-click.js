@@ -14,7 +14,7 @@ export default async function handleButtonClick(button, idx, teneoApi) {
     teneoApi.messageList = [...messages, selectedButton];
 
     // check if there is an extension that want to intercept the new event
-    button =  await handleExtension(API_ON_BUTTON_CLICK, button);
+    await handleExtension(API_ON_BUTTON_CLICK, button);
 
     // only send silent input of postback exists
     if (button.postback) {

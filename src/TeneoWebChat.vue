@@ -45,8 +45,8 @@ export default {
         this.clearHistory()
       });
 
-      EventBus.$on(events.MAXIMIZE_WINDOW, () => {
-        this.maximize();
+      EventBus.$on(events.MAXIMIZE_WINDOW, async () => {
+        await this.maximize();
       });
 
       EventBus.$on(events.MINIMIZE_WINDOW, () => {
@@ -88,20 +88,17 @@ export default {
     },
     async openChat() { 
       var chatWindowTargetState = events.MAXIMIZE_WINDOW;
-      chatWindowTargetState = await handleExtension(API_ON_OPEN_BUTTON_CLICK, chatWindowTargetState);
-      // TODO: trow error when value of chatWindowTargetState is not 'minimize' or 'maximize'?
+      await handleExtension(API_ON_OPEN_BUTTON_CLICK);
       this.changeWindowState(chatWindowTargetState)
     },
     async minimizeChat() { 
       var chatWindowTargetState = events.MINIMIZE_WINDOW
-      chatWindowTargetState = await handleExtension(API_ON_MINIMIZE_BUTTON_CLICK, chatWindowTargetState);
-      // TODO: trow error when value of chatWindowTargetState is not 'minimize' or 'maximize'?
+      await handleExtension(API_ON_MINIMIZE_BUTTON_CLICK);
       this.changeWindowState(chatWindowTargetState)
     },
     async closeChat() { 
       var chatWindowTargetState = events.CLOSE_WINDOW
-      chatWindowTargetState = await handleExtension(API_ON_CLOSE_BUTTON_CLICK, chatWindowTargetState);
-      // TODO: throw error when value of chatWindowTargetState is not 'minimize' or 'maximize'?
+      await handleExtension(API_ON_CLOSE_BUTTON_CLICK);
       this.changeWindowState(chatWindowTargetState)
     },
     async minimize(){
