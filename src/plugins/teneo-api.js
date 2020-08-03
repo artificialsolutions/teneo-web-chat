@@ -59,7 +59,7 @@ export default function teneoApiPlugin(teneoApiUrl) {
 
       // check if there is an extension that want to intercept the request to engine
       const requestPayload = basePayload();
-      requestPayload.message = messageDetails
+      requestPayload.requestDetails = messageDetails
       await handleExtension(API_ON_ENGINE_REQUEST, requestPayload);
 
       // abort if extension says so
@@ -68,13 +68,13 @@ export default function teneoApiPlugin(teneoApiUrl) {
       }      
 
       // only continue if message details is object
-      if (requestPayload.message.constructor !== Object) {
+      if (requestPayload.requestDetails.constructor !== Object) {
         // TODO: throw error?
         return
       }
 
       // only continue if message details contains text key
-      if (!("text" in requestPayload.message)) {
+      if (!("text" in requestPayload.requestDetails)) {
         // TODO: throw error?
         return
       }
@@ -82,7 +82,7 @@ export default function teneoApiPlugin(teneoApiUrl) {
       EventBus.$emit(events.START_SPINNER);
 
       // send the input to engine
-      var response = await teneoApi.sendInput(sessionId, requestPayload.message);
+      var response = await teneoApi.sendInput(sessionId, requestPayload.requestDetails);
 
       // check if there is an extension that want to intercept the response from engine
       await handleExtension(API_ON_ENGINE_RESPONSE, response);
