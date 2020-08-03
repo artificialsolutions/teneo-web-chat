@@ -70,9 +70,8 @@
           var element = document.getElementById('teneo-web-chat');
 
           // EXTENSIONS          
-          function onNewMessage(message) {
-            console.log("onNewMessage", message)
-            return message
+          function onNewMessage(payload) {
+            console.log("onNewMessage", payload)
           }
 
           function onVisibilityChanged(payload) {

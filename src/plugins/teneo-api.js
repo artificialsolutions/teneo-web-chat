@@ -134,11 +134,23 @@ export default function teneoApiPlugin(teneoApiUrl) {
         return;
       }
       // check if there is an extension that want to intercept the message
-      await handleExtension(API_ON_NEW_MESSAGE, message);
+      const payload = basePayload();
+      payload.message = message
+      await handleExtension(API_ON_NEW_MESSAGE, payload);
       // TODO: throw error if message returned by extension is invalid?
-      
+
+      // abort if extension says so
+      if(payload.handledState.handled === true) {
+        return
+      }
+
       // if there is a typing indicator active for this author, hide it
       this.hideTypingIndicator(message);
+
+      // stop further processing if message is not an object
+      if (Object.keys(payload.message).length == 0 || payload.message.constructor !== Object) {
+        return
+      }
 
       // add message to list
       this.messageList = [...this.messageList, message];
