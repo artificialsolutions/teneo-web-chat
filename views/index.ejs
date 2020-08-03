@@ -75,8 +75,8 @@
             return message
           }
 
-          function onVisibilityChanged(data) {
-            console.log("onVisibilityChanged", data)
+          function onVisibilityChanged(payload) {
+            console.log("onVisibilityChanged", payload)
           }
           
           function onEngineRequest(request) {
@@ -107,7 +107,7 @@
           function onOpenButtonClicked(payload) {
             console.log("onOpenButtonClicked", payload)
           }
-          
+
           function onCloseButtonClicked(payload) {
             console.log("onCloseButtonClicked", payload)
           }
@@ -116,8 +116,8 @@
             console.log("onMinimizeButtonClicked", payload)
           }
 
-          function onUserTyping(text) {
-            console.log("onUserTyping", text)
+          function onUserTyping(payload) {
+            console.log("onUserTyping", payload)
           }
 
           function onReady() {

@@ -70,9 +70,10 @@ export default {
       }
     },
     userTyping() {
-      var text = this.$refs.userInput.textContent 
+      // create payload object
+      const payload = {"text" : this.$refs.userInput.textContent }
       // check if there is an extension that want to be notified about the user typing
-      handleExtension(API_ON_USER_TYPING,text);
+      handleExtension(API_ON_USER_TYPING,payload);
     },
     async _submitText() {
       var text = this.$refs.userInput.textContent;
