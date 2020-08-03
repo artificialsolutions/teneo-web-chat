@@ -53,8 +53,8 @@ export default {
         this.minimize();
       });
 
-      EventBus.$on(events.ADD_MESSAGE, (message) => {
-        this.$teneoApi._onMessageReceived(message);
+      EventBus.$on(events.ADD_MESSAGE, async (message) => {
+        await this.$teneoApi._onMessageReceived(message);
       });
 
       EventBus.$on(events.SEND_INPUT, (text,parameters,isSilent) => {

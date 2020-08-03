@@ -53,7 +53,7 @@ export default function teneoApiPlugin(teneoApiUrl) {
         var tmpMessage = { 'author': 'user', 'type': 'text', 'data': { 'text': text } }
 
         // add user messsage to history
-        this._onMessageReceived(tmpMessage)
+        await this._onMessageReceived(tmpMessage)
       }
 
       // check if there is an extension that want to intercept the request to engine
@@ -97,8 +97,8 @@ export default function teneoApiPlugin(teneoApiUrl) {
       sessionId = response.sessionId;
 
       EventBus.$off(events.PUSH_BUBBLE);
-      EventBus.$on(events.PUSH_BUBBLE, (msg) => {
-        this._onMessageReceived(msg)
+      EventBus.$on(events.PUSH_BUBBLE, async (msg) => {
+        await this._onMessageReceived(msg)
       });
 
       await parseTeneoResponse(response);
@@ -143,10 +143,10 @@ export default function teneoApiPlugin(teneoApiUrl) {
       //remove messages of type 'typing', from users of author 'data.author'
       this.messageList = this.messageList.filter(function(item, index, array){ return (!((item.author === data.author)&&(item.type === 'typing')));});
     },
-    showTypingIndicator(message) {
+    async showTypingIndicator(message) {
       this.hideTypingIndicator(message);
       message.type = "typing"
-      this._onMessageReceived(message);
+      await this._onMessageReceived(message);
     },
   };
 
