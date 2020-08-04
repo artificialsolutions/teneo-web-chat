@@ -122,7 +122,12 @@ window['TeneoWebChat'] = {
         return store.getters.state;
 
       case apiConstants.API_GET_CHAT_HISTORY:
-        return messageList.get();
+        // exclude typing indicators from message list
+        let filteredMessageList = messageList.get();
+        filteredMessageList = filteredMessageList.filter(function( message ) {
+          return message.type !== 'typing';
+        });
+        return filteredMessageList;
     }
   },
   call(function_name, payload = undefined) {
