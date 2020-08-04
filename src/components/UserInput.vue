@@ -87,15 +87,18 @@ export default {
       this.$refs.userInput.innerHTML = '';
 
       // check if there is an extension that want to intercept the user input
-      await handleExtension(API_ON_INPUT_SUBMITTED,payload);
-
+      // but only if the user actually submitted something
+      if (payload.text && payload.text.trim().length > 0) {
+        await handleExtension(API_ON_INPUT_SUBMITTED,payload);
+      }
+      
       // return if extension wants to handle submit itself
       if(payload.handledState.handled === true) {
         return
       }
 
 
-      if (payload.text && payload.text.length > 0) {
+      if (payload.text && payload.text.trim().length > 0) {
         const text = payload.text
         this.onSubmit({
           author: PARTICIPANT_USER,
