@@ -64,6 +64,7 @@ export default {
   width: 370px;
   height: calc(100% - 120px);
   max-height: 590px;
+  min-height: 250px;
   position: fixed;
   right: 25px;
   bottom: 25px;

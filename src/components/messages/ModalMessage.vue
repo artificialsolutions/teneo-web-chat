@@ -106,21 +106,25 @@ export default {
 .twc-modal {
   position: fixed;
   z-index: 2700; /* Sit on top */
-  overflow: auto;
+  overflow: hidden;
   background-color: rgba(0, 0, 0, 0.5); 
   width: 370px;
   height: calc(100% - 120px);
   max-height: 590px;
+  min-height: 250px;
   right: 25px;
   bottom: 25px;
   box-sizing: border-box;
   border-radius: 10px;
   transition: 0.3s ease-in-out;
   box-shadow: 0 2px 10px 0 rgba(0, 0, 0, 0.15);
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
 }
 
 .twc-modal-content {
-  margin: 40% auto;
+  /* margin: 40% auto; */
   width: 80%; 
   border: none;
   min-width: 0;
@@ -131,6 +135,11 @@ export default {
   background-clip: border-box;
   border-radius: 0.25rem;
   box-shadow: 0 2px 10px 0 rgba(0, 0, 0, 0.15);
+  position: absolute;
+  float: left;
+  left: 50%;
+  top: 50%;
+  transform: translate(-50%, -50%);
 }
 
 .twc-modal-content .twc-modal-img, .twc-modal-content .twc-modal-img img {
