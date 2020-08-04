@@ -133,10 +133,16 @@ export default function teneoApiPlugin(teneoApiUrl) {
       if (!message) {
         return;
       }
-      // check if there is an extension that want to intercept the message
+
+      // create payload
       const payload = basePayload();
       payload.message = message
-      await handleExtension(API_ON_NEW_MESSAGE, payload);
+
+      // check if there is an extension that wants to intercept the message
+      // except for typing indicator messages
+      if (payload.message.type !== "typing") {
+        await handleExtension(API_ON_NEW_MESSAGE, payload);
+      }
       // TODO: throw error if message returned by extension is invalid?
 
       // abort if extension says so
