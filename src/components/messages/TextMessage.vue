@@ -82,9 +82,19 @@ export default {
   max-width: calc(100% - 84px);
 }
 
-_:-ms-fullscreen, :root .twc-wrap.bot {
+_:-ms-fullscreen, :root .twc-wrap.bot, :root .twc-wrap.agent {
   max-width: calc(100% - 1px);
 }
+
+_:-ms-fullscreen, :root .twc-wrap.user  {
+  max-width: calc(100% - 41px);
+  margin-left: 40px
+}
+
+
+
+
+
 .twc-dateline {
   font-weight: 400;
   font-size: 0.7em;
@@ -113,8 +123,8 @@ _:-ms-fullscreen, :root .twc-wrap.bot {
 }
 
 .twc-text-message.agent {
-  color: var(--agent-message-fg-color, #263238);
-  background-color: var(--agent-message-bg-color, #e4f1e4);
+  color: var(--agent-message-fg-color, #ffffff);
+  background-color: var(--agent-message-bg-color, #47b2fd);
   margin-right: 40px;
   border-bottom-left-radius: 0px;
 }
