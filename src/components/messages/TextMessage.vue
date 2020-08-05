@@ -87,8 +87,8 @@ _:-ms-fullscreen, :root .twc-wrap.bot, :root .twc-wrap.agent {
 }
 
 _:-ms-fullscreen, :root .twc-wrap.user  {
-  max-width: calc(100% - 41px);
-  margin-left: 40px
+  max-width: calc(100% - 86px);
+  margin-left: 85px
 }
 
 
