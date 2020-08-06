@@ -16,6 +16,8 @@ export const events = {
   SHOW_TYPING_INDICATOR: 'show_typing_indicator',
   SEND_INPUT: 'send_input',
   API_STATE_READY: 'ready',
+  DISABLE_INPUT: 'disable_input',
+  ENABLE_INPUT: 'enable_input',
 };
 
 export const EventBus = new Vue();

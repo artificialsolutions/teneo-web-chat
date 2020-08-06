@@ -7,11 +7,12 @@ export const API_CALL_CLEAR_CHAT_HISTORY = "clear_chat_history";
 export const API_CALL_RESET = "reset";
 export const API_CALL_ADD_MESSAGE = "add_message";
 export const API_CALL_SET_WINDOW_TITLE = "set_chat_window_title";
+export const API_CALL_DISABLE_USERINPUT = 'disable_userinput'
+export const API_CALL_ENABLE_USERINPUT = 'enable_userinput'
 // export const API_CALL_SET_AGENT_AVATAR_URL = "set_agent_avatar_url";
 // export const API_CALL_SET_BOT_AVATAR_URL = "set_bot_avatar_url";
 // export const API_CALL_SET_USER_AVATAR_URL = "set_user_avatar_url";
 
-//Should be Hide
 //Add dedicated add typing indicator method
 export const API_CALL_HIDE_TYPING_INDICATOR = 'hide_typing_indicator';
 export const API_CALL_SHOW_TYPING_INDICATOR = 'show_typing_indicator';

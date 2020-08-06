@@ -201,6 +201,14 @@ window['TeneoWebChat'] = {
           store.commit('title',payload);
         }
         break
+
+      case apiConstants.API_CALL_DISABLE_USERINPUT:
+        EventBus.$emit(events.DISABLE_INPUT);
+        break
+
+      case apiConstants.API_CALL_ENABLE_USERINPUT:
+        EventBus.$emit(events.ENABLE_INPUT);
+        break
       
       // case apiConstants.API_CALL_SET_AGENT_AVATAR_URL:
       //   // TODO: throw error if payload is invalid or if store throws error

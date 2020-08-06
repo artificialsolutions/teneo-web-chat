@@ -1,11 +1,11 @@
 <template>
   <div>
-    <form class="twc-user-input" :class="{ active: inputActive }">
+    <form class="twc-user-input" :class="{ active: inputActive, disabled: inputDisabled }">
       <div
         ref="userInput"
         role="button"
         tabIndex="0"
-        contentEditable="true"
+        :contentEditable="contentIsEditable"
         :placeholder="placeholder"
         class="twc-user-input__text"
         @focus="setInputActive(true)"
@@ -14,7 +14,7 @@
         v-debounce:250="userTyping" :debounce-events="['input']"
       ></div>
       <div class="twc-user-input__button">
-        <SendIcon :on-click="_submitText" />
+        <SendIcon :on-click="_submitText"/>
       </div>
     </form>
   </div>
@@ -49,6 +49,8 @@ export default {
   data() {
     return {
       inputActive: false,
+      contentIsEditable: true,
+      inputDisabled: false,
     };
   },
   mounted() {
@@ -58,11 +60,31 @@ export default {
       }
     });
 
+    EventBus.$on(events.DISABLE_INPUT, () => {
+          this.setInputActive(false);
+          this.setContentEditable(false);
+          this.setInputDisabled(true);
+    });
+
+    EventBus.$on(events.ENABLE_INPUT, () => {
+          this.setContentEditable(true);
+          this.setInputDisabled(false);
+          this.setInputActive(true);
+          
+          this.$refs.userInput.focus();
+    });
+
     this.$refs.userInput.focus();
   },
   methods: {
     setInputActive(onoff) {
       this.inputActive = onoff;
+    },
+    setContentEditable(onoff) {
+      this.contentIsEditable = onoff;
+    },
+    setInputDisabled(onoff) {
+      this.inputDisabled = onoff;
     },
     handleReturnKey(event) {
       if (event.keyCode === 13 && !event.shiftKey) {
@@ -123,7 +145,17 @@ export default {
   border-bottom-left-radius: 10px;
   border-bottom-right-radius: 10px;
   transition: background-color 0.2s ease, box-shadow 0.2s ease;
+  pointer-events:initial;
 }
+
+.twc-user-input.disabled {
+  pointer-events:none;
+}
+
+.twc-user-input.disabled .twc-user-input__button, .twc-user-input.disabled .twc-user-input__text {
+  filter: grayscale(100%) opacity(50%);
+}
+
 
 .twc-user-input__text {
   width: 320px;
