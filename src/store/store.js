@@ -103,5 +103,8 @@ export const store = new Vuex.Store({
         state: state => {
             return { 'visibility': state.visibility }
         },
+        engineUrlObj: state => {
+            return { 'engineUrl' : state.teneoEngineUrl}
+        },
     }
 })

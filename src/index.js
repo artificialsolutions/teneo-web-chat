@@ -128,6 +128,12 @@ window['TeneoWebChat'] = {
           return message.type !== 'typing';
         });
         return filteredMessageList;
+      
+      case apiConstants.API_GET_ENGINE_URL:
+        return store.getters.engineUrlObj;
+      
+      default:
+        break
     }
   },
   call(function_name, payload = undefined) {

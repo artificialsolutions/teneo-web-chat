@@ -20,6 +20,7 @@ export const API_CALL_SHOW_TYPING_INDICATOR = 'show_typing_indicator';
 // api getters
 export const API_GET_STATE = "state";
 export const API_GET_CHAT_HISTORY = "chat_history";
+export const API_GET_ENGINE_URL = "engine_url";
 
 // api callacks
 export const API_ON_READY = "ready";
