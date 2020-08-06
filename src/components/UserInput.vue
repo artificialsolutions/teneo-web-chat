@@ -152,10 +152,10 @@ export default {
   pointer-events:none;
 }
 
-.twc-user-input.disabled .twc-user-input__button, .twc-user-input.disabled .twc-user-input__text {
-  filter: grayscale(100%) opacity(50%);
+.twc-user-input.disabled .twc-user-input__button, .twc-user-input.disabled .twc-user-input__text, .twc-user-input.disabled .twc-sc-user-input--send-icon {
+  filter: grayscale(100%);
+  opacity: 0.4;
 }
-
 
 .twc-user-input__text {
   width: 320px;
