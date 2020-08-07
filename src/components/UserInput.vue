@@ -2,6 +2,7 @@
   <div>
     <form class="twc-user-input" :class="{ active: inputActive, disabled: inputDisabled }">
       <div
+        id="twc-user-input"
         ref="userInput"
         role="button"
         tabIndex="0"
@@ -71,7 +72,10 @@ export default {
           this.setInputDisabled(false);
           this.setInputActive(true);
           
-          this.$refs.userInput.focus();
+          //this.$refs.userInput.focus(); // buggy, sometimes throws error
+          if (document.getElementById("twc-user-input")) {
+            document.getElementById("twc-user-input").focus();
+          }
     });
 
     this.$refs.userInput.focus();
