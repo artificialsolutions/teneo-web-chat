@@ -1,5 +1,5 @@
 <template>
-  <div class="twc-chat-window">
+  <div class="twc-chat-window" :class="isIosSafari() && 'twc-chat-window-ios-blue-fix'">
     <Header :on-close="onClose" :on-minimize="onMinimize"/>
     <MessageList :message-list="$teneoApi.messageList" />
     <div v-if="spinnerIsLoading" class="twc-spinner">
@@ -54,7 +54,16 @@ export default {
         this.spinnerIsLoading=true;
         this.$teneoApi.sendMessage(message);
       },
-  },
+      isIosSafari() { //Upgrade to ifSafariMobile
+        var ua = window.navigator.userAgent;
+        var iOS = !!ua.match(/iPad/i) || !!ua.match(/iPhone/i);
+        var webkit = !!ua.match(/WebKit/i);
+        var iOSSafari = iOS && webkit && !ua.match(/CriOS/i) && !ua.match(/OPiOS/i);
+        console.log('is iOS Safari: '+iOSSafari);
+        return iOSSafari;
+        }
+    }
+    //*/
 };
 </script>
 
@@ -76,6 +85,10 @@ export default {
   justify-content: space-between;
   transition: 0.3s ease-in-out;
   border-radius: 10px;
+}
+
+.twc-chat-window-ios-blue-fix {
+  bottom: 0px;
 }
 
 @media (max-width: 450px) {
