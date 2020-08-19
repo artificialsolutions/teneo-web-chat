@@ -1,6 +1,7 @@
 <template>
   <div class="teneo-web-chat">
     <ChatWindow
+      id="twc-chatwindow-id" 
       v-if="isChatOpen"
       :on-close="closeChat"
       :on-minimize="minimizeChat"
@@ -20,6 +21,14 @@ import { API_ON_OPEN_BUTTON_CLICK, API_ON_CLOSE_BUTTON_CLICK, API_ON_MINIMIZE_BU
 import { API_KEY_VISIBILITY, API_STATE_MAXIMIZED, API_STATE_MINIMIZED, DEFAULT_TITLE } from './utils/constants.js';
 registerMessageComponents();
 
+// SAFARI IOS ADAPTATIONS
+import detectIosSafari from './utils/detect-ios-safari';
+const bodyScrollLock = require('body-scroll-lock');
+const disableBodyScroll = bodyScrollLock.disableBodyScroll;
+const enableBodyScroll = bodyScrollLock.enableBodyScroll;
+const messageListId = '#message-list-id';
+
+
 export default {
   name: 'TeneoWebChat',
   components: {
@@ -29,9 +38,13 @@ export default {
   data() {
     return {
       isChatOpen: false,
+      isIosSafari: false
     };
   },
   mounted() {
+      
+      this.isIosSafari=detectIosSafari();
+
       EventBus.$on(events.RESET_SESSION, () => {
         this.minimize()
         this.clearHistory()
@@ -130,6 +143,12 @@ export default {
       if (this.$store.getters.visibility == API_STATE_MAXIMIZED) {
         this.$store.commit('visibility',API_STATE_MINIMIZED);
         this.isChatOpen = false
+
+      if(this.isIosSafari){
+        const targetElement = document.querySelector(messageListId);
+        enableBodyScroll(targetElement);
+      }
+
         await this.apiOnVisibilityChange();
       }
     },
@@ -137,7 +156,14 @@ export default {
       if (this.$store.getters.visibility == API_STATE_MINIMIZED) {
         this.$store.commit('visibility',API_STATE_MAXIMIZED);
         this.isChatOpen = true
+
         await this.apiOnVisibilityChange();
+
+        if(this.isIosSafari){
+          const targetElement = document.querySelector(messageListId);
+          disableBodyScroll(targetElement);
+        }
+        
       }
     },
     clearHistory() {

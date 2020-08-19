@@ -37,6 +37,7 @@
     "@vue/test-utils": "^1.0.3",
     "autoprefixer": "^9.8.5",
     "babel-loader": "^8.1.0",
+    "body-scroll-lock": "^3.0.3",
     "chai": "^4.2.0",
     "core-js": "^3.6.5",
     "css-loader": "^2.1.1",

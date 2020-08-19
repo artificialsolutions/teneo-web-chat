@@ -18,6 +18,7 @@ export const events = {
   API_STATE_READY: 'ready',
   DISABLE_INPUT: 'disable_input',
   ENABLE_INPUT: 'enable_input',
+  USER_INPUT_FOCUS_CHANGED: 'user_input_focus_changed'
 };
 
 export const EventBus = new Vue();

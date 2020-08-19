@@ -72,12 +72,20 @@ export default {
           this.setInputDisabled(false);
           this.setInputActive(true);
           
-          //this.$refs.userInput.focus(); // buggy, sometimes throws error
           if (document.getElementById("twc-user-input")) {
             document.getElementById("twc-user-input").focus();
           }
     });
 
+    //Detect changes and focus and emit event. This will be listened by ChatWindow to adapt to iOS Safari
+    const userInput = document.getElementById("twc-user-input");
+    userInput.addEventListener('focus', (event) => {
+      EventBus.$emit(events.USER_INPUT_FOCUS_CHANGED, true);
+    });
+    userInput.addEventListener('blur', (event) => {
+      EventBus.$emit(events.USER_INPUT_FOCUS_CHANGED, false);
+    });
+    
     this.$refs.userInput.focus();
   },
   methods: {

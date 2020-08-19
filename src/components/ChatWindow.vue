@@ -1,7 +1,7 @@
 <template>
-  <div class="twc-chat-window" :class="isIosSafari() && 'twc-chat-window-ios-blue-fix'">
+    <div :class="chatWindowStyles()">
     <Header :on-close="onClose" :on-minimize="onMinimize"/>
-    <MessageList :message-list="$teneoApi.messageList" />
+    <MessageList id="message-list-id" :message-list="$teneoApi.messageList" />
     <div v-if="spinnerIsLoading" class="twc-spinner">
       <div class="twc-bounce1"></div>
       <div class="twc-bounce2"></div>
@@ -18,6 +18,7 @@ import MessageList from './MessageList.vue';
 import UserInput from './UserInput.vue';
 import { EventBus, events } from '../utils/event-bus.js';
 import { API_CALL_SEND_INPUT } from '../utils/constants';
+import detectIosSafari from '../utils/detect-ios-safari';
 
 export default {
   components: { Header, MessageList, UserInput },
@@ -34,7 +35,18 @@ export default {
   data() {
     return {
       spinnerIsLoading: false,
+      chatWindowBaseStyle: "twc-chat-window",
+      keyboardUp: false,
+      isIosSafari: false
     };
+  },
+  beforeMount() {
+    this.isIosSafari = detectIosSafari();
+    if(this.isIosSafari === true){
+      EventBus.$on(events.USER_INPUT_FOCUS_CHANGED, (onoff) => {
+        this.keyboardUp = onoff
+      });
+    }
   },
   mounted() {
     EventBus.$on(events.ENGINE_REPLIED, () => {
@@ -47,23 +59,22 @@ export default {
     if (this.$teneoApi.messageList.length === 0) {
       this.$teneoApi.sendSilentMessage('');
     }
-
   },
   methods: {
       sendMessage(message) {
         this.spinnerIsLoading=true;
         this.$teneoApi.sendMessage(message);
       },
-      isIosSafari() { //Upgrade to ifSafariMobile
-        var ua = window.navigator.userAgent;
-        var iOS = !!ua.match(/iPad/i) || !!ua.match(/iPhone/i);
-        var webkit = !!ua.match(/WebKit/i);
-        var iOSSafari = iOS && webkit && !ua.match(/CriOS/i) && !ua.match(/OPiOS/i);
-        console.log('is iOS Safari: '+iOSSafari);
-        return iOSSafari;
-        }
+      chatWindowStyles() {
+        if(this.isIosSafari){
+          return this.chatWindowBaseStyle.concat((this.keyboardUp ? " ios-keyboard-shown" : " ios-keyboard-hidden"))
+         }
+         else{
+           return this.chatWindowBaseStyle;
+         }
+      }
     }
-    //*/
+    
 };
 </script>
 
@@ -85,10 +96,7 @@ export default {
   justify-content: space-between;
   transition: 0.3s ease-in-out;
   border-radius: 10px;
-}
-
-.twc-chat-window-ios-blue-fix {
-  bottom: 0px;
+  overscroll-behavior: contain
 }
 
 @media (max-width: 450px) {
@@ -100,6 +108,15 @@ export default {
     bottom: 0px;
     border-radius: 0px;
   }
+}
+
+.ios-keyboard-shown {
+  transition: none;
+  height: calc(66% - 60px);
+}
+.ios-keyboard-hidden {
+  transition: 0.5s ease-in-out;
+  height: 100%;
 }
 
 .twc-spinner {
