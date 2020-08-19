@@ -1,5 +1,5 @@
 <template>
-    <div :class="chatWindowStyles()">
+    <div ref="chatWindowId" :class="chatWindowStyles()">
     <Header :on-close="onClose" :on-minimize="onMinimize"/>
     <MessageList id="message-list-id" :message-list="$teneoApi.messageList" />
     <div v-if="spinnerIsLoading" class="twc-spinner">
@@ -37,14 +37,21 @@ export default {
       spinnerIsLoading: false,
       chatWindowBaseStyle: "twc-chat-window",
       keyboardUp: false,
-      isIosSafari: false
+      isIosSafari: false,
+      lastScrollY: 0
     };
   },
   beforeMount() {
     this.isIosSafari = detectIosSafari();
     if(this.isIosSafari === true){
       EventBus.$on(events.USER_INPUT_FOCUS_CHANGED, (onoff) => {
-        this.keyboardUp = onoff
+        if(!(this.lastScrollY === window.scrollY)){
+          this.keyboardUp = onoff;
+        }
+        else{
+            this.keyboardUp = true; //reactive variable, will update style
+        }
+        this.lastScrollY = window.scrollY;
       });
     }
   },

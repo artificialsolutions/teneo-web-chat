@@ -42,7 +42,7 @@ export default {
     };
   },
   mounted() {
-      
+    
       this.isIosSafari=detectIosSafari();
 
       EventBus.$on(events.RESET_SESSION, () => {
