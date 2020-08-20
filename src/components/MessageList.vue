@@ -25,7 +25,7 @@ export default {
       setTimeout(this._scrollDownInstantly.bind(this), 80);
       //Setup a downwards scroller
       EventBus.$on(events.SCROLL_CHAT_DOWN, () => {
-        setTimeout(() => { this._scrollDown()}, 10);
+        setTimeout(() => { this._scrollDown()}, 40);
       });
   },
   updated() {
