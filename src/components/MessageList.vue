@@ -9,6 +9,7 @@
 </template>
 <script>
 import Message from './Message.vue';
+import { EventBus,events } from '../utils/event-bus';
 
 export default {
   components: {
@@ -21,8 +22,11 @@ export default {
     },
   },
   mounted () {
-      //this._scrollDownInstantly();
       setTimeout(this._scrollDownInstantly.bind(this), 80);
+      //Setup a downwards scroller
+      EventBus.$on(events.SCROLL_CHAT_DOWN, () => {
+        setTimeout(() => { this._scrollDown()}, 10);
+      });
   },
   updated() {
     if (this.shouldScrollToBottom()) {

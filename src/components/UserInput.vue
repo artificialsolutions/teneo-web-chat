@@ -85,12 +85,15 @@ export default {
     userInput.addEventListener('blur', (event) => {
       EventBus.$emit(events.USER_INPUT_FOCUS_CHANGED, false);
     });
-    
+
     this.$refs.userInput.focus();
   },
   methods: {
     setInputActive(onoff) {
       this.inputActive = onoff;
+      if(onoff === true){
+        EventBus.$emit(events.SCROLL_CHAT_DOWN);
+      }
     },
     setContentEditable(onoff) {
       this.contentIsEditable = onoff;

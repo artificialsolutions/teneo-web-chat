@@ -18,7 +18,8 @@ export const events = {
   API_STATE_READY: 'ready',
   DISABLE_INPUT: 'disable_input',
   ENABLE_INPUT: 'enable_input',
-  USER_INPUT_FOCUS_CHANGED: 'user_input_focus_changed'
+  USER_INPUT_FOCUS_CHANGED: 'user_input_focus_changed',
+  SCROLL_CHAT_DOWN: 'scroll_chat_down'
 };
 
 export const EventBus = new Vue();
