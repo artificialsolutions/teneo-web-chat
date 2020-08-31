@@ -42,49 +42,71 @@ export default {
     };
   },
   mounted() {
+    this.isIosSafari=detectIosSafari();
+
+    // Set the name of the hidden property and the change event for visibility
+    var hidden, visibilityChange; 
+    if (typeof document.hidden !== "undefined") { // Opera 12.10 and Firefox 18 and later support 
+      hidden = "hidden";
+      visibilityChange = "visibilitychange";
+    } else if (typeof document.msHidden !== "undefined") {
+      hidden = "msHidden";
+      visibilityChange = "msvisibilitychange";
+    } else if (typeof document.webkitHidden !== "undefined") {
+      hidden = "webkitHidden";
+      visibilityChange = "webkitvisibilitychange";
+    }
+
+    if(this.isIosSafari === true){
+      // Warn if the browser doesn't support addEventListener or the Page Visibility API
+      if ((typeof document.addEventListener === "undefined" || hidden === undefined)) {
+        console.log("This demo requires a browser, such as Google Chrome or Firefox, that supports the Page Visibility API.");
+      } else {
+        // Handle page visibility change   
+        document.addEventListener(visibilityChange, this.handleBrowserMinimize, false);
+      }
+    }
     
-      this.isIosSafari=detectIosSafari();
 
-      EventBus.$on(events.RESET_SESSION, () => {
-        this.minimize()
-        this.clearHistory()
-        this.closeSession()
-      });
+    EventBus.$on(events.RESET_SESSION, () => {
+      this.minimize()
+      this.clearHistory()
+      this.closeSession()
+    });
 
-      EventBus.$on(events.END_SESSION, () => {
-        this.closeSession()
-      });
+    EventBus.$on(events.END_SESSION, () => {
+      this.closeSession()
+    });
 
-      EventBus.$on(events.CLEAR_HISTORY, () => {
-        this.clearHistory()
-      });
+    EventBus.$on(events.CLEAR_HISTORY, () => {
+      this.clearHistory()
+    });
 
-      EventBus.$on(events.MAXIMIZE_WINDOW, async () => {
-        await this.maximize();
-      });
+    EventBus.$on(events.MAXIMIZE_WINDOW, async () => {
+      await this.maximize();
+    });
 
-      EventBus.$on(events.MINIMIZE_WINDOW, () => {
-        this.minimize();
-      });
+    EventBus.$on(events.MINIMIZE_WINDOW, () => {
+      this.minimize();
+    });
 
-      EventBus.$on(events.ADD_MESSAGE, async (message) => {
-        await this.$teneoApi._onMessageReceived(message);
-      });
+    EventBus.$on(events.ADD_MESSAGE, async (message) => {
+      await this.$teneoApi._onMessageReceived(message);
+    });
 
-      EventBus.$on(events.SEND_INPUT, (text,parameters,isSilent) => {
-        this.$teneoApi.sendBaseMessage(text,parameters,isSilent);
-      });
+    EventBus.$on(events.SEND_INPUT, (text,parameters,isSilent) => {
+      this.$teneoApi.sendBaseMessage(text,parameters,isSilent);
+    });
 
-      EventBus.$on(events.HIDE_TYPING_INDICATOR, (data)=> {
-        this.$teneoApi.hideTypingIndicator(data);
-      })
+    EventBus.$on(events.HIDE_TYPING_INDICATOR, (data)=> {
+      this.$teneoApi.hideTypingIndicator(data);
+    })
 
-      EventBus.$on(events.SHOW_TYPING_INDICATOR, (data)=> {
-        this.$teneoApi.showTypingIndicator(data);
-      })
+    EventBus.$on(events.SHOW_TYPING_INDICATOR, (data)=> {
+      this.$teneoApi.showTypingIndicator(data);
+    })
 
-      EventBus.$emit(events.API_STATE_READY);
-
+    EventBus.$emit(events.API_STATE_READY);
     },
   methods: {
     changeWindowState(chatWindowTargetState) {
@@ -179,6 +201,10 @@ export default {
         const data = {};
         data[API_KEY_VISIBILITY] = this.$store.getters.visibility;
         await handleExtension(API_ON_VISIBILITY_CHANGED, data);
+    },
+    async handleBrowserMinimize(){
+      //console.log('handleBrowserMinimize: '+document.hidden)
+      await this.minimize();
     }
   },
 };

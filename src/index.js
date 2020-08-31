@@ -81,7 +81,7 @@ window['TeneoWebChat'] = {
       handleExtension(apiConstants.API_ON_READY);
     });
 
-    var tmpVue = new Vue({
+    new Vue({
       render: (h) => h(TeneoWebChat, { props: { } }),
     }).$mount(element);
 
