@@ -19,10 +19,10 @@ NOTE: This readme contains high-level information about Teneo Web Chat. For full
 ### Adding the web chat UI to your site
 To add the web chat UI to your site, proceed as follows:
 
-##### Download teneo-web-chat.js
+#### Download teneo-web-chat.js
 Download the file `teneo-web-chat.js` from the [latest release on Github](https://github.com/artificialsolutions/teneo-web-chat/releases/) and add it to your site.
 
-##### Update pages
+#### Update pages
 Add the following code before the closing `</body>` tag to _each page_ where you want the web chat window to appear.
 
 ```
@@ -50,7 +50,7 @@ When adding the script to your site, note the following:
 * Make sure `/path/to/teneo-web-chat.js` is replaced with the correct path.
 * Make sure `https://some.teneo/engine-instance/` is updated to match the url of your engine.
 
-##### Initialization properties
+#### Initialization properties
 When initializing Teneo Web Chat, an object containing the initialization properties can be passed on. In the [code](#update-pages) above, an object called `teneoProps` is used to pass on the initialization properties. The following properties are supported:
 
 
