@@ -34,7 +34,7 @@
     "@babel/polyfill": "^7.10.4",
     "@babel/preset-env": "^7.10.4",
     "@babel/register": "^7.10.5",
-    "@vue/test-utils":  "^1.0.3",
+    "@vue/test-utils": "^1.0.3",
     "autoprefixer": "^9.8.5",
     "babel-loader": "^8.1.0",
     "body-scroll-lock": "^3.0.3",
