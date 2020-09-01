@@ -1,6 +1,6 @@
 # v3.0.0
 ## 02-09-2020
-*** THIS VERSION CONTAINS BREAKING CHANGES ***
+__*** THIS VERSION CONTAINS BREAKING CHANGES ***__
 * The file name of the Teneo Web Chat has been changed from `main.js` to `teneo-web-chat.js`.
 * CSS styles used by Teneo Web Chat are now prefixed with `twc-`. If you modified the look & feel by overriding the Teneo Web Chat CSS styles, you may need to rename some styles.
 * The code to embed Teneo Web Chat in your site has changed. When updating, make sure you update the embed code on all pages where Teneo Web Chat is made available.
