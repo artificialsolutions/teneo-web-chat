@@ -1,10 +1,13 @@
 <template>
   <div class="twc-image-message">
-    <img :src="imageUrl" :alt="altText"/>
+    <img :src="imageUrl" :alt="altText" @load="scrollChatUp"/>
   </div>
 </template>
 
 <script>
+
+import { EventBus, events } from '../../utils/event-bus.js';
+
 export default {
   name: 'ImageMessage',
   props: {
@@ -29,6 +32,11 @@ export default {
       return this.message.data.alt;
     },
   },
+  methods: {
+    scrollChatUp() {
+      EventBus.$emit(events.SCROLL_CHAT_DOWN);
+    }
+  }
 };
 </script>
 
