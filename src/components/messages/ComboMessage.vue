@@ -30,7 +30,7 @@
         </div>
       </div>
 
-      <div class="twc-combo-message" v-if="message.type==='twc-clickablelist'">
+      <div class="twc-combo-message" v-if="message.type==='clickablelist'">
         <div class="twc-clickablelist" :class="{ expired: replySent || isExpired}">
           <h5 class="twc-clickablelist-title" v-if="message.title">{{ message.title }}</h5>
           <ul class="twc-clickablelist-message" :class="{ replied: replySent || isExpired}">
@@ -47,7 +47,7 @@
 
       <div class="twc-combo-message" v-if="message.type==='image'">
         <div class="twc-image-message">
-          <img :src="message.image_url" :alt="message.alt" />
+          <img :src="message.image_url" :alt="message.alt" @load="scrollChatUp"/>
         </div>
       </div>
 
@@ -62,7 +62,7 @@
         </div>
       </div>
 
-      <div class="twc-combo-message" v-if="message.type==='mp4video'">
+      <div class="twc-combo-message" v-if="message.type==='filevideo'">
         <div class="twc-file-video">
           <video controls="1">
             <source :src="videoUrl(message.video_url)" type="video/mp4" />
@@ -140,8 +140,11 @@
   </ul>
 </template>
 <script>
+
 import { PARTICIPANT_BOT } from '../../utils/constants.js';
 import handleButtonClick from '../../utils/handle-button-click.js';
+import { EventBus, events } from '../../utils/event-bus.js';
+
 export default {
   name: 'ComboMessage',
   props: {
@@ -188,6 +191,9 @@ export default {
     videoUrl(url) {
       return url + '#t=0.1';
     },
+    scrollChatUp() {
+      EventBus.$emit(events.SCROLL_CHAT_DOWN);
+    }
   },
 };
 </script>
