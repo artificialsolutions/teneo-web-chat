@@ -1,8 +1,6 @@
 # Teneo Web Chat
 Teneo Web Chat is a chat widget that can be embedded in websites. Support for various components like buttons, quick replies, images, audio, videos and cards is built-in and the available Teneo Web Chat JavaScript API allows for easy live chat integration and extendability.
 
-![Teneo Web Chat UI](https://www.teneo.ai/engine/user/pages/04.channels/14.teneo-web-chat/main_chat.png)
-
 Core features:
 * Lightweight
 * Easy to embed in websites
@@ -10,6 +8,8 @@ Core features:
 * Extendable through a powerful Javascript API
 * Works on all major browsers like Chrome, Edge, Firefox, Internet Explorer 11, Opera and Safari. 
 * Open source
+
+NOTE: This readme contains high-level information about Teneo Web Chat. For full documentation, please refer to the [Teneo Web Chat Documentation](https://www.teneo.ai/engine/channels/teneo-web-chat) on teneo.ai.
 
 ## Prerequisites
 * Your bot needs to be published and you need to know the engine URL.
