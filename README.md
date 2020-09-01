@@ -23,7 +23,7 @@ To add the web chat UI to your site, proceed as follows:
 Download the file `teneo-web-chat.js` from the [latest release on Github](https://github.com/artificialsolutions/teneo-web-chat/releases/) and add it to your site.
 
 ##### Update pages
-Add the following code before the closing `&lt;/body&gt;` tag to _each page_ where you want the web chat window to appear.
+Add the following code before the closing `</body>` tag to _each page_ where you want the web chat window to appear.
 
 ```
 <!-- Teneo Web Chat start -->
