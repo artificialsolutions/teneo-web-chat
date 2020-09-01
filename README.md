@@ -28,7 +28,7 @@ Add the following code before the closing `</body>` tag to _each page_ where you
 ```
 <!-- Teneo Web Chat start -->
 <div id="teneo-web-chat"></div>
-<script src="[span class="text-danger"]/path/to/teneo-web-chat.js[/span]"></script>
+<script src="/path/to/teneo-web-chat.js"></script>
 <script>
   window.onload = function () {
     if (
@@ -36,8 +36,8 @@ Add the following code before the closing `</body>` tag to _each page_ where you
         typeof window.TeneoWebChat.initialize === 'function'
     ) {
       var element = document.getElementById('teneo-web-chat');
-      const [span class="text-warning"]teneoProps[/span] = {
-        'teneoEngineUrl': '[span class="text-danger"]https://some.teneo/engine-instance/[/span]',
+      const teneoProps = {
+        'teneoEngineUrl': 'https://some.teneo/engine-instance/',
       }
       window.TeneoWebChat.initialize(element,teneoProps);
     }
