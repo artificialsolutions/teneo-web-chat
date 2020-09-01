@@ -15,7 +15,7 @@ __*** THIS VERSION CONTAINS BREAKING CHANGES ***__
 * Support for typing indicators
 
 ### JAVASCRIPT API
-The new Tenoe Web Chat Javascript API allows you to trigger Teneo Web Chat events, respond to events that happen inside Teneo Web Chat and get details from Teneo Web Chat. This lets you change or extend its behavior in ways that are not provided by the standard configuration.
+The new Teneo Web Chat Javascript API allows you to trigger Teneo Web Chat events, respond to events that happen inside Teneo Web Chat and get details from Teneo Web Chat. This lets you change or extend its behavior in ways that are not provided by the standard configuration.
 * Trigger events
     * Maximize
     * Minimize
