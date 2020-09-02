@@ -6,7 +6,8 @@ Core features:
 * Easy to embed in websites
 * Supports various message types, like cards, images, buttons, quick replies etc.
 * Extendable through a powerful Javascript API
-* Works on all major browsers like Chrome, Edge, Firefox, Internet Explorer 11, Opera and Safari. 
+* Works on all major browsers like Chrome, Edge, Firefox, Internet Explorer 11, Opera and Safari
+* Works on mobile devices
 * Open source
 
 NOTE: This readme contains high-level information about Teneo Web Chat. For full documentation, please refer to the [Teneo Web Chat Documentation](https://www.teneo.ai/engine/channels/teneo-web-chat) on teneo.ai.
