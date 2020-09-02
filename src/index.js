@@ -12,6 +12,7 @@ import { store } from '../src/store/store.js';
 var functionMap = new Map();
 const validFunctionNames = Object.values(apiConstants)
 const messageList = new messageListCache();
+let isInitialised = false;
 
 window['TeneoWebChat'] = {
   initialize(element, twcProps) {
@@ -85,33 +86,41 @@ window['TeneoWebChat'] = {
       render: (h) => h(TeneoWebChat, { props: { } }),
     }).$mount(element);
 
+    // after initializing, freeze the boolean
+    // we use this to prevent people from registering 'on' events after the page has loaded
+    isInitialised = true;
+    Object.freeze(isInitialised);
+
   },
   on(function_name, func){
 
-    // this 'on' method is called each time someone registers
-    // a 'function_name' (ready, visibility_change, engine_response etc)
+    // prevent people from registering 'on' events after teneo web chat was initialized
+    if (isInitialised === false) {
+      // this 'on' method is called each time someone registers
+      // a 'function_name' (ready, visibility_change, engine_response etc)
 
-    // only continue if function name provided is valid
-    if (!validFunctionNames.includes(function_name)) {
-      // TODO: thow error if invalid function_name was provided?
-      return
+      // only continue if function name provided is valid
+      if (!validFunctionNames.includes(function_name)) {
+        // TODO: thow error if invalid function_name was provided?
+        return
+      }
+      
+      // devs may register same function name multiple times 
+      // so we need keep a list of callback functions per 'function_name'
+
+      // fist initialize an empty list
+      var callbackFunctions = [];
+
+      // if we already have callbacks for an api function_name, get them
+      if (functionMap.get(function_name)) {
+        callbackFunctions = functionMap.get(function_name)
+      }
+      // then add the new callback function to the list
+      callbackFunctions.push(func)
+
+      // store the list of callbacks function for this 'function_name'
+      functionMap.set(function_name,callbackFunctions);
     }
-    
-    // devs may register same function name multiple times 
-    // so we need keep a list of callback functions per 'function_name'
-
-    // fist initialize an empty list
-    var callbackFunctions = [];
-
-    // if we already have callbacks for an api function_name, get them
-    if (functionMap.get(function_name)) {
-      callbackFunctions = functionMap.get(function_name)
-    }
-    // then add the new callback function to the list
-    callbackFunctions.push(func)
-
-    // store the list of callbacks function for this 'function_name'
-    functionMap.set(function_name,callbackFunctions);
   },
   off(function_name){
     functionMap.delete(function_name);
@@ -245,3 +254,4 @@ window['TeneoWebChat'] = {
     return API_VERSION;
   },
 };
+Object.freeze(window['TeneoWebChat']);
