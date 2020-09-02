@@ -8,7 +8,7 @@ export const CHANNEL_PARAM = 'teneo-webchat';
 export const BUBBLE_DELAY = 600;
 
 // api version
-export const API_VERSION = "2.5.1";
+export const API_VERSION = "3.0.0";
 
 // state object keys
 export const API_KEY_VISIBILITY = "visibility";
