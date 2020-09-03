@@ -11,7 +11,7 @@ __*** THIS VERSION CONTAINS BREAKING CHANGES ***__
 * New message type 'System message'
 * Option to show both a minimize and close button in header
 * Text messages can now contain an avatar icon and a date line
-* Support for message author type 'agent' (in addtion to the already existing author types 'bot' and 'user')
+* Support for message author type 'agent' (in addition to the already existing author types 'bot' and 'user')
 * Support for typing indicators
 
 ### JAVASCRIPT API
@@ -51,7 +51,8 @@ The new Teneo Web Chat Javascript API allows you to trigger Teneo Web Chat event
 * Improved support for iOS
 * Fix error in console about scrolling
 * Fix scrolling issue when displaying large images
-* Improved layout of buttons with long text
+* Fix layout of buttons with long text
+* Streamlined initialization parameters
 * Updated dependencies
 
 # v2.5.1
