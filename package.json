@@ -51,7 +51,6 @@
     "nock": "^10.0.6",
     "node-sass": "^4.14.1",
     "postcss-cli": "^7.1.1",
-    "postcss-custom-properties": "^9.1.1",
     "postcss-loader": "^3.0.0",
     "postcss-nested": "^4.2.3",
     "precss": "^4.0.0",
