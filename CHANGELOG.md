@@ -46,7 +46,7 @@ The new Teneo Web Chat Javascript API allows you to trigger Teneo Web Chat event
     * Get message list
     * Get engine URL
 
-### IMPROVEMENTS
+### IMPROVEMENTS AND FIXES
 * Icons used in the UI can now be configured
 * Improved support for iOS
 * Fix error in console about scrolling
