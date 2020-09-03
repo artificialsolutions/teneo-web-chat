@@ -1,37 +1,37 @@
 <template>
-  <div class="card" :class="{ expired: replySent || isExpired }">
-    <div class="card-img" v-if="imageUrl">
+  <div class="twc-card" :class="{ expired: replySent || isExpired }">
+    <div class="twc-card-img" v-if="imageUrl">
       <img :src="imageUrl" :alt="altText" />
     </div>
-    <div class="card-body" v-if="cardTitle || cardSubtitle || messageText">
-      <h5 class="card-title" v-if="cardTitle">{{ cardTitle }}</h5>
-      <h6 class="card-subtitle" v-if="cardSubtitle">{{ cardSubtitle }}</h6>
-      <p class="card-text" v-if="messageText">{{ messageText }}</p>
+    <div class="twc-card-body" v-if="cardTitle || cardSubtitle || messageText">
+      <h5 class="twc-card-title" v-if="cardTitle">{{ cardTitle }}</h5>
+      <h6 class="twc-card-subtitle" v-if="cardSubtitle">{{ cardSubtitle }}</h6>
+      <p class="twc-card-text" v-if="messageText">{{ messageText }}</p>
     </div>
-    <div class="clickablelist" :class="{ expired: replySent || isExpired}" v-if="clickablelistitems">
-      <ul class="clickablelist-message" :class="{ replied: replySent}">
+    <div class="twc-clickablelist" :class="{ expired: replySent || isExpired}" v-if="clickablelistitems">
+      <ul class="twc-clickablelist-message" :class="{ replied: replySent}">
         <li
           v-for="(reply, idx) in clickablelistitems"
           :key="idx"
-          class="clickablelist-message__item"
+          class="twc-clickablelist-message__item"
           :class="{ selected: replySent && selected === idx }"
           @click="onSelect(reply, idx)"
         >{{ reply.title }}</li>
       </ul>
     </div>
-    <div class="buttons" :class="{ expired: replySent || isExpired}" v-if="buttonitems">
+    <div class="twc-buttons" :class="{ expired: replySent || isExpired}" v-if="buttonitems">
       <div>
         <a
           role="button"
           v-for="(button, idx) in buttonitems"
           :key="idx"
-          class="btn"
-          :class="{ selected: replySent && selected === idx, 'primary': button.style == 'primary', 'secondary': button.style == 'secondary', 'success': button.style == 'success', 'danger': button.style == 'danger', 'warning': button.style == 'warning', 'info': button.style == 'info'}"
+          class="twc-btn"
+          :class="{ selected: replySent && selected === idx, 'twc-primary': button.style == 'primary', 'twc-secondary': button.style == 'secondary', 'twc-success': button.style == 'success', 'twc-danger': button.style == 'danger', 'twc-warning': button.style == 'warning', 'twc-info': button.style == 'info'}"
           @click="onSelect(button, idx)"
         >{{ button.title }}</a>
       </div>
     </div>
-    <div class="links" v-if="linkitems">
+    <div class="twc-links" v-if="linkitems">
       <div>
         <a
           v-for="(link, idx) in linkitems"
@@ -46,6 +46,7 @@
 <script>
 import { PARTICIPANT_BOT } from '../../utils/constants.js';
 import sanitizeHtml from '../../utils/sanitize-html.js';
+import handleButtonClick from '../../utils/handle-button-click.js';
 
 export default {
   name: 'CardMessage',
@@ -114,15 +115,7 @@ export default {
   methods: {
     async onSelect(reply, idx) {
       if (!this.replySent) {
-        const numMessages = this.$teneoApi.messageList.length;
-        const messages = this.$teneoApi.messageList.slice(0, numMessages - 1);
-        const dynamiclistMessage = this.$teneoApi.messageList[numMessages - 1];
-
-        const selectedItem = { ...dynamiclistMessage, selected: idx };
-
-        this.$teneoApi.messageList = [...messages, selectedItem];
-
-        await this.$teneoApi.sendSilentMessage(reply.postback);
+        await handleButtonClick(reply, idx, this.$teneoApi)
       }
     },
   },
@@ -130,7 +123,7 @@ export default {
 </script>
 
 <style>
-.card {
+.twc-card {
   width: 100%;
   margin-right: 40px;
   min-width: 0;
@@ -146,11 +139,11 @@ export default {
   border-radius: 0.25rem;
   border-bottom-left-radius: 0px;
 }
-.card-img {
+.twc-card-img {
   display: flex;
 }
 
-.card-img img {
+.twc-card-img img {
   object-fit: cover;
   width: 100%;
   height: 180px;
@@ -158,31 +151,31 @@ export default {
   border-top-right-radius: calc(0.25rem - 1px);
 }
 
-.card-body {
+.twc-card-body {
   padding: 14px 14px 6px 14px;
 }
 
-.card-body h5,
-.card .card-body h6 {
+.twc-card-body h5,
+.twc-card .twc-card-body h6 {
   font-family: inherit;
   line-height: 1.2;
   margin-top: 0;
   margin-bottom: 0.6rem;
 }
 
-.card-body h5 {
+.twc-card-body h5 {
   font-size: 1.25rem;
   font-weight: 500;
   color: var(--bot-message-fg-color, #263238);
 }
 
-.card-body h6 {
+.twc-card-body h6 {
   font-size: 1rem;
   font-weight: 500;
   color: #6c757d !important;
 }
 
-.card-text {
+.twc-card-text {
   font-weight: 400;
   font-size: 0.9em;
   line-height: 1.6;
@@ -193,50 +186,50 @@ export default {
   margin-bottom: 0.6rem;
 }
 
-.card .clickablelist-message__item {
+.twc-card .twc-clickablelist-message__item {
   border-left: none;
   border-right: none;
 }
 
-.card .clickablelist-message__item:first-child {
+.twc-card .twc-clickablelist-message__item:first-child {
   border-top: 1px solid var(--light-border-color, #c9c9c9);
   border-top-left-radius: initial;
   border-top-right-radius: initial;
 }
 
-.card .clickablelist-message__item:last-child {
+.twc-card .twc-clickablelist-message__item:last-child {
   border-bottom-left-radius: initial;
   border-bottom-right-radius: initial;
   border-bottom: none;
 }
 
-.card .buttons {
+.twc-card .twc-buttons {
   text-align: center;
   border-top: 1px solid var( --light-border-color, #c9c9c9);
   padding: 12px;
 }
 
-.card .links {
+.twc-card .twc-links {
   border-top: 1px solid var( --light-border-color, #c9c9c9);
   padding: 12px;
 }
 
-.card .links a {
+.twc-card .twc-links a {
   color: var(--card-link-color, #007bff);
   font-size: 0.9rem;
   padding-right: 10px;
   text-decoration: none;
 }
 
-.card .links a:hover {
+.twc-card .twc-links a:hover {
   text-decoration: underline;
 }
 
-.card .links a:last-child {
+.twc-card .twc-links a:last-child {
   padding-right: 0px;
 }
 
-.card .btn {
+.twc-card .twc-btn {
   min-width: 50px !important;
   margin-top: 3px;
 }

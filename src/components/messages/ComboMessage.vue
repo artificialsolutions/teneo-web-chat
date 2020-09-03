@@ -1,43 +1,43 @@
 <template>
-  <ul class="combo" :class="{ replied: replySent}">
+  <ul class="twc-combo" :class="{ replied: replySent}">
     <li v-for="(message, idx) in comboitems" :key="idx">
-      <div class="combo-message" v-if="message.type==='text'">
-        <div class="text-message" :class="messageSource">
-          <p class="text-message__text" v-html="message.text"></p>
+      <div class="twc-combo-message" v-if="message.type==='text'">
+        <div class="twc-text-message" :class="messageSource">
+          <p class="twc-text-message__text" v-html="message.text"></p>
         </div>
       </div>
 
-      <div class="combo-message" v-if="message.type==='audio'">
-        <div class="audio-message">
+      <div class="twc-combo-message" v-if="message.type==='audio'">
+        <div class="twc-audio-message">
           <audio controls>
             <source :src="message.audio_url"/>
           </audio>
         </div>
       </div>
 
-      <div class="combo-message" v-if="message.type==='quickreply'">
-        <div class="quickreply-message" :class="{ expired: replySent || isExpired }">
+      <div class="twc-combo-message" v-if="message.type==='quickreply'">
+        <div class="twc-quickreply-message" :class="{ expired: replySent || isExpired }">
           <div>
             <a
               v-for="(reply, idx) in message.quick_replies"
               :key="idx"
               role="button"
-              class="quickreply-message__item"
-              :class="{ selected: replySent && selected === idx, 'primary': reply.style == 'primary', 'secondary': reply.style == 'secondary', 'success': reply.style == 'success', 'danger': reply.style == 'danger', 'warning': reply.style == 'warning', 'info': reply.style == 'info'}"
+              class="twc-quickreply-message__item"
+              :class="{ selected: replySent && selected === idx, 'twc-primary': reply.style == 'primary', 'twc-secondary': reply.style == 'secondary', 'twc-success': reply.style == 'success', 'twc-danger': reply.style == 'danger', 'twc-warning': reply.style == 'warning', 'twc-info': reply.style == 'info'}"
               @click="onSelect(reply, idx)"
             >{{ reply.title }}</a>
           </div>
         </div>
       </div>
 
-      <div class="combo-message" v-if="message.type==='clickablelist'">
-        <div class="clickablelist" :class="{ expired: replySent || isExpired}">
-          <h5 class="clickablelist-title" v-if="message.title">{{ message.title }}</h5>
-          <ul class="clickablelist-message" :class="{ replied: replySent || isExpired}">
+      <div class="twc-combo-message" v-if="message.type==='clickablelist'">
+        <div class="twc-clickablelist" :class="{ expired: replySent || isExpired}">
+          <h5 class="twc-clickablelist-title" v-if="message.title">{{ message.title }}</h5>
+          <ul class="twc-clickablelist-message" :class="{ replied: replySent || isExpired}">
             <li
               v-for="(reply, idx) in message.list_items"
               :key="idx +'ql'"
-              class="clickablelist-message__item"
+              class="twc-clickablelist-message__item"
               :class="{ selected: replySent && selected === idx +'ql' }"
               @click="onSelect(reply, idx +'ql')"
             >{{ reply.title }}</li>
@@ -45,14 +45,14 @@
         </div>
       </div>
 
-      <div class="combo-message" v-if="message.type==='image'">
-        <div class="image-message">
-          <img :src="message.image_url" :alt="message.alt" />
+      <div class="twc-combo-message" v-if="message.type==='image'">
+        <div class="twc-image-message">
+          <img :src="message.image_url" :alt="message.alt" @load="scrollChatUp"/>
         </div>
       </div>
 
-      <div class="combo-message" v-if="message.type==='youtubevideo'">
-        <div class="twc_youtubevideo">
+      <div class="twc-combo-message" v-if="message.type==='youtubevideo'">
+        <div class="twc-youtube-video">
           <iframe
             :src="message.video_url"
             frameborder="0"
@@ -62,70 +62,70 @@
         </div>
       </div>
 
-      <div class="combo-message" v-if="message.type==='mp4video'">
-        <div class="twc_videofile">
+      <div class="twc-combo-message" v-if="message.type==='filevideo'">
+        <div class="twc-file-video">
           <video controls="1">
             <source :src="videoUrl(message.video_url)" type="video/mp4" />
           </video>
         </div>
       </div>
       
-      <div class="combo-message" v-if="message.type==='vimeovideo'">
-        <div class="twc_vimeovideo">
+      <div class="twc-combo-message" v-if="message.type==='vimeovideo'">
+        <div class="twc-vimeo-video">
           <iframe :src="message.video_url" frameborder="0" allowfullscreen allowtransparency allow></iframe>
         </div>
       </div>
 
-      <div class="combo-message" v-if="message.type==='buttons'">
-        <div class="buttons" :class="{ expired: replySent || isExpired}">
-            <h5 class="buttons-title" v-if="message.title">{{ message.title }}</h5>
+      <div class="twc-combo-message" v-if="message.type==='buttons'">
+        <div class="twc-buttons" :class="{ expired: replySent || isExpired}">
+            <h5 class="twc-buttons-title" v-if="message.title">{{ message.title }}</h5>
             <div>
               <a
                 role="button"
                 v-for="(button, idx) in message.button_items"
                 :key="idx +'btn'"
-                class="btn"
-                :class="{ selected: replySent && selected === idx +'btn', 'primary': button.style == 'primary', 'secondary': button.style == 'secondary', 'success': button.style == 'success', 'danger': button.style == 'danger', 'warning': button.style == 'warning', 'info': button.style == 'info'}"
+                class="twc-btn"
+                :class="{ selected: replySent && selected === idx +'btn', 'twc-primary': button.style == 'primary', 'twc-secondary': button.style == 'secondary', 'twc-success': button.style == 'success', 'twc-danger': button.style == 'danger', 'twc-warning': button.style == 'warning', 'twc-info': button.style == 'info'}"
                 @click="onSelect(button, idx +'btn')"
               >{{ button.title }}</a>
             </div>
           </div>
       </div>
 
-      <div class="combo-message" v-if="message.type==='card'">
-        <div class="card">
-            <div class="card-img" v-if="message.image">
+      <div class="twc-combo-message" v-if="message.type==='card'">
+        <div class="twc-card">
+            <div class="twc-card-img" v-if="message.image">
               <img :src="message.image.image_url" :alt="message.image.alt" />
             </div>
-            <div class="card-body" v-if="message.title || message.subtitle || message.text">
-              <h5 class="card-title" v-if="message.title">{{ message.title }}</h5>
-              <h6 class="card-subtitle" v-if="message.subtitle">{{ message.subtitle }}</h6>
-              <p class="card-text" v-if="message.text">{{ message.text }}</p>
+            <div class="twc-card-body" v-if="message.title || message.subtitle || message.text">
+              <h5 class="twc-card-title" v-if="message.title">{{ message.title }}</h5>
+              <h6 class="twc-card-subtitle" v-if="message.subtitle">{{ message.subtitle }}</h6>
+              <p class="twc-card-text" v-if="message.text">{{ message.text }}</p>
             </div>
-            <div class="clickablelist" :class="{ expired: replySent || isExpired}" v-if="message.list_items">
-              <ul class="clickablelist-message" :class="{ replied: replySent}">
+            <div class="twc-clickablelist" :class="{ expired: replySent || isExpired}" v-if="message.list_items">
+              <ul class="twc-clickablelist-message" :class="{ replied: replySent}">
                 <li
                   v-for="(reply, idx) in message.list_items"
                   :key="idx +'cql'"
-                  class="clickablelist-message__item"
+                  class="twc-clickablelist-message__item"
                   :class="{ selected: replySent && selected === idx +'cql' }"
                   @click="onSelect(reply, idx +'cql')"
                 >{{ reply.title }}</li>
               </ul>
             </div>
-            <div class="buttons" :class="{ expired: replySent || isExpired}" v-if="message.button_items">
+            <div class="twc-buttons" :class="{ expired: replySent || isExpired}" v-if="message.button_items">
               <div>
                 <a
                   role="button"
                   v-for="(button, idx) in message.button_items"
                   :key="idx +'cbtn'"
-                  class="btn"
-                  :class="{ selected: replySent && selected === idx +'cbtn', 'primary': button.style == 'primary', 'secondary': button.style == 'secondary', 'success': button.style == 'success', 'danger': button.style == 'danger', 'warning': button.style == 'warning', 'info': button.style == 'info'}"
+                  class="twc-btn"
+                  :class="{ selected: replySent && selected === idx +'cbtn', 'twc-primary': button.style == 'primary', 'twc-secondary': button.style == 'secondary', 'twc-success': button.style == 'success', 'twc-danger': button.style == 'danger', 'twc-warning': button.style == 'warning', 'twc-info': button.style == 'info'}"
                   @click="onSelect(button, idx +'cbtn')"
                 >{{ button.title }}</a>
               </div>
             </div>
-            <div class="links" v-if="message.link_items">
+            <div class="twc-links" v-if="message.link_items">
               <div>
                 <a
                   v-for="(link, idx) in message.link_items"
@@ -139,9 +139,11 @@
     </li>
   </ul>
 </template>
-
 <script>
+
 import { PARTICIPANT_BOT } from '../../utils/constants.js';
+import handleButtonClick from '../../utils/handle-button-click.js';
+import { EventBus, events } from '../../utils/event-bus.js';
 
 export default {
   name: 'ComboMessage',
@@ -183,26 +185,21 @@ export default {
   methods: {
     async onSelect(reply, idx) {
       if (!this.replySent) {
-        const numMessages = this.$teneoApi.messageList.length;
-        const messages = this.$teneoApi.messageList.slice(0, numMessages - 1);
-        const comboMessage = this.$teneoApi.messageList[numMessages - 1];
-
-        const selectedItem = { ...comboMessage, selected: idx };
-
-        this.$teneoApi.messageList = [...messages, selectedItem];
-
-        await this.$teneoApi.sendSilentMessage(reply.postback);
+        await handleButtonClick(reply, idx, this.$teneoApi)
       }
     },
     videoUrl(url) {
       return url + '#t=0.1';
     },
+    scrollChatUp() {
+      EventBus.$emit(events.SCROLL_CHAT_DOWN);
+    }
   },
 };
 </script>
 
 <style>
-.combo {
+.twc-combo {
   display: flex;
   flex-direction: column;
   justify-content: center;
@@ -212,7 +209,7 @@ export default {
   width: 100%;
 }
 
-.combo-message {
+.twc-combo-message {
   width: 100%;
   min-width: 300px;
   padding-bottom: 10px;
@@ -222,13 +219,13 @@ export default {
 </style>
 
 <style scoped>
-.buttons {
+.twc-buttons {
   width: 100%;
   margin: -3px 47px -3px -3px;
   text-align: center;
 }
 
-.btn {
+.twc-btn {
   min-width: 62px;
 }
 </style>

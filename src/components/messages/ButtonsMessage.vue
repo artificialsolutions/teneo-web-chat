@@ -1,13 +1,13 @@
 <template>
-  <div class="buttons" :class="{ expired: replySent || isExpired}">
-    <h5 class="buttons-title" v-if="buttonsTitle">{{ buttonsTitle }}</h5>
+  <div class="twc-buttons" :class="{ expired: replySent || isExpired}">
+    <h5 class="twc-buttons-title" v-if="buttonsTitle">{{ buttonsTitle }}</h5>
     <div>
       <a
         role="button"
         v-for="(button, idx) in buttonitems"
         :key="idx"
-        class="btn"
-        :class="{ selected: replySent && selected === idx, 'primary': button.style == 'primary', 'secondary': button.style == 'secondary', 'success': button.style == 'success', 'danger': button.style == 'danger', 'warning': button.style == 'warning', 'info': button.style == 'info'}"
+        class="twc-btn"
+        :class="{ selected: replySent && selected === idx, 'twc-primary': button.style == 'primary', 'twc-secondary': button.style == 'secondary', 'twc-success': button.style == 'success', 'twc-danger': button.style == 'danger', 'twc-warning': button.style == 'warning', 'twc-info': button.style == 'info'}"
         @click="onSelect(button, idx)"
       >{{ button.title }}</a>
     </div>
@@ -15,6 +15,9 @@
 </template>
 
 <script>
+
+import handleButtonClick from '../../utils/handle-button-click.js';
+
 export default {
   name: 'ButtonsMessage',
   props: {
@@ -59,23 +62,14 @@ export default {
       if (this.replySent || this.isExpired) {
         return;
       }
-
-      const numMessages = this.$teneoApi.messageList.length;
-      const messages = this.$teneoApi.messageList.slice(0, numMessages - 1);
-      const quickreplyMessage = this.$teneoApi.messageList[numMessages - 1];
-
-      const selectedQuickReply = { ...quickreplyMessage, selected: idx };
-
-      this.$teneoApi.messageList = [...messages, selectedQuickReply];
-
-      await this.$teneoApi.sendSilentMessage(button.postback);
+      await handleButtonClick(button, idx, this.$teneoApi)
     },
   },
 };
 </script>
 
 <style scoped>
-.buttons {
+.twc-buttons {
   width: 100%;
   margin: -3px;
   margin-right: 37px;
@@ -85,14 +79,13 @@ export default {
 
 <style>
 
-.btn {
+.twc-btn {
   border: 1px solid var(--button-bg-color, #4e8cff);
   background: var(--button-bg-color, #4e8cff);
   color: var(--button-fg-color, #ffffff);
   cursor: pointer;
   font-weight: 400;
   text-align: center;
-  white-space: nowrap;
   vertical-align: middle;
   -webkit-user-select: none;
   -moz-user-select: none;
@@ -108,33 +101,33 @@ export default {
   text-decoration: none;
 }
 
-.btn.selected,
-.btn:not(.expired) .btn:hover {
+.twc-btn.selected,
+.twc-btn:not(.expired) .twc-btn:hover {
   color: var(--button-bg-color, #4e8cff);
   background: var(--button-fg-color, #ffffff);
 }
 
-.buttons.selected,
-.buttons:not(.expired) .btn:hover {
+.twc-buttons.selected,
+.twc-buttons:not(.expired) .twc-btn:hover {
   color: var(--button-bg-color, #4e8cff);
   background: var(--button-fg-color, #ffffff);
 }
 
-.buttons.expired .btn {
+.twc-buttons.expired .twc-btn {
   cursor: default;
   color: var(--expired-color, #a9a9a9);
   background: var(--button-fg-color, #ffffff);
   border: 1px solid var(--expired-color, #a9a9a9);
 }
 
-.buttons.expired .btn.selected {
+.twc-buttons.expired .twc-btn.selected {
   cursor: default;
   color: var(--button-fg-color, #ffffff);
   background: var(--expired-color, #a9a9a9);
   border: 1px solid var(--expired-color, #a9a9a9);
 }
 
-.buttons h5 {
+.twc-buttons h5 {
   text-align: center;
   font-family: inherit;
   line-height: 1.2;
@@ -145,61 +138,53 @@ export default {
   color: var(--buttons-title-color, #263238);
 }
 
-.buttons.expired h5 {
+.twc-buttons.expired h5 {
   color: var(--expired-color, #a9a9a9);
 }
 
-/* a.btn:first-child {
-  margin-left: 0px !important;
-}
-
-a.btn:last-child {
-  margin-right: 0px !important;
-} */
-
-.btn.secondary {
+.twc-btn.twc-secondary {
   background: var(--secondary-color, #6c757d);
   border-color: var(--secondary-color, #6c757d);
 }
 
-.buttons:not(.expired) .btn.secondary:hover {
+.twc-buttons:not(.expired) .twc-btn.twc-secondary:hover {
   color: var(--secondary-color, #6c757d) !important;
 }
 
-.btn.success {
+.twc-btn.twc-success {
   background: var(--success-color, #28a745);
   border-color: var(--success-color, #28a745);
 }
 
-.buttons:not(.expired) .btn.success:hover {
+.twc-buttons:not(.expired) .twc-btn.twc-success:hover {
   color: var(--success-color, #28a745) !important;
 }
 
-.btn.warning {
+.twc-btn.twc-warning {
   background: var(--warning-color, #ffc107);
   border-color: var(--warning-color, #ffc107);
   color: var(--dark-fg-color, #263238);
 }
 
-.buttons:not(.expired) .btn.warning:hover {
+.twc-buttons:not(.expired) .twc-btn.twc-warning:hover {
   color: var(--warning-color, #ffc107) !important;
 }
 
-.btn.danger {
+.twc-btn.twc-danger {
   background: var(--danger-color, #dc3545);
   border-color: var(--danger-color, #dc3545);
 }
 
-.buttons:not(.expired) .btn.danger:hover {
+.twc-buttons:not(.expired) .twc-btn.twc-danger:hover {
   color: var(--danger-color, #dc3545) !important;
 }
 
-.btn.info {
+.twc-btn.twc-info {
   background: var(--info-color, #17a2b8);
   border-color: var(--info-color, #17a2b8);
 }
 
-.buttons:not(.expired) .btn.info:hover {
+.twc-buttons:not(.expired) .twc-btn.twc-info:hover {
   color: var(--info-color, #17a2b8) !important;
 }
 

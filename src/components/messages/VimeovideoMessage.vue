@@ -1,5 +1,5 @@
 <template>
-  <div class="twc_vimeovideo">
+  <div class="twc-vimeo-video">
         <iframe
           :src="videoUrl"
           frameborder="0"
@@ -34,7 +34,7 @@ export default {
 </script>
 
 <style>
-.twc_vimeovideo {
+.twc-vimeo-video {
   width: 100%;
   margin-right: 40px;
   min-width: 260px;

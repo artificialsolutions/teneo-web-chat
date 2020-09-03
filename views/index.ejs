@@ -6,15 +6,14 @@
     <meta name="viewport" content="width=device-width, height=device-height, initial-scale=1.0 user-scalable=no">
     <style>
       body {
-        background: #f9fbe7;
+        background: #E5F5FE;
       }
     </style>
   </head>
 
   <body>
-    <button onclick="window.TeneoWebChat.resetChat()">Reset Chat</button>
+    <button onclick="TeneoWebChat.call('reset')">Reset Chat</button><br>
     <div id="teneo-web-chat"></div>
-    <script src="main.js"></script>
     <script>
       window.onload = function () {
         if (
@@ -23,13 +22,20 @@
         ) {
           var element = document.getElementById('teneo-web-chat');
 
-          window.TeneoWebChat.initialize(
-            element,
-            '<%= process.env.HEADER_TITLE %>',
-            '<%= process.env.TENEO_ENGINE_URL %>',
-            '<%= process.env.CLOSE_TIE_SESSION_ON_EXIT %>',
-            '<%= process.env.HEADER_ICON_URL %>'
-          );
+          const teneoProps = {
+            'teneoEngineUrl': '<%= process.env.TENEO_ENGINE_URL %>',
+            'title':'<%= process.env.HEADER_TITLE %>',
+            'titleIconUrl': '<%= process.env.HEADER_ICON_URL %>',
+            'showCloseButton' : '<%= process.env.SHOW_CLOSE_BUTTON %>',
+            'agentAvatarUrl' : '<%= process.env.AGENT_AVATAR_URL %>',
+            'botAvatarUrl' : '<%= process.env.BOT_AVATAR_URL %>',
+            'userAvatarUrl' : '<%= process.env.USER_AVATAR_URL %>',
+            'minimizeIconUrl' :  '<%= process.env.MINIMIZE_ICON_URL %>',
+            'closeIconUrl' :  '<%= process.env.CLOSE_ICON_URL %>',
+            'launchIconUrl' :  '<%= process.env.LAUNCH_ICON_URL %>',
+          }
+
+          window.TeneoWebChat.initialize(element, teneoProps);
         }
       }
     </script>

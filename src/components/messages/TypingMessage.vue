@@ -5,10 +5,13 @@
     <p class="twc-dateline" :class="messageSource" v-if="dateline" v-html="dateline"></p>
     <div class="twc-textwrap" :class="messageSource">
       <div v-if="avatarUrl" class="twc-avatar" :class="messageSource"><img :src="avatarUrl"></div>
-      <div class="twc-text-message" :class="messageSource">
+      <div class="twc-typing-message" :class="messageSource">        
+        <div class="twc-spinner">
+          <div class="twc-bounce1"></div>
+          <div class="twc-bounce2"></div>
+          <div class="twc-bounce3"></div>
+        </div>
         <!-- eslint-disable-next-line vue/no-v-html -->
-        <p v-if="isBot" class="twc-text-message__text" v-html="sanitizedHtmlText"></p>
-        <p v-else class="twc-text-message__text">{{ messageText }}</p>
       </div>
     </div>
     
@@ -17,14 +20,14 @@
 
 <script>
 import { PARTICIPANT_BOT } from '../../utils/constants.js';
-import sanitizeHtml from '../../utils/sanitize-html.js';
 import isValidUrl from '../../utils/validate-url';
+import sanitizeHtml from '../../utils/sanitize-html.js';
 import { mapState } from 'vuex';
 import Vue from 'vue';
 const tmpVue = new Vue();
 
 export default {
-  name: 'TextMessage',
+  name: 'TypingMessage',
   props: {
     message: {
       type: Object,
@@ -32,17 +35,13 @@ export default {
       validator: (message) => {
         return (
           message &&
-          message.type === 'text' &&
-          message.data &&
-          message.data.text
+          message.type === 'typing' &&
+          message.author
         );
       },
     },
   },
   computed: {
-    messageText() {
-      return this.message.data.text;
-    },
     messageSource() {
       return this.message.author;
     },
@@ -53,9 +52,6 @@ export default {
     },
     isBot() {
       return this.message.author === PARTICIPANT_BOT;
-    },
-    sanitizedHtmlText() {
-      return sanitizeHtml(this.message.data.text);
     },
     avatarUrl() {
       if (this.message.data && this.message.data.avatarUrl && isValidUrl(this.message.data.avatarUrl)) {
@@ -78,23 +74,58 @@ export default {
 </script>
 
 <style>
+.twc-typing-message .twc-spinner {
+  margin: 4px 0 8px 0;
+  width: 28px;
+  text-align: center;
+}
+
+.twc-typing-message  .twc-spinner > div {
+  width: 6px;
+  height: 6px;
+  background-color: var(--light-fg-color, #6c757d);
+  border-radius: 100%;
+  display: inline-block;
+  -webkit-animation: twc-sk-bouncedelay 1.4s infinite ease-in-out both;
+  animation: twc-sk-bouncedelay 1.4s infinite ease-in-out both;
+}
+
+.twc-typing-message.bot  .twc-spinner > div {
+  background-color: var(--secondary-color, #6c757d);
+}
+
+.twc-typing-message .twc-spinner .twc-bounce1 {
+  -webkit-animation-delay: -0.32s;
+  animation-delay: -0.32s;
+}
+
+.twc-typing-message .twc-spinner .twc-bounce2 {
+  -webkit-animation-delay: -0.16s;
+  animation-delay: -0.16s;
+}
+
+@-webkit-keyframes twc-sk-bouncedelay {
+  0%, 80%, 100% { -webkit-transform: scale(0) }
+  40% { -webkit-transform: scale(1.0) }
+}
+
+@keyframes twc-sk-bouncedelay {
+  0%, 80%, 100% { 
+    -webkit-transform: scale(0);
+    transform: scale(0);
+  } 40% { 
+    -webkit-transform: scale(1.0);
+    transform: scale(1.0);
+  }
+}
+
 .twc-wrap.user {
   max-width: calc(100% - 84px);
 }
 
-_:-ms-fullscreen, :root .twc-wrap.bot, :root .twc-wrap.agent {
+_:-ms-fullscreen, :root .twc-wrap.bot {
   max-width: calc(100% - 1px);
 }
-
-_:-ms-fullscreen, :root .twc-wrap.user  {
-  max-width: calc(100% - 86px);
-  margin-left: 85px
-}
-
-
-
-
-
 .twc-dateline {
   font-weight: 400;
   font-size: 0.7em;
@@ -107,79 +138,28 @@ _:-ms-fullscreen, :root .twc-wrap.user  {
 .twc-dateline.user {
   text-align: right;
 }
-.twc-text-message {
+.twc-typing-message {
   padding: 6px 18px;
   border-radius: 10px;
-  font-weight: 300;
   font-size: 0.9em;
   line-height: 1.4;
-  -webkit-font-smoothing: subpixel-antialiased;
 }
-.twc-text-message.bot {
-  color: var(--bot-message-fg-color, #263238);
+.twc-typing-message.bot {
   background-color: var(--bot-message-bg-color, #eceff1);
   margin-right: 40px;
   border-bottom-left-radius: 0px;
 }
 
-.twc-text-message.agent {
-  color: var(--agent-message-fg-color, #ffffff);
+.twc-typing-message.agent {
   background-color: var(--agent-message-bg-color, #47b2fd);
   margin-right: 40px;
   border-bottom-left-radius: 0px;
 }
 
-.twc-text-message.user {
+.twc-typing-message.user {
   background: var(--user-message-bg-color, #4e8cff);
-  color: var(--user-message-fg-color, #ffffff);
   word-wrap: break-word;
   border-bottom-right-radius: 0px;
 }
 
-.twc-text-message__text {
-  margin-top: 0.4em;
-  margin-bottom: 0.4em;
-  font-weight: 400;
-}
-
-.twc-text-message a {
-  color: var(--text-link-color, #007bff);
-  text-decoration: none;
-}
-
-.twc-text-message a:hover {
-  text-decoration: underline;
-}
-
-.twc-textwrap {
-  display: flex;
-}
-
-.twc-textwrap.user {
-  flex-direction: row-reverse;
-}
-
-.twc-avatar {
-  min-width: 34px;
-  min-height: 34px;
-  width: 34px;
-  height: 34px;
-  border-radius: 20px;
-  display: flex;
-}
-
-.twc-avatar.bot, .twc-avatar.agent {
-  margin-right: 6px;
-}
-
-.twc-avatar.user {
-  margin-left: 6px;
-}
-
-.twc-avatar img {
-  margin: auto;
-  width: 34px;
-  height: 34px;
-  border-radius: 20px;
-}
 </style>

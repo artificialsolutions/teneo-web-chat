@@ -1,12 +1,12 @@
 <template>
   <div class="teneo-web-chat">
     <ChatWindow
+      id="twc-chatwindow-id" 
       v-if="isChatOpen"
       :on-close="closeChat"
-      :title="serviceName ? serviceName : 'Teneo Web Chat'"
-      :image-url="imageUrl"
+      :on-minimize="minimizeChat"
     />
-    <LaunchButton :open="openChat" :close="closeChat" :is-open="isChatOpen" />
+    <LaunchButton v-if="!isChatOpen" :open="openChat" :is-open="isChatOpen" />
   </div>
 </template>
 
@@ -15,8 +15,19 @@ import registerMessageComponents from './utils/register-message-components.js';
 import ChatWindow from './components/ChatWindow.vue';
 import LaunchButton from './components/LaunchButton.vue';
 import { EventBus, events } from './utils/event-bus.js';
-
+import handleExtension from './utils/handle-extension.js';
+import basePayload from './utils/base-payload.js';
+import { API_ON_OPEN_BUTTON_CLICK, API_ON_CLOSE_BUTTON_CLICK, API_ON_MINIMIZE_BUTTON_CLICK, API_ON_VISIBILITY_CHANGED } from './utils/api-function-names.js';
+import { API_KEY_VISIBILITY, API_STATE_MAXIMIZED, API_STATE_MINIMIZED, DEFAULT_TITLE } from './utils/constants.js';
 registerMessageComponents();
+
+// SAFARI IOS ADAPTATIONS
+import detectIosSafari from './utils/detect-ios-safari';
+const bodyScrollLock = require('body-scroll-lock');
+const disableBodyScroll = bodyScrollLock.disableBodyScroll;
+const enableBodyScroll = bodyScrollLock.enableBodyScroll;
+const messageListId = '#message-list-id';
+
 
 export default {
   name: 'TeneoWebChat',
@@ -24,41 +35,177 @@ export default {
     ChatWindow,
     LaunchButton,
   },
-  props: {
-    imageUrl: {
-      type: String,
-      required: true,
-    },
-    serviceName: {
-      type: String,
-      required: true,
-    },
-    closeTieSessionOnExit: {
-      type: String,
-      required: false,
-    },
-  },
   data() {
     return {
       isChatOpen: false,
+      isIosSafari: false
     };
   },
   mounted() {
-          EventBus.$on(events.RESET_SESSION, () => {
-            this.isChatOpen = false;
-            this.$teneoApi.closeSession()
-          });
+    this.isIosSafari=detectIosSafari();
+
+    // Set the name of the hidden property and the change event for visibility
+    var hidden, visibilityChange; 
+    if (typeof document.hidden !== "undefined") { // Opera 12.10 and Firefox 18 and later support 
+      hidden = "hidden";
+      visibilityChange = "visibilitychange";
+    } else if (typeof document.msHidden !== "undefined") {
+      hidden = "msHidden";
+      visibilityChange = "msvisibilitychange";
+    } else if (typeof document.webkitHidden !== "undefined") {
+      hidden = "webkitHidden";
+      visibilityChange = "webkitvisibilitychange";
+    }
+
+    if(this.isIosSafari === true){
+      // Warn if the browser doesn't support addEventListener or the Page Visibility API
+      if ((typeof document.addEventListener === "undefined" || hidden === undefined)) {
+        console.log("This demo requires a browser, such as Google Chrome or Firefox, that supports the Page Visibility API.");
+      } else {
+        // Handle page visibility change   
+        document.addEventListener(visibilityChange, this.handleBrowserMinimize, false);
+      }
+    }
+    
+
+    EventBus.$on(events.RESET_SESSION, () => {
+      this.minimize()
+      this.clearHistory()
+      this.closeSession()
+    });
+
+    EventBus.$on(events.END_SESSION, () => {
+      this.closeSession()
+    });
+
+    EventBus.$on(events.CLEAR_HISTORY, () => {
+      this.clearHistory()
+    });
+
+    EventBus.$on(events.MAXIMIZE_WINDOW, async () => {
+      await this.maximize();
+    });
+
+    EventBus.$on(events.MINIMIZE_WINDOW, () => {
+      this.minimize();
+    });
+
+    EventBus.$on(events.ADD_MESSAGE, async (message) => {
+      await this.$teneoApi._onMessageReceived(message);
+    });
+
+    EventBus.$on(events.SEND_INPUT, (text,parameters,isSilent) => {
+      this.$teneoApi.sendBaseMessage(text,parameters,isSilent);
+    });
+
+    EventBus.$on(events.HIDE_TYPING_INDICATOR, (data)=> {
+      this.$teneoApi.hideTypingIndicator(data);
+    })
+
+    EventBus.$on(events.SHOW_TYPING_INDICATOR, (data)=> {
+      this.$teneoApi.showTypingIndicator(data);
+    })
+
+    EventBus.$emit(events.API_STATE_READY);
     },
   methods: {
-    openChat() {
-      this.isChatOpen = true;
-    },
-    closeChat() {
-      this.isChatOpen = false
-      if(this.closeTieSessionOnExit === "true" || this.closeTieSessionOnExit === "yes" ){
-          this.$teneoApi.closeSession()
+    changeWindowState(chatWindowTargetState) {
+      if (chatWindowTargetState === events.CLOSE_WINDOW) {
+        this.minimize()
+        this.closeSession()
+        this.clearHistory()
+      } 
+      if (chatWindowTargetState === events.MINIMIZE_WINDOW) {
+        this.minimize()
+      } 
+      if (chatWindowTargetState === events.MAXIMIZE_WINDOW) {
+        this.maximize()
       }
     },
+    async openChat() { 
+      // add handledState to payload
+      const payload = basePayload();
+
+      // check for extension
+      await handleExtension(API_ON_OPEN_BUTTON_CLICK, payload);
+
+      // proceed if extension does not handle function itself
+      if(!payload.handledState.handled === true) {
+        this.changeWindowState( events.MAXIMIZE_WINDOW);
+      } 
+      
+    },
+    async minimizeChat() { 
+
+      // add handledState to payload
+      const payload = basePayload();
+
+      // check for extension
+      await handleExtension(API_ON_MINIMIZE_BUTTON_CLICK, payload);
+
+      // proceed if extension does not handle function itself
+      if(!payload.handledState.handled === true) {
+        this.changeWindowState(events.MINIMIZE_WINDOW);
+      }
+    },
+    async closeChat() { 
+      var chatWindowTargetState = events.CLOSE_WINDOW
+      // add handledState to payload
+      const payload = basePayload();
+
+      // check for extension
+      await handleExtension(API_ON_CLOSE_BUTTON_CLICK, payload);
+
+      // proceed if extension does not handle function itself
+      if(!payload.handledState.handled === true) {
+        this.changeWindowState(events.CLOSE_WINDOW);
+      } 
+    },
+    async minimize(){
+      if (this.$store.getters.visibility == API_STATE_MAXIMIZED) {
+        this.$store.commit('visibility',API_STATE_MINIMIZED);
+        this.isChatOpen = false
+
+      if(this.isIosSafari){
+        const targetElement = document.querySelector(messageListId);
+        enableBodyScroll(targetElement);
+      }
+
+        await this.apiOnVisibilityChange();
+      }
+    },
+    async maximize(){
+      if (this.$store.getters.visibility == API_STATE_MINIMIZED) {
+        this.$store.commit('visibility',API_STATE_MAXIMIZED);
+        this.isChatOpen = true
+
+        await this.apiOnVisibilityChange();
+
+        if(this.isIosSafari){
+          const targetElement = document.querySelector(messageListId);
+          disableBodyScroll(targetElement);
+        }
+        
+      }
+    },
+    clearHistory() {
+      this.$teneoApi.clearHistory()
+    },
+    closeSession() {
+      this.$teneoApi.closeSession()
+    },
+    setWindowTitle(newTitle) { 
+      this.serviceName = newTitle
+    },
+    async apiOnVisibilityChange() {
+        const data = {};
+        data[API_KEY_VISIBILITY] = this.$store.getters.visibility;
+        await handleExtension(API_ON_VISIBILITY_CHANGED, data);
+    },
+    async handleBrowserMinimize(){
+      //console.log('handleBrowserMinimize: '+document.hidden)
+      await this.minimize();
+    }
   },
 };
 </script>
@@ -83,8 +230,11 @@ export default {
   --launchicon-bg-color: var(--primary-color);
   --header-bg-color: var(--primary-color);
   --header-fg-color: var(--light-fg-color);
+  --chat-window-bg-color: #ffffff;
   --bot-message-fg-color: var(--dark-fg-color);
   --bot-message-bg-color: var(--light-bg-color);
+  --agent-message-fg-color: var(--light-fg-color);
+  --agent-message-bg-color: #47b2fd;
   --user-message-bg-color: var(--primary-color);
   --user-message-fg-color: var(--light-fg-color);
   --buttons-title-color: var(--dark-fg-color);
@@ -102,9 +252,6 @@ export default {
   --quickreply-border-color: var(--primary-color);
   --quickreply-expired-color: var(--expired-color);
 
-  width: 100%;
-  height: 100%;
-  padding: 10px;
   font-family: Helvetica, Arial;
 }
 </style>

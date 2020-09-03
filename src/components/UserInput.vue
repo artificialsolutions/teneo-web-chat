@@ -1,28 +1,37 @@
 <template>
   <div>
-    <form class="user-input" :class="{ active: inputActive }">
+    <form class="twc-user-input" :class="{ active: inputActive, disabled: inputDisabled }">
       <div
+        id="twc-user-input"
         ref="userInput"
         role="button"
         tabIndex="0"
-        contentEditable="true"
+        :contentEditable="contentIsEditable"
         :placeholder="placeholder"
-        class="user-input__text"
+        class="twc-user-input__text"
         @focus="setInputActive(true)"
         @blur="setInputActive(false)"
-        @keydown="handleKey"
+        @keydown="handleReturnKey"
+        v-debounce:250="userTyping" :debounce-events="['input']"
       ></div>
-      <div class="user-input__button">
-        <SendIcon :on-click="_submitText" />
+      <div class="twc-user-input__button">
+        <SendIcon :on-click="_submitText"/>
       </div>
     </form>
   </div>
 </template>
 
 <script>
+import Vue from 'vue';
+import vueDebounce from 'vue-debounce'
 import SendIcon from '../icons/send.vue';
 import { PARTICIPANT_USER } from '../utils/constants.js';
+import { API_ON_INPUT_SUBMITTED, API_ON_USER_TYPING } from '../utils/api-function-names.js';
 import { EventBus, events } from '../utils/event-bus.js';
+import handleExtension from '../utils/handle-extension.js';
+import basePayload from '../utils/base-payload.js';
+
+Vue.use(vueDebounce)
 
 export default {
   components: {
@@ -41,6 +50,8 @@ export default {
   data() {
     return {
       inputActive: false,
+      contentIsEditable: true,
+      inputDisabled: false,
     };
   },
   mounted() {
@@ -50,28 +61,87 @@ export default {
       }
     });
 
+    EventBus.$on(events.DISABLE_INPUT, () => {
+          this.setInputActive(false);
+          this.setContentEditable(false);
+          this.setInputDisabled(true);
+    });
+
+    EventBus.$on(events.ENABLE_INPUT, () => {
+          this.setContentEditable(true);
+          this.setInputDisabled(false);
+          this.setInputActive(true);
+          
+          if (document.getElementById("twc-user-input")) {
+            document.getElementById("twc-user-input").focus();
+          }
+    });
+
+    //Detect changes and focus and emit event. This will be listened by ChatWindow to adapt to iOS Safari
+    const userInput = document.getElementById("twc-user-input");
+    userInput.addEventListener('focus', (event) => {
+      EventBus.$emit(events.USER_INPUT_FOCUS_CHANGED, true);
+    });
+    userInput.addEventListener('blur', (event) => {
+      EventBus.$emit(events.USER_INPUT_FOCUS_CHANGED, false);
+    });
+
     this.$refs.userInput.focus();
   },
   methods: {
     setInputActive(onoff) {
       this.inputActive = onoff;
+      if(onoff === true){
+        EventBus.$emit(events.SCROLL_CHAT_DOWN);
+      }
     },
-    handleKey(event) {
+    setContentEditable(onoff) {
+      this.contentIsEditable = onoff;
+    },
+    setInputDisabled(onoff) {
+      this.inputDisabled = onoff;
+    },
+    handleReturnKey(event) {
       if (event.keyCode === 13 && !event.shiftKey) {
         this._submitText(event);
         event.preventDefault();
       }
     },
-    _submitText() {
-      const text = this.$refs.userInput.textContent;
+    userTyping() {
+      // create payload object
+      const payload = {"text" : this.$refs.userInput.textContent }
+      // check if there is an extension that want to be notified about the user typing
+      handleExtension(API_ON_USER_TYPING,payload);
+    },
+    async _submitText() {
+      // create payload object
+      const payload = basePayload();
 
-      if (text && text.length > 0) {
+      // add user input to base payload
+      payload.text = this.$refs.userInput.textContent;
+
+      // clear input field
+      this.$refs.userInput.innerHTML = '';
+
+      // check if there is an extension that want to intercept the user input
+      // but only if the user actually submitted something
+      if (payload.text && payload.text.trim().length > 0) {
+        await handleExtension(API_ON_INPUT_SUBMITTED,payload);
+      }
+      
+      // return if extension wants to handle submit itself
+      if(payload.handledState.handled === true) {
+        return
+      }
+
+
+      if (payload.text && payload.text.trim().length > 0) {
+        const text = payload.text
         this.onSubmit({
           author: PARTICIPANT_USER,
           type: 'text',
           data: { text },
         });
-        this.$refs.userInput.innerHTML = '';
       }
     },
   },
@@ -79,7 +149,7 @@ export default {
 </script>
 
 <style scoped>
-.user-input {
+.twc-user-input {
   min-height: 55px;
   margin: 0px;
   position: relative;
@@ -90,9 +160,19 @@ export default {
   border-bottom-left-radius: 10px;
   border-bottom-right-radius: 10px;
   transition: background-color 0.2s ease, box-shadow 0.2s ease;
+  pointer-events:initial;
 }
 
-.user-input__text {
+.twc-user-input.disabled {
+  pointer-events:none;
+}
+
+.twc-user-input.disabled .twc-user-input__button, .twc-user-input.disabled .twc-user-input__text, .twc-user-input.disabled .twc-sc-user-input--send-icon {
+  filter: grayscale(100%);
+  opacity: 0.4;
+}
+
+.twc-user-input__text {
   width: 320px;
   resize: none;
   border: none;
@@ -115,7 +195,7 @@ export default {
   cursor: text;
 }
 
-.user-input__text:empty:before {
+.twc-user-input__text:empty:before {
   content: attr(placeholder);
   display: block;
   filter: contrast(15%);
@@ -135,15 +215,14 @@ export default {
     [placeholder]:empty:focus::before {
       content: "";
       margin-bottom: 0px;
-      /* height: auto; */
     }
 
-   [placeholder]:empty.user-input__text::before {
+   [placeholder]:empty.twc-user-input__text::before {
       height: 0px;
     }
 }
 
-.user-input__button {
+.twc-user-input__button {
   width: 40px;
   max-height: 200px;
   margin-left: 2px;
@@ -153,24 +232,24 @@ export default {
   justify-content: center;
 }
 
-.user-input.active {
+.twc-user-input.active {
   box-shadow: none;
   background-color: white;
   box-shadow: 0px -2px 10px 0px rgba(150, 165, 190, 0.2);
 }
 
-.user-input__button label {
+.twc-user-input__button label {
   position: relative;
   height: 24px;
   padding-left: 3px;
   cursor: pointer;
 }
 
-.user-input__button label:hover path {
+.twc-user-input__button label:hover path {
   fill: rgba(86, 88, 103, 1);
 }
 
-.user-input__button input {
+.twc-user-input__button input {
   position: absolute;
   left: 0;
   top: 0;

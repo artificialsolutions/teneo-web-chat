@@ -1,5 +1,5 @@
 <template>
-  <div ref="scrollList" class="message-list">
+  <div ref="scrollList" class="twc-message-list">
     <Message
       v-for="(message, idx) in messageList"
       :key="idx"
@@ -9,6 +9,7 @@
 </template>
 <script>
 import Message from './Message.vue';
+import { EventBus,events } from '../utils/event-bus';
 
 export default {
   components: {
@@ -21,7 +22,11 @@ export default {
     },
   },
   mounted () {
-      this._scrollDownInstantly();
+      setTimeout(this._scrollDownInstantly.bind(this), 80);
+      //Setup a downwards scroller
+      EventBus.$on(events.SCROLL_CHAT_DOWN, () => {
+        setTimeout(() => { this._scrollDown()}, 40);
+      });
   },
   updated() {
     if (this.shouldScrollToBottom()) {
@@ -40,7 +45,7 @@ export default {
           behavior: 'smooth',
           block: 'end',
         });
-      } else {
+      } else if (this.$refs.scrollList) {
         this.$refs.scrollList.scrollTop = this.$refs.scrollList.scrollHeight;
       }
     },
@@ -50,9 +55,10 @@ export default {
       if (latestMessage && typeof latestMessage.scrollIntoView === 'function') {
         latestMessage.scrollIntoView({
           behavior: 'auto',
+          inline: "nearest",
           block: 'end',
         });
-      } else {
+      } else if (this.$refs.scrollList) {
         this.$refs.scrollList.scrollTop = this.$refs.scrollList.scrollHeight;
       }
     },
@@ -65,7 +71,7 @@ export default {
 };
 </script>
 <style scoped>
-.message-list {
+.twc-message-list {
   height: 80%;
   overflow-y: auto;
   background-size: 100%;

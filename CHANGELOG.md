@@ -1,3 +1,60 @@
+# v3.0.0
+## 02-09-2020
+__*** THIS VERSION CONTAINS BREAKING CHANGES ***__
+* The file name of the Teneo Web Chat has been changed from `main.js` to `teneo-web-chat.js`.
+* CSS styles used by Teneo Web Chat are now prefixed with `twc-`. If you modified the look & feel by overriding the Teneo Web Chat CSS styles, you may need to rename some styles.
+* The code to embed Teneo Web Chat in your site has changed. When updating, make sure you update the embed code on all pages where Teneo Web Chat is made available.
+
+### NEW FEATURES
+* Javascript API
+* New message type 'Modal'
+* New message type 'System message'
+* Option to show both a minimize and close button in header
+* Text messages can now contain an avatar icon and a date line
+* Support for message author type 'agent' (in addition to the already existing author types 'bot' and 'user')
+* Support for typing indicators
+
+### JAVASCRIPT API
+The new Teneo Web Chat Javascript API allows you to trigger Teneo Web Chat events, respond to events that happen inside Teneo Web Chat and get details from Teneo Web Chat. This lets you change or extend its behavior in ways that are not provided by the standard configuration.
+* Trigger events
+    * Maximize
+    * Minimize
+    * Send input
+    * End session
+    * Clear chat history
+    * Reset
+    * Add message
+    * Show typing indicator
+    * Hide typing indicator
+    * Set chat window title
+    * Disable user input
+    * Enable user input
+* Subscribe to events
+    * On ready
+    * On open button clicked
+    * On minimize button clicked
+    * On close button clicked
+    * On visibility changed
+    * On user typing
+    * On input submitted
+    * On message button clicked
+    * On engine request
+    * On engine response
+    * On new message
+* Getters
+    * Get state
+    * Get message list
+    * Get engine URL
+
+### IMPROVEMENTS AND FIXES
+* Icons used in the UI can now be configured
+* Improved support for iOS
+* Fix error in console about scrolling
+* Fix scrolling issue when displaying large images
+* Fix layout of buttons with long text
+* Streamlined initialization parameters
+* Updated dependencies
+
 # v2.5.1
 ## 17-06-2020
 * Fix: don't show scrolling animation when reopening chat window but start at bottom instantly
