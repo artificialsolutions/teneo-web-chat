@@ -253,5 +253,6 @@ export default {
   --quickreply-expired-color: var(--expired-color);
 
   font-family: Helvetica, Arial;
+  font: -apple-system-body;
 }
 </style>
