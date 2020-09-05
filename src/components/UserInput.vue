@@ -180,7 +180,7 @@ export default {
   border-bottom-left-radius: 10px;
   box-sizing: border-box;
   padding: 18px;
-  font-size: 15px;
+  font-size: 0.95em;
   font-weight: 400;
   line-height: 1.33;
   white-space: pre-wrap;

@@ -92,7 +92,7 @@ export default {
   -ms-user-select: none;
   user-select: none;
   padding: 0.375rem 0.75rem;
-  font-size: 0.9rem;
+  font-size: 0.9em;
   line-height: 1.5;
   border-radius: 0.25rem;
   min-width: 62px;
@@ -133,7 +133,7 @@ export default {
   line-height: 1.2;
   margin-top: 0;
   margin-bottom: 0.6rem;
-  font-size: 1rem;
+  font-size: 1em;
   font-weight: 500;
   color: var(--buttons-title-color, #263238);
 }
