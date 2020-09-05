@@ -74,7 +74,7 @@ export default {
   padding: 8px 14px 8px 14px;
   color: var(--quickreply-fg-color, #4e8cff);
   cursor: pointer;
-  font-size: 0.8rem;
+  font-size: 0.8em;
   display: inline-block;
   margin: 3px;
 }

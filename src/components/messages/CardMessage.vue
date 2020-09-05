@@ -164,13 +164,13 @@ export default {
 }
 
 .twc-card-body h5 {
-  font-size: 1.25rem;
+  font-size: 1.25em;
   font-weight: 500;
   color: var(--bot-message-fg-color, #263238);
 }
 
 .twc-card-body h6 {
-  font-size: 1rem;
+  font-size: 1em;
   font-weight: 500;
   color: #6c757d !important;
 }
@@ -216,7 +216,7 @@ export default {
 
 .twc-card .twc-links a {
   color: var(--card-link-color, #007bff);
-  font-size: 0.9rem;
+  font-size: 0.9em;
   padding-right: 10px;
   text-decoration: none;
 }
