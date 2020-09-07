@@ -18,7 +18,8 @@ import { EventBus, events } from './utils/event-bus.js';
 import handleExtension from './utils/handle-extension.js';
 import basePayload from './utils/base-payload.js';
 import { API_ON_OPEN_BUTTON_CLICK, API_ON_CLOSE_BUTTON_CLICK, API_ON_MINIMIZE_BUTTON_CLICK, API_ON_VISIBILITY_CHANGED } from './utils/api-function-names.js';
-import { API_KEY_VISIBILITY, API_STATE_MAXIMIZED, API_STATE_MINIMIZED, DEFAULT_TITLE } from './utils/constants.js';
+import { API_KEY_VISIBILITY, API_STATE_MAXIMIZED, API_STATE_MINIMIZED, DEFAULT_TITLE, SESSION_ID_STORAGE_KEY } from './utils/constants.js';
+import detectSafari from './utils/detect-safari.js';
 registerMessageComponents();
 
 // SAFARI IOS ADAPTATIONS
@@ -27,6 +28,10 @@ const bodyScrollLock = require('body-scroll-lock');
 const disableBodyScroll = bodyScrollLock.disableBodyScroll;
 const enableBodyScroll = bodyScrollLock.enableBodyScroll;
 const messageListId = '#message-list-id';
+
+// Detect safari (not just iOS) so we can clear session id from storage in closeSession
+const isSafari = detectSafari();
+const sessionKey = SESSION_ID_STORAGE_KEY;
 
 
 export default {
@@ -193,6 +198,16 @@ export default {
     },
     closeSession() {
       this.$teneoApi.closeSession()
+
+      // when opened in Safari, we explicitly store the session id in the browser storage
+      // it's a bit cleaner to delete it again when the engine session is closed
+      if (isSafari) {
+        if(this.$store.getters.useLocalStorage) {
+          window.localStorage.removeItem(sessionKey);
+        } else {
+          window.sessionStorage.removeItem(sessionKey);
+        }
+      }
     },
     setWindowTitle(newTitle) { 
       this.serviceName = newTitle

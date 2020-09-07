@@ -4,7 +4,7 @@ import TIE from '../utils/tie-client.js'; // import tie client SDK like this to 
 
 import MessageListCache from '../utils/message-list-cache.js';
 import parseTeneoResponse from '../utils/parse-teneo-response.js';
-import { CHANNEL_PARAM } from '../utils/constants.js';
+import { CHANNEL_PARAM, SESSION_ID_STORAGE_KEY } from '../utils/constants.js';
 import { API_ON_ENGINE_REQUEST, API_ON_ENGINE_RESPONSE, API_ON_NEW_MESSAGE } from '../utils/api-function-names.js';
 import { EventBus, events } from '../utils/event-bus.js';
 import handleExtension from '../utils/handle-extension.js';
@@ -16,7 +16,7 @@ export default function teneoApiPlugin(teneoApiUrl) {
   const messageListCache = new MessageListCache();
   const tmpVue = new Vue({ data: { messageList: messageListCache.get() } });
   const isSafari = detectSafari();
-  const sessionKey = "teneo-web-chat-session-id";
+  const sessionKey = SESSION_ID_STORAGE_KEY;
   let sessionId = null;
 
 
