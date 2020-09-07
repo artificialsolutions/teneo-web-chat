@@ -118,11 +118,11 @@ export default {
 }
 
 .ios-keyboard-shown {
-  transition: none;
+  transition: 0.3s ease-in-out !important;
   height: calc(66% - 60px);
 }
 .ios-keyboard-hidden {
-  transition: 0.5s ease-in-out;
+  transition: 0.2s ease-in-out !important;
   height: 100%;
 }
 
