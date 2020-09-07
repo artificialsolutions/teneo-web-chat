@@ -30,6 +30,7 @@ import { API_ON_INPUT_SUBMITTED, API_ON_USER_TYPING } from '../utils/api-functio
 import { EventBus, events } from '../utils/event-bus.js';
 import handleExtension from '../utils/handle-extension.js';
 import basePayload from '../utils/base-payload.js';
+import detectIosSafari from '../utils/detect-ios-safari';
 
 Vue.use(vueDebounce)
 
@@ -86,7 +87,11 @@ export default {
       EventBus.$emit(events.USER_INPUT_FOCUS_CHANGED, false);
     });
 
-    this.$refs.userInput.focus();
+    
+    this.isIosSafari = detectIosSafari();
+    if (this.isIosSafari === false) {
+      this.$refs.userInput.focus();
+    }
   },
   methods: {
     setInputActive(onoff) {
