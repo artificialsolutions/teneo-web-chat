@@ -9,11 +9,14 @@ import { API_ON_ENGINE_REQUEST, API_ON_ENGINE_RESPONSE, API_ON_NEW_MESSAGE } fro
 import { EventBus, events } from '../utils/event-bus.js';
 import handleExtension from '../utils/handle-extension.js';
 import basePayload from '../utils/base-payload.js';
+import detectSafari from '../utils/detect-safari';
 
 export default function teneoApiPlugin(teneoApiUrl) {
   const teneoApi = TIE.init(teneoApiUrl);
   const messageListCache = new MessageListCache();
   const tmpVue = new Vue({ data: { messageList: messageListCache.get() } });
+  const isSafari = detectSafari();
+  const sessionKey = "teneo-web-chat-session-id";
   let sessionId = null;
 
 
@@ -81,6 +84,16 @@ export default function teneoApiPlugin(teneoApiUrl) {
 
       EventBus.$emit(events.START_SPINNER);
 
+      // get session from storage when safari is used
+      // to prevent issues when 'prevent cross-site tracking' is enabled
+      if (isSafari) {
+        if (tmpVue.$store.getters.useLocalStorage) {
+          sessionId = window.localStorage.getItem(sessionKey);
+        } else {
+          sessionId = window.sessionStorage.getItem(sessionKey);
+        }
+      }
+      
       // send the input to engine
       var response = await teneoApi.sendInput(sessionId, requestPayload.requestDetails);
 
@@ -110,7 +123,19 @@ export default function teneoApiPlugin(teneoApiUrl) {
         return
       }
 
-      sessionId = response.sessionId;
+      // if users have 'prevent cross-site tracking' enabled
+      // a reload of the page may lose the session
+      if (isSafari) {
+        if(tmpVue.$store.getters.useLocalStorage) {
+          window.localStorage.setItem(sessionKey, response.sessionId);
+        } else {
+          window.sessionStorage.setItem(sessionKey, response.sessionId);
+        }
+      } else {
+        sessionId = response.sessionId;
+      }
+
+      // sessionId = response.sessionId;
 
       EventBus.$off(events.PUSH_BUBBLE);
       EventBus.$on(events.PUSH_BUBBLE, async (msg) => {
