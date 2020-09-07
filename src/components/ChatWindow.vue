@@ -103,7 +103,7 @@ export default {
   justify-content: space-between;
   transition: 0.3s ease-in-out;
   border-radius: 10px;
-  overscroll-behavior: contain
+  overscroll-behavior: contain;
 }
 
 @media (max-width: 450px) {
