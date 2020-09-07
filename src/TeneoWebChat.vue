@@ -65,7 +65,7 @@ export default {
     if(this.isIosSafari === true){
       // Warn if the browser doesn't support addEventListener or the Page Visibility API
       if ((typeof document.addEventListener === "undefined" || hidden === undefined)) {
-        console.log("This demo requires a browser, such as Google Chrome or Firefox, that supports the Page Visibility API.");
+        // console.log("This application requires a browser, such as Google Chrome or Firefox, that supports the Page Visibility API.");
       } else {
         // Handle page visibility change   
         document.addEventListener(visibilityChange, this.handleBrowserMinimize, false);
