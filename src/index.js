@@ -143,10 +143,7 @@ window['TeneoWebChat'] = {
       
       case apiConstants.API_GET_ENGINE_URL:
         return store.getters.engineUrlObj;
-      
-      case apiConstants.API_GET_STORAGE_CONFIG:
-        return store.getters.storageConfig;
-      
+            
       default:
         break
     }
