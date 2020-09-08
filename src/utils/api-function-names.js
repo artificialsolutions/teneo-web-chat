@@ -9,9 +9,6 @@ export const API_CALL_ADD_MESSAGE = "add_message";
 export const API_CALL_SET_WINDOW_TITLE = "set_chat_window_title";
 export const API_CALL_DISABLE_USERINPUT = 'disable_user_input'
 export const API_CALL_ENABLE_USERINPUT = 'enable_user_input'
-// export const API_CALL_SET_AGENT_AVATAR_URL = "set_agent_avatar_url";
-// export const API_CALL_SET_BOT_AVATAR_URL = "set_bot_avatar_url";
-// export const API_CALL_SET_USER_AVATAR_URL = "set_user_avatar_url";
 
 //Add dedicated add typing indicator method
 export const API_CALL_HIDE_TYPING_INDICATOR = 'hide_typing_indicator';
