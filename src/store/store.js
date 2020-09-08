@@ -113,5 +113,12 @@ export const store = new Vuex.Store({
             return { 'engineUrl' : state.teneoEngineUrl}
         },
         useLocalStorage: state => state.useLocalStorage,
+        storageConfig: state => {
+            const storageApiObj = { 'storageConfig' : 'sessionStorage'}
+            if (state.useLocalStorage) {
+                storageApiObj.storageConfig = 'localStorage'
+            }
+            return storageApiObj
+        }
     }
 })
