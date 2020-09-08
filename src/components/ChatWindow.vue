@@ -104,6 +104,8 @@ export default {
   transition: 0.3s ease-in-out;
   border-radius: 10px;
   overscroll-behavior: contain;
+  -webkit-animation: twc-fade-in 0.3s cubic-bezier(0.390, 0.575, 0.565, 1.000) both;
+  animation: twc-fade-in 0.3s cubic-bezier(0.390, 0.575, 0.565, 1.000) both;
 }
 
 @media (max-width: 450px) {
@@ -166,5 +168,25 @@ export default {
     -webkit-transform: scale(1.0);
     transform: scale(1.0);
   }
+}
+</style>
+
+<style>
+@-webkit-keyframes twc-fade-in {
+    0% {
+        opacity: 0;
+    }
+    100% {
+        opacity: 1;
+    }
+}
+
+@keyframes twc-fade-in {
+    0% {
+        opacity: 0;
+    }
+    100% {
+        opacity: 1;
+    }
 }
 </style>
