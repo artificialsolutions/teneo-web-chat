@@ -171,10 +171,10 @@ export default {
         this.$store.commit('visibility',API_STATE_MINIMIZED);
         this.isChatOpen = false
 
-      if(this.isIosSafari){
-        const targetElement = document.querySelector(messageListId);
-        enableBodyScroll(targetElement);
-      }
+        if(this.isIosSafari){
+          const targetElement = document.querySelector(messageListId);
+          enableBodyScroll(targetElement);
+        }
 
         await this.apiOnVisibilityChange();
       }
