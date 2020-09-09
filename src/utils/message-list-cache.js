@@ -1,5 +1,3 @@
-import { store } from '../store/store.js';
-
 class MessageListCache {
   constructor() {
     this.enabled = !!window.sessionStorage;
