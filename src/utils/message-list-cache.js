@@ -3,7 +3,6 @@ import { store } from '../store/store.js';
 class MessageListCache {
   constructor() {
     this.enabled = !!window.sessionStorage;
-
     this.cacheKey = 'teneo-web-chat-messages';
   }
 
