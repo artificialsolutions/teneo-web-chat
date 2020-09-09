@@ -1,3 +1,9 @@
+# v3.0.1
+## 09-09-2020
+* Support Dynamic Type on iOS - Font size in Teneo Web Chat will depend on Dynmic Type setting in iOS
+* Fixed a bug where session was not properly maintained in Safari
+* Improved keyboard handling on iOS
+
 # v3.0.0
 ## 02-09-2020
 __*** THIS VERSION CONTAINS BREAKING CHANGES ***__
