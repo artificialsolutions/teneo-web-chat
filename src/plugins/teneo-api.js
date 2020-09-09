@@ -87,11 +87,7 @@ export default function teneoApiPlugin(teneoApiUrl) {
       // get session from storage when safari is used
       // to prevent issues when 'prevent cross-site tracking' is enabled
       if (isSafari) {
-        if (tmpVue.$store.getters.useLocalStorage) {
-          sessionId = window.localStorage.getItem(sessionKey);
-        } else {
-          sessionId = window.sessionStorage.getItem(sessionKey);
-        }
+        sessionId = window.sessionStorage.getItem(sessionKey);
       }
       
       // send the input to engine
@@ -126,11 +122,7 @@ export default function teneoApiPlugin(teneoApiUrl) {
       // if users have 'prevent cross-site tracking' enabled
       // a reload of the page may lose the session
       if (isSafari) {
-        if(tmpVue.$store.getters.useLocalStorage) {
-          window.localStorage.setItem(sessionKey, response.sessionId);
-        } else {
-          window.sessionStorage.setItem(sessionKey, response.sessionId);
-        }
+        window.sessionStorage.setItem(sessionKey, response.sessionId);
       } else {
         sessionId = response.sessionId;
       }

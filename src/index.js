@@ -38,9 +38,6 @@ window['TeneoWebChat'] = {
     if (twcProps.showCloseButton === true || twcProps.showCloseButton === "true") {
       store.commit('showCloseButton',true);
     }
-    if (twcProps.useLocalStorage === true || twcProps.useLocalStorage === "true") {
-      store.commit('useLocalStorage',true);
-    }
 
     if (twcProps.agentAvatarUrl) {
       // TODO: error handling (once store thows error)

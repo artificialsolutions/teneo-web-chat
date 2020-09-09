@@ -19,7 +19,6 @@ export const store = new Vuex.Store({
         minimizeIconUrl: "",
         closeIconUrl: "",
         launchIconUrl: "",
-        useLocalStorage: false,
     },
     mutations: {
         visibility(state, newVisibility) {
@@ -87,11 +86,6 @@ export const store = new Vuex.Store({
                 state.launchIconUrl = newUrl
             }
         },
-        useLocalStorage(state, useLocalStorageBool) {
-            if (typeof useLocalStorageBool === "boolean") {
-                state.useLocalStorage = useLocalStorageBool
-            }
-        },
     },
     getters: {
         teneoEngineUrl: state => state.teneoEngineUrl,
@@ -112,6 +106,5 @@ export const store = new Vuex.Store({
         engineUrlObj: state => {
             return { 'engineUrl' : state.teneoEngineUrl}
         },
-        useLocalStorage: state => state.useLocalStorage,
     }
 })

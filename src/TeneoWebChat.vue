@@ -202,11 +202,7 @@ export default {
       // when opened in Safari, we explicitly store the session id in the browser storage
       // it's a bit cleaner to delete it again when the engine session is closed
       if (isSafari) {
-        if(this.$store.getters.useLocalStorage) {
-          window.localStorage.removeItem(sessionKey);
-        } else {
-          window.sessionStorage.removeItem(sessionKey);
-        }
+        window.sessionStorage.removeItem(sessionKey);
       }
     },
     setWindowTitle(newTitle) { 
