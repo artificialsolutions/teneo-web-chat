@@ -9,7 +9,7 @@ class MessageListCache {
 
   get() {
     if (this.enabled) {
-      const cached = window.sessionStorage.getItem(this.cacheKey);;
+      const cached = window.sessionStorage.getItem(this.cacheKey);
 
       if (!cached) {
         return [];
