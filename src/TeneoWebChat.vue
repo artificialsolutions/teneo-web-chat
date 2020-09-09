@@ -18,7 +18,8 @@ import { EventBus, events } from './utils/event-bus.js';
 import handleExtension from './utils/handle-extension.js';
 import basePayload from './utils/base-payload.js';
 import { API_ON_OPEN_BUTTON_CLICK, API_ON_CLOSE_BUTTON_CLICK, API_ON_MINIMIZE_BUTTON_CLICK, API_ON_VISIBILITY_CHANGED } from './utils/api-function-names.js';
-import { API_KEY_VISIBILITY, API_STATE_MAXIMIZED, API_STATE_MINIMIZED, DEFAULT_TITLE } from './utils/constants.js';
+import { API_KEY_VISIBILITY, API_STATE_MAXIMIZED, API_STATE_MINIMIZED, DEFAULT_TITLE, SESSION_ID_STORAGE_KEY } from './utils/constants.js';
+import detectSafari from './utils/detect-safari.js';
 registerMessageComponents();
 
 // SAFARI IOS ADAPTATIONS
@@ -27,6 +28,10 @@ const bodyScrollLock = require('body-scroll-lock');
 const disableBodyScroll = bodyScrollLock.disableBodyScroll;
 const enableBodyScroll = bodyScrollLock.enableBodyScroll;
 const messageListId = '#message-list-id';
+
+// Detect safari (not just iOS) so we can clear session id from storage in closeSession
+const isSafari = detectSafari();
+const sessionKey = SESSION_ID_STORAGE_KEY;
 
 
 export default {
@@ -60,7 +65,7 @@ export default {
     if(this.isIosSafari === true){
       // Warn if the browser doesn't support addEventListener or the Page Visibility API
       if ((typeof document.addEventListener === "undefined" || hidden === undefined)) {
-        console.log("This demo requires a browser, such as Google Chrome or Firefox, that supports the Page Visibility API.");
+        // console.log("This application requires a browser, such as Google Chrome or Firefox, that supports the Page Visibility API.");
       } else {
         // Handle page visibility change   
         document.addEventListener(visibilityChange, this.handleBrowserMinimize, false);
@@ -166,10 +171,10 @@ export default {
         this.$store.commit('visibility',API_STATE_MINIMIZED);
         this.isChatOpen = false
 
-      if(this.isIosSafari){
-        const targetElement = document.querySelector(messageListId);
-        enableBodyScroll(targetElement);
-      }
+        if(this.isIosSafari){
+          const targetElement = document.querySelector(messageListId);
+          enableBodyScroll(targetElement);
+        }
 
         await this.apiOnVisibilityChange();
       }
@@ -193,6 +198,12 @@ export default {
     },
     closeSession() {
       this.$teneoApi.closeSession()
+
+      // when opened in Safari, we explicitly store the session id in the browser storage
+      // it's a bit cleaner to delete it again when the engine session is closed
+      if (isSafari) {
+        window.sessionStorage.removeItem(sessionKey);
+      }
     },
     setWindowTitle(newTitle) { 
       this.serviceName = newTitle
@@ -253,5 +264,6 @@ export default {
   --quickreply-expired-color: var(--expired-color);
 
   font-family: Helvetica, Arial;
+  font: -apple-system-body;
 }
 </style>

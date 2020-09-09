@@ -154,7 +154,7 @@ export default {
 }
 
 .twc-modal-body .twc-modal-title {
-    font-size: 1.25rem;
+    font-size: 1.25em;
     font-weight: 500;
     color: var(--bot-message-fg-color, #263238);
     font-family: inherit;

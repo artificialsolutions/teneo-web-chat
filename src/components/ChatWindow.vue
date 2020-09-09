@@ -103,7 +103,9 @@ export default {
   justify-content: space-between;
   transition: 0.3s ease-in-out;
   border-radius: 10px;
-  overscroll-behavior: contain
+  overscroll-behavior: contain;
+  -webkit-animation: twc-fade-in 0.3s cubic-bezier(0.390, 0.575, 0.565, 1.000) both;
+  animation: twc-fade-in 0.3s cubic-bezier(0.390, 0.575, 0.565, 1.000) both;
 }
 
 @media (max-width: 450px) {
@@ -118,11 +120,11 @@ export default {
 }
 
 .ios-keyboard-shown {
-  transition: none;
+  transition: 0.3s ease-in-out !important;
   height: calc(66% - 60px);
 }
 .ios-keyboard-hidden {
-  transition: 0.5s ease-in-out;
+  transition: 0.2s ease-in-out !important;
   height: 100%;
 }
 
@@ -166,5 +168,25 @@ export default {
     -webkit-transform: scale(1.0);
     transform: scale(1.0);
   }
+}
+</style>
+
+<style>
+@-webkit-keyframes twc-fade-in {
+    0% {
+        opacity: 0;
+    }
+    100% {
+        opacity: 1;
+    }
+}
+
+@keyframes twc-fade-in {
+    0% {
+        opacity: 0;
+    }
+    100% {
+        opacity: 1;
+    }
 }
 </style>

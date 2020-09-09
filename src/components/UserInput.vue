@@ -30,6 +30,7 @@ import { API_ON_INPUT_SUBMITTED, API_ON_USER_TYPING } from '../utils/api-functio
 import { EventBus, events } from '../utils/event-bus.js';
 import handleExtension from '../utils/handle-extension.js';
 import basePayload from '../utils/base-payload.js';
+import detectMobile from '../utils/detect-mobile.js';
 
 Vue.use(vueDebounce)
 
@@ -86,7 +87,11 @@ export default {
       EventBus.$emit(events.USER_INPUT_FOCUS_CHANGED, false);
     });
 
-    this.$refs.userInput.focus();
+    
+    // don't give user input focus on mobile devices, keyboard blocks the view too much
+    if (!detectMobile()) {
+      this.$refs.userInput.focus();
+    }
   },
   methods: {
     setInputActive(onoff) {
@@ -180,7 +185,7 @@ export default {
   border-bottom-left-radius: 10px;
   box-sizing: border-box;
   padding: 18px;
-  font-size: 15px;
+  font-size: 0.95em;
   font-weight: 400;
   line-height: 1.33;
   white-space: pre-wrap;

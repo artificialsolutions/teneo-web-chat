@@ -79,7 +79,7 @@ export default {
   line-height: 1.2;
   margin-top: 0;
   margin-bottom: 0.6rem;
-  font-size: 1rem;
+  font-size: 1em;
   font-weight: 500;
   color: var(--clickablelist-title-color, #263238);
 }
@@ -104,7 +104,7 @@ export default {
   padding: 8px 14px 8px 14px;
   color: var(--clickablelist-fg-color, #263238);
   cursor: pointer;
-  font-size: 0.9rem;
+  font-size: 0.9em;
 }
 
 .twc-clickablelist-message__item:first-child {

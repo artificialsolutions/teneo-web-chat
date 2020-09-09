@@ -91,10 +91,6 @@ _:-ms-fullscreen, :root .twc-wrap.user  {
   margin-left: 85px
 }
 
-
-
-
-
 .twc-dateline {
   font-weight: 400;
   font-size: 0.7em;
