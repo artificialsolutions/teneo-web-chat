@@ -86,7 +86,12 @@ export default {
 
         // only send silent input of postback exists
         if (payload.button.postback) {
-          await this.$teneoApi.sendSilentMessage(payload.button.postback);
+          let parameters = {}
+          if (payload.button.parameters) {
+            parameters = payload.button.parameters
+          }
+
+          await this.$teneoApi.sendSilentMessage(payload.button.postback, parameters);
         }
 
       }

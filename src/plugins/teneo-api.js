@@ -138,11 +138,11 @@ export default function teneoApiPlugin(teneoApiUrl) {
 
     },
 
-    async sendMessage(message) {
-      await this.sendBaseMessage(message.data.text, {}, false)
+    async sendMessage(message, parameters = {}) {
+      await this.sendBaseMessage(message.data.text, parameters, false);
     },
-    async sendSilentMessage(text) {
-      await this.sendBaseMessage(text, {}, true)
+    async sendSilentMessage(text = '', parameters = {}) {
+      await this.sendBaseMessage(text, parameters, true);
     },
     async _onMessageReceived(message) {
       // TODO: throw error if payload is invalid?
