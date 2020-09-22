@@ -80,12 +80,14 @@ export default {
 
     //Detect changes and focus and emit event. This will be listened by ChatWindow to adapt to iOS Safari
     const userInput = document.getElementById("twc-user-input");
-    userInput.addEventListener('focus', (event) => {
-      EventBus.$emit(events.USER_INPUT_FOCUS_CHANGED, true);
-    });
-    userInput.addEventListener('blur', (event) => {
-      EventBus.$emit(events.USER_INPUT_FOCUS_CHANGED, false);
-    });
+    if(userInput){
+      userInput.addEventListener('focus', (event) => {
+        EventBus.$emit(events.USER_INPUT_FOCUS_CHANGED, true);
+      });
+      userInput.addEventListener('blur', (event) => {
+        EventBus.$emit(events.USER_INPUT_FOCUS_CHANGED, false);
+      });
+    }
 
     
     // don't give user input focus on mobile devices, keyboard blocks the view too much
