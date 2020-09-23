@@ -95,7 +95,7 @@ window['TeneoWebChat'] = {
   on(function_name, func){
 
     // prevent people from registering 'on' events after teneo web chat was initialized
-    if (isInitialised === false) {
+    if ((isInitialised === false)||(process.env.NODE_ENV === 'test')) {
       // this 'on' method is called each time someone registers
       // a 'function_name' (ready, visibility_change, engine_response etc)
 
@@ -130,13 +130,14 @@ window['TeneoWebChat'] = {
       case apiConstants.API_GET_STATE:
         return store.getters.state;
 
-      case apiConstants.API_GET_CHAT_HISTORY:
+      case apiConstants.API_GET_CHAT_HISTORY:{
         // exclude typing indicators from message list
         let filteredMessageList = messageList.get();
         filteredMessageList = filteredMessageList.filter(function( message ) {
           return message.type !== 'typing';
         });
         return filteredMessageList;
+      }
       
       case apiConstants.API_GET_ENGINE_URL:
         return store.getters.engineUrlObj;
@@ -231,6 +232,8 @@ window['TeneoWebChat'] = {
   },
   version() {
     return API_VERSION;
-  },
+  }
 };
-Object.freeze(window['TeneoWebChat']);
+if((process.env.NODE_ENV === 'undefined')||(process.env.NODE_ENV !== 'test')){
+  Object.freeze(window['TeneoWebChat']);
+}

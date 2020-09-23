@@ -96,11 +96,11 @@ export default {
     });
 
     EventBus.$on(events.ADD_MESSAGE, async (message) => {
-      await this.$teneoApi._onMessageReceived(message);
+      this._onMessageReceived(message);
     });
 
     EventBus.$on(events.SEND_INPUT, (text,parameters,isSilent) => {
-      this.$teneoApi.sendBaseMessage(text,parameters,isSilent);
+      this.sendBaseMessage(text,parameters,isSilent)
     });
 
     EventBus.$on(events.HIDE_TYPING_INDICATOR, (data)=> {
@@ -114,6 +114,13 @@ export default {
     EventBus.$emit(events.API_STATE_READY);
     },
   methods: {
+    //encapsulating dependency methods makes Testing easier
+    async _onMessageReceived(message){
+      await this.$teneoApi._onMessageReceived(message);
+    },
+    sendBaseMessage(text,parameters,isSilent){ 
+      this.$teneoApi.sendBaseMessage(text,parameters,isSilent);
+    },
     changeWindowState(chatWindowTargetState) {
       if (chatWindowTargetState === events.CLOSE_WINDOW) {
         this.minimize()
@@ -183,7 +190,6 @@ export default {
       if (this.$store.getters.visibility == API_STATE_MINIMIZED) {
         this.$store.commit('visibility',API_STATE_MAXIMIZED);
         this.isChatOpen = true
-
         await this.apiOnVisibilityChange();
 
         if(this.isIosSafari){
