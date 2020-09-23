@@ -82,7 +82,9 @@ window['TeneoWebChat'] = {
       handleExtension(apiConstants.API_ON_READY);
     });
 
-    this.helpers.renderTeneoWebChat(element);
+    new Vue({
+      render: (h) => h(TeneoWebChat, { props: { } }),
+    }).$mount(element);
 
     // after initializing, freeze the boolean
     // we use this to prevent people from registering 'on' events after the page has loaded
@@ -126,10 +128,16 @@ window['TeneoWebChat'] = {
   get(function_name){
     switch (function_name) {
       case apiConstants.API_GET_STATE:
-        return this.helpers.apiGetState();
+        return store.getters.state;
 
-      case apiConstants.API_GET_CHAT_HISTORY:
-        return this.helpers.apiGetChatHistory();
+      case apiConstants.API_GET_CHAT_HISTORY:{
+        // exclude typing indicators from message list
+        let filteredMessageList = messageList.get();
+        filteredMessageList = filteredMessageList.filter(function( message ) {
+          return message.type !== 'typing';
+        });
+        return filteredMessageList;
+      }
       
       case apiConstants.API_GET_ENGINE_URL:
         return store.getters.engineUrlObj;
@@ -206,7 +214,7 @@ window['TeneoWebChat'] = {
       case apiConstants.API_CALL_SET_WINDOW_TITLE:
         // TODO: throw error if payload is invalid or if store throws error
         if (typeof payload === "string") {
-          this.helpers.setTitle(payload)
+          store.commit('title',payload);
         }
         break
 
@@ -224,27 +232,8 @@ window['TeneoWebChat'] = {
   },
   version() {
     return API_VERSION;
-  },
-  helpers:{
-    renderTeneoWebChat(element){
-      new Vue({
-        render: (h) => h(TeneoWebChat, { props: { } }),
-      }).$mount(element);
-    },
-    setTitle(payload){
-      store.commit('title',payload);
-    },
-    apiGetState(){
-      return store.getters.state;
-    }, 
-    apiGetChatHistory(){
-      // exclude typing indicators from message list
-      let filteredMessageList = messageList.get();
-      filteredMessageList = filteredMessageList.filter(function( message ) {
-        return message.type !== 'typing';
-      });
-      return filteredMessageList;
-    }
   }
 };
-Object.freeze(window['TeneoWebChat']);
+if((process.env.NODE_ENV === 'undefined')||(process.env.NODE_ENV !== 'test')){
+  Object.freeze(window['TeneoWebChat']);
+}

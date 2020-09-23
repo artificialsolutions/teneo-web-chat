@@ -166,15 +166,6 @@ ejs.renderFile(index_js, function (err, str) {
           }
           testWindow.TeneoWebChat.on(api.API_ON_READY, myReadyCallback);
           
-          //mock renderTeneoWebChat method by shallow mounting the TWC Component, this should lead to onReady being called
-          testWindow.TeneoWebChat.helpers.renderTeneoWebChat = jest.fn().mockImplementation((element) => {      
-            const wrapper = shallowMount(TeneoWebChat, {
-              title: 'Teneo Web Chat',
-              teneoEngineUrl: 'https://teneo-api.com/some-bot',
-              propsData: {isChatOpen: false}
-            })
-          });
-
           //Initialize TeneoWebChat, this should lead to rendering the component and cause onReady event to happen
           testWindow.TeneoWebChat.initialize(element, teneoProps);
           

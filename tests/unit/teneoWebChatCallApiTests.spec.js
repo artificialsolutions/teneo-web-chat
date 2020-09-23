@@ -160,43 +160,71 @@ ejs.renderFile(index_js, function (err, str) {
                     }
                 })
 
-                //Mock the implementation of setTitle in 'window.TeneoWebChat.helpers'
+                //Mock the implementation of setTitle in 'window.TeneoWebChat'
                 const newTitle = 'New Title';
-                window.TeneoWebChat.helpers.setTitle = jest.fn().mockImplementation((payload) => {      
-                    mockStore.state.title = payload;
-                  });
 
+                //backup method group, then overwrite with mock
+                const callBK = window.TeneoWebChat.call
+                window.TeneoWebChat.call = jest.fn().mockImplementation((function_name, payload) => {   
+                    switch  (function_name) {
+                        case api.API_CALL_SET_WINDOW_TITLE:
+                            // TODO: throw error if payload is invalid or if store throws error
+                            if (typeof payload === "string") {
+                                mockStore.state.title = payload;
+                            }
+                            break
+                    }
+                  });
                 //Call the API method under test
                 await window.TeneoWebChat.call(api.API_CALL_SET_WINDOW_TITLE, newTitle);
-                
-                //Asert that setTitle was called, and that the value was set in the Header's template
-                expect(window.TeneoWebChat.helpers.setTitle).toHaveBeenCalledTimes(1);
+                window.TeneoWebChat.call = callBK
+
+                //Asert that that the value was set in the Header's template
                 expect(wrapperHeader.html()).toContain('New Title');
             })
 
 
-            test('Assert API_GET_STATE', async ()=> {                
-                window.TeneoWebChat.helpers.apiGetState = jest.fn().mockImplementation(() => {    
-                    return {'visibility':mockStore.state.visibility}
-                  });
-                  
+            test('Assert API_GET_STATE', async ()=> {     
+
+                //backup method group, then overwrite with mock
+                const getBK = window.TeneoWebChat.get
+                window.TeneoWebChat.get = jest.fn().mockImplementation((function_name) => {
+                    switch (function_name) {
+                      case api.API_GET_STATE:  
+                         return {'visibility':mockStore.state.visibility}
+                    }
+                });
+                
+                //Simulate calling Api method
                 const expected = {'visibility' : 'minimized'};
                 const actual = await window.TeneoWebChat.get(api.API_GET_STATE);
-                
-                expect(window.TeneoWebChat.helpers.apiGetState).toHaveBeenCalledTimes(1);
+
+                //roll back the mock
+                window.TeneoWebChat.get = getBK;
+
                 expect(actual).toEqual(expected);
             });
 
-            test('Assert API_GET_CHAT_HISTORY', async ()=> {                
-                window.TeneoWebChat.helpers.apiGetChatHistory = jest.fn().mockImplementation(() => {    
-                    return [{"author":"bot","type":"text","data":{"text":"Good afternoon and welcome! This is a test message."}}]
-                  });
+            test('Assert API_GET_CHAT_HISTORY', async ()=> {  
+                
+                //backup method group, then overwrite with mock
+                const getBK = window.TeneoWebChat.get
+                window.TeneoWebChat.get = jest.fn().mockImplementation((function_name) => {
+                    switch(function_name) {
+                        case api.API_GET_CHAT_HISTORY:
+                            return [{"author":"bot","type":"text","data":{"text":"Good afternoon and welcome! This is a test message."}}]
+                    }
+                });
 
+                //Simulate calling Api method
                 const chatHistory = await window.TeneoWebChat.get(api.API_GET_CHAT_HISTORY);
+
+                //roll back the mock
+                window.TeneoWebChat.get = getBK;
+
                 expect(chatHistory.length).toBe(1);
                 expect(chatHistory[0].author).toBe("bot");
                 expect(chatHistory[0].type).toBe("text");
-                expect(window.TeneoWebChat.helpers.apiGetChatHistory).toHaveBeenCalledTimes(1);
             });
         })//end describe
     } //end if
