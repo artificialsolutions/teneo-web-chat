@@ -93,7 +93,7 @@ window['TeneoWebChat'] = {
   on(function_name, func){
 
     // prevent people from registering 'on' events after teneo web chat was initialized
-    if ((isInitialised === false)||(process.env.CURRENT_SCRIPT === 'testing')) {
+    if ((isInitialised === false)||(process.env.NODE_ENV === 'test')) {
       // this 'on' method is called each time someone registers
       // a 'function_name' (ready, visibility_change, engine_response etc)
 

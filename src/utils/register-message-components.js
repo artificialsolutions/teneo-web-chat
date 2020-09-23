@@ -1,7 +1,7 @@
 import Vue from 'vue';
 
 export default function registerMessageComponents() {
-  if((process.env.CURRENT_SCRIPT === 'undefined')||(process.env.CURRENT_SCRIPT !== 'testing')){
+  if((process.env.NODE_ENV === 'undefined')||(process.env.NODE_ENV !== 'test')){
     const requireComponent = require.context(
       '../components/messages',
       true,
