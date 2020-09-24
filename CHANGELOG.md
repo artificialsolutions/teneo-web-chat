@@ -1,9 +1,9 @@
 # v3.1.0
 ## 23-09-2020
-* Buttons, quickreplies and clickable lists can now include engine input parameters
-* Added api call 'Set chat window icon'
+* Buttons, quick replies and clickable lists can now include engine input parameters
+* Added API-call 'Set chat window icon'
 * Reworked unit tests to use jest instead of mocha
-* Updated depenencies and removed obsolete dependencies
+* Updated dependencies and removed obsolete dependencies
 
 # v3.0.1
 ## 09-09-2020
