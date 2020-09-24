@@ -23,9 +23,13 @@ export default async function handleButtonClick(button, idx, teneoApi) {
         button = payload.button
     }
 
-    // only send silent input of postback exists
+    // only send silent input if postback exists
     if (!(payload.handledState.handled === true) && button.postback) {
-        await teneoApi.sendSilentMessage(button.postback);
+        let parameters = {};
+        if (button.parameters) {
+            parameters = button.parameters;
+        }
+        await teneoApi.sendSilentMessage(button.postback, parameters);
     }
 }
   
