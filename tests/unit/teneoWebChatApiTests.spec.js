@@ -115,23 +115,18 @@ ejs.renderFile(index_js, function (err, str) {
         var testWindow;
         beforeEach(() => {
           dom = new JSDOM(str);
-        //  console.log('dom: '+dom);
           container = dom.window.document;
-        //  console.log('container: ',container);
           testWindow = dom.window.globalThis;
         })
         
         test('Assert presence of methods in Window.TeneoWebChat', () => {
-        //  console.log('testWindow: ',testWindow);
           expect(testWindow.TeneoWebChat).toBeTruthy
           expect(testWindow.TeneoWebChat.initialize).toBeTruthy
-          /*
           expect(testWindow.TeneoWebChat.on).toBeTruthy
           expect(testWindow.TeneoWebChat.off).toBeTruthy
           expect(testWindow.TeneoWebChat.get).toBeTruthy
           expect(testWindow.TeneoWebChat.call).toBeTruthy
           expect(testWindow.TeneoWebChat.version).toBeTruthy
-          //*/
         })
       })
 

@@ -183,6 +183,40 @@ ejs.renderFile(index_js, function (err, str) {
                 expect(wrapperHeader.html()).toContain('New Title');
             })
 
+            test('Assert API_CALL_SET_WINDOW_ICON', async()=> {
+                //Mount component with mock store
+                const wrapperHeader = mount(Header, {
+                    propsData: {
+                        onClose: jest.fn(),
+                        onMinimize: jest.fn()
+                    },
+                    mocks:{
+                        $store: mockStore
+                    }
+                })
+
+                //Mock the implementation of setTitle in 'window.TeneoWebChat'
+                const newTitle = 'www.icon.url';
+
+                //backup method group, then overwrite with mock
+                const callBK = window.TeneoWebChat.call
+                window.TeneoWebChat.call = jest.fn().mockImplementation((function_name, payload) => {   
+                    switch  (function_name) {
+                        case api.API_CALL_SET_WINDOW_ICON:
+                            // TODO: throw error if payload is invalid or if store throws error
+                            if (typeof payload === "string") {
+                                mockStore.state.title = payload;
+                            }
+                            break
+                    }
+                  });
+                //Call the API method under test
+                await window.TeneoWebChat.call(api.API_CALL_SET_WINDOW_ICON, newTitle);
+                window.TeneoWebChat.call = callBK
+
+                //Asert that that the value was set in the Header's template
+                expect(wrapperHeader.html()).toContain('www.icon.url');
+            })
 
             test('Assert API_GET_STATE', async ()=> {     
 
