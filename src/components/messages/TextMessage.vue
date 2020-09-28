@@ -7,8 +7,7 @@
       <div v-if="avatarUrl" class="twc-avatar" :class="messageSource"><img :src="avatarUrl"></div>
       <div class="twc-text-message" :class="messageSource">
         <!-- eslint-disable-next-line vue/no-v-html -->
-        <p v-if="isBot" class="twc-text-message__text" v-html="sanitizedHtmlText"></p>
-        <p v-else class="twc-text-message__text">{{ messageText }}</p>
+        <p class="twc-text-message__text" v-html="sanitizedHtmlText"></p>
       </div>
     </div>
     
