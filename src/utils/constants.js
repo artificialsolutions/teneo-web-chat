@@ -9,7 +9,7 @@ export const BUBBLE_DELAY = 600;
 export const SESSION_ID_STORAGE_KEY = 'teneo-web-chat-session-id';
 
 // api version
-export const API_VERSION = "3.0.0";
+export const API_VERSION = "3.1.0";
 
 // state object keys
 export const API_KEY_VISIBILITY = "visibility";
