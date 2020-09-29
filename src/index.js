@@ -8,6 +8,7 @@ import * as apiConstants from '../src/utils/api-function-names.js';
 import handleExtension from '../src/utils/handle-extension.js';
 import messageListCache from '../src/utils/message-list-cache.js';
 import { store } from '../src/store/store.js';
+import isValidUrl from '../src/utils/validate-url';
 
 var functionMap = new Map();
 const validFunctionNames = Object.values(apiConstants)
@@ -222,6 +223,12 @@ window['TeneoWebChat'] = {
         // TODO: throw error if payload is invalid or if store throws error
         if (typeof payload === "string") {
           store.commit('titleIconUrl',payload);
+          if(payload.length === 0){
+            store.commit('titleIconUrl',null);
+          }
+        }
+        else{
+          store.commit('titleIconUrl',null);
         }
         break
 
@@ -233,6 +240,18 @@ window['TeneoWebChat'] = {
         EventBus.$emit(events.ENABLE_INPUT);
         break
       
+      case apiConstants.API_CALL_SET_ENGINE_URL:
+        if(typeof payload === "string"){
+          if(isValidUrl(payload))
+            EventBus.$emit(events.SET_ENGINE_URL, payload);
+          else
+            EventBus.$emit(events.SET_ENGINE_URL, process.env.TENEO_ENGINE_URL);
+       }
+       else if(payload === null){
+        EventBus.$emit(events.SET_ENGINE_URL, process.env.TENEO_ENGINE_URL);
+       }
+        break;
+
       default:
         break
     }

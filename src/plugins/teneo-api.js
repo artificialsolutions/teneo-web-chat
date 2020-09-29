@@ -10,9 +10,16 @@ import { EventBus, events } from '../utils/event-bus.js';
 import handleExtension from '../utils/handle-extension.js';
 import basePayload from '../utils/base-payload.js';
 import detectSafari from '../utils/detect-safari';
+import isValidUrl from '../utils/validate-url';
 
 export default function teneoApiPlugin(teneoApiUrl) {
-  const teneoApi = TIE.init(teneoApiUrl);
+  var teneoApi = TIE.init(teneoApiUrl);
+  EventBus.$on(events.SET_ENGINE_URL, (newTeneoApiUrl) => {
+    if(isValidUrl(newTeneoApiUrl)){
+      teneoApi = TIE.init(newTeneoApiUrl);
+    }
+  });
+
   const messageListCache = new MessageListCache();
   const tmpVue = new Vue({ data: { messageList: messageListCache.get() } });
   const isSafari = detectSafari();
