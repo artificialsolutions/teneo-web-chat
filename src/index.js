@@ -219,6 +219,10 @@ window['TeneoWebChat'] = {
         }
         break
 
+      case apiConstants.API_CALL_RESET_CHAT_WINDOW_TITLE:
+        store.commit('title',null)
+        break;
+      
       case apiConstants.API_CALL_SET_CHAT_WINDOW_ICON:
         // TODO: throw error if payload is invalid or if store throws error
         if (typeof payload === "string") {

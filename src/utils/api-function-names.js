@@ -7,6 +7,7 @@ export const API_CALL_CLEAR_CHAT_HISTORY = "clear_chat_history";
 export const API_CALL_RESET = "reset";
 export const API_CALL_ADD_MESSAGE = "add_message";
 export const API_CALL_SET_CHAT_WINDOW_TITLE = "set_chat_window_title";
+export const API_CALL_RESET_CHAT_WINDOW_TITLE = "reset_chat_window_title";
 export const API_CALL_SET_CHAT_WINDOW_ICON = "set_chat_window_icon"
 export const API_CALL_RESET_CHAT_WINDOW_ICON = "reset_chat_window_icon"
 export const API_CALL_SET_LAUNCH_ICON = "set_launch_icon"
