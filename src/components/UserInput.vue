@@ -144,10 +144,16 @@ export default {
 
       if (payload.text && payload.text.trim().length > 0) {
         const text = payload.text
+        
+        var parameters = {}
+        if(payload.parameters){
+          parameters = payload.parameters
+        }
+
         this.onSubmit({
           author: PARTICIPANT_USER,
           type: 'text',
-          data: { text },
+          data: { text, parameters }
         });
       }
     },

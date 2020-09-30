@@ -45,6 +45,8 @@ export default function teneoApiPlugin(teneoApiUrl) {
 
     async sendBaseMessage(text, parameters, isSilent) {
 
+      if(parameters.obfuscated)
+        console.log('INPUT_SUBMITTED obfuscated: '+parameters.obfuscated)
       // set text and channel
       var messageDetails = {
         'text': text,
@@ -149,8 +151,8 @@ export default function teneoApiPlugin(teneoApiUrl) {
 
     },
 
-    async sendMessage(message, parameters = {}) {
-      await this.sendBaseMessage(message.data.text, parameters, false);
+    async sendMessage(message) {
+      await this.sendBaseMessage(message.data.text, message.data.parameters, false);
     },
     async sendSilentMessage(text = '', parameters = {}) {
       await this.sendBaseMessage(text, parameters, true);

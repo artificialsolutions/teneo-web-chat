@@ -18,14 +18,18 @@
       const mandalorianIconUrl = 'https://cdn0.iconfinder.com/data/icons/famous-character-vol-1-colored/48/JD-31-512.png'
       const newEndpoint = 'https://gorgeoushuskies-10d959.bots.teneo.ai/web_chat_test_26gbp9h61k8dftrg9pe7r1z6cv/'
       const oldEndpoint = 'https://as-freaky-styley-714c5e.bots.teneo.ai/teneo_web_chat_tes_3gzgctjx5q84x8fztj2bdzxtrh/'
+      const agentIconUrl = 'https://cdn0.iconfinder.com/data/icons/streamline-emoji-1/48/092-robot-face-1-512.png'
     </script>
     
     <button onclick="TeneoWebChat.call('set_chat_window_title', 'New Title')">Set Custom Title</button><br><br>
 
-    <button onclick="TeneoWebChat.call('set_chat_window_icon', mandalorianIconUrl)">Set Custom Icon</button><br>
-    <button onclick="TeneoWebChat.call('set_chat_window_icon', '')">Set empty icon</button><br>
-    <button onclick="TeneoWebChat.call('reset_chat_window_icon')">Reset icon</button> <br><br>
+    <button onclick="TeneoWebChat.call('set_chat_window_icon', mandalorianIconUrl)">Set Custom Window icon</button><br>
+    <button onclick="TeneoWebChat.call('set_chat_window_icon', '')">Set  Window icon</button><br>
+    <button onclick="TeneoWebChat.call('reset_chat_window_icon')">Reset Window icon</button> <br><br>
 
+
+    <button onclick="TeneoWebChat.call('set_launch_icon', agentIconUrl)">Set Custom Launch icon</button><br>
+    <button onclick="TeneoWebChat.call('reset_launch_icon')">Reset Launch icon</button><br><br>
 
 
     <button onclick="TeneoWebChat.call('set_chat_window_title', '')">Set blank Title</button><br><br>
@@ -58,6 +62,14 @@
             'closeIconUrl' :  '<%= process.env.CLOSE_ICON_URL %>',
             'launchIconUrl' :  '<%= process.env.LAUNCH_ICON_URL %>',
           }
+
+          window.TeneoWebChat.on('input_submitted', payload => {
+              payload.text = 'Obfuscated text bla bla';
+              if (payload.parameters==null){
+                payload.parameters = {};
+                payload.parameters.obfuscated = 'true';
+              }
+          });
 
           window.TeneoWebChat.initialize(element, teneoProps);
         }
