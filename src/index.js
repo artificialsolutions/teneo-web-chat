@@ -242,14 +242,11 @@ window['TeneoWebChat'] = {
       
       case apiConstants.API_CALL_SET_ENGINE_URL:
         if(typeof payload === "string"){
-          if(isValidUrl(payload))
+          if(isValidUrl(payload)) {
+            store.commit('teneoEngineUrl',payload);
             EventBus.$emit(events.SET_ENGINE_URL, payload);
-          else
-            EventBus.$emit(events.SET_ENGINE_URL, process.env.TENEO_ENGINE_URL);
-       }
-       else if(payload === null){
-        EventBus.$emit(events.SET_ENGINE_URL, process.env.TENEO_ENGINE_URL);
-       }
+          } 
+        }
         break;
 
       default:

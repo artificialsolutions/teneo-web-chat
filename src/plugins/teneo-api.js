@@ -13,18 +13,22 @@ import detectSafari from '../utils/detect-safari';
 import isValidUrl from '../utils/validate-url';
 
 export default function teneoApiPlugin(teneoApiUrl) {
-  var teneoApi = TIE.init(teneoApiUrl);
-  EventBus.$on(events.SET_ENGINE_URL, (newTeneoApiUrl) => {
-    if(isValidUrl(newTeneoApiUrl)){
-      teneoApi = TIE.init(newTeneoApiUrl);
-    }
-  });
 
   const messageListCache = new MessageListCache();
   const tmpVue = new Vue({ data: { messageList: messageListCache.get() } });
   const isSafari = detectSafari();
   const sessionKey = SESSION_ID_STORAGE_KEY;
   let sessionId = null;
+
+  // default initialisation of teneoApi
+  var teneoApiUrl = tmpVue.$store.getters.teneoEngineUrl
+  var teneoApi = TIE.init(teneoApiUrl);
+
+  // Update teneoApi if engine url changed using API call
+  EventBus.$on(events.SET_ENGINE_URL, () => {
+    teneoApiUrl = tmpVue.$store.getters.teneoEngineUrl
+    teneoApi = TIE.init(teneoApiUrl);
+  });
 
 
   const plugin = {
