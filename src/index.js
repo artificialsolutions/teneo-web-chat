@@ -223,15 +223,13 @@ window['TeneoWebChat'] = {
         // TODO: throw error if payload is invalid or if store throws error
         if (typeof payload === "string") {
           store.commit('titleIconUrl',payload);
-          if(payload.length === 0){
-            store.commit('titleIconUrl',null);
-          }
-        }
-        else{
-          store.commit('titleIconUrl',null);
         }
         break
 
+      case apiConstants.API_CALL_RESET_WINDOW_ICON:
+        store.commit('titleIconUrl',null);
+        break
+          
       case apiConstants.API_CALL_DISABLE_USERINPUT:
         EventBus.$emit(events.DISABLE_INPUT);
         break
