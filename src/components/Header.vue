@@ -1,9 +1,9 @@
 <template>
   <div class="twc-header">
     <img v-if="titleIconUrl" class="twc-header__img" :src="titleIconUrl" />
-    <BubbleIcon v-else class="twc-header__img" />
+    <BubbleIcon v-else class="twc-header__img" id="default-header-icon"/>
     <div v-if="title" class="twc-header__title">{{ title }}</div>
-    <div v-else class="twc-header__title">Teneo Web Chat</div>
+    <div v-else class="twc-header__title">{{getDefaultTitle}}</div>
     <button class="twc-header__minimize-button" @click="onMinimize" id="header-minimize-button">
       <img v-if="minimizeIconUrl" class="twc-header__minimize-icon" :src="minimizeIconUrl" />
       <MinimizeIcon v-else class="twc-header__minimize-icon" />
@@ -19,6 +19,7 @@
 import XIcon from '../icons/x.vue';
 import MinimizeIcon from '../icons/minimize-caret.vue';
 import BubbleIcon from '../icons/bubble.vue';
+import * as constants from '../utils/constants.js';
 import { mapState } from 'vuex';
 
 export default {
@@ -45,6 +46,11 @@ export default {
         'minimizeIconUrl',
         'closeIconUrl',
     ]),
+  },
+  methods: {
+    getDefaultTitle(){
+        return constants.DEFAULT_TITLE;
+      }
   }
 };
 </script>

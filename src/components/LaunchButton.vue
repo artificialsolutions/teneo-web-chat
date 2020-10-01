@@ -5,7 +5,7 @@
     @click.prevent="isOpen ? close() : open()"
   >
     <img v-if="launchIconUrl" class="twc-launch-button__open-icon" :src="launchIconUrl" />
-    <BubbleIcon v-else class="twc-launch-button__open-icon" />
+    <BubbleIcon v-else class="twc-launch-button__open-icon" id="default-launch-button-icon"/>
   </div>
 </template>
 <script>
