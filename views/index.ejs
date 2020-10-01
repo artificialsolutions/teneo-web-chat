@@ -64,14 +64,6 @@
             'launchIconUrl' :  '<%= process.env.LAUNCH_ICON_URL %>',
           }
 
-          window.TeneoWebChat.on('input_submitted', payload => {
-              payload.text = 'Obfuscated text bla bla';
-              if (payload.parameters==null){
-                payload.parameters = {};
-                payload.parameters.obfuscated = 'true';
-              }
-          });
-
           window.TeneoWebChat.initialize(element, teneoProps);
         }
       }
