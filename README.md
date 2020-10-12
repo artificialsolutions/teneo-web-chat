@@ -95,13 +95,13 @@ Sometimes you may wish to provide an answer using multiple text bubbles. This ca
 ]
 ```
 
-For more details on how to generate the value of `outputTextSegmentIndexes` in Teneo Studio, please refer to [Splitting answers into bubbles](https://www.teneo.ai/engine/channels/teneo-web-chat#splitting-answers-into-bubbles).
+For more details on how to generate the value of `outputTextSegmentIndexes` in Teneo Studio, please refer to [Splitting answers into bubbles](https://developers.artificial-solutions.com/engine/teneo-web-chat#splitting-answers-into-bubbles).
 
 ## Extending
 ### Javascript API
-The functionality provided by Teneo Web Chat can be extended and modified using the [Teneo Web Chat JavaScript API](https://developers.artificial-solutions.com/engine/teneo-web-chat/teneo-web-chat-api). This api allows developers to create extensions that can trigger events in the Teneo Web Chat widget, or subscribe to events that may occur in the chat widget. This lets developers change or extend its behavior in ways that are not provided by the standard configuration. 
+The functionality provided by Teneo Web Chat can be extended and modified using the [Teneo Web Chat JavaScript API](https://developers.artificial-solutions.com/engine/teneo-web-chat/web-chat-api). This api allows developers to create extensions that can trigger events in the Teneo Web Chat widget, or subscribe to events that may occur in the chat widget. This lets developers change or extend its behavior in ways that are not provided by the standard configuration. 
 
-Extensions can be created using standard JavaScript, without needing to modify the source code of Teneo Web Chat. Full specification of the API can be foud here: [Teneo Web Chat JavaScript API](https://developers.artificial-solutions.com/engine/teneo-web-chat/teneo-web-chat-api).
+Extensions can be created using standard JavaScript, without needing to modify the source code of Teneo Web Chat. Full specification of the API can be foud here: [Teneo Web Chat JavaScript API](https://developers.artificial-solutions.com/engine/teneo-web-chat/web-chat-api).
 
 ### Modifying the source code
 While in most cases using the Javascript API provides enough functionality to extend Teneo Web Chat, you can also access and work with Teneo Web Chat's source code directly. To modify and run the source code, a basic understanding of [Vue.js](https://vuejs.org) is required. Teneo Web Chat is based on [Vue Beautiful Chat](https://github.com/mattmezza/vue-beautiful-chat) by Matteo Merola. 
