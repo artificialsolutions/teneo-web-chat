@@ -10,7 +10,7 @@ Core features:
 * Works on mobile devices
 * Open source
 
-NOTE: This readme contains high-level information about Teneo Web Chat. For full documentation, please refer to the [Teneo Web Chat Documentation](https://www.teneo.ai/engine/channels/teneo-web-chat) on teneo.ai.
+NOTE: This readme contains high-level information about Teneo Web Chat. For full documentation, please refer to the [Teneo Web Chat Documentation](https://developers.artificial-solutions.com/engine/teneo-web-chat) on the Teneo Developers website.
 
 ## Prerequisites
 * Your bot needs to be published and you need to know the engine URL.
@@ -83,7 +83,7 @@ If you are looking for a quick way to interact with your bot using Teneo Web Cha
 When Heroku has finished deploying, click 'View app'. You should now be able to use the web chat ui to talk to your bot.
 
 ## Message types
-Teneo Web Chat offers various message types that can be 'attached' to the bot's answer text. This is achieved by adding an output parameter `teneowebclient` with JSON specific for the message type. For more details on the message types supported, see the [documentation on teneo.ai](https://www.teneo.ai/engine/channels/teneo-web-chat).
+Teneo Web Chat offers various message types that can be 'attached' to the bot's answer text. This is achieved by adding an output parameter `teneowebclient` with JSON specific for the message type. For more details on the message types supported, see the [documentation on the Teneo Developers website](https://developers.artificial-solutions.com/engine/teneo-web-chat).
 
 ## Splitting answers into 'bubbles'
 Sometimes you may wish to provide an answer using multiple text bubbles. This can be achieved by including an output parameter called `outputTextSegmentIndexes`. This output parameter should contain a list of index pairs, to indicate where the output text can be split into separate bubbles. The value of the `outputTextSegmentIndexes` should be structured like this (linebreaks are added for readability):
@@ -99,9 +99,9 @@ For more details on how to generate the value of `outputTextSegmentIndexes` in T
 
 ## Extending
 ### Javascript API
-The functionality provided by Teneo Web Chat can be extended and modified using the [Teneo Web Chat JavaScript API](https://www.teneo.ai/engine/channels/teneo-web-chat/teneo-web-chat-api). This api allows developers to create extensions that can trigger events in the Teneo Web Chat widget, or subscribe to events that may occur in the chat widget. This lets developers change or extend its behavior in ways that are not provided by the standard configuration. 
+The functionality provided by Teneo Web Chat can be extended and modified using the [Teneo Web Chat JavaScript API](https://developers.artificial-solutions.com/engine/teneo-web-chat/teneo-web-chat-api). This api allows developers to create extensions that can trigger events in the Teneo Web Chat widget, or subscribe to events that may occur in the chat widget. This lets developers change or extend its behavior in ways that are not provided by the standard configuration. 
 
-Extensions can be created using standard JavaScript, without needing to modify the source code of Teneo Web Chat. Full specification of the API can be foud here: [Teneo Web Chat JavaScript API](https://www.teneo.ai/engine/channels/teneo-web-chat/teneo-web-chat-api).
+Extensions can be created using standard JavaScript, without needing to modify the source code of Teneo Web Chat. Full specification of the API can be foud here: [Teneo Web Chat JavaScript API](https://developers.artificial-solutions.com/engine/teneo-web-chat/teneo-web-chat-api).
 
 ### Modifying the source code
 While in most cases using the Javascript API provides enough functionality to extend Teneo Web Chat, you can also access and work with Teneo Web Chat's source code directly. To modify and run the source code, a basic understanding of [Vue.js](https://vuejs.org) is required. Teneo Web Chat is based on [Vue Beautiful Chat](https://github.com/mattmezza/vue-beautiful-chat) by Matteo Merola. 
@@ -250,7 +250,7 @@ To create custom message types, these are the steps to take:
 
 ## Engine input parameters
 ### channel
-In addition to the input entered by the user, requests to the Teneo Engine also contain an input parameter 'channel' with value 'teneo-webchat'. This allows you to change the behavior of your bot, depending on the channel used. For information on how to retrieve the value of an input parameter in Teneo Studio, see [Store input parameters](https://www.teneo.ai/studio/scripting/how-to/store-input-parameters) on the Teneo Developers website.
+In addition to the input entered by the user, requests to the Teneo Engine also contain an input parameter 'channel' with value 'teneo-webchat'. This allows you to change the behavior of your bot, depending on the channel used. For information on how to retrieve the value of an input parameter in Teneo Studio, see [Store input parameters](https://developers.artificial-solutions.com/studio/scripting/how-to/store-input-parameters) on the Teneo Developers website.
 
 ### Extra parameters
 An optional map of parameters can be included when Teneo Web Chat is initialized. The keys in this map (and their values) will be included as individual input parameters in all requests to the Teneo Engine. 
