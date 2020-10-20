@@ -242,6 +242,7 @@ export default {
   --expired-color: #a9a9a9;
   --text-link-color: #007bff;
   --user-input-bg-color: #f4f7f9;
+  --user-input-fg-color: #565867;
   --sendicon-fg-color: var(--dark-fg-color);
   --launch-button-bg-color: var(--primary-color);
   --launchicon-fg-color: var(--light-fg-color);

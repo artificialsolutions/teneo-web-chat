@@ -198,7 +198,7 @@ export default {
   line-height: 1.33;
   white-space: pre-wrap;
   word-wrap: break-word;
-  color: #565867;
+  color: var(--user-input-fg-color, #565867);
   -webkit-font-smoothing: antialiased;
   max-height: 200px;
   overflow: scroll;
