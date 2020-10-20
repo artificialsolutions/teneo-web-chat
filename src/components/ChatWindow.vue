@@ -1,7 +1,7 @@
 <template>
     <div ref="chatWindowId" :class="chatWindowStyles()">
     <Header :on-close="onClose" :on-minimize="onMinimize"/>
-    <MessageList id="message-list-id" :message-list="$teneoApi.messageList" />
+    <MessageList id="twc-message-list" :message-list="$teneoApi.messageList" />
     <div v-if="spinnerIsLoading" class="twc-spinner">
       <div class="twc-bounce1"></div>
       <div class="twc-bounce2"></div>

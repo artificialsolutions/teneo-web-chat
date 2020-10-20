@@ -1,7 +1,7 @@
 <template>
   <div class="teneo-web-chat">
     <ChatWindow
-      id="twc-chatwindow-id" 
+      id="twc-chat-window" 
       v-if="isChatOpen"
       :on-close="closeChat"
       :on-minimize="minimizeChat"
@@ -27,7 +27,7 @@ import detectIosSafari from './utils/detect-ios-safari';
 const bodyScrollLock = require('body-scroll-lock');
 const disableBodyScroll = bodyScrollLock.disableBodyScroll;
 const enableBodyScroll = bodyScrollLock.enableBodyScroll;
-const messageListId = '#message-list-id';
+const messageListId = '#twc-message-list';
 
 // Detect safari (not just iOS) so we can clear session id from storage in closeSession
 const isSafari = detectSafari();
