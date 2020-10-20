@@ -77,16 +77,16 @@ export default {
 </script>
 
 <style>
-.twc-message__wrapper.user .twc-wrap {
+.twc-message.user .twc-wrap {
   max-width: calc(100% - 84px);
 }
 
 /* workaround to fix wicth of text message box on IE11 */
-_:-ms-fullscreen, :root .twc-message__wrapper.bot .twc-wrap, :root .twc-message__wrapper.agent .twc-wrap {
+_:-ms-fullscreen, :root .twc-message.bot .twc-wrap, :root .twc-message.agent .twc-wrap {
   max-width: calc(100% - 1px);
 }
 
-_:-ms-fullscreen, :root .twc-message__wrapper.user .twc-wrap  {
+_:-ms-fullscreen, :root .twc-message.user .twc-wrap  {
   max-width: calc(100% - 86px);
   margin-left: 85px
 }
@@ -101,7 +101,7 @@ _:-ms-fullscreen, :root .twc-message__wrapper.user .twc-wrap  {
   -webkit-font-smoothing: subpixel-antialiased;
   color: var(--secondary-color, #6c757d);
 }
-.twc-message__wrapper.user .twc-dateline {
+.twc-message.user .twc-dateline {
   text-align: right;
 }
 .twc-text-message {
@@ -112,21 +112,21 @@ _:-ms-fullscreen, :root .twc-message__wrapper.user .twc-wrap  {
   line-height: 1.4;
   -webkit-font-smoothing: subpixel-antialiased;
 }
-.twc-message__wrapper.bot .twc-text-message {
+.twc-message.bot .twc-text-message {
   color: var(--bot-message-fg-color, #263238);
   background-color: var(--bot-message-bg-color, #eceff1);
   margin-right: 40px;
   border-bottom-left-radius: 0px;
 }
 
-.twc-message__wrapper.agent .twc-text-message {
+.twc-message.agent .twc-text-message {
   color: var(--agent-message-fg-color, #ffffff);
   background-color: var(--agent-message-bg-color, #47b2fd);
   margin-right: 40px;
   border-bottom-left-radius: 0px;
 }
 
-.twc-message__wrapper.user .twc-text-message {
+.twc-message.user .twc-text-message {
   background: var(--user-message-bg-color, #4e8cff);
   color: var(--user-message-fg-color, #ffffff);
   word-wrap: break-word;
@@ -152,7 +152,7 @@ _:-ms-fullscreen, :root .twc-message__wrapper.user .twc-wrap  {
   display: flex;
 }
 
-.twc-message__wrapper.user .twc-textwrap {
+.twc-message.user .twc-textwrap {
   flex-direction: row-reverse;
 }
 
@@ -165,11 +165,11 @@ _:-ms-fullscreen, :root .twc-message__wrapper.user .twc-wrap  {
   display: flex;
 }
 
-.twc-message__wrapper.bot .twc-avatar, .twc-message__wrapper.agent .twc-avatar {
+.twc-message.bot .twc-avatar, .twc-message.agent .twc-avatar {
   margin-right: 6px;
 }
 
-.twc-message__wrapper.user .twc-avatar {
+.twc-message.user .twc-avatar {
   margin-left: 6px;
 }
 

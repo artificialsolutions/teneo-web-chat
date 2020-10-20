@@ -1,11 +1,11 @@
 <template>
-<div class="twc-wrap" :class="messageSource">
+<div class="twc-wrap">
     
     <!-- eslint-disable-next-line vue/no-v-html -->
-    <p class="twc-dateline" :class="messageSource" v-if="dateline" v-html="dateline"></p>
-    <div class="twc-textwrap" :class="messageSource">
-      <div v-if="avatarUrl" class="twc-avatar" :class="messageSource"><img :src="avatarUrl"></div>
-      <div class="twc-typing-message" :class="messageSource">        
+    <p class="twc-dateline" v-if="dateline" v-html="dateline"></p>
+    <div class="twc-textwrap">
+      <div v-if="avatarUrl" class="twc-avatar"><img :src="avatarUrl"></div>
+      <div class="twc-typing-message">        
         <div class="twc-spinner">
           <div class="twc-bounce1"></div>
           <div class="twc-bounce2"></div>
@@ -83,14 +83,14 @@ export default {
 .twc-typing-message  .twc-spinner > div {
   width: 6px;
   height: 6px;
-  background-color: var(--light-fg-color, #6c757d);
+  background-color: var(--light-fg-color, #ffffff);
   border-radius: 100%;
   display: inline-block;
   -webkit-animation: twc-sk-bouncedelay 1.4s infinite ease-in-out both;
   animation: twc-sk-bouncedelay 1.4s infinite ease-in-out both;
 }
 
-.twc-typing-message.bot  .twc-spinner > div {
+.twc-message.bot .twc-typing-message .twc-spinner > div {
   background-color: var(--secondary-color, #6c757d);
 }
 
@@ -119,11 +119,11 @@ export default {
   }
 }
 
-.twc-wrap.user {
+.twc-message.user .twc-wrap {
   max-width: calc(100% - 84px);
 }
 
-_:-ms-fullscreen, :root .twc-wrap.bot {
+_:-ms-fullscreen, :root .twc-message.bot .twc-wrap {
   max-width: calc(100% - 1px);
 }
 .twc-dateline {
@@ -135,7 +135,7 @@ _:-ms-fullscreen, :root .twc-wrap.bot {
   -webkit-font-smoothing: subpixel-antialiased;
   color: var(--secondary-color, #6c757d);
 }
-.twc-dateline.user {
+.twc-message.user .twc-dateline {
   text-align: right;
 }
 .twc-typing-message {
@@ -144,19 +144,19 @@ _:-ms-fullscreen, :root .twc-wrap.bot {
   font-size: 0.9em;
   line-height: 1.4;
 }
-.twc-typing-message.bot {
+.twc-message.bot .twc-typing-message {
   background-color: var(--bot-message-bg-color, #eceff1);
   margin-right: 40px;
   border-bottom-left-radius: 0px;
 }
 
-.twc-typing-message.agent {
+.twc-message.agent .twc-typing-message {
   background-color: var(--agent-message-bg-color, #47b2fd);
   margin-right: 40px;
   border-bottom-left-radius: 0px;
 }
 
-.twc-typing-message.user {
+.twc-message.user .twc-typing-message {
   background: var(--user-message-bg-color, #4e8cff);
   word-wrap: break-word;
   border-bottom-right-radius: 0px;

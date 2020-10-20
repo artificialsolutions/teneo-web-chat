@@ -1,8 +1,6 @@
 <template>
-  <div class="twc-message">
-    <div class="twc-message__wrapper" :class="messageSource">
+  <div class="twc-message" :class="messageSource">
       <component :is="messageType" :message="message" />
-    </div>
   </div>
 </template>
 
@@ -42,16 +40,11 @@ export default {
   display: flex;
 }
 
-.twc-message__wrapper {
-  width: 100%;
-  display: flex;
-}
-
-.twc-message__wrapper.user {
+.twc-message.user {
   justify-content: flex-end;
 }
 
-.twc-message__wrapper.bot {
+.twc-message.bot {
   justify-content: flex-start;
 }
 </style>

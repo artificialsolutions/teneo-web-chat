@@ -2,7 +2,7 @@
   <ul class="twc-combo" :class="{ replied: replySent}">
     <li v-for="(message, idx) in comboitems" :key="idx">
       <div class="twc-combo-message" v-if="message.type==='text'">
-        <div class="twc-text-message" :class="messageSource">
+        <div class="twc-text-message">
           <p class="twc-text-message__text" v-html="message.text"></p>
         </div>
       </div>
@@ -17,7 +17,6 @@
 
       <div class="twc-combo-message" v-if="message.type==='quickreply'">
         <div class="twc-quickreply-message" :class="{ expired: replySent || isExpired }">
-          <div>
             <a
               v-for="(reply, idx) in message.quick_replies"
               :key="idx"
@@ -26,7 +25,6 @@
               :class="{ selected: replySent && selected === idx, 'twc-primary': reply.style == 'primary', 'twc-secondary': reply.style == 'secondary', 'twc-success': reply.style == 'success', 'twc-danger': reply.style == 'danger', 'twc-warning': reply.style == 'warning', 'twc-info': reply.style == 'info'}"
               @click="onSelect(reply, idx)"
             >{{ reply.title }}</a>
-          </div>
         </div>
       </div>
 

@@ -46,10 +46,42 @@
               "dateline" : "<strong>Jack</strong> - 12:45"
           }
       }
+
+      const typingIndicatorUser = {
+          "author": "user",
+          "data": { 
+              "avatarUrl" : "https://as-freaky-styley-714c5e.bots.teneo.ai/teneo_web_chat_tes_3gzgctjx5q84x8fztj2bdzxtrh/images/user.png",
+              "dateline" : "<strong>Joanna</strong> - 12:45"
+          }
+      }
+
+      const typingIndicatorBot = {
+          "author": "bot",
+          "data": { 
+              "avatarUrl" : "https://as-freaky-styley-714c5e.bots.teneo.ai/teneo_web_chat_tes_3gzgctjx5q84x8fztj2bdzxtrh/images/bot.png",
+              "dateline" : "<strong>Sara</strong> - 12:45"
+          }
+      }
+
+      const typingIndicatorAgent = {
+          "author": "agent",
+          "data": { 
+              "avatarUrl" : "https://as-freaky-styley-714c5e.bots.teneo.ai/teneo_web_chat_tes_3gzgctjx5q84x8fztj2bdzxtrh/images/agent.png",
+              "dateline" : "<strong>Jack</strong> - 12:45"
+          }
+      }
     </script>
     <button class="btn" onclick="TeneoWebChat.call('add_message',textMessageUserAvatarDateline)">Message from user</button><br>
     <button class="btn" onclick="TeneoWebChat.call('add_message',textMessageBotAvatarDateline)">Message from bot</button><br>
     <button class="btn" onclick="TeneoWebChat.call('add_message',textMessageAgentAvatarDateline)">Message from agent</button><br>
+    <button class="btn" onclick="TeneoWebChat.call('show_typing_indicator',typingIndicatorAgent)">Show agent typing indicator</button><br>
+    <button class="btn" onclick="TeneoWebChat.call('show_typing_indicator',typingIndicatorBot)">Show bot typing indicator</button><br>
+    <button class="btn" onclick="TeneoWebChat.call('show_typing_indicator',typingIndicatorUser)">Show user typing indicator</button><br>
+
+    <button class="btn" onclick="TeneoWebChat.call('hide_typing_indicator',{'author': 'agent'})">Hide agent typing indicator</button><br>
+    <button class="btn" onclick="TeneoWebChat.call('hide_typing_indicator',{'author': 'bot'})">Hide bot typing indicator</button><br>
+    <button class="btn" onclick="TeneoWebChat.call('hide_typing_indicator',{'author': 'user'})">Hide user typing indicator</button><br>
+
 
     <script src="teneo-web-chat.js"></script> <!-- needed for Heroku -->
     <div id="teneo-web-chat"></div>
