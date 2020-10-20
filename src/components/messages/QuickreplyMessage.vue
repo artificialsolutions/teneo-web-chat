@@ -1,6 +1,5 @@
 <template>
   <div class="twc-quickreply-message" :class="{ expired: replySent || isExpired }">
-    <div>
     <a
       v-for="(reply, idx) in quickreplies"
       :key="idx"
@@ -9,7 +8,6 @@
       :class="{ selected: replySent && selected === idx, 'twc-primary': reply.style == 'primary', 'twc-secondary': reply.style == 'secondary', 'twc-success': reply.style == 'success', 'twc-danger': reply.style == 'danger', 'twc-warning': reply.style == 'warning', 'twc-info': reply.style == 'info'}"
       @click="onSelect(reply, idx)"
     >{{ reply.title }}</a>
-    </div>
   </div>
 </template>
 
