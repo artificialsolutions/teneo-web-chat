@@ -172,7 +172,7 @@ export default {
 .twc-card-body h6 {
   font-size: 1em;
   font-weight: 500;
-  color: #6c757d !important;
+  color: var(--secondary-color, #263238) !important;
 }
 
 .twc-card-text {
