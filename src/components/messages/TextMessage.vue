@@ -1,11 +1,11 @@
 <template>
-<div class="twc-wrap" :class="messageSource">
+<div class="twc-wrap">
     
     <!-- eslint-disable-next-line vue/no-v-html -->
-    <p class="twc-dateline" :class="messageSource" v-if="dateline" v-html="dateline"></p>
-    <div class="twc-textwrap" :class="messageSource">
-      <div v-if="avatarUrl" class="twc-avatar" :class="messageSource"><img :src="avatarUrl"></div>
-      <div class="twc-text-message" :class="messageSource">
+    <p class="twc-dateline" v-if="dateline" v-html="dateline"></p>
+    <div class="twc-textwrap">
+      <div v-if="avatarUrl" class="twc-avatar"><img :src="avatarUrl"></div>
+      <div class="twc-text-message">
         <!-- eslint-disable-next-line vue/no-v-html -->
         <p class="twc-text-message__text" v-html="sanitizedHtmlText"></p>
       </div>
@@ -77,18 +77,20 @@ export default {
 </script>
 
 <style>
-.twc-wrap.user {
+.twc-message__wrapper.user .twc-wrap {
   max-width: calc(100% - 84px);
 }
 
-_:-ms-fullscreen, :root .twc-wrap.bot, :root .twc-wrap.agent {
+/* workaround to fix wicth of text message box on IE11 */
+_:-ms-fullscreen, :root .twc-message__wrapper.bot .twc-wrap, :root .twc-message__wrapper.agent .twc-wrap {
   max-width: calc(100% - 1px);
 }
 
-_:-ms-fullscreen, :root .twc-wrap.user  {
+_:-ms-fullscreen, :root .twc-message__wrapper.user .twc-wrap  {
   max-width: calc(100% - 86px);
   margin-left: 85px
 }
+/* End of workaround */
 
 .twc-dateline {
   font-weight: 400;
@@ -99,7 +101,7 @@ _:-ms-fullscreen, :root .twc-wrap.user  {
   -webkit-font-smoothing: subpixel-antialiased;
   color: var(--secondary-color, #6c757d);
 }
-.twc-dateline.user {
+.twc-message__wrapper.user .twc-dateline {
   text-align: right;
 }
 .twc-text-message {
@@ -110,21 +112,21 @@ _:-ms-fullscreen, :root .twc-wrap.user  {
   line-height: 1.4;
   -webkit-font-smoothing: subpixel-antialiased;
 }
-.twc-text-message.bot {
+.twc-message__wrapper.bot .twc-text-message {
   color: var(--bot-message-fg-color, #263238);
   background-color: var(--bot-message-bg-color, #eceff1);
   margin-right: 40px;
   border-bottom-left-radius: 0px;
 }
 
-.twc-text-message.agent {
+.twc-message__wrapper.agent .twc-text-message {
   color: var(--agent-message-fg-color, #ffffff);
   background-color: var(--agent-message-bg-color, #47b2fd);
   margin-right: 40px;
   border-bottom-left-radius: 0px;
 }
 
-.twc-text-message.user {
+.twc-message__wrapper.user .twc-text-message {
   background: var(--user-message-bg-color, #4e8cff);
   color: var(--user-message-fg-color, #ffffff);
   word-wrap: break-word;
@@ -150,7 +152,7 @@ _:-ms-fullscreen, :root .twc-wrap.user  {
   display: flex;
 }
 
-.twc-textwrap.user {
+.twc-message__wrapper.user .twc-textwrap {
   flex-direction: row-reverse;
 }
 
@@ -163,11 +165,11 @@ _:-ms-fullscreen, :root .twc-wrap.user  {
   display: flex;
 }
 
-.twc-avatar.bot, .twc-avatar.agent {
+.twc-message__wrapper.bot .twc-avatar, .twc-message__wrapper.agent .twc-avatar {
   margin-right: 6px;
 }
 
-.twc-avatar.user {
+.twc-message__wrapper.user .twc-avatar {
   margin-left: 6px;
 }
 
