@@ -238,11 +238,13 @@ export default {
   --danger-color: #dc3545;
   --success-color: #28a745;
   --warning-color: #ffc107;
+  --quickreply-warning-text-color: #e0a800;
   --info-color: #17a2b8;
   --expired-color: #a9a9a9;
   --text-link-color: #007bff;
   --user-input-bg-color: #f4f7f9;
   --user-input-fg-color: #565867;
+  --spinner-color: var(--light-border-color);
   --sendicon-fg-color: var(--dark-fg-color);
   --launch-button-bg-color: var(--primary-color);
   --launchicon-fg-color: var(--light-fg-color);

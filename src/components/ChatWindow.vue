@@ -137,7 +137,7 @@ export default {
 .twc-spinner > div {
   width: 9px;
   height: 9px;
-  background-color: #aaa;
+  background-color: var(--spinner-color, #c9c9c9);
 
   border-radius: 100%;
   display: inline-block;
