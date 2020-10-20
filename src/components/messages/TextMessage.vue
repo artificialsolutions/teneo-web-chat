@@ -1,9 +1,9 @@
 <template>
-<div class="twc-wrap">
+<div class="twc-text-message-wrapper">
     
     <!-- eslint-disable-next-line vue/no-v-html -->
     <p class="twc-dateline" v-if="dateline" v-html="dateline"></p>
-    <div class="twc-textwrap">
+    <div class="twc-avatar-text-wrapper">
       <div v-if="avatarUrl" class="twc-avatar"><img :src="avatarUrl"></div>
       <div class="twc-text-message">
         <!-- eslint-disable-next-line vue/no-v-html -->
@@ -77,16 +77,16 @@ export default {
 </script>
 
 <style>
-.twc-message.user .twc-wrap {
+.twc-message.user .twc-text-message-wrapper {
   max-width: calc(100% - 84px);
 }
 
 /* workaround to fix wicth of text message box on IE11 */
-_:-ms-fullscreen, :root .twc-message.bot .twc-wrap, :root .twc-message.agent .twc-wrap {
+_:-ms-fullscreen, :root .twc-message.bot .twc-text-message-wrapper, :root .twc-message.agent .twc-text-message-wrapper {
   max-width: calc(100% - 1px);
 }
 
-_:-ms-fullscreen, :root .twc-message.user .twc-wrap  {
+_:-ms-fullscreen, :root .twc-message.user .twc-text-message-wrapper  {
   max-width: calc(100% - 86px);
   margin-left: 85px
 }
@@ -148,11 +148,11 @@ _:-ms-fullscreen, :root .twc-message.user .twc-wrap  {
   text-decoration: underline;
 }
 
-.twc-textwrap {
+.twc-avatar-text-wrapper {
   display: flex;
 }
 
-.twc-message.user .twc-textwrap {
+.twc-message.user .twc-avatar-text-wrapper {
   flex-direction: row-reverse;
 }
 

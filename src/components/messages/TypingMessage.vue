@@ -1,9 +1,9 @@
 <template>
-<div class="twc-wrap">
+<div class="twc-text-message-wrapper">
     
     <!-- eslint-disable-next-line vue/no-v-html -->
     <p class="twc-dateline" v-if="dateline" v-html="dateline"></p>
-    <div class="twc-textwrap">
+    <div class="twc-avatar-text-wrapper">
       <div v-if="avatarUrl" class="twc-avatar"><img :src="avatarUrl"></div>
       <div class="twc-typing-message">        
         <div class="twc-spinner">
@@ -119,11 +119,11 @@ export default {
   }
 }
 
-.twc-message.user .twc-wrap {
+.twc-message.user .twc-text-message-wrapper {
   max-width: calc(100% - 84px);
 }
 
-_:-ms-fullscreen, :root .twc-message.bot .twc-wrap {
+_:-ms-fullscreen, :root .twc-message.bot .twc-text-message-wrapper {
   max-width: calc(100% - 1px);
 }
 .twc-dateline {
