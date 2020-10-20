@@ -1,5 +1,5 @@
 <template>
-  <ul class="twc-combo" :class="{ replied: replySent}">
+  <ul class="twc-combo">
     <li v-for="(message, idx) in comboitems" :key="idx">
       <div class="twc-combo-message" v-if="message.type==='text'">
         <div class="twc-text-message">
