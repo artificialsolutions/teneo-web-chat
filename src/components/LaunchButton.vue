@@ -35,7 +35,7 @@ export default {
 </script>
 <style scoped>
 .twc-launch-button {
-  background-color: var(--header-bg-color, #4e8cff);
+  background-color: var(--launch-button-bg-color, #4e8cff);
   width: 60px;
   height: 60px;
   background-position: center;
@@ -57,7 +57,7 @@ export default {
 .twc-launch-button__open-icon {
   height: 26px;
   width: 26px;
-  color: var(--light-fg-color, #ffffff);
+  color: var(--launchicon-fg-color, #ffffff);
   transform-origin: 50% 50%;
   transition: transform .4s, filter .5s ease-out;
 }

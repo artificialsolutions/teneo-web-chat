@@ -243,8 +243,8 @@ export default {
   --text-link-color: #007bff;
   --user-input-bg-color: #f4f7f9;
   --sendicon-fg-color: var(--dark-fg-color);
-  --launchicon-bg-color: var(--light-fg-color);
-  --launchicon-bg-color: var(--primary-color);
+  --launch-button-bg-color: var(--primary-color);
+  --launchicon-fg-color: var(--light-fg-color);
   --header-bg-color: var(--primary-color);
   --header-fg-color: var(--light-fg-color);
   --chat-window-bg-color: #ffffff;
