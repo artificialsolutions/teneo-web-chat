@@ -23,7 +23,7 @@ export default {
     },
     isMinimized: {
       type: Boolean,
-      required: true,
+      required: false,
     },
     open: {
       type: Function,

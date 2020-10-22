@@ -9,7 +9,6 @@
     stroke-width="1"
     stroke-linecap="round"
     stroke-linejoin="round"
-    class="feather feather-x"
   >
 
   <line class="st2" x1="18" y1="9.8" x2="12" y2="15.8"/>
