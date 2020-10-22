@@ -1,5 +1,5 @@
 <template>
-    <form class="twc-user-input" :class="{ active: inputActive, disabled: inputDisabled }">
+    <form class="twc-user-input" :class="{ 'twc-active': inputActive, 'twc-disabled': inputDisabled }">
       <div
         id="twc-user-input"
         ref="userInput"
@@ -174,11 +174,11 @@ export default {
   pointer-events:initial;
 }
 
-.twc-user-input.disabled {
+.twc-user-input.twc-disabled {
   pointer-events:none;
 }
 
-.twc-user-input.disabled .twc-user-input__button, .twc-user-input.disabled .twc-user-input__text, .twc-user-input.disabled .twc-sc-user-input--send-icon {
+.twc-user-input.twc-disabled .twc-user-input__button, .twc-user-input.twc-disabled .twc-user-input__text, .twc-user-input.twc-disabled .twc-sc-user-input--send-icon {
   filter: grayscale(100%);
   opacity: 0.4;
 }
@@ -243,7 +243,7 @@ export default {
   justify-content: center;
 }
 
-.twc-user-input.active {
+.twc-user-input.twc-active {
   box-shadow: none;
   background-color: white;
   box-shadow: 0px -2px 10px 0px rgba(150, 165, 190, 0.2);
