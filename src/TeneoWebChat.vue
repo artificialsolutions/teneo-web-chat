@@ -6,7 +6,7 @@
       :on-close="closeChat"
       :on-minimize="minimizeChat"
     />
-    <LaunchButton v-if="!isChatOpen" :open="openChat" :is-open="isChatOpen" />
+    <LaunchButton v-if="!isChatOpen" :open="openChat" :is-open="isChatOpen" :is-minimized="isChatMinimized" />
   </div>
 </template>
 
@@ -43,6 +43,7 @@ export default {
   data() {
     return {
       isChatOpen: false,
+      isChatMinimized: false,
       isIosSafari: false
     };
   },
@@ -77,6 +78,8 @@ export default {
       this.minimize()
       this.clearHistory()
       this.closeSession()
+      this.isChatMinimized = false
+      this.isChatClosed = true
     });
 
     EventBus.$on(events.END_SESSION, () => {
@@ -126,6 +129,8 @@ export default {
         this.minimize()
         this.closeSession()
         this.clearHistory()
+        this.isChatMinimized = false
+        this.isChatClosed = true
       } 
       if (chatWindowTargetState === events.MINIMIZE_WINDOW) {
         this.minimize()
@@ -177,6 +182,7 @@ export default {
       if (this.$store.getters.visibility == API_STATE_MAXIMIZED) {
         this.$store.commit('visibility',API_STATE_MINIMIZED);
         this.isChatOpen = false
+        this.isChatMinimized = true
 
         if(this.isIosSafari){
           const targetElement = document.querySelector(messageListId);
@@ -190,6 +196,7 @@ export default {
       if (this.$store.getters.visibility == API_STATE_MINIMIZED) {
         this.$store.commit('visibility',API_STATE_MAXIMIZED);
         this.isChatOpen = true
+        this.isChatMinimized = false
         await this.apiOnVisibilityChange();
 
         if(this.isIosSafari){

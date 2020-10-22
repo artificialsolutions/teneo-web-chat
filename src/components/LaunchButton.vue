@@ -1,7 +1,7 @@
 <template>
   <div
     class="twc-launch-button"
-    :class="{ opened: isOpen, closed: !isOpen }"
+    :class="{ 'twc-opened': isOpen, 'twc-closed': !isOpen && !isMinimized, 'twc-minimized': isMinimized}"
     @click.prevent="isOpen ? close() : open()"
   >
     <img v-if="launchIconUrl" class="twc-launch-button__open-icon" :src="launchIconUrl" />
@@ -18,6 +18,10 @@ export default {
   },
   props: {
     isOpen: {
+      type: Boolean,
+      required: true,
+    },
+    isMinimized: {
       type: Boolean,
       required: true,
     },
@@ -70,9 +74,4 @@ export default {
   transform: scale(1.1);
 }
 
-/* @media (max-width: 450px) {
-  .twc-launch-button.opened {
-    display: none;
-  }
-} */
 </style>
