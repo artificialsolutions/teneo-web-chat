@@ -1,4 +1,5 @@
 <template>
+  <div>
     <form class="twc-user-input" :class="{ 'twc-active': inputActive, 'twc-disabled': inputDisabled }">
       <div
         id="twc-user-input"
@@ -17,6 +18,7 @@
         <SendIcon :on-click="_submitText"/>
       </div>
     </form>
+  </div>
 </template>
 
 <script>
