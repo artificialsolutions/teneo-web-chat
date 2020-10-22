@@ -192,6 +192,11 @@ export default function teneoApiPlugin(teneoApiUrl) {
       this.messageList = [...this.messageList, message];
     },
     async closeSession() {
+      // get session from storage when safari is used
+      // to prevent issues when 'prevent cross-site tracking' is enabled
+      if (isSafari) {
+        sessionId = window.sessionStorage.getItem(sessionKey);
+      }
       TIE.close(teneoApiUrl, sessionId);
     },
     async clearHistory() {
