@@ -42,9 +42,6 @@ export default {
     messageText() {
       return this.message.data.text;
     },
-    messageSource() {
-      return this.message.author;
-    },
     dateline() {
       if (this.message.data && this.message.data.dateline) {
         return sanitizeHtml(this.message.data.dateline)
@@ -77,16 +74,16 @@ export default {
 </script>
 
 <style>
-.twc-message.user .twc-text-message-wrapper {
+.twc-message.twc-user .twc-text-message-wrapper {
   max-width: calc(100% - 84px);
 }
 
 /* workaround to fix wicth of text message box on IE11 */
-_:-ms-fullscreen, :root .twc-message.bot .twc-text-message-wrapper, :root .twc-message.agent .twc-text-message-wrapper {
+_:-ms-fullscreen, :root .twc-message.twc-bot .twc-text-message-wrapper, :root .twc-message.twc-agent .twc-text-message-wrapper {
   max-width: calc(100% - 1px);
 }
 
-_:-ms-fullscreen, :root .twc-message.user .twc-text-message-wrapper  {
+_:-ms-fullscreen, :root .twc-message.twc-user .twc-text-message-wrapper  {
   max-width: calc(100% - 86px);
   margin-left: 85px
 }
@@ -101,7 +98,7 @@ _:-ms-fullscreen, :root .twc-message.user .twc-text-message-wrapper  {
   -webkit-font-smoothing: subpixel-antialiased;
   color: var(--secondary-color, #6c757d);
 }
-.twc-message.user .twc-dateline {
+.twc-message.twc-user .twc-dateline {
   text-align: right;
 }
 .twc-text-message {
@@ -112,21 +109,21 @@ _:-ms-fullscreen, :root .twc-message.user .twc-text-message-wrapper  {
   line-height: 1.4;
   -webkit-font-smoothing: subpixel-antialiased;
 }
-.twc-message.bot .twc-text-message {
+.twc-message.twc-bot .twc-text-message {
   color: var(--bot-message-fg-color, #263238);
   background-color: var(--bot-message-bg-color, #eceff1);
   margin-right: 40px;
   border-bottom-left-radius: 0px;
 }
 
-.twc-message.agent .twc-text-message {
+.twc-message.twc-agent .twc-text-message {
   color: var(--agent-message-fg-color, #ffffff);
   background-color: var(--agent-message-bg-color, #47b2fd);
   margin-right: 40px;
   border-bottom-left-radius: 0px;
 }
 
-.twc-message.user .twc-text-message {
+.twc-message.twc-user .twc-text-message {
   background: var(--user-message-bg-color, #4e8cff);
   color: var(--user-message-fg-color, #ffffff);
   word-wrap: break-word;
@@ -152,7 +149,7 @@ _:-ms-fullscreen, :root .twc-message.user .twc-text-message-wrapper  {
   display: flex;
 }
 
-.twc-message.user .twc-avatar-text-wrapper {
+.twc-message.twc-user .twc-avatar-text-wrapper {
   flex-direction: row-reverse;
 }
 
@@ -165,11 +162,11 @@ _:-ms-fullscreen, :root .twc-message.user .twc-text-message-wrapper  {
   display: flex;
 }
 
-.twc-message.bot .twc-avatar, .twc-message.agent .twc-avatar {
+.twc-message.twc-bot .twc-avatar, .twc-message.twc-agent .twc-avatar {
   margin-right: 6px;
 }
 
-.twc-message.user .twc-avatar {
+.twc-message.twc-user .twc-avatar {
   margin-left: 6px;
 }
 

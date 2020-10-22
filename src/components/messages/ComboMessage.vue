@@ -170,9 +170,6 @@ export default {
     selected() {
       return this.message.selected;
     },
-    messageSource() {
-      return this.message.author;
-    },
     isExpired() {
       const { messageList } = this.$teneoApi;
       const latestMessage = messageList[messageList.length - 1];

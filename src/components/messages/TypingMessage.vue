@@ -42,9 +42,6 @@ export default {
     },
   },
   computed: {
-    messageSource() {
-      return this.message.author;
-    },
     dateline() {
       if (this.message.data && this.message.data.dateline) {
         return sanitizeHtml(this.message.data.dateline)
@@ -90,7 +87,7 @@ export default {
   animation: twc-sk-bouncedelay 1.4s infinite ease-in-out both;
 }
 
-.twc-message.bot .twc-typing-message .twc-spinner > div {
+.twc-message.twc-bot .twc-typing-message .twc-spinner > div {
   background-color: var(--secondary-color, #6c757d);
 }
 
@@ -119,11 +116,11 @@ export default {
   }
 }
 
-.twc-message.user .twc-text-message-wrapper {
+.twc-message.twc-user .twc-text-message-wrapper {
   max-width: calc(100% - 84px);
 }
 
-_:-ms-fullscreen, :root .twc-message.bot .twc-text-message-wrapper {
+_:-ms-fullscreen, :root .twc-message.twc-bot .twc-text-message-wrapper {
   max-width: calc(100% - 1px);
 }
 .twc-dateline {
@@ -135,7 +132,7 @@ _:-ms-fullscreen, :root .twc-message.bot .twc-text-message-wrapper {
   -webkit-font-smoothing: subpixel-antialiased;
   color: var(--secondary-color, #6c757d);
 }
-.twc-message.user .twc-dateline {
+.twc-message.twc-user .twc-dateline {
   text-align: right;
 }
 .twc-typing-message {
@@ -144,19 +141,19 @@ _:-ms-fullscreen, :root .twc-message.bot .twc-text-message-wrapper {
   font-size: 0.9em;
   line-height: 1.4;
 }
-.twc-message.bot .twc-typing-message {
+.twc-message.twc-bot .twc-typing-message {
   background-color: var(--bot-message-bg-color, #eceff1);
   margin-right: 40px;
   border-bottom-left-radius: 0px;
 }
 
-.twc-message.agent .twc-typing-message {
+.twc-message.twc-agent .twc-typing-message {
   background-color: var(--agent-message-bg-color, #47b2fd);
   margin-right: 40px;
   border-bottom-left-radius: 0px;
 }
 
-.twc-message.user .twc-typing-message {
+.twc-message.twc-user .twc-typing-message {
   background: var(--user-message-bg-color, #4e8cff);
   word-wrap: break-word;
   border-bottom-right-radius: 0px;
