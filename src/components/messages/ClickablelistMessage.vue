@@ -1,5 +1,5 @@
 <template>
-  <div class="twc-clickablelist" :class="{ expired: replySent || isExpired }">
+  <div class="twc-clickablelist" :class="{ 'twc-expired': replySent || isExpired }">
     <h5 class="twc-clickablelist-title" v-if="clickablelistTitle">{{ clickablelistTitle }}</h5>
     <ul class="twc-clickablelist-message" :class="{ replied: replySent}">
       <li
@@ -84,7 +84,7 @@ export default {
   color: var(--clickablelist-title-color, #263238);
 }
 
-.twc-clickablelist.expired h5 {
+.twc-clickablelist.twc-expired h5 {
   color: var(--expired-color, #a9a9a9);
 }
 
@@ -129,15 +129,15 @@ export default {
   color: var(--expired-color, #a9a9a9);
 }
 
-.twc-clickablelist.expired .twc-clickablelist-message__item,
-.twc-clickablelist.expired .twc-clickablelist-message__item:hover {
+.twc-clickablelist.twc-expired .twc-clickablelist-message__item,
+.twc-clickablelist.twc-expired .twc-clickablelist-message__item:hover {
   cursor: default;
   color: var(--expired-color, #a9a9a9);
   background-color: var(--clickablelist-bg-color, #ffffff);
 }
 
-.twc-clickablelist.expired .twc-clickablelist-message__item.selected,
-.twc-clickablelist.expired .twc-clickablelist-message__item.selected:hover {
+.twc-clickablelist.twc-expired .twc-clickablelist-message__item.selected,
+.twc-clickablelist.twc-expired .twc-clickablelist-message__item.selected:hover {
   cursor: default;
   background-color: var(--clickablelist-selected-bg-color, #eceff1);
   color: var(--expired-color, #a9a9a9);

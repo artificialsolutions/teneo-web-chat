@@ -1,5 +1,5 @@
 <template>
-  <div class="twc-quickreply-message" :class="{ expired: replySent || isExpired }">
+  <div class="twc-quickreply-message" :class="{ 'twc-expired': replySent || isExpired }">
     <a
       v-for="(reply, idx) in quickreplies"
       :key="idx"
@@ -78,24 +78,24 @@ export default {
 }
 
 .twc-quickreply-message__item.selected,
-.twc-quickreply-message:not(.expired) .twc-quickreply-message__item:hover {
+.twc-quickreply-message:not(.twc-expired) .twc-quickreply-message__item:hover {
   background: var(--quickreply-bg-color, #ffffff);
   color: var(--quickreply-fg-color, #4e8cff);
 }
 
 .twc-quickreply-message__item.selected,
-.twc-quickreply-message:not(.expired) .twc-quickreply-message__item:hover {
+.twc-quickreply-message:not(.twc-expired) .twc-quickreply-message__item:hover {
   background: var(--quickreply-fg-color, #4e8cff);
   color: var(--quickreply-bg-color, #ffffff);
 }
 
-.twc-quickreply-message.expired .twc-quickreply-message__item:not(.selected) {
+.twc-quickreply-message.twc-expired .twc-quickreply-message__item:not(.selected) {
   cursor: default;
   color: var(--quickreply-expired-color, #a9a9a9);
   border-color: var(--quickreply-expired-color, #a9a9a9);
 }
 
-.twc-quickreply-message.expired .twc-quickreply-message__item.selected {
+.twc-quickreply-message.twc-expired .twc-quickreply-message__item.selected {
   cursor: default;
   background: var(--quickreply-expired-color, #a9a9a9);
   color: var(--quickreply-bg-color, #ffffff);
@@ -107,7 +107,7 @@ export default {
   border-color: var(--secondary-color, #6c757d);
 }
 
-.twc-quickreply-message:not(.expired) .twc-quickreply-message__item.twc-secondary:hover {
+.twc-quickreply-message:not(.twc-expired) .twc-quickreply-message__item.twc-secondary:hover {
   color: var(--quickreply-bg-color, #ffffff) !important;
   background: var(--secondary-color, #6c757d);
 }
@@ -117,7 +117,7 @@ export default {
   border-color: var(--success-color, #28a745);
 }
 
-.twc-quickreply-message:not(.expired) .twc-quickreply-message__item.twc-success:hover {
+.twc-quickreply-message:not(.twc-expired) .twc-quickreply-message__item.twc-success:hover {
   color: var(--quickreply-bg-color, #ffffff) !important;
   background: var(--success-color, #28a745);
 }
@@ -127,7 +127,7 @@ export default {
   color: var(--quickreply-warning-text-color, #e0a800);
 }
 
-.twc-quickreply-message:not(.expired) .twc-quickreply-message__item.twc-warning:hover {
+.twc-quickreply-message:not(.twc-expired) .twc-quickreply-message__item.twc-warning:hover {
   color: var(--dark-fg-color, #263238);
   background: var(--warning-color, #ffc107);
 }
@@ -137,7 +137,7 @@ export default {
   border-color: var(--danger-color, #dc3545);
 }
 
-.twc-quickreply-message:not(.expired) .twc-quickreply-message__item.twc-danger:hover {
+.twc-quickreply-message:not(.twc-expired) .twc-quickreply-message__item.twc-danger:hover {
   color: var(--quickreply-bg-color, #ffffff);
   background: var(--danger-color, #dc3545);
 }
@@ -147,7 +147,7 @@ export default {
   border-color: var(--info-color, #17a2b8);
 }
 
-.twc-quickreply-message:not(.expired) .twc-quickreply-message__item.twc-info:hover {
+.twc-quickreply-message:not(.twc-expired) .twc-quickreply-message__item.twc-info:hover {
   color: var(--quickreply-bg-color, #ffffff);
   background: var(--info-color, #17a2b8);
 }
