@@ -8,25 +8,25 @@
       <h6 class="twc-card-subtitle" v-if="cardSubtitle">{{ cardSubtitle }}</h6>
       <p class="twc-card-text" v-if="messageText">{{ messageText }}</p>
     </div>
-    <div class="twc-clickablelist" :class="{ expired: replySent || isExpired}" v-if="clickablelistitems">
+    <div class="twc-clickablelist" :class="{ 'twc-expired': replySent || isExpired}" v-if="clickablelistitems">
       <ul class="twc-clickablelist-message" :class="{ replied: replySent}">
         <li
           v-for="(reply, idx) in clickablelistitems"
           :key="idx"
           class="twc-clickablelist-message__item"
-          :class="{ selected: replySent && selected === idx }"
+          :class="{ 'twc-selected': replySent && selected === idx }"
           @click="onSelect(reply, idx)"
         >{{ reply.title }}</li>
       </ul>
     </div>
-    <div class="twc-buttons" :class="{ expired: replySent || isExpired}" v-if="buttonitems">
+    <div class="twc-buttons" :class="{ 'twc-expired': replySent || isExpired}" v-if="buttonitems">
       <div>
         <a
           role="button"
           v-for="(button, idx) in buttonitems"
           :key="idx"
           class="twc-btn"
-          :class="{ selected: replySent && selected === idx, 'twc-primary': button.style == 'primary', 'twc-secondary': button.style == 'secondary', 'twc-success': button.style == 'success', 'twc-danger': button.style == 'danger', 'twc-warning': button.style == 'warning', 'twc-info': button.style == 'info'}"
+          :class="{ 'twc-selected': replySent && selected === idx, 'twc-primary': button.style == 'primary', 'twc-secondary': button.style == 'secondary', 'twc-success': button.style == 'success', 'twc-danger': button.style == 'danger', 'twc-warning': button.style == 'warning', 'twc-info': button.style == 'info'}"
           @click="onSelect(button, idx)"
         >{{ button.title }}</a>
       </div>

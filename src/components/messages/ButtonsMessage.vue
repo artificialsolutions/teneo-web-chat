@@ -7,7 +7,7 @@
         v-for="(button, idx) in buttonitems"
         :key="idx"
         class="twc-btn"
-        :class="{ selected: replySent && selected === idx, 'twc-primary': button.style == 'primary', 'twc-secondary': button.style == 'secondary', 'twc-success': button.style == 'success', 'twc-danger': button.style == 'danger', 'twc-warning': button.style == 'warning', 'twc-info': button.style == 'info'}"
+        :class="{ 'twc-selected': replySent && selected === idx, 'twc-primary': button.style == 'primary', 'twc-secondary': button.style == 'secondary', 'twc-success': button.style == 'success', 'twc-danger': button.style == 'danger', 'twc-warning': button.style == 'warning', 'twc-info': button.style == 'info'}"
         @click="onSelect(button, idx)"
       >{{ button.title }}</a>
     </div>
@@ -101,13 +101,13 @@ export default {
   text-decoration: none;
 }
 
-.twc-btn.selected,
+.twc-btn.twc-selected,
 .twc-btn:not(.twc-expired) .twc-btn:hover {
   color: var(--button-bg-color, #4e8cff);
   background: var(--button-fg-color, #ffffff);
 }
 
-.twc-buttons.selected,
+.twc-buttons.twc-selected,
 .twc-buttons:not(.twc-expired) .twc-btn:hover {
   color: var(--button-bg-color, #4e8cff);
   background: var(--button-fg-color, #ffffff);
@@ -120,7 +120,7 @@ export default {
   border: 1px solid var(--expired-color, #a9a9a9);
 }
 
-.twc-buttons.twc-expired .twc-btn.selected {
+.twc-buttons.twc-expired .twc-btn.twc-selected {
   cursor: default;
   color: var(--button-fg-color, #ffffff);
   background: var(--expired-color, #a9a9a9);

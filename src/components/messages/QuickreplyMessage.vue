@@ -5,7 +5,7 @@
       :key="idx"
       role="button"
       class="twc-quickreply-message__item"
-      :class="{ selected: replySent && selected === idx, 'twc-primary': reply.style == 'primary', 'twc-secondary': reply.style == 'secondary', 'twc-success': reply.style == 'success', 'twc-danger': reply.style == 'danger', 'twc-warning': reply.style == 'warning', 'twc-info': reply.style == 'info'}"
+      :class="{ 'twc-selected': replySent && selected === idx, 'twc-primary': reply.style == 'primary', 'twc-secondary': reply.style == 'secondary', 'twc-success': reply.style == 'success', 'twc-danger': reply.style == 'danger', 'twc-warning': reply.style == 'warning', 'twc-info': reply.style == 'info'}"
       @click="onSelect(reply, idx)"
     >{{ reply.title }}</a>
   </div>
@@ -77,25 +77,25 @@ export default {
   margin: 3px;
 }
 
-.twc-quickreply-message__item.selected,
+.twc-quickreply-message__item.twc-selected,
 .twc-quickreply-message:not(.twc-expired) .twc-quickreply-message__item:hover {
   background: var(--quickreply-bg-color, #ffffff);
   color: var(--quickreply-fg-color, #4e8cff);
 }
 
-.twc-quickreply-message__item.selected,
+.twc-quickreply-message__item.twc-selected,
 .twc-quickreply-message:not(.twc-expired) .twc-quickreply-message__item:hover {
   background: var(--quickreply-fg-color, #4e8cff);
   color: var(--quickreply-bg-color, #ffffff);
 }
 
-.twc-quickreply-message.twc-expired .twc-quickreply-message__item:not(.selected) {
+.twc-quickreply-message.twc-expired .twc-quickreply-message__item:not(.twc-selected) {
   cursor: default;
   color: var(--quickreply-expired-color, #a9a9a9);
   border-color: var(--quickreply-expired-color, #a9a9a9);
 }
 
-.twc-quickreply-message.twc-expired .twc-quickreply-message__item.selected {
+.twc-quickreply-message.twc-expired .twc-quickreply-message__item.twc-selected {
   cursor: default;
   background: var(--quickreply-expired-color, #a9a9a9);
   color: var(--quickreply-bg-color, #ffffff);

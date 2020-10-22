@@ -6,7 +6,7 @@
         v-for="(reply, idx) in clickablelistitems"
         :key="idx"
         class="twc-clickablelist-message__item"
-        :class="{ selected: replySent && selected === idx }"
+        :class="{ 'twc-selected': replySent && selected === idx }"
         @click="onSelect(reply, idx)"
       >{{ reply.title }}</li>
     </ul>
@@ -118,7 +118,7 @@ export default {
   border-bottom-right-radius: 0.25rem;
 }
 
-.twc-clickablelist-message__item.selected,
+.twc-clickablelist-message__item.twc-selected,
 .twc-clickablelist-message:not(.replied) .twc-clickablelist-message__item:hover {
   background-color: var(--clickablelist-selected-bg-color, #eceff1);
   color: var(--clickablelist-selected-fg-color, #263238);
@@ -136,8 +136,8 @@ export default {
   background-color: var(--clickablelist-bg-color, #ffffff);
 }
 
-.twc-clickablelist.twc-expired .twc-clickablelist-message__item.selected,
-.twc-clickablelist.twc-expired .twc-clickablelist-message__item.selected:hover {
+.twc-clickablelist.twc-expired .twc-clickablelist-message__item.twc-selected,
+.twc-clickablelist.twc-expired .twc-clickablelist-message__item.twc-selected:hover {
   cursor: default;
   background-color: var(--clickablelist-selected-bg-color, #eceff1);
   color: var(--expired-color, #a9a9a9);
