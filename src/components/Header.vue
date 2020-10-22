@@ -81,7 +81,6 @@ export default {
 }
 
 .twc-header__close-button {
-  outline: none;
   background: none;
   border: none;
   cursor: pointer;
@@ -97,12 +96,15 @@ export default {
 }
 
 .twc-header__minimize-button {
-  outline: none;
   background: none;
   border: none;
   cursor: pointer;
   padding: 0;
   margin-left: auto;
+}
+
+.twc-header__minimize-button:active, .twc-header__close-button:active { 
+  outline: none;
 }
 
 .twc-header__minimize-icon {

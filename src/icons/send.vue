@@ -1,5 +1,4 @@
 <template>
-  <button class="twc-sc-user-input--send-icon-wrapper" @click.prevent="onClick">
     <svg
       version="1.1"
       class="twc-sc-user-input--send-icon"
@@ -21,43 +20,4 @@
         />
       </g>
     </svg>
-  </button>
 </template>
-
-<script>
-export default {
-  props: {
-    onClick: {
-      type: Function,
-      required: true,
-    },
-  },
-};
-</script>
-
-<style scoped>
-.twc-sc-user-input--send-icon-wrapper {
-  background: none;
-  border: none;
-  padding: 0px;
-  margin: 0 5px 0 0;
-  outline: none;
-  color: var(--sendicon-fg-color);
-}
-
-.twc-sc-user-input--send-icon-wrapper:focus {
-  outline: none;
-}
-
-.twc-sc-user-input--send-icon {
-  height: 20px;
-  width: 20px;
-  cursor: pointer;
-  align-self: center;
-  outline: none;
-}
-
-.twc-sc-user-input--send-icon:hover path {
-  filter: contrast(15%);
-}
-</style>

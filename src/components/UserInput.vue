@@ -15,7 +15,9 @@
         v-debounce:250="userTyping" :debounce-events="['input']"
       ></div>
       <div class="twc-user-input__button">
-        <SendIcon :on-click="_submitText"/>
+        <button role="button" tabindex="0" class="twc-sc-user-input--send-icon-wrapper" @click.prevent="_submitText" >
+          <SendIcon />
+        </button>
       </div>
     </form>
   </div>
@@ -155,6 +157,13 @@ export default {
           type: 'text',
           data: { text, parameters }
         });
+
+        
+      }
+      
+      // don't give user input focus on mobile devices, keyboard blocks the view too much
+      if (!detectMobile()) {
+        this.$refs.userInput.focus();
       }
     },
   },
@@ -272,5 +281,29 @@ export default {
   opacity: 0;
   cursor: pointer;
   overflow: hidden;
+}
+
+.twc-sc-user-input--send-icon-wrapper {
+  background: none;
+  border: none;
+  padding: 0px;
+  margin: 0 5px 0 0;
+  /* outline: none; */
+  color: var(--sendicon-fg-color);
+}
+
+.twc-sc-user-input--send-icon-wrapper:active {
+  outline: none;
+}
+
+.twc-sc-user-input--send-icon {
+  height: 20px;
+  width: 20px;
+  cursor: pointer;
+  align-self: center;
+}
+
+.twc-sc-user-input--send-icon:hover path {
+  filter: contrast(15%);
 }
 </style>
