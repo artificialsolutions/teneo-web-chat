@@ -16,9 +16,10 @@
 
 <script>
 
-import { API_ON_LINKBUTTON_CLICK } from '../../utils/api-function-names.js';
-import handleExtension from '../../utils/handle-extension.js';
-import basePayload from '../../utils/base-payload';
+// import { API_ON_LINKBUTTON_CLICK } from '../../utils/api-function-names.js';
+// import handleExtension from '../../utils/handle-extension.js';
+// import basePayload from '../../utils/base-payload';
+import handleLinkButtonClick from '../../utils/handle-linkbutton-click.js';
 
 export default {
   name: 'LinkbuttonsMessage',
@@ -61,26 +62,27 @@ export default {
   },
   methods: {
     async onClick(linkbutton, event) {
-      console.log("Link button clicked")
+      await handleLinkButtonClick(linkbutton, event)
+      // console.log("Link button clicked")
 
-      // check if there is an extension that want to intercept the new event
-      let payload = basePayload();
-      payload.linkbutton = JSON.parse(JSON.stringify(linkbutton))
-      console.log("before handleExtension", payload)
-      await handleExtension(API_ON_LINKBUTTON_CLICK, payload);
+      // // check if there is an extension that want to intercept the new event
+      // var lbPayload = basePayload();
+      // lbPayload.linkbutton = JSON.parse(JSON.stringify(linkbutton))
+      // console.log("before handleExtension", lbPayload)
+      // await handleExtension(API_ON_LINKBUTTON_CLICK, lbPayload);
       
-      // abort if extension says so
-      console.log("after handleExtension", payload)
+      // // abort if extension says so
+      // console.log("after handleExtension", lbPayload)
 
-      if (payload.handledState.handled === true) {
-        console.log("Abort mission")
-        if (event) {
-          event.preventDefault()
-        }
+      // if (lbPayload.handledState.handled === true) {
+      //   console.log("Abort mission")
+      //   if (event) {
+      //     event.preventDefault()
+      //   }
         
-      } else {
-        return
-      }
+      // } else {
+      //   return
+      // }
     },
   },
 };
