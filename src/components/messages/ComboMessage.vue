@@ -21,6 +21,7 @@
               v-for="(reply, idx) in message.quick_replies"
               :key="idx"
               role="button"
+              :tabindex="replySent || isExpired ? -1 : 0"
               class="twc-quickreply-message__item"
               :class="{ 'twc-selected': replySent && selected === idx, 'twc-primary': reply.style == 'primary', 'twc-secondary': reply.style == 'secondary', 'twc-success': reply.style == 'success', 'twc-danger': reply.style == 'danger', 'twc-warning': reply.style == 'warning', 'twc-info': reply.style == 'info'}"
               @click="onSelect(reply, idx)"
@@ -35,6 +36,8 @@
             <li
               v-for="(reply, idx) in message.list_items"
               :key="idx +'ql'"
+              role="button"
+              :tabindex="replySent || isExpired ? -1 : 0"
               class="twc-clickablelist-message__item"
               :class="{ 'twc-selected': replySent && selected === idx +'ql' }"
               @click="onSelect(reply, idx +'ql')"
@@ -80,6 +83,7 @@
             <div>
               <a
                 role="button"
+                :tabindex="replySent || isExpired ? -1 : 0"
                 v-for="(button, idx) in message.button_items"
                 :key="idx +'btn'"
                 class="twc-btn"
@@ -106,6 +110,8 @@
                   v-for="(reply, idx) in message.list_items"
                   :key="idx +'cql'"
                   class="twc-clickablelist-message__item"
+                  role="button"
+                  :tabindex="replySent || isExpired ? -1 : 0"
                   :class="{ 'twc-selected': replySent && selected === idx +'cql' }"
                   @click="onSelect(reply, idx +'cql')"
                 >{{ reply.title }}</li>
@@ -118,6 +124,7 @@
                   v-for="(button, idx) in message.button_items"
                   :key="idx +'cbtn'"
                   class="twc-btn"
+                  :tabindex="replySent || isExpired ? -1 : 0"
                   :class="{ 'twc-selected': replySent && selected === idx +'cbtn', 'twc-primary': button.style == 'primary', 'twc-secondary': button.style == 'secondary', 'twc-success': button.style == 'success', 'twc-danger': button.style == 'danger', 'twc-warning': button.style == 'warning', 'twc-info': button.style == 'info'}"
                   @click="onSelect(button, idx +'cbtn')"
                 >{{ button.title }}</a>
@@ -129,6 +136,7 @@
                   v-for="(link, idx) in message.link_items"
                   :href="link.url"
                   :key="idx"
+                  role="link"
                 >{{ link.title }}</a>
               </div>
             </div>

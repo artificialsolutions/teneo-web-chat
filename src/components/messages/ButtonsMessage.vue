@@ -3,6 +3,7 @@
     <h5 class="twc-buttons-title" v-if="buttonsTitle">{{ buttonsTitle }}</h5>
       <a
         role="button"
+        :tabindex="replySent || isExpired ? -1 : 0"
         v-for="(button, idx) in buttonitems"
         :key="idx"
         class="twc-btn"
@@ -97,6 +98,14 @@ export default {
   display: inline-block;
   margin: 3px;
   text-decoration: none;
+}
+
+.twc-btn:active {
+  outline:none;
+}
+
+.twc-expired .twc-btn {
+  outline: none;
 }
 
 .twc-btn.twc-selected,

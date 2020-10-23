@@ -2,7 +2,7 @@
     <div ref="chatWindowId" :class="chatWindowStyles()">
     <Header :on-close="onClose" :on-minimize="onMinimize"/>
     <MessageList id="twc-message-list" :message-list="$teneoApi.messageList" />
-    <div v-if="spinnerIsLoading" class="twc-spinner">
+    <div v-if="spinnerIsLoading" class="twc-spinner" role="progressbar" aria-valuemin="0" aria-valuetext="Bot is responding" aria-valuemax="100">
       <div class="twc-bounce1"></div>
       <div class="twc-bounce2"></div>
       <div class="twc-bounce3"></div>

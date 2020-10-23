@@ -14,6 +14,8 @@
           v-for="(reply, idx) in clickablelistitems"
           :key="idx"
           class="twc-clickablelist-message__item"
+          role="button"
+          :tabindex="replySent || isExpired ? -1 : 0"
           :class="{ 'twc-selected': replySent && selected === idx }"
           @click="onSelect(reply, idx)"
         >{{ reply.title }}</li>
@@ -24,6 +26,7 @@
         <a
           role="button"
           v-for="(button, idx) in buttonitems"
+          :tabindex="replySent || isExpired ? -1 : 0"
           :key="idx"
           class="twc-btn"
           :class="{ 'twc-selected': replySent && selected === idx, 'twc-primary': button.style == 'primary', 'twc-secondary': button.style == 'secondary', 'twc-success': button.style == 'success', 'twc-danger': button.style == 'danger', 'twc-warning': button.style == 'warning', 'twc-info': button.style == 'info'}"
@@ -37,6 +40,7 @@
           v-for="(link, idx) in linkitems"
           :href="link.url"
           :key="idx"
+          role="link"
         >{{ link.title }}</a>
       </div>
     </div>

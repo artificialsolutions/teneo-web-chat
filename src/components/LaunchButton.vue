@@ -3,9 +3,13 @@
     class="twc-launch-button"
     :class="{ 'twc-opened': isOpen, 'twc-closed': !isOpen && !isMinimized, 'twc-minimized': isMinimized}"
     @click.prevent="isOpen ? close() : open()"
+    @keydown="handleReturnSpaceKeys"
+    tabindex="0"
+    aria-roledescription="Chat with a digital assistant"
+    aria-label="Open chat"
   >
-    <img v-if="launchIconUrl" class="twc-launch-button__open-icon" :src="launchIconUrl" />
-    <BubbleIcon v-else class="twc-launch-button__open-icon" id="default-launch-button-icon"/>
+    <img v-if="launchIconUrl" class="twc-launch-button__open-icon" :src="launchIconUrl" aria-hidden="true"/>
+    <BubbleIcon v-else class="twc-launch-button__open-icon" id="default-launch-button-icon" aria-hidden="true"/>
   </div>
 </template>
 <script>
@@ -34,6 +38,14 @@ export default {
     ...mapState([
         'launchIconUrl',
     ]),
+  },
+  methods: {
+    handleReturnSpaceKeys(event) {
+      if (event.code === 'Space' || event.code === 'Enter') {
+        this.open();
+        event.preventDefault();
+      }
+    },
   },
 };
 </script>
@@ -64,6 +76,9 @@ export default {
   color: var(--launchicon-fg-color, #ffffff);
   transform-origin: 50% 50%;
   transition: transform .4s, filter .5s ease-out;
+}
+.twc-launch-button:active {
+  outline: none;
 }
 
 .twc-launch-button:hover {

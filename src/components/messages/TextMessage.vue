@@ -4,7 +4,7 @@
     <!-- eslint-disable-next-line vue/no-v-html -->
     <p class="twc-dateline" v-if="dateline" v-html="dateline"></p>
     <div class="twc-avatar-text-wrapper">
-      <div v-if="avatarUrl" class="twc-avatar"><img :src="avatarUrl"></div>
+      <div v-if="avatarUrl" class="twc-avatar" aria-hidden="true"><img :src="avatarUrl"></div>
       <div class="twc-text-message">
         <!-- eslint-disable-next-line vue/no-v-html -->
         <p class="twc-text-message__text" v-html="sanitizedHtmlText"></p>
