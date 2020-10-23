@@ -2,9 +2,9 @@
   <div>
     <form class="twc-user-input" :class="{ 'twc-active': inputActive, 'twc-disabled': inputDisabled }">
       <div
-        id="twc-user-input"
+        id="twc-user-input-field"
         ref="userInput"
-        role="button"
+        role="textbox"
         tabIndex="0"
         :contentEditable="contentIsEditable"
         :placeholder="placeholder"
@@ -15,8 +15,9 @@
         v-debounce:250="userTyping" :debounce-events="['input']"
       ></div>
       <div class="twc-user-input__button">
-        <button role="button" tabindex="0" class="twc-sc-user-input--send-icon-wrapper" @click.prevent="_submitText" >
-          <SendIcon />
+        <button role="button" tabindex="0" class="twc-user-input__send-icon-wrapper" @click.prevent="_submitText" >
+          <img v-if="sendIconUrl" class="twc-user-input__send-icon" :src="sendIconUrl" />
+          <SendIcon v-else class="twc-user-input__send-icon" />
         </button>
       </div>
     </form>
@@ -33,6 +34,7 @@ import { EventBus, events } from '../utils/event-bus.js';
 import handleExtension from '../utils/handle-extension.js';
 import basePayload from '../utils/base-payload.js';
 import detectMobile from '../utils/detect-mobile.js';
+import { mapState } from 'vuex';
 
 Vue.use(vueDebounce)
 
@@ -49,6 +51,11 @@ export default {
       type: String,
       default: 'Please type here...',
     },
+  },
+  computed: {
+    ...mapState([
+        'sendIconUrl',
+    ]),
   },
   data() {
     return {
@@ -75,13 +82,13 @@ export default {
           this.setInputDisabled(false);
           this.setInputActive(true);
           
-          if (document.getElementById("twc-user-input")) {
-            document.getElementById("twc-user-input").focus();
+          if (document.getElementById("twc-user-input-field")) {
+            document.getElementById("twc-user-input-field").focus();
           }
     });
 
     //Detect changes and focus and emit event. This will be listened by ChatWindow to adapt to iOS Safari
-    const userInput = document.getElementById("twc-user-input");
+    const userInput = document.getElementById("twc-user-input-field");
     if(userInput){
       userInput.addEventListener('focus', (event) => {
         EventBus.$emit(events.USER_INPUT_FOCUS_CHANGED, true);
@@ -189,7 +196,7 @@ export default {
   pointer-events:none;
 }
 
-.twc-user-input.twc-disabled .twc-user-input__button, .twc-user-input.twc-disabled .twc-user-input__text, .twc-user-input.twc-disabled .twc-sc-user-input--send-icon {
+.twc-user-input.twc-disabled .twc-user-input__button, .twc-user-input.twc-disabled .twc-user-input__text, .twc-user-input.twc-disabled .twc-user-input__send-icon {
   filter: grayscale(100%);
   opacity: 0.4;
 }
@@ -283,7 +290,7 @@ export default {
   overflow: hidden;
 }
 
-.twc-sc-user-input--send-icon-wrapper {
+.twc-user-input__send-icon-wrapper {
   background: none;
   border: none;
   padding: 0px;
@@ -292,18 +299,18 @@ export default {
   color: var(--sendicon-fg-color);
 }
 
-.twc-sc-user-input--send-icon-wrapper:active {
+.twc-user-input__send-icon-wrapper:active {
   outline: none;
 }
 
-.twc-sc-user-input--send-icon {
+.twc-user-input__send-icon {
   height: 20px;
   width: 20px;
   cursor: pointer;
   align-self: center;
 }
 
-.twc-sc-user-input--send-icon:hover path {
+.twc-user-input__send-icon:hover path {
   filter: contrast(15%);
 }
 </style>

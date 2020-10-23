@@ -19,6 +19,7 @@ export const store = new Vuex.Store({
         minimizeIconUrl: "",
         closeIconUrl: "",
         launchIconUrl: "",
+        sendIconUrl: "",
     },
     mutations: {
         visibility(state, newVisibility) {
@@ -86,6 +87,12 @@ export const store = new Vuex.Store({
                 state.launchIconUrl = newUrl
             }
         },
+        sendIconUrl(state, newUrl) {
+            // TODO: Throw error if url is invalid
+            if (isValidUrl(newUrl)) {
+                state.sendIconUrl = newUrl
+            }
+        },
     },
     getters: {
         teneoEngineUrl: state => state.teneoEngineUrl,
@@ -100,6 +107,7 @@ export const store = new Vuex.Store({
         minimizeIconUrl: state => state.minimizeIconUrl,
         closeIconUrl: state => state.closeIconUrl,
         launchIconUrl: state => state.launchIconUrl,
+        sendIconUrl: state => state.sendIconUrl,
         state: state => {
             return { 'visibility': state.visibility }
         },
