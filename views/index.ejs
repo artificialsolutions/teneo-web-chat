@@ -87,7 +87,18 @@
     <script src="teneo-web-chat.js"></script> <!-- needed for Heroku -->
     <div id="teneo-web-chat"></div>
     <script>
+      
+
       window.onload = function () {
+
+        // TEMPORARY - REMOVE BEFORE RELEASE
+        function onSendButtonClicked(payload) {
+          // handle close button clicked event
+          payload.handledState.handled = false
+          console.log("Sent button clicked extension")
+        }
+        window.TeneoWebChat.on('send_button_clicked', onSendButtonClicked)
+
         if (
           window.TeneoWebChat &&
             typeof window.TeneoWebChat.initialize === 'function'
@@ -109,6 +120,8 @@
           }
 
           window.TeneoWebChat.initialize(element, teneoProps);
+
+          
         }
       }
     </script>

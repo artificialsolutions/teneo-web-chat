@@ -15,7 +15,7 @@
         v-debounce:250="userTyping" :debounce-events="['input']"
       ></div>
       <div class="twc-user-input__button">
-        <button role="button" tabindex="0" class="twc-user-input__send-icon-wrapper" @click.prevent="_submitText" >
+        <button role="button" tabindex="0" class="twc-user-input__send-icon-wrapper" @click.prevent="" @click="sendButtonClicked()">
           <img v-if="sendIconUrl" class="twc-user-input__send-icon" :src="sendIconUrl" />
           <SendIcon v-else class="twc-user-input__send-icon" />
         </button>
@@ -29,7 +29,7 @@ import Vue from 'vue';
 import vueDebounce from 'vue-debounce'
 import SendIcon from '../icons/send.vue';
 import { PARTICIPANT_USER } from '../utils/constants.js';
-import { API_ON_INPUT_SUBMITTED, API_ON_USER_TYPING } from '../utils/api-function-names.js';
+import { API_ON_INPUT_SUBMITTED, API_ON_USER_TYPING, API_ON_SEND_BUTTON_CLICK } from '../utils/api-function-names.js';
 import { EventBus, events } from '../utils/event-bus.js';
 import handleExtension from '../utils/handle-extension.js';
 import basePayload from '../utils/base-payload.js';
@@ -128,6 +128,19 @@ export default {
       const payload = {"text" : this.$refs.userInput.textContent }
       // check if there is an extension that want to be notified about the user typing
       handleExtension(API_ON_USER_TYPING,payload);
+    },
+    async sendButtonClicked() {
+      console.log("Send button clicked yes")
+      const payload = basePayload();
+      await handleExtension(API_ON_SEND_BUTTON_CLICK,payload);
+      // return if extension wants to handle submit itself
+      if(payload.handledState.handled === true) {
+        console.log("payload.handledState true", payload.handledState)
+        return false
+      } else {
+        console.log("payload.handledState", payload.handledState)
+        this._submitText()
+      }
     },
     async _submitText() {
       // create payload object
