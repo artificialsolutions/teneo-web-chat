@@ -130,15 +130,17 @@ export default {
       handleExtension(API_ON_USER_TYPING,payload);
     },
     async sendButtonClicked() {
-      console.log("Send button clicked yes")
+      console.log("Send button clicked")
       const payload = basePayload();
+      console.log("send input payload before handleExtension", payload)
       await handleExtension(API_ON_SEND_BUTTON_CLICK,payload);
+      console.log("send input payload after handleExtension", payload)
       // return if extension wants to handle submit itself
       if(payload.handledState.handled === true) {
         console.log("payload.handledState true", payload.handledState)
         return false
       } else {
-        console.log("payload.handledState", payload.handledState)
+        console.log("payload.handledState false", payload.handledState)
         this._submitText()
       }
     },
