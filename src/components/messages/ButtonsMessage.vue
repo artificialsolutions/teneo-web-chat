@@ -1,7 +1,6 @@
 <template>
   <div class="twc-buttons" :class="{ 'twc-expired': replySent || isExpired}">
     <h5 class="twc-buttons-title" v-if="buttonsTitle">{{ buttonsTitle }}</h5>
-    <div>
       <a
         role="button"
         v-for="(button, idx) in buttonitems"
@@ -10,7 +9,6 @@
         :class="{ 'twc-selected': replySent && selected === idx, 'twc-primary': button.style == 'primary', 'twc-secondary': button.style == 'secondary', 'twc-success': button.style == 'success', 'twc-danger': button.style == 'danger', 'twc-warning': button.style == 'warning', 'twc-info': button.style == 'info'}"
         @click="onSelect(button, idx)"
       >{{ button.title }}</a>
-    </div>
   </div>
 </template>
 
