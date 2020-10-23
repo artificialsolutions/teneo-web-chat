@@ -6,6 +6,7 @@
         ref="userInput"
         role="textbox"
         tabIndex="0"
+        aria-label="Enter the text to send to the bot"
         :contentEditable="contentIsEditable"
         :placeholder="placeholder"
         class="twc-user-input__text"
@@ -15,9 +16,9 @@
         v-debounce:250="userTyping" :debounce-events="['input']"
       ></div>
       <div class="twc-user-input__button">
-        <button role="button" tabindex="0" class="twc-user-input__send-icon-wrapper" @click.prevent="_submitText" >
-          <img v-if="sendIconUrl" class="twc-user-input__send-icon" :src="sendIconUrl" />
-          <SendIcon v-else class="twc-user-input__send-icon" />
+        <button role="button" tabindex="0" aria-label="Send text" class="twc-user-input__send-icon-wrapper" @click.prevent="_submitText" >
+          <img v-if="sendIconUrl" class="twc-user-input__send-icon" :src="sendIconUrl" aria-hidden="true"/>
+          <SendIcon v-else class="twc-user-input__send-icon" aria-hidden="true"/>
         </button>
       </div>
     </form>

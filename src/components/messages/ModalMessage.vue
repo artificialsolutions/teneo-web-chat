@@ -12,6 +12,7 @@
         <div>
            <a
           role="button"
+          tabindex="0"
           v-for="(button, idx) in buttonitems"
           :key="idx"
           class="twc-btn"
