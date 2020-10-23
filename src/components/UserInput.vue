@@ -6,6 +6,7 @@
         ref="userInput"
         role="textbox"
         tabIndex="0"
+        aria-label="Enter the text to send to the bot"
         :contentEditable="contentIsEditable"
         :placeholder="placeholder"
         class="twc-user-input__text"
