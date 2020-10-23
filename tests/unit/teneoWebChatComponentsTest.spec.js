@@ -184,16 +184,23 @@ describe('Test Message Components', () => {
     test('Assert QuickreplyMessage JSON', () =>{
         const wrapper = mount(QuickreplyMessage, {
             propsData: {
-                message: sampleJSON.quickreplyMessageJSON
+                message: sampleJSON.quickReplyMessageJSON
             },
             computed: {
-                replySent: () => jest.fn(),
-                quickreplies: () => jest.fn().mockImplementation( () => {   
-                    return sampleJSON.quickreplyMessageJSON.data.quick_replies;
-                }), 
+                replySent: () => jest.fn().mockImplementation( () => {
+                    return false;
+                }),
+                isExpired: () => jest.fn().mockImplementation( () => {
+                    return false;
+                }),
+                
             }
         })
-        expect(wrapper.html()).toContain('twc-quickreply-message')
+        const onSelectMock = jest.fn().mockImplementation( () => {
+            return false;
+        })
+        wrapper.vm.onSelect = onSelectMock;
+        expect(wrapper.html()).toContain('twc-primary')
     })
 
 

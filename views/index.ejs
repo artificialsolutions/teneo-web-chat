@@ -105,6 +105,12 @@
         ) {
           var element = document.getElementById('teneo-web-chat');
 
+          const linkbuttonCallback = function (payload){
+            payload.handledState.handled = false;
+          }
+
+          window.TeneoWebChat.on('message_linkbutton_clicked', linkbuttonCallback);
+
           const teneoProps = {
             'teneoEngineUrl': '<%= process.env.TENEO_ENGINE_URL %>',
             'title':'<%= process.env.HEADER_TITLE %>',

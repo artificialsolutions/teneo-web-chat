@@ -13,20 +13,22 @@ export const audioMessage = {
     "data": { "audio_url": "https://url.to/audio.mp3" },
 }
 
-export const quickReplyMessage = {
-    "type": "quickreply",
-    "quick_replies": [
-        {
-            "style": "primary",
-            "title": "Primary",
-            "postback": "Primary"
-        },
-        {
-            "style": "secondary",
-            "title": "Secondary",
-            "postback": "Secondary"
-        }
-    ]
+export const quickReplyMessageJSON = {
+    type: "quickreply",
+    data:{
+        "quick_replies": [
+            {
+                "style": "primary",
+                "title": "Primary",
+                "postback": "Primary"
+            },
+            {
+                "style": "secondary",
+                "title": "Secondary",
+                "postback": "Secondary"
+            }
+        ]
+    }
 }
 
 export const buttonsMessage = {
