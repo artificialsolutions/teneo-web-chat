@@ -8,6 +8,7 @@
       class="twc-quickreply-message__item"
       :class="{ 'twc-selected': replySent && selected === idx, 'twc-primary': reply.style == 'primary', 'twc-secondary': reply.style == 'secondary', 'twc-success': reply.style == 'success', 'twc-danger': reply.style == 'danger', 'twc-warning': reply.style == 'warning', 'twc-info': reply.style == 'info'}"
       @click="onSelect(reply, idx)"
+      @keydown="handleReturnSpaceKeys($event, reply, idx)"
     >{{ reply.title }}</a>
   </div>
 </template>
@@ -54,6 +55,11 @@ export default {
         return;
       }
       await handleButtonClick(reply, idx, this.$teneoApi)
+    },
+    handleReturnSpaceKeys(event, reply, idx) {
+      if (event.code === 'Space' || event.code === 'Enter') {
+        this.onSelect(reply, idx)
+      }
     },
   },
 };

@@ -18,6 +18,7 @@
           class="twc-btn"
           :class="{ 'twc-primary': button.style == 'primary', 'twc-secondary': button.style == 'secondary', 'twc-success': button.style == 'success', 'twc-danger': button.style == 'danger', 'twc-warning': button.style == 'warning', 'twc-info': button.style == 'info'}"
           @click="onSelect(button, idx)"
+          @keydown="handleReturnSpaceKeys($event, button, idx)"
           >{{ button.title }}</a>
         </div>
       </div>
@@ -95,6 +96,11 @@ export default {
           await this.$teneoApi.sendSilentMessage(payload.button.postback, parameters);
         }
 
+      }
+    },
+    handleReturnSpaceKeys(event, reply, idx) {
+      if (event.code === 'Space' || event.code === 'Enter') {
+        this.onSelect(reply, idx)
       }
     },
     hideModal() {

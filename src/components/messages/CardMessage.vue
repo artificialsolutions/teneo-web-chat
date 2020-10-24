@@ -18,6 +18,7 @@
           :tabindex="replySent || isExpired ? -1 : 0"
           :class="{ 'twc-selected': replySent && selected === idx }"
           @click="onSelect(reply, idx)"
+          @keydown="handleReturnSpaceKeys($event, reply, idx)"
         >{{ reply.title }}</li>
       </ul>
     </div>
@@ -31,6 +32,7 @@
           class="twc-btn"
           :class="{ 'twc-selected': replySent && selected === idx, 'twc-primary': button.style == 'primary', 'twc-secondary': button.style == 'secondary', 'twc-success': button.style == 'success', 'twc-danger': button.style == 'danger', 'twc-warning': button.style == 'warning', 'twc-info': button.style == 'info'}"
           @click="onSelect(button, idx)"
+          @keydown="handleReturnSpaceKeys($event, button, idx)"
         >{{ button.title }}</a>
       </div>
     </div>
@@ -120,6 +122,11 @@ export default {
     async onSelect(reply, idx) {
       if (!this.replySent) {
         await handleButtonClick(reply, idx, this.$teneoApi)
+      }
+    },
+    handleReturnSpaceKeys(event, reply, idx) {
+      if (event.code === 'Space' || event.code === 'Enter') {
+        this.onSelect(reply, idx)
       }
     },
   },
