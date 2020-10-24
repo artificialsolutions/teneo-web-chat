@@ -2,30 +2,22 @@ import { API_ON_LINKBUTTON_CLICK } from './api-function-names.js';
 import handleExtension from './handle-extension.js';
 import basePayload from './base-payload';
 
-export default async function handleLinkButtonClick(button) {
+export default async function handleLinkButtonClick(button, event) {
 
     const payload = basePayload()
 
-    console.log("payload before handleExtension", payload);
+    // include button detials in paylaod
+    payload.button = button
+
     // check if there is an extension that want to intercept the new event
     await handleExtension(API_ON_LINKBUTTON_CLICK, payload);
 
-    console.log("payload after handleExtension", payload);
-
-    // only send silent input if postback exists
+    // if extension handles button, prevent default button click behaviour from happening
     if (payload.handledState.handled === true) {
-        console.log("bla")
-    } else {
-        console.log("button",button)
-        if (button.target) {
-            console.log("Open page in new window")
-            window.open(button.link, button.target);
-        } else {
-            console.log("Open page in same window")
-            window.location.href = button.link;
+        if (event) {
+          event.preventDefault()
         }
-        
-    }
-    
+        return
+    }    
 }
   
