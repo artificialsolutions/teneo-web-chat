@@ -1,5 +1,3 @@
-// import Vue from 'vue';
-// const tmpVue = new Vue();
 import { API_ON_LINKBUTTON_CLICK } from './api-function-names.js';
 import handleExtension from './handle-extension.js';
 import basePayload from './base-payload';
@@ -7,13 +5,11 @@ import basePayload from './base-payload';
 export default async function handleLinkButtonClick(button) {
 
     const payload = basePayload()
-    payload.button = button
+
     console.log("payload before handleExtension", payload);
     // check if there is an extension that want to intercept the new event
     await handleExtension(API_ON_LINKBUTTON_CLICK, payload);
-    if (payload.button) {
-        button = payload.button
-    }
+
     console.log("payload after handleExtension", payload);
 
     // only send silent input if postback exists
