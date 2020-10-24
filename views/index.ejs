@@ -108,7 +108,7 @@
 
         function onMessageButtonClicked(payload) {
             // handle message button clicked event
-            payload.handledState.handled = true;
+            payload.handledState.handled = false;
             var button = payload.button
             console.log("Button clicked, postback value:", button.postback)
         }
