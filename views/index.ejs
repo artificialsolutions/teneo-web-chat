@@ -94,14 +94,15 @@
         // TEMPORARY - REMOVE BEFORE RELEASE
         function onSendButtonClicked(payload) {
           // handle close button clicked event
-          payload.handledState.handled = true
+          payload.handledState.handled = false
           console.log("Sent button clicked extension")
         }
         TeneoWebChat.on('send_button_clicked', onSendButtonClicked)
 
         function onLinkbuttonClicked(payload) {
           // handle link button clicked event
-          payload.handledState.handled = true
+          payload.handledState.handled = false
+          console.log("Link button clicked result:", payload)
         }
         TeneoWebChat.on('message_linkbutton_clicked', onLinkbuttonClicked)
 
