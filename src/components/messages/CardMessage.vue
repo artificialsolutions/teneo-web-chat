@@ -36,11 +36,17 @@
         >{{ button.title }}</a>
       </div>
     </div>
-    <div class="twc-linkbuttons" v-if="linkitems">
-      <div>
+    <div class="twc-links" v-if="linkitems">
         <a
-          role="button"
-          v-for="(button, idx) in linkitems.linkbutton_items"
+          v-for="(link, idx) in linkitems"
+          :href="link.url"
+          :key="idx"
+        >{{ link.title }}</a>
+    </div>
+    <div class="twc-linkbuttons" v-if="linkbutton_items">
+        <a
+          role="link"
+          v-for="(button, idx) in linkbutton_items"
           :key="idx"
           :href="button.link"
           :target="button.target"
@@ -49,7 +55,6 @@
           @click="onLinkbuttonClick(button, $event)"
           @keydown="handleReturnSpaceKeys($event, button, idx)"
         >{{ button.title }}</a>
-      </div>
     </div>
   </div>
 </template>
@@ -107,6 +112,9 @@ export default {
     },
     linkitems() {
       return this.message.data.link_items;
+    },
+    linkbutton_items() {
+      return this.message.data.linkbutton_items;
     },
     replySent() {
       return !!this.message.selected || this.message.selected === 0;
@@ -226,7 +234,7 @@ export default {
   border-bottom: none;
 }
 
-.twc-card .twc-buttons, .twc-card .twc-linnkbuttons {
+.twc-card .twc-buttons, .twc-card .twc-linkbuttons {
   text-align: center;
   border-top: 1px solid var( --light-border-color, #c9c9c9);
   padding: 12px;
