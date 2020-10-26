@@ -4,9 +4,11 @@
       v-for="(reply, idx) in quickreplies"
       :key="idx"
       role="button"
+      :tabindex="replySent || isExpired ? -1 : 0"
       class="twc-quickreply-message__item"
       :class="{ 'twc-selected': replySent && selected === idx, 'twc-primary': reply.style == 'primary', 'twc-secondary': reply.style == 'secondary', 'twc-success': reply.style == 'success', 'twc-danger': reply.style == 'danger', 'twc-warning': reply.style == 'warning', 'twc-info': reply.style == 'info'}"
       @click="onSelect(reply, idx)"
+      @keydown="handleReturnSpaceKeys($event, reply, idx)"
     >{{ reply.title }}</a>
   </div>
 </template>
@@ -54,6 +56,11 @@ export default {
       }
       await handleButtonClick(reply, idx, this.$teneoApi)
     },
+    handleReturnSpaceKeys(event, reply, idx) {
+      if (event.code === 'Space' || event.code === 'Enter') {
+        this.onSelect(reply, idx)
+      }
+    },
   },
 };
 </script>
@@ -75,6 +82,14 @@ export default {
   font-size: 0.8em;
   display: inline-block;
   margin: 3px;
+}
+
+.twc-quickreply-message__item:active {
+  outline:none;
+}
+
+.twc-expired .twc-quickreply-message__item {
+  outline: none;
 }
 
 .twc-quickreply-message__item.twc-selected,

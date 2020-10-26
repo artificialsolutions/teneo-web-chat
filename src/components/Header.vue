@@ -1,16 +1,16 @@
 <template>
   <div class="twc-header">
-    <img v-if="titleIconUrl" class="twc-header__img" :src="titleIconUrl" />
-    <BubbleIcon v-else class="twc-header__img" id="default-header-icon"/>
+    <img v-if="titleIconUrl" class="twc-header__img" :src="titleIconUrl" aria-hidden="true"/>
+    <BubbleIcon v-else class="twc-header__img" id="default-header-icon" aria-hidden="true"/>
     <div v-if="title" class="twc-header__title">{{ title }}</div>
     <div v-else class="twc-header__title">{{getDefaultTitle}}</div>
-    <button class="twc-header__minimize-button" @click="onMinimize" id="header-minimize-button">
-      <img v-if="minimizeIconUrl" class="twc-header__minimize-icon" :src="minimizeIconUrl" />
-      <MinimizeIcon v-else class="twc-header__minimize-icon" />
+    <button class="twc-header__minimize-button" @click="onMinimize" id="header-minimize-button" aria-label="Minimize chat window">
+      <img v-if="minimizeIconUrl" class="twc-header__minimize-icon" :src="minimizeIconUrl" aria-hidden="true"/>
+      <MinimizeIcon v-else class="twc-header__minimize-icon" aria-hidden="true"/>
     </button>
-    <button v-if="showCloseButton" class="twc-header__close-button" @click="onClose" id="header-close-button">
-      <img v-if="closeIconUrl" class="twc-header__close-icon" :src="closeIconUrl" />
-      <XIcon v-else class="twc-header__close-icon" />
+    <button v-if="showCloseButton" class="twc-header__close-button" @click="onClose" id="header-close-button" aria-label="Close chat window">
+      <img v-if="closeIconUrl" class="twc-header__close-icon" :src="closeIconUrl" aria-hidden="true"/>
+      <XIcon v-else class="twc-header__close-icon" aria-hidden="true"/>
     </button>
   </div>
 </template>

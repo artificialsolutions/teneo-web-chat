@@ -14,11 +14,14 @@
         @blur="setInputActive(false)"
         @keydown="handleReturnKey"
         v-debounce:250="userTyping" :debounce-events="['input']"
+        :aria-disabled="inputDisabled"
+        :disabled="inputDisabled ? true : false"
+        aria-label="Input field"
       ></div>
       <div class="twc-user-input__button">
-        <button role="button" tabindex="0" class="twc-user-input__send-icon-wrapper" @click.prevent="" @click="sendButtonClicked()">
-          <img v-if="sendIconUrl" class="twc-user-input__send-icon" :src="sendIconUrl" />
-          <SendIcon v-else class="twc-user-input__send-icon" />
+        <button role="button" tabindex="0" aria-label="Send text" class="twc-user-input__send-icon-wrapper" @click.prevent="_submitText" :aria-disabled="inputDisabled" :disabled="inputDisabled ? true : false">
+          <img v-if="sendIconUrl" class="twc-user-input__send-icon" :src="sendIconUrl" aria-hidden="true"/>
+          <SendIcon v-else class="twc-user-input__send-icon" aria-hidden="true"/>
         </button>
       </div>
     </form>
@@ -76,6 +79,10 @@ export default {
           this.setInputActive(false);
           this.setContentEditable(false);
           this.setInputDisabled(true);
+          
+          if (document.getElementById("twc-user-input-field")) {
+            document.getElementById("twc-user-input-field").blur();
+          }
     });
 
     EventBus.$on(events.ENABLE_INPUT, () => {
@@ -190,6 +197,20 @@ export default {
   },
 };
 </script>
+
+<style scoped>
+.sr-only {
+      position: absolute;
+      width: 1px;
+      height: 1px;
+      padding: 0;
+      margin: -1px;
+      overflow: hidden;
+      clip: rect(0, 0, 0, 0);
+      white-space: nowrap; /* added line */
+      border: 0;
+}
+</style>
 
 <style scoped>
 .twc-user-input {

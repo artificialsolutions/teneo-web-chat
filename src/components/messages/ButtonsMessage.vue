@@ -3,11 +3,13 @@
     <h5 class="twc-buttons-title" v-if="buttonsTitle">{{ buttonsTitle }}</h5>
       <a
         role="button"
+        :tabindex="replySent || isExpired ? -1 : 0"
         v-for="(button, idx) in buttonitems"
         :key="idx"
         class="twc-btn"
         :class="{ 'twc-selected': replySent && selected === idx, 'twc-primary': button.style == 'primary', 'twc-secondary': button.style == 'secondary', 'twc-success': button.style == 'success', 'twc-danger': button.style == 'danger', 'twc-warning': button.style == 'warning', 'twc-info': button.style == 'info'}"
         @click="onSelect(button, idx)"
+        @keydown="handleReturnSpaceKeys($event, button, idx)"
       >{{ button.title }}</a>
   </div>
 </template>
@@ -62,6 +64,11 @@ export default {
       }
       await handleButtonClick(button, idx, this.$teneoApi)
     },
+    handleReturnSpaceKeys(event, reply, idx) {
+      if (event.code === 'Space' || event.code === 'Enter') {
+        this.onSelect(reply, idx)
+      }
+    },
   },
 };
 </script>
@@ -97,6 +104,14 @@ export default {
   display: inline-block;
   margin: 3px;
   text-decoration: none;
+}
+
+.twc-btn:active {
+  outline:none;
+}
+
+.twc-expired .twc-btn {
+  outline: none;
 }
 
 .twc-btn.twc-selected,

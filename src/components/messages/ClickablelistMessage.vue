@@ -3,11 +3,14 @@
     <h5 class="twc-clickablelist-title" v-if="clickablelistTitle">{{ clickablelistTitle }}</h5>
     <ul class="twc-clickablelist-message" :class="{ replied: replySent}">
       <li
+        :tabindex="replySent || isExpired ? -1 : 0"
+        role="button"
         v-for="(reply, idx) in clickablelistitems"
         :key="idx"
         class="twc-clickablelist-message__item"
         :class="{ 'twc-selected': replySent && selected === idx }"
         @click="onSelect(reply, idx)"
+        @keydown="handleReturnSpaceKeys($event, reply, idx)"
       >{{ reply.title }}</li>
     </ul>
   </div>
@@ -60,6 +63,11 @@ export default {
          await handleButtonClick(reply, idx, this.$teneoApi)
       }
     },
+    handleReturnSpaceKeys(event, reply, idx) {
+      if (event.code === 'Space' || event.code === 'Enter') {
+        this.onSelect(reply, idx)
+      }
+    },
   },
 };
 </script>
@@ -105,6 +113,14 @@ export default {
   color: var(--clickablelist-fg-color, #263238);
   cursor: pointer;
   font-size: 0.9em;
+}
+
+.twc-clickablelist-message__item:active {
+  outline:none;
+}
+
+.twc-expired .twc-clickablelist-message__item {
+  outline: none;
 }
 
 .twc-clickablelist-message__item:first-child {
