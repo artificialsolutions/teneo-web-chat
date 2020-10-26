@@ -139,7 +139,7 @@ export default {
 
 .twc-quickreply-message__item.twc-warning {
   border-color: var(--warning-color, #ffc107);
-  color: var(--quickreply-warning-text-color, #e0a800);
+  color: var(--warning-fg-text-color, #c99700);
 }
 
 .twc-quickreply-message:not(.twc-expired) .twc-quickreply-message__item.twc-warning:hover {

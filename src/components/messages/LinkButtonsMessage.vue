@@ -2,17 +2,19 @@
   <div class="twc-linkbuttons">
     <h5 class="twc-linkbuttons-title" v-if="buttonsTitle">{{ buttonsTitle }}</h5>
       <a
-        role="button"
+        role="link"
         v-for="(button, idx) in linkbuttons"
         :key="idx"
         :href="button.link"
         :target="button.target"
         class="twc-linkbutton"
-        :class="{'twc-primary': button.style == 'primary', 'twc-secondary': button.style == 'secondary', 'twc-success': button.style == 'success', 'twc-danger': button.style == 'danger', 'twc-warning': button.style == 'warning', 'twc-info': button.style == 'info'}"
+        
         @click="onClick(button, $event)"
         @keydown="handleReturnSpaceKeys($event, button, idx)"
       >{{ button.title }}</a>
+      <!-- :class="{'twc-primary': button.style == 'primary', 'twc-secondary': button.style == 'secondary', 'twc-success': button.style == 'success', 'twc-danger': button.style == 'danger', 'twc-warning': button.style == 'warning', 'twc-info': button.style == 'info'}" -->
   </div>
+
 </template>
 
 <script>
@@ -70,9 +72,9 @@ export default {
 <style>
 
 .twc-linkbutton {
-  border: 1px solid var(--button-bg-color, #4e8cff);
-  background: var(--button-bg-color, #4e8cff);
-  color: var(--button-fg-color, #ffffff);
+  border: 1px solid var(--light-border-color) !important;
+  color: var(--link-button--fg-color, #007bff);
+  background: var(--light-fg-color, #ffffff) !important;
   cursor: pointer;
   font-weight: 400;
   text-align: center;
@@ -85,15 +87,14 @@ export default {
   font-size: 0.9em;
   line-height: 1.5;
   border-radius: 0.25rem;
-  min-width: 62px;
+  /* min-width: 62px; */
   display: inline-block;
   margin: 3px;
   text-decoration: none;
 }
 
 .twc-linkbutton:hover {
-  color: var(--button-bg-color, #4e8cff);
-  background: var(--button-fg-color, #ffffff);
+  text-decoration: underline;
 }
 
 .twc-linkbuttons h5 {
@@ -108,54 +109,33 @@ export default {
 }
 
 .twc-linkbutton.twc-secondary {
-  background: var(--secondary-color, #6c757d);
-  border-color: var(--secondary-color, #6c757d);
-}
-
-.twc-linkbutton.twc-secondary:hover {
-  color: var(--secondary-color, #6c757d) !important;
-  background: var(--button-fg-color, #ffffff);
+  color: var(--secondary-color, #6c757d);
 }
 
 .twc-linkbutton.twc-success {
-  background: var(--success-color, #28a745);
-  border-color: var(--success-color, #28a745);
+  color: var(--success-color, #28a745);
 }
 
-.twc-linkbutton.twc-success:hover {
-  color: var(--success-color, #28a745) !important;
-  background: var(--button-fg-color, #ffffff);
-}
-
-.twc-linkbutton.twc-warning {
-  background: var(--warning-color, #ffc107);
-  border-color: var(--warning-color, #ffc107);
-  color: var(--dark-fg-color, #263238);
-}
-
-.twc-linkbutton.twc-warning:hover {
-  color: var(--warning-color, #ffc107) !important;
-  background: var(--button-fg-color, #ffffff);
+.twc-linkbutton.twc-warning, .twc-linkbutton.twc-warning:hover {
+  color: var(--warning-fg-text-color, #c99700) !important;
 }
 
 .twc-linkbutton.twc-danger {
-  background: var(--danger-color, #dc3545);
-  border-color: var(--danger-color, #dc3545);
-}
-
-.twc-linkbutton.twc-danger:hover {
-  color: var(--danger-color, #dc3545) !important;
-  background: var(--button-fg-color, #ffffff);
+  color: var(--danger-color, #dc3545);
 }
 
 .twc-linkbutton.twc-info {
-  background: var(--info-color, #17a2b8);
-  border-color: var(--info-color, #17a2b8);
+  color: var(--info-color, #17a2b8);
 }
 
-.twc-linkbutton.twc-info:hover {
-  color: var(--info-color, #17a2b8) !important;
-  background: var(--button-fg-color, #ffffff);
+.twc-linkbuttons a[target="_blank"]::after {
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 10 10'%3E%3Cline x1='3.5' y1='1.5' x2='0.5' y2='1.5' fill='currentColor' stroke='currentColor' stroke-linecap='square' stroke-miterlimit='10'/%3E%3Cline x1='0.5' y1='9.5' x2='0.5' y2='1.5' fill='currentColor' stroke='currentColor' stroke-linecap='square' stroke-miterlimit='10'/%3E%3Cline x1='8.5' y1='9.5' x2='0.5' y2='9.5' fill='currentColor' stroke='currentColor' stroke-linecap='square' stroke-miterlimit='10'/%3E%3Cline x1='8.5' y1='6.5' x2='8.5' y2='9.5' fill='currentColor' stroke='currentColor' stroke-linecap='square' stroke-miterlimit='10'/%3E%3Cline x1='4.5' y1='5.5' x2='9.5' y2='0.5' fill='currentColor' stroke='currentColor' stroke-miterlimit='10'/%3E%3Cline x1='9.5' y1='3.5' x2='9.5' y2='0.5' fill='currentColor' stroke='currentColor' stroke-linecap='square' stroke-miterlimit='10'/%3E%3Cline x1='6.5' y1='0.5' x2='9.5' y2='0.5' fill='currentColor' stroke='currentColor' stroke-linecap='square' stroke-miterlimit='10'/%3E%3C/svg%3E");
+  background-size: 10px 10px;
+  display: inline-block;
+  width: 10px; 
+  height: 10px;
+  margin: 0 3px 0 5px;
+  content:"";
+  filter: initial !important;
 }
-
 </style>
