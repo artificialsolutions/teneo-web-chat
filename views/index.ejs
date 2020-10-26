@@ -101,7 +101,22 @@
           payload.handledState.handled = false
           console.log("Sent button clicked extension")
         }
-        window.TeneoWebChat.on('send_button_clicked', onSendButtonClicked)
+        TeneoWebChat.on('send_button_clicked', onSendButtonClicked)
+
+        function onLinkbuttonClicked(payload) {
+          // handle link button clicked event
+          payload.handledState.handled = false
+          console.log("Link button clicked result:", payload)
+        }
+        TeneoWebChat.on('message_linkbutton_clicked', onLinkbuttonClicked)
+
+        function onMessageButtonClicked(payload) {
+            // handle message button clicked event
+            payload.handledState.handled = false;
+            var button = payload.button
+            console.log("Button clicked, postback value:", button.postback)
+        }
+        TeneoWebChat.on('message_button_clicked', onMessageButtonClicked)
 
         if (
           window.TeneoWebChat &&
