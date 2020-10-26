@@ -135,18 +135,33 @@
                 >{{ button.title }}</a>
               </div>
             </div>
-            <div class="twc-links" v-if="message.link_items">
-              <div>
-                <a
-                  v-for="(link, idx) in message.link_items"
-                  :href="link.url"
-                  :key="idx"
-                  role="link"
-                >{{ link.title }}</a>
-              </div>
-            </div>
           </div>
       </div>
+
+
+      <div class="twc-combo-message" v-if="message.type==='linkbuttons'">
+        <!--
+        <div class="twc-linkbuttons" v-if="message.linkbutton_items">
+          <div>
+            <a
+              role="button"
+              v-for="(button, idx) in linkitems.linkbutton_items"
+              :key="idx"
+              :href="button.link"
+              :target="button.target"
+              class="twc-linkbutton"
+              :class="{'twc-primary': button.style == 'primary', 'twc-secondary': button.style == 'secondary', 'twc-success': button.style == 'success', 'twc-danger': button.style == 'danger', 'twc-warning': button.style == 'warning', 'twc-info': button.style == 'info'}"
+              @click="onLinkbuttonClick(button, $event)"
+              @keydown="handleReturnSpaceKeys($event, button, idx)"
+            >{{ button.title }}</a>
+          </div>
+        </div>
+        -->
+      </div>
+
+
+
+
     </li>
   </ul>
 </template>
@@ -155,6 +170,7 @@
 import { PARTICIPANT_BOT } from '../../utils/constants.js';
 import handleButtonClick from '../../utils/handle-button-click.js';
 import { EventBus, events } from '../../utils/event-bus.js';
+import handleLinkButtonClick from '../../utils/handle-linkbutton-click.js';
 
 export default {
   name: 'ComboMessage',
@@ -177,6 +193,9 @@ export default {
     comboitems() {
       return this.message.data.components;
     },
+    linkitems() {
+      return this.message.data.link_items;
+    },
     replySent() {
       return !!this.message.selected || this.message.selected === 0;
     },
@@ -191,6 +210,9 @@ export default {
     },
   },
   methods: {
+    async onLinkbuttonClick(linkbutton, event) {
+      await handleLinkButtonClick(linkbutton, event)
+    },
     async onSelect(reply, idx) {
       if (!this.replySent) {
         await handleButtonClick(reply, idx, this.$teneoApi)

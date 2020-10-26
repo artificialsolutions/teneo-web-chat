@@ -36,14 +36,19 @@
         >{{ button.title }}</a>
       </div>
     </div>
-    <div class="twc-links" v-if="linkitems">
+    <div class="twc-linkbuttons" v-if="linkitems">
       <div>
         <a
-          v-for="(link, idx) in linkitems"
-          :href="link.url"
+          role="button"
+          v-for="(button, idx) in linkitems.linkbutton_items"
           :key="idx"
-          role="link"
-        >{{ link.title }}</a>
+          :href="button.link"
+          :target="button.target"
+          class="twc-linkbutton"
+          :class="{'twc-primary': button.style == 'primary', 'twc-secondary': button.style == 'secondary', 'twc-success': button.style == 'success', 'twc-danger': button.style == 'danger', 'twc-warning': button.style == 'warning', 'twc-info': button.style == 'info'}"
+          @click="onLinkbuttonClick(button, $event)"
+          @keydown="handleReturnSpaceKeys($event, button, idx)"
+        >{{ button.title }}</a>
       </div>
     </div>
   </div>
@@ -53,6 +58,7 @@
 import { PARTICIPANT_BOT } from '../../utils/constants.js';
 import sanitizeHtml from '../../utils/sanitize-html.js';
 import handleButtonClick from '../../utils/handle-button-click.js';
+import handleLinkButtonClick from '../../utils/handle-linkbutton-click.js';
 
 export default {
   name: 'CardMessage',
@@ -119,6 +125,9 @@ export default {
     },
   },
   methods: {
+    async onLinkbuttonClick(linkbutton, event) {
+      await handleLinkButtonClick(linkbutton, event)
+    },
     async onSelect(reply, idx) {
       if (!this.replySent) {
         await handleButtonClick(reply, idx, this.$teneoApi)
@@ -217,7 +226,7 @@ export default {
   border-bottom: none;
 }
 
-.twc-card .twc-buttons {
+.twc-card .twc-buttons, .twc-card .twc-linnkbuttons {
   text-align: center;
   border-top: 1px solid var( --light-border-color, #c9c9c9);
   padding: 12px;

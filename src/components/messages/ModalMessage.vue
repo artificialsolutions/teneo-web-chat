@@ -8,6 +8,7 @@
         <h5 class="twc-modal-title" v-if="modalTitle">{{ modalTitle }}</h5>
         <p class="twc-modal-text" v-if="messageText" v-html="sanitizedHtmlText"></p>
       </div>
+      
       <div class="twc-buttons" v-if="buttonitems">
         <div>
           <a
@@ -23,6 +24,23 @@
           >{{ button.title }}</a>
         </div>
       </div>
+      
+      <div class="twc-linkbuttons" v-if="linkitems">
+        <div>
+          <a
+            role="button"
+            v-for="(button, idx) in linkitems.linkbutton_items"
+            :key="idx"
+            :href="button.link"
+            :target="button.target"
+            class="twc-linkbutton"
+            :class="{'twc-primary': button.style == 'primary', 'twc-secondary': button.style == 'secondary', 'twc-success': button.style == 'success', 'twc-danger': button.style == 'danger', 'twc-warning': button.style == 'warning', 'twc-info': button.style == 'info'}"
+            @click="onLinkbuttonClick(button, $event)"
+            @keydown="handleReturnSpaceKeys($event, button, idx)"
+          >{{ button.title }}</a>
+        </div>
+      </div>
+
     </div>
   </div>
 </template>
@@ -33,6 +51,7 @@ import sanitizeHtml from '../../utils/sanitize-html.js';
 import handleExtension from '../../utils/handle-extension.js';
 import basePayload from '../../utils/base-payload.js';
 import { EventBus, events } from '../../utils/event-bus.js';
+import handleLinkButtonClick from '../../utils/handle-linkbutton-click.js';
 
 export default {
   name: 'ModalMessage',
@@ -61,6 +80,9 @@ export default {
         return this.message.data.image.alt;
       }
     },
+    linkitems() {
+      return this.message.data.link_items;
+    },
     messageText() {
       if (this.message.data.text) {
         return this.message.data.text;
@@ -77,6 +99,9 @@ export default {
     EventBus.$emit(events.DISABLE_INPUT);
   },
   methods: {
+    async onLinkbuttonClick(linkbutton, event) {
+      await handleLinkButtonClick(linkbutton, event)
+    },
     async onSelect(reply, idx) {
       if (!this.replySent) {
         // hide modal
