@@ -9,6 +9,7 @@
         class="twc-btn"
         :class="{ 'twc-selected': replySent && selected === idx, 'twc-primary': button.style == 'primary', 'twc-secondary': button.style == 'secondary', 'twc-success': button.style == 'success', 'twc-danger': button.style == 'danger', 'twc-warning': button.style == 'warning', 'twc-info': button.style == 'info'}"
         @click="onSelect(button, idx)"
+        @keydown="handleReturnSpaceKeys($event, button, idx)"
       >{{ button.title }}</a>
   </div>
 </template>
@@ -62,6 +63,11 @@ export default {
         return;
       }
       await handleButtonClick(button, idx, this.$teneoApi)
+    },
+    handleReturnSpaceKeys(event, reply, idx) {
+      if (event.code === 'Space' || event.code === 'Enter') {
+        this.onSelect(reply, idx)
+      }
     },
   },
 };

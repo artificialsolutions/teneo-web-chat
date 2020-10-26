@@ -10,6 +10,7 @@
         class="twc-clickablelist-message__item"
         :class="{ 'twc-selected': replySent && selected === idx }"
         @click="onSelect(reply, idx)"
+        @keydown="handleReturnSpaceKeys($event, reply, idx)"
       >{{ reply.title }}</li>
     </ul>
   </div>
@@ -60,6 +61,11 @@ export default {
     async onSelect(reply, idx) {
       if (!this.replySent) {
          await handleButtonClick(reply, idx, this.$teneoApi)
+      }
+    },
+    handleReturnSpaceKeys(event, reply, idx) {
+      if (event.code === 'Space' || event.code === 'Enter') {
+        this.onSelect(reply, idx)
       }
     },
   },

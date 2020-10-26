@@ -1,5 +1,5 @@
 <template>
-  <div ref="scrollList" class="twc-message-list">
+  <div ref="scrollList" class="twc-message-list" aria-live="polite">
     <Message
       v-for="(message, idx) in messageList"
       :key="idx"

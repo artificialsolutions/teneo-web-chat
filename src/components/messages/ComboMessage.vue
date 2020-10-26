@@ -25,6 +25,7 @@
               class="twc-quickreply-message__item"
               :class="{ 'twc-selected': replySent && selected === idx, 'twc-primary': reply.style == 'primary', 'twc-secondary': reply.style == 'secondary', 'twc-success': reply.style == 'success', 'twc-danger': reply.style == 'danger', 'twc-warning': reply.style == 'warning', 'twc-info': reply.style == 'info'}"
               @click="onSelect(reply, idx)"
+              @keydown="handleReturnSpaceKeys($event, reply, idx)"
             >{{ reply.title }}</a>
         </div>
       </div>
@@ -41,6 +42,7 @@
               class="twc-clickablelist-message__item"
               :class="{ 'twc-selected': replySent && selected === idx +'ql' }"
               @click="onSelect(reply, idx +'ql')"
+              @keydown="handleReturnSpaceKeys($event, reply, idx +'ql')"
             >{{ reply.title }}</li>
           </ul>
         </div>
@@ -89,6 +91,7 @@
                 class="twc-btn"
                 :class="{ 'twc-selected': replySent && selected === idx +'btn', 'twc-primary': button.style == 'primary', 'twc-secondary': button.style == 'secondary', 'twc-success': button.style == 'success', 'twc-danger': button.style == 'danger', 'twc-warning': button.style == 'warning', 'twc-info': button.style == 'info'}"
                 @click="onSelect(button, idx +'btn')"
+                @keydown="handleReturnSpaceKeys($event, button, idx +'btn')"
               >{{ button.title }}</a>
             </div>
           </div>
@@ -114,6 +117,7 @@
                   :tabindex="replySent || isExpired ? -1 : 0"
                   :class="{ 'twc-selected': replySent && selected === idx +'cql' }"
                   @click="onSelect(reply, idx +'cql')"
+                  @keydown="handleReturnSpaceKeys($event, reply, idx +'cql')"
                 >{{ reply.title }}</li>
               </ul>
             </div>
@@ -127,6 +131,7 @@
                   :tabindex="replySent || isExpired ? -1 : 0"
                   :class="{ 'twc-selected': replySent && selected === idx +'cbtn', 'twc-primary': button.style == 'primary', 'twc-secondary': button.style == 'secondary', 'twc-success': button.style == 'success', 'twc-danger': button.style == 'danger', 'twc-warning': button.style == 'warning', 'twc-info': button.style == 'info'}"
                   @click="onSelect(button, idx +'cbtn')"
+                  @keydown="handleReturnSpaceKeys($event, button, idx +'cbtn')"
                 >{{ button.title }}</a>
               </div>
             </div>
@@ -189,6 +194,11 @@ export default {
     async onSelect(reply, idx) {
       if (!this.replySent) {
         await handleButtonClick(reply, idx, this.$teneoApi)
+      }
+    },
+    handleReturnSpaceKeys(event, reply, idx) {
+      if (event.code === 'Space' || event.code === 'Enter') {
+        this.onSelect(reply, idx)
       }
     },
     videoUrl(url) {
