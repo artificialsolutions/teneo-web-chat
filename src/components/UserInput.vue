@@ -6,7 +6,7 @@
         ref="userInput"
         role="textbox"
         tabIndex="0"
-        aria-label="Enter the text to send to the bot"
+        aria-label="Input field"
         :contentEditable="contentIsEditable"
         :placeholder="placeholder"
         class="twc-user-input__text"
@@ -16,7 +16,6 @@
         v-debounce:250="userTyping" :debounce-events="['input']"
         :aria-disabled="inputDisabled"
         :disabled="inputDisabled ? true : false"
-        aria-label="Input field"
       ></div>
       <div class="twc-user-input__button">
         <button role="button" tabindex="0" aria-label="Send text" class="twc-user-input__send-icon-wrapper" @click.prevent="_submitText" :aria-disabled="inputDisabled" :disabled="inputDisabled ? true : false">
