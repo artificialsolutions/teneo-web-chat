@@ -10,6 +10,7 @@
         class="twc-linkbutton"
         :class="{'twc-primary': button.style == 'primary', 'twc-secondary': button.style == 'secondary', 'twc-success': button.style == 'success', 'twc-danger': button.style == 'danger', 'twc-warning': button.style == 'warning', 'twc-info': button.style == 'info'}"
         @click="onClick(button, $event)"
+        @keydown="handleReturnSpaceKeys($event, button, idx)"
       >{{ button.title }}</a>
   </div>
 </template>
@@ -47,6 +48,11 @@ export default {
   methods: {
     async onClick(linkbutton, event) {
       await handleLinkButtonClick(linkbutton, event)
+    },
+    handleReturnSpaceKeys(event, reply, idx) {
+      if (event.code === 'Space' || event.code === 'Enter') {
+        this.onClick(reply, idx)
+      }
     },
   },
 };
