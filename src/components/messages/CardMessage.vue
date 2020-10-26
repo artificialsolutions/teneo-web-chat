@@ -123,6 +123,9 @@ export default {
       if (!this.replySent) {
         await handleButtonClick(reply, idx, this.$teneoApi)
       }
+      if (document.getElementById("twc-user-input-field")) {
+        document.getElementById("twc-user-input-field").focus();
+      }
     },
     handleReturnSpaceKeys(event, reply, idx) {
       if (event.code === 'Space' || event.code === 'Enter') {

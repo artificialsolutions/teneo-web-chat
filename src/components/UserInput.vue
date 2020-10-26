@@ -15,6 +15,7 @@
         v-debounce:250="userTyping" :debounce-events="['input']"
         :aria-disabled="inputDisabled"
         :disabled="inputDisabled ? true : false"
+        aria-label="Input field"
       ></div>
       <div class="twc-user-input__button">
         <button role="button" tabindex="0" aria-label="Send text" class="twc-user-input__send-icon-wrapper" @click.prevent="_submitText" :aria-disabled="inputDisabled" :disabled="inputDisabled ? true : false">
@@ -77,6 +78,10 @@ export default {
           this.setInputActive(false);
           this.setContentEditable(false);
           this.setInputDisabled(true);
+          
+          if (document.getElementById("twc-user-input-field")) {
+            document.getElementById("twc-user-input-field").blur();
+          }
     });
 
     EventBus.$on(events.ENABLE_INPUT, () => {

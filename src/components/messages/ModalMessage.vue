@@ -10,11 +10,12 @@
       </div>
       <div class="twc-buttons" v-if="buttonitems">
         <div>
-           <a
+          <a
+          v-for="(button, idx) in buttonitems"
           role="button"
           tabindex="0"
-          v-for="(button, idx) in buttonitems"
           :key="idx"
+          :autofocus="idx == 0 ? true : false"
           class="twc-btn"
           :class="{ 'twc-primary': button.style == 'primary', 'twc-secondary': button.style == 'secondary', 'twc-success': button.style == 'success', 'twc-danger': button.style == 'danger', 'twc-warning': button.style == 'warning', 'twc-info': button.style == 'info'}"
           @click="onSelect(button, idx)"
@@ -31,6 +32,7 @@ import { API_ON_MODAL_BUTTON_CLICK } from '../../utils/api-function-names.js';
 import sanitizeHtml from '../../utils/sanitize-html.js';
 import handleExtension from '../../utils/handle-extension.js';
 import basePayload from '../../utils/base-payload.js';
+import { EventBus, events } from '../../utils/event-bus.js';
 
 export default {
   name: 'ModalMessage',
@@ -71,6 +73,9 @@ export default {
       return sanitizeHtml(this.message.data.text);
     },
   },
+  mounted() {
+    EventBus.$emit(events.DISABLE_INPUT);
+  },
   methods: {
     async onSelect(reply, idx) {
       if (!this.replySent) {
@@ -100,6 +105,7 @@ export default {
     },
     handleReturnSpaceKeys(event, reply, idx) {
       if (event.code === 'Space' || event.code === 'Enter') {
+        event.preventDefault()
         this.onSelect(reply, idx)
       }
     },
@@ -109,6 +115,7 @@ export default {
           return message.type !== 'modal';
       });      
       this.$teneoApi.messageList = messages;
+      EventBus.$emit(events.ENABLE_INPUT);
     },
   },
 };
