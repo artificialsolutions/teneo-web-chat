@@ -25,11 +25,11 @@
         </div>
       </div>
       
-      <div class="twc-linkbuttons" v-if="linkitems">
+      <!-- <div class="twc-linkbuttons" v-if="linkbutton_items">
         <div>
           <a
             role="button"
-            v-for="(button, idx) in linkitems.linkbutton_items"
+            v-for="(button, idx) in linkbutton_items"
             :key="idx"
             :href="button.link"
             :target="button.target"
@@ -39,7 +39,7 @@
             @keydown="handleReturnSpaceKeys($event, button, idx)"
           >{{ button.title }}</a>
         </div>
-      </div>
+      </div> -->
 
     </div>
   </div>
@@ -80,9 +80,6 @@ export default {
         return this.message.data.image.alt;
       }
     },
-    linkitems() {
-      return this.message.data.link_items;
-    },
     messageText() {
       if (this.message.data.text) {
         return this.message.data.text;
@@ -91,6 +88,9 @@ export default {
     buttonitems() {
       return this.message.data.button_items;
     },
+    // linkbutton_items() {
+    //   return this.message.data.linkbutton_items;
+    // },
     sanitizedHtmlText() {
       return sanitizeHtml(this.message.data.text);
     },
