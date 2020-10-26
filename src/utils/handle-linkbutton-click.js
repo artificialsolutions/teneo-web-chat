@@ -1,4 +1,4 @@
-import { API_ON_LINKBUTTON_CLICK } from './api-function-names.js';
+import { API_ON_BUTTON_CLICK } from './api-function-names.js';
 import handleExtension from './handle-extension.js';
 import basePayload from './base-payload';
 
@@ -10,7 +10,7 @@ export default async function handleLinkButtonClick(button, event) {
     payload.button = button
 
     // check if there is an extension that want to intercept the new event
-    await handleExtension(API_ON_LINKBUTTON_CLICK, payload);
+    await handleExtension(API_ON_BUTTON_CLICK, payload);
 
     // if extension handles button, prevent default button click behaviour from happening
     if (payload.handledState.handled === true) {

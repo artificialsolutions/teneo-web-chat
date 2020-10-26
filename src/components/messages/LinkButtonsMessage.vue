@@ -15,10 +15,6 @@
 </template>
 
 <script>
-
-// import { API_ON_LINKBUTTON_CLICK } from '../../utils/api-function-names.js';
-// import handleExtension from '../../utils/handle-extension.js';
-// import basePayload from '../../utils/base-payload';
 import handleLinkButtonClick from '../../utils/handle-linkbutton-click.js';
 
 export default {
@@ -47,42 +43,10 @@ export default {
     linkbuttons() {
       return this.message.data.linkbutton_items;
     },
-    // replySent() {
-    //   return !!this.message.selected || this.message.selected === 0;
-    // },
-    // selected() {
-    //   return this.message.selected;
-    // },
-    // isExpired() {
-    //   const { messageList } = this.$teneoApi;
-    //   const latestMessage = messageList[messageList.length - 1];
-
-    //   return latestMessage && latestMessage !== this.message;
-    // },
   },
   methods: {
     async onClick(linkbutton, event) {
       await handleLinkButtonClick(linkbutton, event)
-      // console.log("Link button clicked")
-
-      // // check if there is an extension that want to intercept the new event
-      // var lbPayload = basePayload();
-      // lbPayload.linkbutton = JSON.parse(JSON.stringify(linkbutton))
-      // console.log("before handleExtension", lbPayload)
-      // await handleExtension(API_ON_LINKBUTTON_CLICK, lbPayload);
-      
-      // // abort if extension says so
-      // console.log("after handleExtension", lbPayload)
-
-      // if (lbPayload.handledState.handled === true) {
-      //   console.log("Abort mission")
-      //   if (event) {
-      //     event.preventDefault()
-      //   }
-        
-      // } else {
-      //   return
-      // }
     },
   },
 };
