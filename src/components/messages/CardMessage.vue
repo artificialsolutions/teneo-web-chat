@@ -18,7 +18,7 @@
           :tabindex="replySent || isExpired ? -1 : 0"
           :class="{ 'twc-selected': replySent && selected === idx }"
           @click="onSelect(reply, idx)"
-          @keydown="handleReturnSpaceKeys($event, reply, idx)"
+          @keydown="handleReturnSpaceKeys($event, reply, idx, 'clickablelist')"
         >{{ reply.title }}</li>
       </ul>
     </div>
@@ -32,7 +32,7 @@
           class="twc-btn"
           :class="{ 'twc-selected': replySent && selected === idx, 'twc-primary': button.style == 'primary', 'twc-secondary': button.style == 'secondary', 'twc-success': button.style == 'success', 'twc-danger': button.style == 'danger', 'twc-warning': button.style == 'warning', 'twc-info': button.style == 'info'}"
           @click="onSelect(button, idx)"
-          @keydown="handleReturnSpaceKeys($event, button, idx)"
+          @keydown="handleReturnSpaceKeys($event, button, idx, 'button')"
         >{{ button.title }}</a>
       </div>
     </div>
@@ -48,12 +48,11 @@
           role="link"
           v-for="(button, idx) in linkbutton_items"
           :key="idx"
-          :href="button.link"
+          :href="button.url"
           :target="button.target"
           class="twc-linkbutton"
-          :class="{'twc-primary': button.style == 'primary', 'twc-secondary': button.style == 'secondary', 'twc-success': button.style == 'success', 'twc-danger': button.style == 'danger', 'twc-warning': button.style == 'warning', 'twc-info': button.style == 'info'}"
           @click="onLinkbuttonClick(button, $event)"
-          @keydown="handleReturnSpaceKeys($event, button, idx)"
+          @keydown="handleReturnSpaceKeys($event, button, idx, 'linkbutton')"
         >{{ button.title }}</a>
     </div>
   </div>
@@ -144,9 +143,14 @@ export default {
         document.getElementById("twc-user-input-field").focus();
       }
     },
-    handleReturnSpaceKeys(event, reply, idx) {
+    handleReturnSpaceKeys(event, button, idx, type) {
       if (event.code === 'Space' || event.code === 'Enter') {
-        this.onSelect(reply, idx)
+        if (type === 'button' || type === 'clickablelist') {
+           this.onSelect(button, idx)
+        }
+        if (type === 'linkbutton') {
+          this.onLinkbuttonClick(button, event)
+        }
       }
     },
   },

@@ -138,29 +138,21 @@
           </div>
       </div>
 
-
       <div class="twc-combo-message" v-if="message.type==='linkbuttons'">
-        <!--
-        <div class="twc-linkbuttons" v-if="message.linkbutton_items">
-          <div>
+        <div class="twc-linkbuttons">
+            <h5 class="twc-linkbuttons-title" v-if="message.title">{{ message.title }}</h5>
             <a
-              role="button"
-              v-for="(button, idx) in linkitems.linkbutton_items"
+              v-for="(button, idx) in message.linkbutton_items"
+              role="link"
               :key="idx"
               :href="button.link"
               :target="button.target"
               class="twc-linkbutton"
-              :class="{'twc-primary': button.style == 'primary', 'twc-secondary': button.style == 'secondary', 'twc-success': button.style == 'success', 'twc-danger': button.style == 'danger', 'twc-warning': button.style == 'warning', 'twc-info': button.style == 'info'}"
               @click="onLinkbuttonClick(button, $event)"
               @keydown="handleReturnSpaceKeys($event, button, idx)"
             >{{ button.title }}</a>
-          </div>
         </div>
-        -->
       </div>
-
-
-
 
     </li>
   </ul>
@@ -262,5 +254,12 @@ export default {
 
 .twc-btn {
   min-width: 62px;
+}
+
+.twc-linkbuttons {
+  width: 100%;
+  margin: -3px;
+  margin-right: 37px;
+  text-align: center;
 }
 </style>
