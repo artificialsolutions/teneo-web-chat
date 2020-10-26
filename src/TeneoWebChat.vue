@@ -245,7 +245,7 @@ export default {
   --danger-color: #dc3545;
   --success-color: #28a745;
   --warning-color: #ffc107;
-  --quickreply-warning-text-color: #e0a800;
+  --warning-fg-text-color: #d19d00;
   --info-color: #17a2b8;
   --expired-color: #a9a9a9;
   --text-link-color: #007bff;
@@ -269,6 +269,7 @@ export default {
   --button-bg-color: var(--primary-color);
   --card-bg-color: var(--light-fg-color);
   --card-link-color: var(--text-link-color);
+  --link-button-fg-color: var(--text-link-color);
   --clickablelist-title-color: var(--dark-fg-color);
   --clickablelist-bg-color: var(--light-fg-color);
   --clickablelist-fg-color: var(--dark-fg-color);
