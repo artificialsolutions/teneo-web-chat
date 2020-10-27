@@ -13,7 +13,7 @@
 	* bot -> twc-bot
 	* user - twc-user
 	* agent - twc-agent
-* Launch button now has an additional class 'twc-minimized' or 'twc-closed', depending on whether the window was minmized or closed.
+* Launch button now has an additional class 'twc-minimized' or 'twc-closed', depending on whether the window was minmized or closed. 
 
 # v3.1.0
 ## 23-09-2020
