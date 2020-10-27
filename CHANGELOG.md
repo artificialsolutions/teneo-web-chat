@@ -1,11 +1,11 @@
-# v3.2.0-beta
+# v3.2.0
 ## 27-10-2020
 * New message type: linkbuttons
 * New configuration setting: sendIconUrl
 * New api's: 'Set send icon' and 'Reset send icon'
 * New api: 'Set engine URL'
 * Improved accessibility
-* Changed names of the following css classes (old class name -> new class name):
+* Added 'twc-' prefix to the followin classes:
     * active -> twc-active
 	* disabled -> twc-disabled
 	* expired -> twc-expired
@@ -13,7 +13,7 @@
 	* bot -> twc-bot
 	* user - twc-user
 	* agent - twc-agent
-* Launch button now has an additional class 'twc-minimized' or 'twc-closed', depending on whether the window was minmized or closed. 
+* Launch button now has an additional class 'twc-minimized' or 'twc-closed', depending on whether the window was minmized or closed.
 
 # v3.1.0
 ## 23-09-2020
