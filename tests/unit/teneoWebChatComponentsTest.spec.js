@@ -13,6 +13,7 @@ import QuickreplyMessage from '@/components/messages/QuickreplyMessage.vue'
 import SystemMessage from '@/components/messages/SystemMessage.vue'
 import VimeovideoMessage from '@/components/messages/VimeovideoMessage.vue'
 import YoutubevideoMessage from '@/components/messages/YoutubevideoMessage.vue'
+import LinkButtonsMessage from '@/components/messages/LinkButtonsMessage.vue'
 
 import * as sampleJSON  from "../../src/utils/sample-message-json";
 
@@ -56,7 +57,7 @@ describe('Test Message Components', () => {
 
         const wrapper = mount(CardMessage, {
             propsData: {
-                message : sampleJSON.cardMessageJSON
+                message: sampleJSON.cardMessageJSON
             },
             computed: {
                 isExpired: () => jest.fn()
@@ -64,7 +65,7 @@ describe('Test Message Components', () => {
         })
         const wrapperWithLinks = mount(CardMessage, {
             propsData: {
-                message : sampleJSON.cardMessageJSONwithLinks
+                message: sampleJSON.cardMessageJSONwithLinks
             },
             computed: {
                 isExpired: () => jest.fn()
@@ -72,7 +73,7 @@ describe('Test Message Components', () => {
         })
         const wrapperWithButtons = mount(CardMessage, {
             propsData: {
-                message : sampleJSON.cardMessageJSONwithButtons
+                message: sampleJSON.cardMessageJSONwithButtons
             },
             computed: {
                 isExpired: () => jest.fn()
@@ -80,16 +81,24 @@ describe('Test Message Components', () => {
         })
         const wrapperWithClickablelist = mount(CardMessage, {
             propsData: {
-                message : sampleJSON.cardMessageJSONwithClickablelist
+                message: sampleJSON.cardMessageJSONwithClickablelist
             },
             computed: {
                 isExpired: () => jest.fn()
             }
         })
+
+        const wrapperWithLinkButtons = mount(CardMessage, {
+            propsData: {
+                message: sampleJSON.cardMessageJSONWithLinkButtons
+            }
+        })
+
         expect(wrapper.exists()).toBe(true)
         expect(wrapperWithLinks.exists()).toBe(true)
         expect(wrapperWithButtons.exists()).toBe(true)
         expect(wrapperWithClickablelist.exists()).toBe(true)
+        expect(wrapperWithLinkButtons.html()).toContain("<div class=\"twc-linkbuttons\"><a role=\"link\" href=\"https://developers.artificial-solutions.com/studio\" target=\"_blank\" class=\"twc-linkbutton\">Studio</a><a role=\"link\" href=\"https://developers.artificial-solutions.com/engine\" target=\"_blank\" class=\"twc-linkbutton\">Engine</a></div>")
     })
 
     
@@ -99,10 +108,21 @@ describe('Test Message Components', () => {
                 message : sampleJSON.clickableListMessageJSON
             },
             computed: {
-                isExpired: () => jest.fn()
+                isExpired: () => jest.fn().mockImplementation( () => {
+                    return false;
+                }),
             }
         })
-        expect(wrapper.exists()).toBe(true)
+        expect(wrapper.html()).toContain('<li tabindex=\"-1\" role=\"button\" class=\"twc-clickablelist-message__item\">Two</li>')
+    })
+
+    test('Assert LinkButtonsMessage JSON', () =>{
+        const wrapper = mount(LinkButtonsMessage, {
+            propsData: {
+                message: sampleJSON.linkButtonsMessageJSON
+            }
+        })
+        expect(wrapper.html()).toContain("<h5 class=\"twc-linkbuttons-title\">Optional title</h5> <a role=\"link\" href=\"#\" class=\"twc-linkbutton\">Link 1</a><a role=\"link\" href=\"https://developers.artificial-solutions.com/\" target=\"_self\" class=\"twc-linkbutton\">Link 2</a><a role=\"link\" href=\"https://developers.artificial-solutions.com/\" target=\"_blank\" class=\"twc-linkbutton\">Link 3</a>")
     })
 
 
@@ -132,7 +152,7 @@ describe('Test Message Components', () => {
         expect(wrapper.html()).toContain('twc-file-video')
         expect(wrapper.html()).toContain('twc-vimeo-video')
         expect(wrapper.html()).toContain('twc-buttons');
-        expect(wrapper.html()).toContain('twc-card')
+        expect(wrapper.html()).toContain('<h5 class=\"twc-linkbuttons-title\">Optional title</h5> <a role=\"link\" class=\"twc-linkbutton\">Link 1</a><a role=\"link\" target=\"_self\" class=\"twc-linkbutton\">Link 2</a><a role=\"link\" target=\"_blank\" class=\"twc-linkbutton\">Link 3</a>')
     })
 
 
@@ -200,7 +220,7 @@ describe('Test Message Components', () => {
             return false;
         })
         wrapper.vm.onSelect = onSelectMock;
-        expect(wrapper.html()).toContain('twc-primary')
+        expect(wrapper.html()).toContain('<div class=\"twc-quickreply-message twc-expired\"><a role=\"button\" tabindex=\"-1\" class=\"twc-quickreply-message__item twc-primary\">Primary</a><a role=\"button\" tabindex=\"-1\" class=\"twc-quickreply-message__item twc-secondary\">Secondary</a></div>')
     })
 
 
@@ -215,7 +235,7 @@ describe('Test Message Components', () => {
                 }), 
             }
         })
-        expect(wrapper.html()).toContain('twc-system-message')
+        expect(wrapper.html()).toContain("<p class=\"twc-system-message__text\">This is a system message.</p>")
     })
 
 
