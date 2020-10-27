@@ -16,6 +16,8 @@
 	* agent - twc-agent
 * Launch button now has an additional class 'twc-minimized' or 'twc-closed', depending on whether the window was minmized or closed.
 
+For more details on the styles used by Teneo Web Caht, see the new page [Styling Teneo Web Chat](https://developers.artificial-solutions.com/engine/teneo-web-chat/styling-teneo-web-chat).
+
 Note: as of this version, link_items in cards are deprecated. They still work but will be removed in the next major release of Teneo Web Chat. If your solution uses cards with link_items, please update them to use linkbutton_items instead.
 
 # v3.1.0
