@@ -1,6 +1,6 @@
 # v3.2.0
 ## 27-10-2020
-* New message type: [linkbuttons](https://developers.artificial-solutions.com/engine/teneo-web-chat#link-buttons)
+* New message type: [Link buttons](https://developers.artificial-solutions.com/engine/teneo-web-chat#link-buttons)
 * New configuration setting: sendIconUrl
 * New api's: [Set send icon](https://developers.artificial-solutions.com/engine/teneo-web-chat/web-chat-api#set-send-icon) and [Reset send icon](https://developers.artificial-solutions.com/engine/teneo-web-chat/web-chat-api#reset-send-icon)
 * New api: [Set engine URL](https://developers.artificial-solutions.com/engine/teneo-web-chat/web-chat-api#set-engine-url)
