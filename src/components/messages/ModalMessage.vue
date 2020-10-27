@@ -24,22 +24,6 @@
           >{{ button.title }}</a>
         </div>
       </div>
-      
-      <!-- <div class="twc-linkbuttons" v-if="linkbutton_items">
-        <div>
-          <a
-            role="button"
-            v-for="(button, idx) in linkbutton_items"
-            :key="idx"
-            :href="button.link"
-            :target="button.target"
-            class="twc-linkbutton"
-            :class="{'twc-primary': button.style == 'primary', 'twc-secondary': button.style == 'secondary', 'twc-success': button.style == 'success', 'twc-danger': button.style == 'danger', 'twc-warning': button.style == 'warning', 'twc-info': button.style == 'info'}"
-            @click="onLinkbuttonClick(button, $event)"
-            @keydown="handleReturnSpaceKeys($event, button, idx)"
-          >{{ button.title }}</a>
-        </div>
-      </div> -->
 
     </div>
   </div>
@@ -88,9 +72,6 @@ export default {
     buttonitems() {
       return this.message.data.button_items;
     },
-    // linkbutton_items() {
-    //   return this.message.data.linkbutton_items;
-    // },
     sanitizedHtmlText() {
       return sanitizeHtml(this.message.data.text);
     },
@@ -99,9 +80,6 @@ export default {
     EventBus.$emit(events.DISABLE_INPUT);
   },
   methods: {
-    async onLinkbuttonClick(linkbutton, event) {
-      await handleLinkButtonClick(linkbutton, event)
-    },
     async onSelect(reply, idx) {
       if (!this.replySent) {
         // hide modal
@@ -125,7 +103,6 @@ export default {
 
           await this.$teneoApi.sendSilentMessage(payload.button.postback, parameters);
         }
-
       }
     },
     handleReturnSpaceKeys(event, reply, idx) {

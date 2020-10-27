@@ -9,7 +9,6 @@
         :target="button.target"
         class="twc-linkbutton"
         @click="onClick(button, $event)"
-        @keydown="handleReturnSpaceKeys($event, button, idx)"
       >{{ button.title }}</a>
   </div>
 </template>
@@ -48,11 +47,6 @@ export default {
     async onClick(linkbutton, event) {
       await handleLinkButtonClick(linkbutton, event)
     },
-    async handleReturnSpaceKeys(event, linkbutton, idx) {
-      if (event.code === 'Space' || event.code === 'Enter') {
-        this.onClick(linkbutton, idx)
-      }
-    },
   },
 };
 </script>
@@ -68,9 +62,9 @@ export default {
 
 <style>
 .twc-linkbutton {
-  border: 1px solid var(--light-border-color) !important;
+  border: 1px solid var(--link-button-border-color, #c9c9c9) !important;
   color: var(--link-button-fg-color, #007bff) !important;
-  background: var(--light-fg-color, #ffffff) !important;
+  background: var(--link-button-bg-color, #ffffff) !important;
   cursor: pointer;
   font-weight: 400;
   text-align: center;
@@ -83,7 +77,6 @@ export default {
   font-size: 0.9em;
   line-height: 1.5;
   border-radius: 0.25rem;
-  /* min-width: 62px; */
   display: inline-block;
   margin: 3px;
   text-decoration: none;
@@ -124,14 +117,14 @@ export default {
   color: var(--info-color, #17a2b8);
 } */
 
-/* .twc-linkbuttons a[target="_blank"]::after {
-  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 10 10'%3E%3Cline x1='3.5' y1='1.5' x2='0.5' y2='1.5' fill='currentColor' stroke='currentColor' stroke-linecap='square' stroke-miterlimit='10'/%3E%3Cline x1='0.5' y1='9.5' x2='0.5' y2='1.5' fill='currentColor' stroke='currentColor' stroke-linecap='square' stroke-miterlimit='10'/%3E%3Cline x1='8.5' y1='9.5' x2='0.5' y2='9.5' fill='currentColor' stroke='currentColor' stroke-linecap='square' stroke-miterlimit='10'/%3E%3Cline x1='8.5' y1='6.5' x2='8.5' y2='9.5' fill='currentColor' stroke='currentColor' stroke-linecap='square' stroke-miterlimit='10'/%3E%3Cline x1='4.5' y1='5.5' x2='9.5' y2='0.5' fill='currentColor' stroke='currentColor' stroke-miterlimit='10'/%3E%3Cline x1='9.5' y1='3.5' x2='9.5' y2='0.5' fill='currentColor' stroke='currentColor' stroke-linecap='square' stroke-miterlimit='10'/%3E%3Cline x1='6.5' y1='0.5' x2='9.5' y2='0.5' fill='currentColor' stroke='currentColor' stroke-linecap='square' stroke-miterlimit='10'/%3E%3C/svg%3E");
+.twc-linkbuttons a[target="_blank"]::after {
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 10 10'%3E%3Cdefs%3E%3Cstyle%3E.cls-1,.cls-2%7Bfill:none;stroke:%23565867;stroke-miterlimit:10;%7D.cls-1%7Bstroke-linecap:square;%7D%3C/style%3E%3C/defs%3E%3Cline class='cls-1' x1='3.5' y1='1.5' x2='0.5' y2='1.5'/%3E%3Cline class='cls-1' x1='0.5' y1='9.5' x2='0.5' y2='1.5'/%3E%3Cline class='cls-1' x1='8.5' y1='9.5' x2='0.5' y2='9.5'/%3E%3Cline class='cls-1' x1='8.5' y1='6.5' x2='8.5' y2='9.5'/%3E%3Cline class='cls-2' x1='4.5' y1='5.5' x2='9.5' y2='0.5'/%3E%3Cline class='cls-1' x1='9.5' y1='3.5' x2='9.5' y2='0.5'/%3E%3Cline class='cls-1' x1='6.5' y1='0.5' x2='9.5' y2='0.5'/%3E%3C/svg%3E");
   background-size: 10px 10px;
   display: inline-block;
   width: 10px; 
   height: 10px;
-  margin: 0 3px 0 5px;
+  margin: 0 0 0 4px;
   content:"";
   filter: initial !important;
-} */
+}
 </style>
