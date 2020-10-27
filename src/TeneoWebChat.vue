@@ -1,12 +1,12 @@
 <template>
   <div class="teneo-web-chat">
     <ChatWindow
-      id="twc-chatwindow-id" 
+      id="twc-chat-window" 
       v-if="isChatOpen"
       :on-close="closeChat"
       :on-minimize="minimizeChat"
     />
-    <LaunchButton v-if="!isChatOpen" :open="openChat" :is-open="isChatOpen" />
+    <LaunchButton v-if="!isChatOpen" :open="openChat" :is-open="isChatOpen" :is-minimized="isChatMinimized" />
   </div>
 </template>
 
@@ -27,7 +27,7 @@ import detectIosSafari from './utils/detect-ios-safari';
 const bodyScrollLock = require('body-scroll-lock');
 const disableBodyScroll = bodyScrollLock.disableBodyScroll;
 const enableBodyScroll = bodyScrollLock.enableBodyScroll;
-const messageListId = '#message-list-id';
+const messageListId = '#twc-message-list';
 
 // Detect safari (not just iOS) so we can clear session id from storage in closeSession
 const isSafari = detectSafari();
@@ -43,6 +43,7 @@ export default {
   data() {
     return {
       isChatOpen: false,
+      isChatMinimized: false,
       isIosSafari: false
     };
   },
@@ -77,6 +78,8 @@ export default {
       this.minimize()
       this.clearHistory()
       this.closeSession()
+      this.isChatMinimized = false
+      this.isChatClosed = true
     });
 
     EventBus.$on(events.END_SESSION, () => {
@@ -126,6 +129,8 @@ export default {
         this.minimize()
         this.closeSession()
         this.clearHistory()
+        this.isChatMinimized = false
+        this.isChatClosed = true
       } 
       if (chatWindowTargetState === events.MINIMIZE_WINDOW) {
         this.minimize()
@@ -177,6 +182,7 @@ export default {
       if (this.$store.getters.visibility == API_STATE_MAXIMIZED) {
         this.$store.commit('visibility',API_STATE_MINIMIZED);
         this.isChatOpen = false
+        this.isChatMinimized = true
 
         if(this.isIosSafari){
           const targetElement = document.querySelector(messageListId);
@@ -190,6 +196,7 @@ export default {
       if (this.$store.getters.visibility == API_STATE_MINIMIZED) {
         this.$store.commit('visibility',API_STATE_MAXIMIZED);
         this.isChatOpen = true
+        this.isChatMinimized = false
         await this.apiOnVisibilityChange();
 
         if(this.isIosSafari){
@@ -238,13 +245,16 @@ export default {
   --danger-color: #dc3545;
   --success-color: #28a745;
   --warning-color: #ffc107;
+  --warning-fg-text-color: #d19d00;
   --info-color: #17a2b8;
   --expired-color: #a9a9a9;
   --text-link-color: #007bff;
   --user-input-bg-color: #f4f7f9;
+  --user-input-fg-color: #565867;
+  --spinner-color: var(--light-border-color);
   --sendicon-fg-color: var(--dark-fg-color);
-  --launchicon-bg-color: var(--light-fg-color);
-  --launchicon-bg-color: var(--primary-color);
+  --launch-button-bg-color: var(--primary-color);
+  --launchicon-fg-color: var(--light-fg-color);
   --header-bg-color: var(--primary-color);
   --header-fg-color: var(--light-fg-color);
   --chat-window-bg-color: #ffffff;
@@ -259,6 +269,9 @@ export default {
   --button-bg-color: var(--primary-color);
   --card-bg-color: var(--light-fg-color);
   --card-link-color: var(--text-link-color);
+  --link-button-fg-color: var(--text-link-color);
+  --link-button-bg-color: var(--light-fg-color);
+  --link-button-border-color: var(--light-border-color);
   --clickablelist-title-color: var(--dark-fg-color);
   --clickablelist-bg-color: var(--light-fg-color);
   --clickablelist-fg-color: var(--dark-fg-color);

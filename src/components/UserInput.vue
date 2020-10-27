@@ -1,11 +1,12 @@
 <template>
   <div>
-    <form class="twc-user-input" :class="{ active: inputActive, disabled: inputDisabled }">
+    <form class="twc-user-input" :class="{ 'twc-active': inputActive, 'twc-disabled': inputDisabled }">
       <div
-        id="twc-user-input"
+        id="twc-user-input-field"
         ref="userInput"
-        role="button"
+        role="textbox"
         tabIndex="0"
+        aria-label="Input field"
         :contentEditable="contentIsEditable"
         :placeholder="placeholder"
         class="twc-user-input__text"
@@ -13,9 +14,14 @@
         @blur="setInputActive(false)"
         @keydown="handleReturnKey"
         v-debounce:250="userTyping" :debounce-events="['input']"
+        :aria-disabled="inputDisabled"
+        :disabled="inputDisabled ? true : false"
       ></div>
       <div class="twc-user-input__button">
-        <SendIcon :on-click="_submitText"/>
+        <button role="button" tabindex="0" aria-label="Send text" class="twc-user-input__send-icon-wrapper" @click.prevent="" @click="sendButtonClicked()" :aria-disabled="inputDisabled" :disabled="inputDisabled ? true : false">
+          <img v-if="sendIconUrl" class="twc-user-input__send-icon" :src="sendIconUrl" aria-hidden="true"/>
+          <SendIcon v-else class="twc-user-input__send-icon" aria-hidden="true"/>
+        </button>
       </div>
     </form>
   </div>
@@ -26,11 +32,12 @@ import Vue from 'vue';
 import vueDebounce from 'vue-debounce'
 import SendIcon from '../icons/send.vue';
 import { PARTICIPANT_USER } from '../utils/constants.js';
-import { API_ON_INPUT_SUBMITTED, API_ON_USER_TYPING } from '../utils/api-function-names.js';
+import { API_ON_INPUT_SUBMITTED, API_ON_USER_TYPING, API_ON_SEND_BUTTON_CLICK } from '../utils/api-function-names.js';
 import { EventBus, events } from '../utils/event-bus.js';
 import handleExtension from '../utils/handle-extension.js';
 import basePayload from '../utils/base-payload.js';
 import detectMobile from '../utils/detect-mobile.js';
+import { mapState } from 'vuex';
 
 Vue.use(vueDebounce)
 
@@ -47,6 +54,11 @@ export default {
       type: String,
       default: 'Please type here...',
     },
+  },
+  computed: {
+    ...mapState([
+        'sendIconUrl',
+    ]),
   },
   data() {
     return {
@@ -66,6 +78,10 @@ export default {
           this.setInputActive(false);
           this.setContentEditable(false);
           this.setInputDisabled(true);
+          
+          if (document.getElementById("twc-user-input-field")) {
+            document.getElementById("twc-user-input-field").blur();
+          }
     });
 
     EventBus.$on(events.ENABLE_INPUT, () => {
@@ -73,13 +89,13 @@ export default {
           this.setInputDisabled(false);
           this.setInputActive(true);
           
-          if (document.getElementById("twc-user-input")) {
-            document.getElementById("twc-user-input").focus();
+          if (document.getElementById("twc-user-input-field")) {
+            document.getElementById("twc-user-input-field").focus();
           }
     });
 
     //Detect changes and focus and emit event. This will be listened by ChatWindow to adapt to iOS Safari
-    const userInput = document.getElementById("twc-user-input");
+    const userInput = document.getElementById("twc-user-input-field");
     if(userInput){
       userInput.addEventListener('focus', (event) => {
         EventBus.$emit(events.USER_INPUT_FOCUS_CHANGED, true);
@@ -120,6 +136,19 @@ export default {
       // check if there is an extension that want to be notified about the user typing
       handleExtension(API_ON_USER_TYPING,payload);
     },
+    async sendButtonClicked() {
+
+      const payload = basePayload();
+
+      await handleExtension(API_ON_SEND_BUTTON_CLICK,payload);
+
+      // return if extension wants to handle submit itself
+      if(payload.handledState.handled === true) {
+        return
+      }
+      // call submit function
+      this._submitText()
+    },
     async _submitText() {
       // create payload object
       const payload = basePayload();
@@ -144,16 +173,43 @@ export default {
 
       if (payload.text && payload.text.trim().length > 0) {
         const text = payload.text
+        
+        var parameters = {}
+        if(payload.parameters){
+          parameters = payload.parameters
+        }
+
         this.onSubmit({
           author: PARTICIPANT_USER,
           type: 'text',
-          data: { text },
+          data: { text, parameters }
         });
+
+        
+      }
+      
+      // don't give user input focus on mobile devices, keyboard blocks the view too much
+      if (!detectMobile()) {
+        this.$refs.userInput.focus();
       }
     },
   },
 };
 </script>
+
+<style scoped>
+.sr-only {
+      position: absolute;
+      width: 1px;
+      height: 1px;
+      padding: 0;
+      margin: -1px;
+      overflow: hidden;
+      clip: rect(0, 0, 0, 0);
+      white-space: nowrap; /* added line */
+      border: 0;
+}
+</style>
 
 <style scoped>
 .twc-user-input {
@@ -170,11 +226,11 @@ export default {
   pointer-events:initial;
 }
 
-.twc-user-input.disabled {
+.twc-user-input.twc-disabled {
   pointer-events:none;
 }
 
-.twc-user-input.disabled .twc-user-input__button, .twc-user-input.disabled .twc-user-input__text, .twc-user-input.disabled .twc-sc-user-input--send-icon {
+.twc-user-input.twc-disabled .twc-user-input__button, .twc-user-input.twc-disabled .twc-user-input__text, .twc-user-input.twc-disabled .twc-user-input__send-icon {
   filter: grayscale(100%);
   opacity: 0.4;
 }
@@ -192,7 +248,7 @@ export default {
   line-height: 1.33;
   white-space: pre-wrap;
   word-wrap: break-word;
-  color: #565867;
+  color: var(--user-input-fg-color, #565867);
   -webkit-font-smoothing: antialiased;
   max-height: 200px;
   overflow: scroll;
@@ -239,7 +295,7 @@ export default {
   justify-content: center;
 }
 
-.twc-user-input.active {
+.twc-user-input.twc-active {
   box-shadow: none;
   background-color: white;
   box-shadow: 0px -2px 10px 0px rgba(150, 165, 190, 0.2);
@@ -266,5 +322,29 @@ export default {
   opacity: 0;
   cursor: pointer;
   overflow: hidden;
+}
+
+.twc-user-input__send-icon-wrapper {
+  background: none;
+  border: none;
+  padding: 0px;
+  margin: 0 5px 0 0;
+  /* outline: none; */
+  color: var(--sendicon-fg-color);
+}
+
+.twc-user-input__send-icon-wrapper:active {
+  outline: none;
+}
+
+.twc-user-input__send-icon {
+  height: 20px;
+  width: 20px;
+  cursor: pointer;
+  align-self: center;
+}
+
+.twc-user-input__send-icon:hover path {
+  filter: contrast(15%);
 }
 </style>

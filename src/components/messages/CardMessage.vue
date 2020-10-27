@@ -1,5 +1,5 @@
 <template>
-  <div class="twc-card" :class="{ expired: replySent || isExpired }">
+  <div class="twc-card">
     <div class="twc-card-img" v-if="imageUrl">
       <img :src="imageUrl" :alt="altText" />
     </div>
@@ -8,37 +8,53 @@
       <h6 class="twc-card-subtitle" v-if="cardSubtitle">{{ cardSubtitle }}</h6>
       <p class="twc-card-text" v-if="messageText">{{ messageText }}</p>
     </div>
-    <div class="twc-clickablelist" :class="{ expired: replySent || isExpired}" v-if="clickablelistitems">
+    <div class="twc-clickablelist" :class="{ 'twc-expired': replySent || isExpired}" v-if="clickablelistitems">
       <ul class="twc-clickablelist-message" :class="{ replied: replySent}">
         <li
           v-for="(reply, idx) in clickablelistitems"
           :key="idx"
           class="twc-clickablelist-message__item"
-          :class="{ selected: replySent && selected === idx }"
+          role="button"
+          :tabindex="replySent || isExpired ? -1 : 0"
+          :class="{ 'twc-selected': replySent && selected === idx }"
           @click="onSelect(reply, idx)"
+          @keydown="handleReturnSpaceKeys($event, reply, idx, 'clickablelist')"
         >{{ reply.title }}</li>
       </ul>
     </div>
-    <div class="twc-buttons" :class="{ expired: replySent || isExpired}" v-if="buttonitems">
+    <div class="twc-buttons" :class="{ 'twc-expired': replySent || isExpired}" v-if="buttonitems">
       <div>
         <a
           role="button"
           v-for="(button, idx) in buttonitems"
+          :tabindex="replySent || isExpired ? -1 : 0"
           :key="idx"
           class="twc-btn"
-          :class="{ selected: replySent && selected === idx, 'twc-primary': button.style == 'primary', 'twc-secondary': button.style == 'secondary', 'twc-success': button.style == 'success', 'twc-danger': button.style == 'danger', 'twc-warning': button.style == 'warning', 'twc-info': button.style == 'info'}"
+          :class="{ 'twc-selected': replySent && selected === idx, 'twc-primary': button.style == 'primary', 'twc-secondary': button.style == 'secondary', 'twc-success': button.style == 'success', 'twc-danger': button.style == 'danger', 'twc-warning': button.style == 'warning', 'twc-info': button.style == 'info'}"
           @click="onSelect(button, idx)"
+          @keydown="handleReturnSpaceKeys($event, button, idx, 'button')"
         >{{ button.title }}</a>
       </div>
     </div>
+    <div class="twc-linkbuttons" v-if="linkbutton_items">
+        <a
+          role="link"
+          v-for="(button, idx) in linkbutton_items"
+          :key="idx"
+          :href="button.url"
+          :target="button.target"
+          :rel="button.target === '_blank' ? 'noopener': false"
+          class="twc-linkbutton"
+          @click="onLinkbuttonClick(button, $event)"
+        >{{ button.title }}</a>
+    </div>
+    <!-- link item in cards are deprecated, please use linkbuttons instead -->
     <div class="twc-links" v-if="linkitems">
-      <div>
         <a
           v-for="(link, idx) in linkitems"
           :href="link.url"
           :key="idx"
         >{{ link.title }}</a>
-      </div>
     </div>
   </div>
 </template>
@@ -47,6 +63,7 @@
 import { PARTICIPANT_BOT } from '../../utils/constants.js';
 import sanitizeHtml from '../../utils/sanitize-html.js';
 import handleButtonClick from '../../utils/handle-button-click.js';
+import handleLinkButtonClick from '../../utils/handle-linkbutton-click.js';
 
 export default {
   name: 'CardMessage',
@@ -96,6 +113,9 @@ export default {
     linkitems() {
       return this.message.data.link_items;
     },
+    linkbutton_items() {
+      return this.message.data.linkbutton_items;
+    },
     replySent() {
       return !!this.message.selected || this.message.selected === 0;
     },
@@ -113,9 +133,17 @@ export default {
     },
   },
   methods: {
+    async onLinkbuttonClick(linkbutton, event) {
+      await handleLinkButtonClick(linkbutton, event)
+    },
     async onSelect(reply, idx) {
       if (!this.replySent) {
         await handleButtonClick(reply, idx, this.$teneoApi)
+      }
+    },
+    handleReturnSpaceKeys(event, button, idx, type) {
+      if (event.code === 'Space' || event.code === 'Enter') {
+        this.onSelect(button, idx)
       }
     },
   },
@@ -172,7 +200,7 @@ export default {
 .twc-card-body h6 {
   font-size: 1em;
   font-weight: 500;
-  color: #6c757d !important;
+  color: var(--secondary-color, #263238) !important;
 }
 
 .twc-card-text {
@@ -203,7 +231,7 @@ export default {
   border-bottom: none;
 }
 
-.twc-card .twc-buttons {
+.twc-card .twc-buttons, .twc-card .twc-linkbuttons {
   text-align: center;
   border-top: 1px solid var( --light-border-color, #c9c9c9);
   padding: 12px;

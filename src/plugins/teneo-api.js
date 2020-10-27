@@ -10,14 +10,25 @@ import { EventBus, events } from '../utils/event-bus.js';
 import handleExtension from '../utils/handle-extension.js';
 import basePayload from '../utils/base-payload.js';
 import detectSafari from '../utils/detect-safari';
+import isValidUrl from '../utils/validate-url';
 
 export default function teneoApiPlugin(teneoApiUrl) {
-  const teneoApi = TIE.init(teneoApiUrl);
+
   const messageListCache = new MessageListCache();
   const tmpVue = new Vue({ data: { messageList: messageListCache.get() } });
   const isSafari = detectSafari();
   const sessionKey = SESSION_ID_STORAGE_KEY;
   let sessionId = null;
+
+  // default initialisation of teneoApi
+  var teneoApiUrl = tmpVue.$store.getters.teneoEngineUrl
+  var teneoApi = TIE.init(teneoApiUrl);
+
+  // Update teneoApi if engine url changed using API call
+  EventBus.$on(events.SET_ENGINE_URL, () => {
+    teneoApiUrl = tmpVue.$store.getters.teneoEngineUrl
+    teneoApi = TIE.init(teneoApiUrl);
+  });
 
 
   const plugin = {
@@ -34,6 +45,8 @@ export default function teneoApiPlugin(teneoApiUrl) {
 
     async sendBaseMessage(text, parameters, isSilent) {
 
+      if(parameters.obfuscated)
+        console.log('INPUT_SUBMITTED obfuscated: '+parameters.obfuscated)
       // set text and channel
       var messageDetails = {
         'text': text,
@@ -138,8 +151,8 @@ export default function teneoApiPlugin(teneoApiUrl) {
 
     },
 
-    async sendMessage(message, parameters = {}) {
-      await this.sendBaseMessage(message.data.text, parameters, false);
+    async sendMessage(message) {
+      await this.sendBaseMessage(message.data.text, message.data.parameters, false);
     },
     async sendSilentMessage(text = '', parameters = {}) {
       await this.sendBaseMessage(text, parameters, true);
@@ -179,6 +192,11 @@ export default function teneoApiPlugin(teneoApiUrl) {
       this.messageList = [...this.messageList, message];
     },
     async closeSession() {
+      // get session from storage when safari is used
+      // to prevent issues when 'prevent cross-site tracking' is enabled
+      if (isSafari) {
+        sessionId = window.sessionStorage.getItem(sessionKey);
+      }
       TIE.close(teneoApiUrl, sessionId);
     },
     async clearHistory() {

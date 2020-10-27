@@ -1,8 +1,6 @@
 <template>
-  <div class="twc-message">
-    <div class="twc-message__wrapper" :class="messageSource">
+  <div class="twc-message" :class="messageSourceClass">
       <component :is="messageType" :message="message" />
-    </div>
   </div>
 </template>
 
@@ -26,8 +24,16 @@ export default {
     messageText() {
       return this.message.data.text;
     },
-    messageSource() {
-      return this.message.author;
+    messageSourceClass() {
+      if (this.message.author === "bot") {
+        return "twc-bot"
+      } else if (this.message.author === "user") {
+        return "twc-user"
+      } else if (this.message.author === "agent") {
+        return "twc-agent"
+      } else {
+        return ""
+      }
     },
   },
 };
@@ -42,16 +48,11 @@ export default {
   display: flex;
 }
 
-.twc-message__wrapper {
-  width: 100%;
-  display: flex;
-}
-
-.twc-message__wrapper.user {
+.twc-message.twc-user {
   justify-content: flex-end;
 }
 
-.twc-message__wrapper.bot {
+.twc-message.twc-bot {
   justify-content: flex-start;
 }
 </style>

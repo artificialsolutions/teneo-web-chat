@@ -1,3 +1,25 @@
+# v3.2.0
+## 27-10-2020
+* New message type: [Link buttons](https://developers.artificial-solutions.com/engine/teneo-web-chat#link-buttons)
+* New configuration setting: sendIconUrl
+* New api's: [Set send icon](https://developers.artificial-solutions.com/engine/teneo-web-chat/web-chat-api#set-send-icon) and [Reset send icon](https://developers.artificial-solutions.com/engine/teneo-web-chat/web-chat-api#reset-send-icon)
+* New api: [On send button clicked](https://developers.artificial-solutions.com/engine/teneo-web-chat/web-chat-api#on-send-button-clicked)
+* New api: [Set engine URL](https://developers.artificial-solutions.com/engine/teneo-web-chat/web-chat-api#set-engine-url)
+* Improved accessibility
+* Added 'twc-' prefix to the followin classes:
+    * active -> twc-active
+	* disabled -> twc-disabled
+	* expired -> twc-expired
+	* selected -> twc-selected
+	* bot -> twc-bot
+	* user - twc-user
+	* agent - twc-agent
+* Launch button now has an additional class 'twc-minimized' or 'twc-closed', depending on whether the window was minmized or closed.
+
+For more details on the styles used by Teneo Web Caht, see the new page [Styling Teneo Web Chat](https://developers.artificial-solutions.com/engine/teneo-web-chat/styling-teneo-web-chat).
+
+Note: as of this version, link_items in cards are deprecated. They still work but will be removed in the next major release of Teneo Web Chat. If your solution uses cards with link_items, please update them to use linkbutton_items instead.
+
 # v3.1.0
 ## 23-09-2020
 * Buttons, quick replies and clickable lists can now include engine input parameters

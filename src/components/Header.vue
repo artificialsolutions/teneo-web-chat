@@ -1,15 +1,16 @@
 <template>
   <div class="twc-header">
-    <img v-if="titleIconUrl" class="twc-header__img" :src="titleIconUrl" />
-    <BubbleIcon v-else class="twc-header__img" />
-    <div class="twc-header__title">{{ title }}</div>
-    <button class="twc-header__minimize-button" @click="onMinimize" id="header-minimize-button">
-      <img v-if="minimizeIconUrl" class="twc-header__minimize-icon" :src="minimizeIconUrl" />
-      <MinimizeIcon v-else class="twc-header__minimize-icon" />
+    <img v-if="titleIconUrl" class="twc-header__img" :src="titleIconUrl" aria-hidden="true"/>
+    <BubbleIcon v-else class="twc-header__img" id="default-header-icon" aria-hidden="true"/>
+    <div v-if="title" class="twc-header__title">{{ title }}</div>
+    <div v-else class="twc-header__title">{{getDefaultTitle}}</div>
+    <button class="twc-header__minimize-button" @click="onMinimize" id="header-minimize-button" aria-label="Minimize chat window">
+      <img v-if="minimizeIconUrl" class="twc-header__minimize-icon" :src="minimizeIconUrl" aria-hidden="true"/>
+      <MinimizeIcon v-else class="twc-header__minimize-icon" aria-hidden="true"/>
     </button>
-    <button v-if="showCloseButton" class="twc-header__close-button" @click="onClose" id="header-close-button">
-      <img v-if="closeIconUrl" class="twc-header__close-icon" :src="closeIconUrl" />
-      <XIcon v-else class="twc-header__close-icon" />
+    <button v-if="showCloseButton" class="twc-header__close-button" @click="onClose" id="header-close-button" aria-label="Close chat window">
+      <img v-if="closeIconUrl" class="twc-header__close-icon" :src="closeIconUrl" aria-hidden="true"/>
+      <XIcon v-else class="twc-header__close-icon" aria-hidden="true"/>
     </button>
   </div>
 </template>
@@ -18,6 +19,7 @@
 import XIcon from '../icons/x.vue';
 import MinimizeIcon from '../icons/minimize-caret.vue';
 import BubbleIcon from '../icons/bubble.vue';
+import * as constants from '../utils/constants.js';
 import { mapState } from 'vuex';
 
 export default {
@@ -44,6 +46,11 @@ export default {
         'minimizeIconUrl',
         'closeIconUrl',
     ]),
+  },
+  methods: {
+    getDefaultTitle(){
+        return constants.DEFAULT_TITLE;
+      }
   }
 };
 </script>
@@ -74,7 +81,6 @@ export default {
 }
 
 .twc-header__close-button {
-  outline: none;
   background: none;
   border: none;
   cursor: pointer;
@@ -90,12 +96,15 @@ export default {
 }
 
 .twc-header__minimize-button {
-  outline: none;
   background: none;
   border: none;
   cursor: pointer;
   padding: 0;
   margin-left: auto;
+}
+
+.twc-header__minimize-button:active, .twc-header__close-button:active { 
+  outline: none;
 }
 
 .twc-header__minimize-icon {

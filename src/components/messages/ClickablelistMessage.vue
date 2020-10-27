@@ -1,13 +1,16 @@
 <template>
-  <div class="twc-clickablelist" :class="{ expired: replySent || isExpired }">
+  <div class="twc-clickablelist" :class="{ 'twc-expired': replySent || isExpired }">
     <h5 class="twc-clickablelist-title" v-if="clickablelistTitle">{{ clickablelistTitle }}</h5>
     <ul class="twc-clickablelist-message" :class="{ replied: replySent}">
       <li
+        :tabindex="replySent || isExpired ? -1 : 0"
+        role="button"
         v-for="(reply, idx) in clickablelistitems"
         :key="idx"
         class="twc-clickablelist-message__item"
-        :class="{ selected: replySent && selected === idx }"
+        :class="{ 'twc-selected': replySent && selected === idx }"
         @click="onSelect(reply, idx)"
+        @keydown="handleReturnSpaceKeys($event, reply, idx)"
       >{{ reply.title }}</li>
     </ul>
   </div>
@@ -60,6 +63,11 @@ export default {
          await handleButtonClick(reply, idx, this.$teneoApi)
       }
     },
+    handleReturnSpaceKeys(event, reply, idx) {
+      if (event.code === 'Space' || event.code === 'Enter') {
+        this.onSelect(reply, idx)
+      }
+    },
   },
 };
 </script>
@@ -84,7 +92,7 @@ export default {
   color: var(--clickablelist-title-color, #263238);
 }
 
-.twc-clickablelist.expired h5 {
+.twc-clickablelist.twc-expired h5 {
   color: var(--expired-color, #a9a9a9);
 }
 
@@ -107,6 +115,14 @@ export default {
   font-size: 0.9em;
 }
 
+.twc-clickablelist-message__item:active {
+  outline:none;
+}
+
+.twc-expired .twc-clickablelist-message__item {
+  outline: none;
+}
+
 .twc-clickablelist-message__item:first-child {
   border-top: 1px solid var(--light-border-color, #c9c9c9);
   border-top-left-radius: 0.25rem;
@@ -118,7 +134,7 @@ export default {
   border-bottom-right-radius: 0.25rem;
 }
 
-.twc-clickablelist-message__item.selected,
+.twc-clickablelist-message__item.twc-selected,
 .twc-clickablelist-message:not(.replied) .twc-clickablelist-message__item:hover {
   background-color: var(--clickablelist-selected-bg-color, #eceff1);
   color: var(--clickablelist-selected-fg-color, #263238);
@@ -129,15 +145,15 @@ export default {
   color: var(--expired-color, #a9a9a9);
 }
 
-.twc-clickablelist.expired .twc-clickablelist-message__item,
-.twc-clickablelist.expired .twc-clickablelist-message__item:hover {
+.twc-clickablelist.twc-expired .twc-clickablelist-message__item,
+.twc-clickablelist.twc-expired .twc-clickablelist-message__item:hover {
   cursor: default;
   color: var(--expired-color, #a9a9a9);
   background-color: var(--clickablelist-bg-color, #ffffff);
 }
 
-.twc-clickablelist.expired .twc-clickablelist-message__item.selected,
-.twc-clickablelist.expired .twc-clickablelist-message__item.selected:hover {
+.twc-clickablelist.twc-expired .twc-clickablelist-message__item.twc-selected,
+.twc-clickablelist.twc-expired .twc-clickablelist-message__item.twc-selected:hover {
   cursor: default;
   background-color: var(--clickablelist-selected-bg-color, #eceff1);
   color: var(--expired-color, #a9a9a9);

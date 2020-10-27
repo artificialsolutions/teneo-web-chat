@@ -5,10 +5,12 @@ import { JSDOM } from 'jsdom'
 import path from 'path'
 import ejs from 'ejs'
 import index from '../../src/index.js' //appears unused, but is required to access window.TeneoWebChat
-import * as api  from "../../src/utils/api-function-names";
+import * as api  from '../../src/utils/api-function-names';
+import * as constants from '../../src/utils/constants'
 
 import TeneoWebChat from '@/components/../TeneoWebChat.vue'
 import Header from '@/components/Header.vue'
+import LaunchButton from '@/components/LaunchButton.vue'
 import teneoApiPlugin from '../../src/plugins/teneo-api.js'
 
 const index_js = path.resolve(__dirname, '../../src/index.js')
@@ -28,7 +30,10 @@ ejs.renderFile(index_js, function (err, str) {
 
         var mockStore = {
             state: {
-              title: 'Teneo Web Chat',
+              launchIconUrl: "",
+              teneoEngineUrl: "",
+              title: "Teneo Web Chat",
+              titleIconUrl: "",
               visibility: "minimized",
             }
           }
@@ -148,7 +153,7 @@ ejs.renderFile(index_js, function (err, str) {
             })
 
 
-            test('Assert API_CALL_SET_WINDOW_TITLE', async()=> {
+            test('Assert API_CALL_SET_CHAT_WINDOW_TITLE', async()=> {
                 //Mount component with mock store
                 const wrapperHeader = mount(Header, {
                     propsData: {
@@ -167,7 +172,7 @@ ejs.renderFile(index_js, function (err, str) {
                 const callBK = window.TeneoWebChat.call
                 window.TeneoWebChat.call = jest.fn().mockImplementation((function_name, payload) => {   
                     switch  (function_name) {
-                        case api.API_CALL_SET_WINDOW_TITLE:
+                        case api.API_CALL_SET_CHAT_WINDOW_TITLE:
                             // TODO: throw error if payload is invalid or if store throws error
                             if (typeof payload === "string") {
                                 mockStore.state.title = payload;
@@ -176,13 +181,157 @@ ejs.renderFile(index_js, function (err, str) {
                     }
                   });
                 //Call the API method under test
-                await window.TeneoWebChat.call(api.API_CALL_SET_WINDOW_TITLE, newTitle);
+                await window.TeneoWebChat.call(api.API_CALL_SET_CHAT_WINDOW_TITLE, newTitle);
                 window.TeneoWebChat.call = callBK
 
                 //Asert that that the value was set in the Header's template
                 expect(wrapperHeader.html()).toContain('New Title');
             })
 
+            test('Assert API_CALL_RESET_CHAT_WINDOW_TITLE', async()=> {
+                //Mount component with mock store
+                const wrapperHeader = mount(Header, {
+                    propsData: {
+                        onClose: jest.fn(),
+                        onMinimize: jest.fn()
+                    },
+                    mocks:{
+                        $store: mockStore
+                    }
+                })
+
+                //Mock the method's mplementation in 'window.TeneoWebChat'
+
+                //backup method group, then overwrite with mock
+                const callBK = window.TeneoWebChat.call
+                window.TeneoWebChat.call = jest.fn().mockImplementation((function_name) => {   
+                    switch  (function_name) {
+                        case api.API_CALL_RESET_CHAT_WINDOW_TITLE:
+                            mockStore.state.title = constants.DEFAULT_TITLE;
+                            break
+                    }
+                  });
+                //Call the API method under test
+                await window.TeneoWebChat.call(api.API_CALL_RESET_CHAT_WINDOW_TITLE);
+                window.TeneoWebChat.call = callBK
+
+                //Asert that that the value was set in the Header's template
+                expect(wrapperHeader.html()).toContain(constants.DEFAULT_TITLE);
+            })
+
+            test('Assert API_CALL_SET_CHAT_WINDOW_ICON', async()=> {
+                //Mount component with mock store
+                const wrapperHeader = mount(Header, {
+                    propsData: {
+                        onClose: jest.fn(),
+                        onMinimize: jest.fn()
+                    },
+                    mocks:{
+                        $store: mockStore
+                    }
+                })
+
+                //Mock the method's mplementation in 'window.TeneoWebChat'
+                const newIconUrl = 'www.icon.url';
+
+                //backup method group, then overwrite with mock
+                const callBK = window.TeneoWebChat.call
+                window.TeneoWebChat.call = jest.fn().mockImplementation((function_name, payload) => {   
+                    switch  (function_name) {
+                        case api.API_CALL_SET_CHAT_WINDOW_ICON:
+                            // TODO: throw error if payload is invalid or if store throws error
+                            if (typeof payload === "string") {
+                                mockStore.state.titleIconUrl = payload;
+                            }
+                            break
+                    }
+                  });
+                //Call the API method under test
+                await window.TeneoWebChat.call(api.API_CALL_SET_CHAT_WINDOW_ICON, newIconUrl);
+                window.TeneoWebChat.call = callBK
+
+                //Asert that that the value was set in the Header's template
+                expect(wrapperHeader.html()).toContain('www.icon.url');
+            })
+
+            test('Assert API_CALL_RESET_CHAT_WINDOW_ICON', async()=> {
+                //Mount component with mock store
+                const wrapperHeader = mount(Header, {
+                    propsData: {
+                        onClose: jest.fn(),
+                        onMinimize: jest.fn()
+                    },
+                    mocks:{
+                        $store: mockStore
+                    }
+                })
+
+                //Mock the method's mplementation in 'window.TeneoWebChat'
+                //backup method group, then overwrite with mock
+                const callBK = window.TeneoWebChat.call
+                window.TeneoWebChat.call = jest.fn().mockImplementation((function_name, payload) => {   
+                    switch  (function_name) {
+                        case api.API_CALL_RESET_CHAT_WINDOW_ICON:
+                            mockStore.state.titleIconUrl = null;
+                            break
+                    }
+                  });
+                //Call the API method under test
+                await window.TeneoWebChat.call(api.API_CALL_RESET_CHAT_WINDOW_ICON);
+                window.TeneoWebChat.call = callBK
+
+                //Asert that that the default icon's id exists in the Header's template
+                expect(wrapperHeader.html()).toContain('default-header-icon');
+            })
+
+            test('Assert LaunchButton methods API_CALL_SET_LAUNCH_ICON and API_CALL_RESET_LAUNCH_ICON', async()=> {
+                //Mount component with mock store
+                const wrapperLaunchButton = mount(LaunchButton, {
+                    propsData: {
+                        open: jest.fn(),
+                        isOpen: false
+                    },
+                    mocks:{
+                        $store: mockStore
+                    }
+                })
+
+                //Mock the method's mplementation in 'window.TeneoWebChat'
+                const newIconUrl = 'www.launch-icon.url';
+
+                //backup method group, then overwrite with mock
+                const callBK = window.TeneoWebChat.call
+                window.TeneoWebChat.call = jest.fn().mockImplementation((function_name, payload) => {
+                    switch  (function_name) {
+                        case api.API_CALL_SET_LAUNCH_ICON:
+                            // TODO: throw error if payload is invalid or if store throws error
+                            if (typeof payload === "string") {
+                                mockStore.state.launchIconUrl = payload;
+                            }
+                            break
+                        
+                        case api.API_CALL_RESET_LAUNCH_ICON:
+                            mockStore.state.launchIconUrl = null;
+                            break
+                    }
+                  });
+                //Call the API method under test
+                await window.TeneoWebChat.call(api.API_CALL_SET_LAUNCH_ICON, newIconUrl);
+                
+
+                //Asert that that the value was set in the component's template
+                expect(wrapperLaunchButton.html()).toContain('www.launch-icon.url');
+
+
+                //Call the second API method under test
+                await window.TeneoWebChat.call(api.API_CALL_RESET_LAUNCH_ICON);
+
+                //Rollback mocks
+                window.TeneoWebChat.call = callBK
+
+                //Asert that that the value was resset in the component's template
+                expect(wrapperLaunchButton.html()).toContain('default-launch-button-icon');
+            })
 
             test('Assert API_GET_STATE', async ()=> {     
 

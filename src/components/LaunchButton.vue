@@ -1,11 +1,15 @@
 <template>
   <div
     class="twc-launch-button"
-    :class="{ opened: isOpen, closed: !isOpen }"
+    :class="{ 'twc-opened': isOpen, 'twc-closed': !isOpen && !isMinimized, 'twc-minimized': isMinimized}"
     @click.prevent="isOpen ? close() : open()"
+    @keydown="handleReturnSpaceKeys"
+    tabindex="0"
+    aria-roledescription="Chat with a digital assistant"
+    aria-label="Open chat"
   >
-    <img v-if="launchIconUrl" class="twc-launch-button__open-icon" :src="launchIconUrl" />
-    <BubbleIcon v-else class="twc-launch-button__open-icon" />
+    <img v-if="launchIconUrl" class="twc-launch-button__open-icon" :src="launchIconUrl" aria-hidden="true"/>
+    <BubbleIcon v-else class="twc-launch-button__open-icon" id="default-launch-button-icon" aria-hidden="true"/>
   </div>
 </template>
 <script>
@@ -21,6 +25,10 @@ export default {
       type: Boolean,
       required: true,
     },
+    isMinimized: {
+      type: Boolean,
+      required: false,
+    },
     open: {
       type: Function,
       required: true,
@@ -31,11 +39,19 @@ export default {
         'launchIconUrl',
     ]),
   },
+  methods: {
+    handleReturnSpaceKeys(event) {
+      if (event.code === 'Space' || event.code === 'Enter') {
+        this.open();
+        event.preventDefault();
+      }
+    },
+  },
 };
 </script>
 <style scoped>
 .twc-launch-button {
-  background-color: var(--header-bg-color, #4e8cff);
+  background-color: var(--launch-button-bg-color, #4e8cff);
   width: 60px;
   height: 60px;
   background-position: center;
@@ -57,9 +73,12 @@ export default {
 .twc-launch-button__open-icon {
   height: 26px;
   width: 26px;
-  color: var(--light-fg-color, #ffffff);
+  color: var(--launchicon-fg-color, #ffffff);
   transform-origin: 50% 50%;
   transition: transform .4s, filter .5s ease-out;
+}
+.twc-launch-button:active {
+  outline: none;
 }
 
 .twc-launch-button:hover {
@@ -70,9 +89,4 @@ export default {
   transform: scale(1.1);
 }
 
-/* @media (max-width: 450px) {
-  .twc-launch-button.opened {
-    display: none;
-  }
-} */
 </style>

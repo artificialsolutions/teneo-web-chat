@@ -8,6 +8,7 @@ import * as apiConstants from '../src/utils/api-function-names.js';
 import handleExtension from '../src/utils/handle-extension.js';
 import messageListCache from '../src/utils/message-list-cache.js';
 import { store } from '../src/store/store.js';
+import isValidUrl from '../src/utils/validate-url';
 
 var functionMap = new Map();
 const validFunctionNames = Object.values(apiConstants)
@@ -67,6 +68,11 @@ window['TeneoWebChat'] = {
     if (twcProps.launchIconUrl) {
       // TODO: error handling (once store thows error)
       store.commit('launchIconUrl',twcProps.launchIconUrl);
+    }
+
+    if (twcProps.sendIconUrl) {
+      // TODO: error handling (once store thows error)
+      store.commit('sendIconUrl',twcProps.sendIconUrl);
     }
 
     // check required properties
@@ -211,18 +217,48 @@ window['TeneoWebChat'] = {
         }
         break
 
-      case apiConstants.API_CALL_SET_WINDOW_TITLE:
+      case apiConstants.API_CALL_SET_CHAT_WINDOW_TITLE:
         // TODO: throw error if payload is invalid or if store throws error
         if (typeof payload === "string") {
           store.commit('title',payload);
         }
         break
 
-      case apiConstants.API_CALL_SET_WINDOW_ICON:
+      case apiConstants.API_CALL_RESET_CHAT_WINDOW_TITLE:
+        store.commit('title',null)
+        break;
+      
+      case apiConstants.API_CALL_SET_CHAT_WINDOW_ICON:
         // TODO: throw error if payload is invalid or if store throws error
         if (typeof payload === "string") {
           store.commit('titleIconUrl',payload);
         }
+        break
+
+      case apiConstants.API_CALL_RESET_CHAT_WINDOW_ICON:
+        store.commit('titleIconUrl',null);
+        break
+
+      case apiConstants.API_CALL_SET_LAUNCH_ICON:
+        // TODO: throw error if payload is invalid or if store throws error
+        if (typeof payload === "string") {
+          store.commit('launchIconUrl',payload);
+        }
+        break
+
+      case apiConstants.API_CALL_RESET_LAUNCH_ICON:
+        store.commit('launchIconUrl',null);
+        break
+        
+      case apiConstants.API_CALL_SET_SEND_ICON:
+        // TODO: throw error if payload is invalid or if store throws error
+        if (typeof payload === "string") {
+          store.commit('sendIconUrl',payload);
+        }
+        break
+
+      case apiConstants.API_CALL_RESET_SEND_ICON:
+        store.commit('sendIconUrl',null);
         break
 
       case apiConstants.API_CALL_DISABLE_USERINPUT:
@@ -233,6 +269,15 @@ window['TeneoWebChat'] = {
         EventBus.$emit(events.ENABLE_INPUT);
         break
       
+      case apiConstants.API_CALL_SET_ENGINE_URL:
+        if(typeof payload === "string"){
+          if(isValidUrl(payload)) {
+            store.commit('teneoEngineUrl',payload);
+            EventBus.$emit(events.SET_ENGINE_URL, payload);
+          } 
+        }
+        break;
+
       default:
         break
     }

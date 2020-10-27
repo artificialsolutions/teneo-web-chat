@@ -17,5 +17,4 @@ export default async function handleExtension(method_name,payload) {
 
         }
     }
-    // return payload
 }

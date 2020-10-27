@@ -1,11 +1,11 @@
 <template>
     <div ref="chatWindowId" :class="chatWindowStyles()">
     <Header :on-close="onClose" :on-minimize="onMinimize"/>
-    <MessageList id="message-list-id" :message-list="$teneoApi.messageList" />
-    <div v-if="spinnerIsLoading" class="twc-spinner">
-      <div class="twc-bounce1"></div>
-      <div class="twc-bounce2"></div>
-      <div class="twc-bounce3"></div>
+    <MessageList id="twc-message-list" :message-list="$teneoApi.messageList" />
+    <div v-if="spinnerIsLoading" class="twc-spinner" role="progressbar" aria-valuemin="0" aria-valuetext="Bot is responding" aria-valuemax="100">
+      <div class="twc-bounce1" aria-hidden="true"></div>
+      <div class="twc-bounce2" aria-hidden="true"></div>
+      <div class="twc-bounce3" aria-hidden="true"></div>
     </div>
     <UserInput :on-submit="sendMessage" />
   </div>
@@ -137,7 +137,7 @@ export default {
 .twc-spinner > div {
   width: 9px;
   height: 9px;
-  background-color: #aaa;
+  background-color: var(--spinner-color, #c9c9c9);
 
   border-radius: 100%;
   display: inline-block;

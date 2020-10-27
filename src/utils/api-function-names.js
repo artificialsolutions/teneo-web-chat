@@ -6,10 +6,17 @@ export const API_CALL_END_SESSION = "end_session";
 export const API_CALL_CLEAR_CHAT_HISTORY = "clear_chat_history";
 export const API_CALL_RESET = "reset";
 export const API_CALL_ADD_MESSAGE = "add_message";
-export const API_CALL_SET_WINDOW_TITLE = "set_chat_window_title";
-export const API_CALL_SET_WINDOW_ICON = "set_chat_window_icon"
-export const API_CALL_DISABLE_USERINPUT = 'disable_user_input'
-export const API_CALL_ENABLE_USERINPUT = 'enable_user_input'
+export const API_CALL_SET_CHAT_WINDOW_TITLE = "set_chat_window_title";
+export const API_CALL_RESET_CHAT_WINDOW_TITLE = "reset_chat_window_title";
+export const API_CALL_SET_CHAT_WINDOW_ICON = "set_chat_window_icon"
+export const API_CALL_RESET_CHAT_WINDOW_ICON = "reset_chat_window_icon"
+export const API_CALL_SET_LAUNCH_ICON = "set_launch_icon"
+export const API_CALL_RESET_LAUNCH_ICON = "reset_launch_icon"
+export const API_CALL_SET_SEND_ICON = "set_send_icon";
+export const API_CALL_RESET_SEND_ICON = "reset_send_icon";
+export const API_CALL_SET_ENGINE_URL = "set_engine_url";
+export const API_CALL_DISABLE_USERINPUT = 'disable_user_input';
+export const API_CALL_ENABLE_USERINPUT = 'enable_user_input';
 
 //Add dedicated add typing indicator method
 export const API_CALL_HIDE_TYPING_INDICATOR = 'hide_typing_indicator';
@@ -33,3 +40,4 @@ export const API_ON_OPEN_BUTTON_CLICK = "open_button_clicked";
 export const API_ON_CLOSE_BUTTON_CLICK = "close_button_clicked";
 export const API_ON_MINIMIZE_BUTTON_CLICK = "minimize_button_clicked";
 export const API_ON_MODAL_BUTTON_CLICK = "modal_button_clicked";
+export const API_ON_SEND_BUTTON_CLICK = "send_button_clicked";

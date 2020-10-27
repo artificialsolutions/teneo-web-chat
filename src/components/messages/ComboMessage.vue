@@ -1,8 +1,8 @@
 <template>
-  <ul class="twc-combo" :class="{ replied: replySent}">
+  <ul class="twc-combo">
     <li v-for="(message, idx) in comboitems" :key="idx">
       <div class="twc-combo-message" v-if="message.type==='text'">
-        <div class="twc-text-message" :class="messageSource">
+        <div class="twc-text-message">
           <p class="twc-text-message__text" v-html="message.text"></p>
         </div>
       </div>
@@ -16,30 +16,33 @@
       </div>
 
       <div class="twc-combo-message" v-if="message.type==='quickreply'">
-        <div class="twc-quickreply-message" :class="{ expired: replySent || isExpired }">
-          <div>
+        <div class="twc-quickreply-message" :class="{ 'twc-expired': replySent || isExpired }">
             <a
               v-for="(reply, idx) in message.quick_replies"
               :key="idx"
               role="button"
+              :tabindex="replySent || isExpired ? -1 : 0"
               class="twc-quickreply-message__item"
-              :class="{ selected: replySent && selected === idx, 'twc-primary': reply.style == 'primary', 'twc-secondary': reply.style == 'secondary', 'twc-success': reply.style == 'success', 'twc-danger': reply.style == 'danger', 'twc-warning': reply.style == 'warning', 'twc-info': reply.style == 'info'}"
+              :class="{ 'twc-selected': replySent && selected === idx, 'twc-primary': reply.style == 'primary', 'twc-secondary': reply.style == 'secondary', 'twc-success': reply.style == 'success', 'twc-danger': reply.style == 'danger', 'twc-warning': reply.style == 'warning', 'twc-info': reply.style == 'info'}"
               @click="onSelect(reply, idx)"
+              @keydown="handleReturnSpaceKeys($event, reply, idx)"
             >{{ reply.title }}</a>
-          </div>
         </div>
       </div>
 
       <div class="twc-combo-message" v-if="message.type==='clickablelist'">
-        <div class="twc-clickablelist" :class="{ expired: replySent || isExpired}">
+        <div class="twc-clickablelist" :class="{ 'twc-expired': replySent || isExpired}">
           <h5 class="twc-clickablelist-title" v-if="message.title">{{ message.title }}</h5>
           <ul class="twc-clickablelist-message" :class="{ replied: replySent || isExpired}">
             <li
               v-for="(reply, idx) in message.list_items"
               :key="idx +'ql'"
+              role="button"
+              :tabindex="replySent || isExpired ? -1 : 0"
               class="twc-clickablelist-message__item"
-              :class="{ selected: replySent && selected === idx +'ql' }"
+              :class="{ 'twc-selected': replySent && selected === idx +'ql' }"
               @click="onSelect(reply, idx +'ql')"
+              @keydown="handleReturnSpaceKeys($event, reply, idx +'ql')"
             >{{ reply.title }}</li>
           </ul>
         </div>
@@ -77,19 +80,37 @@
       </div>
 
       <div class="twc-combo-message" v-if="message.type==='buttons'">
-        <div class="twc-buttons" :class="{ expired: replySent || isExpired}">
+        <div class="twc-buttons" :class="{ 'twc-expired': replySent || isExpired}">
             <h5 class="twc-buttons-title" v-if="message.title">{{ message.title }}</h5>
             <div>
               <a
                 role="button"
+                :tabindex="replySent || isExpired ? -1 : 0"
                 v-for="(button, idx) in message.button_items"
                 :key="idx +'btn'"
                 class="twc-btn"
-                :class="{ selected: replySent && selected === idx +'btn', 'twc-primary': button.style == 'primary', 'twc-secondary': button.style == 'secondary', 'twc-success': button.style == 'success', 'twc-danger': button.style == 'danger', 'twc-warning': button.style == 'warning', 'twc-info': button.style == 'info'}"
+                :class="{ 'twc-selected': replySent && selected === idx +'btn', 'twc-primary': button.style == 'primary', 'twc-secondary': button.style == 'secondary', 'twc-success': button.style == 'success', 'twc-danger': button.style == 'danger', 'twc-warning': button.style == 'warning', 'twc-info': button.style == 'info'}"
                 @click="onSelect(button, idx +'btn')"
+                @keydown="handleReturnSpaceKeys($event, button, idx +'btn')"
               >{{ button.title }}</a>
             </div>
           </div>
+      </div>
+
+      <div class="twc-combo-message" v-if="message.type==='linkbuttons'">
+        <div class="twc-linkbuttons">
+            <h5 class="twc-linkbuttons-title" v-if="message.title">{{ message.title }}</h5>
+            <a
+              v-for="(button, idx) in message.linkbutton_items"
+              role="link"
+              :key="idx"
+              :href="button.url"
+              :target="button.target"
+              :rel="button.target === '_blank' ? 'noopener': false"
+              class="twc-linkbutton"
+              @click="onLinkbuttonClick(button, $event)"
+            >{{ button.title }}</a>
+        </div>
       </div>
 
       <div class="twc-combo-message" v-if="message.type==='card'">
@@ -102,37 +123,53 @@
               <h6 class="twc-card-subtitle" v-if="message.subtitle">{{ message.subtitle }}</h6>
               <p class="twc-card-text" v-if="message.text">{{ message.text }}</p>
             </div>
-            <div class="twc-clickablelist" :class="{ expired: replySent || isExpired}" v-if="message.list_items">
-              <ul class="twc-clickablelist-message" :class="{ replied: replySent}">
+            <div class="twc-clickablelist" :class="{ 'twc-expired': replySent || isExpired}" v-if="message.list_items">
+              <ul class="twc-clickablelist-message" :class="{ 'twc-replied': replySent}">
                 <li
                   v-for="(reply, idx) in message.list_items"
                   :key="idx +'cql'"
                   class="twc-clickablelist-message__item"
-                  :class="{ selected: replySent && selected === idx +'cql' }"
+                  role="button"
+                  :tabindex="replySent || isExpired ? -1 : 0"
+                  :class="{ 'twc-selected': replySent && selected === idx +'cql' }"
                   @click="onSelect(reply, idx +'cql')"
+                  @keydown="handleReturnSpaceKeys($event, reply, idx +'cql')"
                 >{{ reply.title }}</li>
               </ul>
             </div>
-            <div class="twc-buttons" :class="{ expired: replySent || isExpired}" v-if="message.button_items">
+            <div class="twc-buttons" :class="{ 'twc-expired': replySent || isExpired}" v-if="message.button_items">
               <div>
                 <a
                   role="button"
                   v-for="(button, idx) in message.button_items"
                   :key="idx +'cbtn'"
                   class="twc-btn"
-                  :class="{ selected: replySent && selected === idx +'cbtn', 'twc-primary': button.style == 'primary', 'twc-secondary': button.style == 'secondary', 'twc-success': button.style == 'success', 'twc-danger': button.style == 'danger', 'twc-warning': button.style == 'warning', 'twc-info': button.style == 'info'}"
+                  :tabindex="replySent || isExpired ? -1 : 0"
+                  :class="{ 'twc-selected': replySent && selected === idx +'cbtn', 'twc-primary': button.style == 'primary', 'twc-secondary': button.style == 'secondary', 'twc-success': button.style == 'success', 'twc-danger': button.style == 'danger', 'twc-warning': button.style == 'warning', 'twc-info': button.style == 'info'}"
                   @click="onSelect(button, idx +'cbtn')"
+                  @keydown="handleReturnSpaceKeys($event, button, idx +'cbtn')"
                 >{{ button.title }}</a>
               </div>
             </div>
-            <div class="twc-links" v-if="message.link_items">
-              <div>
+            <div class="twc-linkbuttons" v-if="message.linkbutton_items">
                 <a
-                  v-for="(link, idx) in message.link_items"
+                  role="link"
+                  v-for="(button, idx) in message.linkbutton_items"
+                  :key="idx"
+                  :href="button.url"
+                  :target="button.target"
+                  :rel="button.target === '_blank' ? 'noopener': false"
+                  class="twc-linkbutton"
+                  @click="onLinkbuttonClick(button, $event)"
+                >{{ button.title }}</a>
+            </div>
+            <!-- link item in cards are deprecated, please use linkbuttons instead -->
+            <div class="twc-links" v-if="linkitems">
+                <a
+                  v-for="(link, idx) in linkitems"
                   :href="link.url"
                   :key="idx"
                 >{{ link.title }}</a>
-              </div>
             </div>
           </div>
       </div>
@@ -144,6 +181,7 @@
 import { PARTICIPANT_BOT } from '../../utils/constants.js';
 import handleButtonClick from '../../utils/handle-button-click.js';
 import { EventBus, events } from '../../utils/event-bus.js';
+import handleLinkButtonClick from '../../utils/handle-linkbutton-click.js';
 
 export default {
   name: 'ComboMessage',
@@ -166,14 +204,14 @@ export default {
     comboitems() {
       return this.message.data.components;
     },
+    linkitems() {
+      return this.message.data.link_items;
+    },
     replySent() {
       return !!this.message.selected || this.message.selected === 0;
     },
     selected() {
       return this.message.selected;
-    },
-    messageSource() {
-      return this.message.author;
     },
     isExpired() {
       const { messageList } = this.$teneoApi;
@@ -183,9 +221,17 @@ export default {
     },
   },
   methods: {
+    async onLinkbuttonClick(linkbutton, event) {
+      await handleLinkButtonClick(linkbutton, event)
+    },
     async onSelect(reply, idx) {
       if (!this.replySent) {
         await handleButtonClick(reply, idx, this.$teneoApi)
+      }
+    },
+    handleReturnSpaceKeys(event, reply, idx) {
+      if (event.code === 'Space' || event.code === 'Enter') {
+        this.onSelect(reply, idx)
       }
     },
     videoUrl(url) {
@@ -227,5 +273,17 @@ export default {
 
 .twc-btn {
   min-width: 62px;
+}
+
+.twc-linkbuttons {
+  width: 100%;
+  margin: -3px;
+  margin-right: 37px;
+  text-align: center;
+}
+
+.twc-card .twc-linkbuttons {
+  width: auto;
+  margin: 0;
 }
 </style>

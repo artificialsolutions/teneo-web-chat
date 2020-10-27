@@ -13,20 +13,22 @@ export const audioMessage = {
     "data": { "audio_url": "https://url.to/audio.mp3" },
 }
 
-export const quickReplyMessage = {
-    "type": "quickreply",
-    "quick_replies": [
-        {
-            "style": "primary",
-            "title": "Primary",
-            "postback": "Primary"
-        },
-        {
-            "style": "secondary",
-            "title": "Secondary",
-            "postback": "Secondary"
-        }
-    ]
+export const quickReplyMessageJSON = {
+    type: "quickreply",
+    data:{
+        "quick_replies": [
+            {
+                "style": "primary",
+                "title": "Primary",
+                "postback": "Primary"
+            },
+            {
+                "style": "secondary",
+                "title": "Secondary",
+                "postback": "Secondary"
+            }
+        ]
+    }
 }
 
 export const buttonsMessage = {
@@ -73,6 +75,26 @@ export const cardMessageJSONwithLinks = {
             {
                 "title": "Another link",
                 "url": "https://url.to/another/page"
+            }
+        ]
+    }
+}
+export const cardMessageJSONWithLinkButtons = {
+    "type":"card",
+    data: {
+        "image": {
+            "image_url":"https://as-freaky-styley-714c5e.bots.teneo.ai/teneo_web_chat_tes_3gzgctjx5q84x8fztj2bdzxtrh/images/trees.png",
+            "alt":"This is an image"
+        },
+        "title":"This is the title",
+        "subtitle":"This is the subtitle",
+        "text":"Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod tempor incididunt.",
+        "linkbutton_items": [
+            {
+                "title":"Studio","url":"https://developers.artificial-solutions.com/studio","target":"_blank"
+            },
+            {
+                "title":"Engine","url":"https://developers.artificial-solutions.com/engine","target":"_blank"
             }
         ]
     }
@@ -135,6 +157,18 @@ export const clickableListMessageJSON = {
                 "title": "Two",
                 "postback": "Two"
             },
+        ]
+    }
+}
+
+export const linkButtonsMessageJSON = {
+    "type":"linkbuttons",
+    data: {
+        "title":"Optional title",
+        "linkbutton_items": [
+            {"title":"Link 1","url":"#"},
+            {"title":"Link 2","url":"https://developers.artificial-solutions.com/","target":"_self"},
+            {"title":"Link 3","url":"https://developers.artificial-solutions.com/","target":"_blank"}
         ]
     }
 }
@@ -226,9 +260,19 @@ export const comboMessageJSON = {
                 "subtitle": "This is the subtitle",
                 "text": "Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod tempor incididunt."
             },
+            {
+                "type":"linkbuttons",
+                "title":"Optional title",
+                "linkbutton_items": [
+                    {"title":"Link 1","url":"#"},
+                    {"title":"Link 2","url":"https://developers.artificial-solutions.com/","target":"_self"},
+                    {"title":"Link 3","url":"https://developers.artificial-solutions.com/","target":"_blank"}
+                ]
+            },
         ]
     }
 }
+
 
 export const filevideoMessageJSON = {
     "type": "filevideo",

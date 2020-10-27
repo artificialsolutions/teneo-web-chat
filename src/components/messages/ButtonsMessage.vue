@@ -1,16 +1,16 @@
 <template>
-  <div class="twc-buttons" :class="{ expired: replySent || isExpired}">
+  <div class="twc-buttons" :class="{ 'twc-expired': replySent || isExpired}">
     <h5 class="twc-buttons-title" v-if="buttonsTitle">{{ buttonsTitle }}</h5>
-    <div>
       <a
         role="button"
+        :tabindex="replySent || isExpired ? -1 : 0"
         v-for="(button, idx) in buttonitems"
         :key="idx"
         class="twc-btn"
-        :class="{ selected: replySent && selected === idx, 'twc-primary': button.style == 'primary', 'twc-secondary': button.style == 'secondary', 'twc-success': button.style == 'success', 'twc-danger': button.style == 'danger', 'twc-warning': button.style == 'warning', 'twc-info': button.style == 'info'}"
+        :class="{ 'twc-selected': replySent && selected === idx, 'twc-primary': button.style == 'primary', 'twc-secondary': button.style == 'secondary', 'twc-success': button.style == 'success', 'twc-danger': button.style == 'danger', 'twc-warning': button.style == 'warning', 'twc-info': button.style == 'info'}"
         @click="onSelect(button, idx)"
+        @keydown="handleReturnSpaceKeys($event, button, idx)"
       >{{ button.title }}</a>
-    </div>
   </div>
 </template>
 
@@ -64,6 +64,11 @@ export default {
       }
       await handleButtonClick(button, idx, this.$teneoApi)
     },
+    handleReturnSpaceKeys(event, reply, idx) {
+      if (event.code === 'Space' || event.code === 'Enter') {
+        this.onSelect(reply, idx)
+      }
+    },
   },
 };
 </script>
@@ -101,26 +106,34 @@ export default {
   text-decoration: none;
 }
 
-.twc-btn.selected,
-.twc-btn:not(.expired) .twc-btn:hover {
+.twc-btn:active {
+  outline:none;
+}
+
+.twc-expired .twc-btn {
+  outline: none;
+}
+
+.twc-btn.twc-selected,
+.twc-btn:not(.twc-expired) .twc-btn:hover {
   color: var(--button-bg-color, #4e8cff);
   background: var(--button-fg-color, #ffffff);
 }
 
-.twc-buttons.selected,
-.twc-buttons:not(.expired) .twc-btn:hover {
+.twc-buttons.twc-selected,
+.twc-buttons:not(.twc-expired) .twc-btn:hover {
   color: var(--button-bg-color, #4e8cff);
   background: var(--button-fg-color, #ffffff);
 }
 
-.twc-buttons.expired .twc-btn {
+.twc-buttons.twc-expired .twc-btn, .twc-buttons.twc-expired .twc-btn:hover {
   cursor: default;
   color: var(--expired-color, #a9a9a9);
   background: var(--button-fg-color, #ffffff);
   border: 1px solid var(--expired-color, #a9a9a9);
 }
 
-.twc-buttons.expired .twc-btn.selected {
+.twc-buttons.twc-expired .twc-btn.twc-selected {
   cursor: default;
   color: var(--button-fg-color, #ffffff);
   background: var(--expired-color, #a9a9a9);
@@ -138,7 +151,7 @@ export default {
   color: var(--buttons-title-color, #263238);
 }
 
-.twc-buttons.expired h5 {
+.twc-buttons.twc-expired h5 {
   color: var(--expired-color, #a9a9a9);
 }
 
@@ -147,7 +160,7 @@ export default {
   border-color: var(--secondary-color, #6c757d);
 }
 
-.twc-buttons:not(.expired) .twc-btn.twc-secondary:hover {
+.twc-buttons:not(.twc-expired) .twc-btn.twc-secondary:hover {
   color: var(--secondary-color, #6c757d) !important;
 }
 
@@ -156,7 +169,7 @@ export default {
   border-color: var(--success-color, #28a745);
 }
 
-.twc-buttons:not(.expired) .twc-btn.twc-success:hover {
+.twc-buttons:not(.twc-expired) .twc-btn.twc-success:hover {
   color: var(--success-color, #28a745) !important;
 }
 
@@ -166,7 +179,7 @@ export default {
   color: var(--dark-fg-color, #263238);
 }
 
-.twc-buttons:not(.expired) .twc-btn.twc-warning:hover {
+.twc-buttons:not(.twc-expired) .twc-btn.twc-warning:hover {
   color: var(--warning-color, #ffc107) !important;
 }
 
@@ -175,7 +188,7 @@ export default {
   border-color: var(--danger-color, #dc3545);
 }
 
-.twc-buttons:not(.expired) .twc-btn.twc-danger:hover {
+.twc-buttons:not(.twc-expired) .twc-btn.twc-danger:hover {
   color: var(--danger-color, #dc3545) !important;
 }
 
@@ -184,7 +197,7 @@ export default {
   border-color: var(--info-color, #17a2b8);
 }
 
-.twc-buttons:not(.expired) .twc-btn.twc-info:hover {
+.twc-buttons:not(.twc-expired) .twc-btn.twc-info:hover {
   color: var(--info-color, #17a2b8) !important;
 }
 

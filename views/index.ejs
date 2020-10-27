@@ -13,11 +13,104 @@
 
   <body>
     <button onclick="TeneoWebChat.call('reset')">Reset Chat</button><br>
+
     
+    <script>
+      const textMessageBotAvatarDateline = { 
+          "author": "bot", 
+          "type": "text", 
+          "data": { 
+              "text": "Lorem ipsum dolor sit amet! Duis aute irure dolor in reprehenderit.",
+              "avatarUrl" : "https://as-freaky-styley-714c5e.bots.teneo.ai/teneo_web_chat_tes_3gzgctjx5q84x8fztj2bdzxtrh/images/bot.png",
+              "dateline" : "<strong>Sara</strong> - 12:45"
+          }
+      }
+
+      const textMessageUserAvatarDateline = { 
+          "author": "user", 
+          "type": "text", 
+          "data": { 
+              "text": "Lorem ipsum dolor sit amet! Duis aute irure dolor in reprehenderit.",
+              "avatarUrl" : "https://as-freaky-styley-714c5e.bots.teneo.ai/teneo_web_chat_tes_3gzgctjx5q84x8fztj2bdzxtrh/images/user.png",
+              "dateline" : "<strong>Joanna</strong> - 12:45"
+          }
+      }
+
+
+      const textMessageAgentAvatarDateline = { 
+          "author": "agent", 
+          "type": "text", 
+          "data": { 
+              "text": "Lorem ipsum dolor sit amet! Duis aute irure dolor in reprehenderit.",
+              "avatarUrl" : "https://as-freaky-styley-714c5e.bots.teneo.ai/teneo_web_chat_tes_3gzgctjx5q84x8fztj2bdzxtrh/images/agent.png",
+              "dateline" : "<strong>Jack</strong> - 12:45"
+          }
+      }
+
+      const typingIndicatorUser = {
+          "author": "user",
+          "data": { 
+              "avatarUrl" : "https://as-freaky-styley-714c5e.bots.teneo.ai/teneo_web_chat_tes_3gzgctjx5q84x8fztj2bdzxtrh/images/user.png",
+              "dateline" : "<strong>Joanna</strong> - 12:45"
+          }
+      }
+
+      const typingIndicatorBot = {
+          "author": "bot",
+          "data": { 
+              "avatarUrl" : "https://as-freaky-styley-714c5e.bots.teneo.ai/teneo_web_chat_tes_3gzgctjx5q84x8fztj2bdzxtrh/images/bot.png",
+              "dateline" : "<strong>Sara</strong> - 12:45"
+          }
+      }
+
+      const typingIndicatorAgent = {
+          "author": "agent",
+          "data": { 
+              "avatarUrl" : "https://as-freaky-styley-714c5e.bots.teneo.ai/teneo_web_chat_tes_3gzgctjx5q84x8fztj2bdzxtrh/images/agent.png",
+              "dateline" : "<strong>Jack</strong> - 12:45"
+          }
+      }
+    </script>
+    <button class="btn" onclick="TeneoWebChat.call('add_message',textMessageUserAvatarDateline)">Message from user</button><br>
+    <button class="btn" onclick="TeneoWebChat.call('add_message',textMessageBotAvatarDateline)">Message from bot</button><br>
+    <button class="btn" onclick="TeneoWebChat.call('add_message',textMessageAgentAvatarDateline)">Message from agent</button><br>
+    <button class="btn" onclick="TeneoWebChat.call('show_typing_indicator',typingIndicatorAgent)">Show agent typing indicator</button><br>
+    <button class="btn" onclick="TeneoWebChat.call('show_typing_indicator',typingIndicatorBot)">Show bot typing indicator</button><br>
+    <button class="btn" onclick="TeneoWebChat.call('show_typing_indicator',typingIndicatorUser)">Show user typing indicator</button><br>
+
+    <button class="btn" onclick="TeneoWebChat.call('hide_typing_indicator',{'author': 'agent'})">Hide agent typing indicator</button><br>
+    <button class="btn" onclick="TeneoWebChat.call('hide_typing_indicator',{'author': 'bot'})">Hide bot typing indicator</button><br>
+    <button class="btn" onclick="TeneoWebChat.call('hide_typing_indicator',{'author': 'user'})">Hide user typing indicator</button><br>
+    <button class="btn" onclick="TeneoWebChat.call('set_send_icon','https://as-freaky-styley-714c5e.bots.teneo.ai/teneo_web_chat_tes_3gzgctjx5q84x8fztj2bdzxtrh/images/bot.png')">Send icon</button><br>
+    <button class="btn" onclick="TeneoWebChat.call('reset_send_icon')">Reset send icon</button><br>
+
+    <button class="btn" onclick="TeneoWebChat.call('disable_user_input')">Disable input</button><br>
+    <button class="btn" onclick="TeneoWebChat.call('enable_user_input')">Enable input</button><br>
+    
+
     <script src="teneo-web-chat.js"></script> <!-- needed for Heroku -->
     <div id="teneo-web-chat"></div>
     <script>
+      
+
       window.onload = function () {
+
+        // TEMPORARY - REMOVE BEFORE RELEASE
+        function onSendButtonClicked(payload) {
+          // handle close button clicked event
+          payload.handledState.handled = false
+          console.log("Sent button clicked extension")
+        }
+        TeneoWebChat.on('send_button_clicked', onSendButtonClicked)
+
+        function onMessageButtonClicked(payload) {
+            // handle message button clicked event
+            payload.handledState.handled = false;
+            var button = payload.button
+            console.log("Button clicked yes:", button)
+        }
+        TeneoWebChat.on('message_button_clicked', onMessageButtonClicked)
+
         if (
           window.TeneoWebChat &&
             typeof window.TeneoWebChat.initialize === 'function'
@@ -35,9 +128,12 @@
             'minimizeIconUrl' :  '<%= process.env.MINIMIZE_ICON_URL %>',
             'closeIconUrl' :  '<%= process.env.CLOSE_ICON_URL %>',
             'launchIconUrl' :  '<%= process.env.LAUNCH_ICON_URL %>',
+            'sendIconUrl' :  '<%= process.env.SEND_ICON_URL %>',
           }
 
           window.TeneoWebChat.initialize(element, teneoProps);
+
+          
         }
       }
     </script>

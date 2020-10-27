@@ -1,15 +1,15 @@
 <template>
-  <div class="twc-quickreply-message" :class="{ expired: replySent || isExpired }">
-    <div>
+  <div class="twc-quickreply-message" :class="{ 'twc-expired': replySent || isExpired }">
     <a
       v-for="(reply, idx) in quickreplies"
       :key="idx"
       role="button"
+      :tabindex="replySent || isExpired ? -1 : 0"
       class="twc-quickreply-message__item"
-      :class="{ selected: replySent && selected === idx, 'twc-primary': reply.style == 'primary', 'twc-secondary': reply.style == 'secondary', 'twc-success': reply.style == 'success', 'twc-danger': reply.style == 'danger', 'twc-warning': reply.style == 'warning', 'twc-info': reply.style == 'info'}"
+      :class="{ 'twc-selected': replySent && selected === idx, 'twc-primary': reply.style == 'primary', 'twc-secondary': reply.style == 'secondary', 'twc-success': reply.style == 'success', 'twc-danger': reply.style == 'danger', 'twc-warning': reply.style == 'warning', 'twc-info': reply.style == 'info'}"
       @click="onSelect(reply, idx)"
+      @keydown="handleReturnSpaceKeys($event, reply, idx)"
     >{{ reply.title }}</a>
-    </div>
   </div>
 </template>
 
@@ -56,6 +56,11 @@ export default {
       }
       await handleButtonClick(reply, idx, this.$teneoApi)
     },
+    handleReturnSpaceKeys(event, reply, idx) {
+      if (event.code === 'Space' || event.code === 'Enter') {
+        this.onSelect(reply, idx)
+      }
+    },
   },
 };
 </script>
@@ -79,25 +84,33 @@ export default {
   margin: 3px;
 }
 
-.twc-quickreply-message__item.selected,
-.twc-quickreply-message:not(.expired) .twc-quickreply-message__item:hover {
+.twc-quickreply-message__item:active {
+  outline:none;
+}
+
+.twc-expired .twc-quickreply-message__item {
+  outline: none;
+}
+
+.twc-quickreply-message__item.twc-selected,
+.twc-quickreply-message:not(.twc-expired) .twc-quickreply-message__item:hover {
   background: var(--quickreply-bg-color, #ffffff);
   color: var(--quickreply-fg-color, #4e8cff);
 }
 
-.twc-quickreply-message__item.selected,
-.twc-quickreply-message:not(.expired) .twc-quickreply-message__item:hover {
+.twc-quickreply-message__item.twc-selected,
+.twc-quickreply-message:not(.twc-expired) .twc-quickreply-message__item:hover {
   background: var(--quickreply-fg-color, #4e8cff);
   color: var(--quickreply-bg-color, #ffffff);
 }
 
-.twc-quickreply-message.expired .twc-quickreply-message__item:not(.selected) {
+.twc-quickreply-message.twc-expired .twc-quickreply-message__item:not(.twc-selected) {
   cursor: default;
   color: var(--quickreply-expired-color, #a9a9a9);
   border-color: var(--quickreply-expired-color, #a9a9a9);
 }
 
-.twc-quickreply-message.expired .twc-quickreply-message__item.selected {
+.twc-quickreply-message.twc-expired .twc-quickreply-message__item.twc-selected {
   cursor: default;
   background: var(--quickreply-expired-color, #a9a9a9);
   color: var(--quickreply-bg-color, #ffffff);
@@ -109,7 +122,7 @@ export default {
   border-color: var(--secondary-color, #6c757d);
 }
 
-.twc-quickreply-message:not(.expired) .twc-quickreply-message__item.twc-secondary:hover {
+.twc-quickreply-message:not(.twc-expired) .twc-quickreply-message__item.twc-secondary:hover {
   color: var(--quickreply-bg-color, #ffffff) !important;
   background: var(--secondary-color, #6c757d);
 }
@@ -119,17 +132,17 @@ export default {
   border-color: var(--success-color, #28a745);
 }
 
-.twc-quickreply-message:not(.expired) .twc-quickreply-message__item.twc-success:hover {
+.twc-quickreply-message:not(.twc-expired) .twc-quickreply-message__item.twc-success:hover {
   color: var(--quickreply-bg-color, #ffffff) !important;
   background: var(--success-color, #28a745);
 }
 
 .twc-quickreply-message__item.twc-warning {
   border-color: var(--warning-color, #ffc107);
-  color: #e0a800;
+  color: var(--warning-fg-text-color, #c99700);
 }
 
-.twc-quickreply-message:not(.expired) .twc-quickreply-message__item.twc-warning:hover {
+.twc-quickreply-message:not(.twc-expired) .twc-quickreply-message__item.twc-warning:hover {
   color: var(--dark-fg-color, #263238);
   background: var(--warning-color, #ffc107);
 }
@@ -139,7 +152,7 @@ export default {
   border-color: var(--danger-color, #dc3545);
 }
 
-.twc-quickreply-message:not(.expired) .twc-quickreply-message__item.twc-danger:hover {
+.twc-quickreply-message:not(.twc-expired) .twc-quickreply-message__item.twc-danger:hover {
   color: var(--quickreply-bg-color, #ffffff);
   background: var(--danger-color, #dc3545);
 }
@@ -149,7 +162,7 @@ export default {
   border-color: var(--info-color, #17a2b8);
 }
 
-.twc-quickreply-message:not(.expired) .twc-quickreply-message__item.twc-info:hover {
+.twc-quickreply-message:not(.twc-expired) .twc-quickreply-message__item.twc-info:hover {
   color: var(--quickreply-bg-color, #ffffff);
   background: var(--info-color, #17a2b8);
 }
