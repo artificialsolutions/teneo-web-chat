@@ -106,6 +106,7 @@
               :key="idx"
               :href="button.url"
               :target="button.target"
+              :rel="button.target === '_blank' ? 'noopener': false"
               class="twc-linkbutton"
               @click="onLinkbuttonClick(button, $event)"
             >{{ button.title }}</a>
@@ -157,6 +158,7 @@
                   :key="idx"
                   :href="button.url"
                   :target="button.target"
+                  :rel="button.target === '_blank' ? 'noopener': false"
                   class="twc-linkbutton"
                   @click="onLinkbuttonClick(button, $event)"
                 >{{ button.title }}</a>
