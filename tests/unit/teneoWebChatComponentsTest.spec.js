@@ -98,7 +98,7 @@ describe('Test Message Components', () => {
         expect(wrapperWithLinks.exists()).toBe(true)
         expect(wrapperWithButtons.exists()).toBe(true)
         expect(wrapperWithClickablelist.exists()).toBe(true)
-        expect(wrapperWithLinkButtons.html()).toContain("<div class=\"twc-linkbuttons\"><a role=\"link\" href=\"https://developers.artificial-solutions.com/studio\" target=\"_blank\" class=\"twc-linkbutton\">Studio</a><a role=\"link\" href=\"https://developers.artificial-solutions.com/engine\" target=\"_blank\" class=\"twc-linkbutton\">Engine</a></div>")
+        expect(wrapperWithLinkButtons.html()).toContain("<a role=\"link\" href=\"https://developers.artificial-solutions.com/engine\" target=\"_blank\" rel=\"noopener\" class=\"twc-linkbutton\">Engine</a>")
     })
 
     
@@ -122,7 +122,7 @@ describe('Test Message Components', () => {
                 message: sampleJSON.linkButtonsMessageJSON
             }
         })
-        expect(wrapper.html()).toContain("<h5 class=\"twc-linkbuttons-title\">Optional title</h5> <a role=\"link\" href=\"#\" class=\"twc-linkbutton\">Link 1</a><a role=\"link\" href=\"https://developers.artificial-solutions.com/\" target=\"_self\" class=\"twc-linkbutton\">Link 2</a><a role=\"link\" href=\"https://developers.artificial-solutions.com/\" target=\"_blank\" class=\"twc-linkbutton\">Link 3</a>")
+        expect(wrapper.html()).toContain("<a role=\"link\" href=\"https://developers.artificial-solutions.com/\" target=\"_blank\" rel=\"noopener\" class=\"twc-linkbutton\">Link 3</a>")
     })
 
 
@@ -152,7 +152,7 @@ describe('Test Message Components', () => {
         expect(wrapper.html()).toContain('twc-file-video')
         expect(wrapper.html()).toContain('twc-vimeo-video')
         expect(wrapper.html()).toContain('twc-buttons');
-        expect(wrapper.html()).toContain('<h5 class=\"twc-linkbuttons-title\">Optional title</h5> <a role=\"link\" class=\"twc-linkbutton\">Link 1</a><a role=\"link\" target=\"_self\" class=\"twc-linkbutton\">Link 2</a><a role=\"link\" target=\"_blank\" class=\"twc-linkbutton\">Link 3</a>')
+        expect(wrapper.html()).toContain('<a role=\"link\" href=\"https://developers.artificial-solutions.com/\" target=\"_blank\" rel=\"noopener\" class=\"twc-linkbutton\">Link 3</a>')
     })
 
 
