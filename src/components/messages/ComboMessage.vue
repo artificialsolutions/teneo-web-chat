@@ -97,6 +97,22 @@
           </div>
       </div>
 
+      <div class="twc-combo-message" v-if="message.type==='linkbuttons'">
+        <div class="twc-linkbuttons">
+            <h5 class="twc-linkbuttons-title" v-if="message.title">{{ message.title }}</h5>
+            <a
+              v-for="(button, idx) in message.linkbutton_items"
+              role="link"
+              :key="idx"
+              :href="button.url"
+              :target="button.target"
+              :rel="button.target === '_blank' ? 'noopener': false"
+              class="twc-linkbutton"
+              @click="onLinkbuttonClick(button, $event)"
+            >{{ button.title }}</a>
+        </div>
+      </div>
+
       <div class="twc-combo-message" v-if="message.type==='card'">
         <div class="twc-card">
             <div class="twc-card-img" v-if="message.image">
@@ -135,25 +151,28 @@
                 >{{ button.title }}</a>
               </div>
             </div>
+            <div class="twc-linkbuttons" v-if="message.linkbutton_items">
+                <a
+                  role="link"
+                  v-for="(button, idx) in message.linkbutton_items"
+                  :key="idx"
+                  :href="button.url"
+                  :target="button.target"
+                  :rel="button.target === '_blank' ? 'noopener': false"
+                  class="twc-linkbutton"
+                  @click="onLinkbuttonClick(button, $event)"
+                >{{ button.title }}</a>
+            </div>
+            <!-- link item in cards are deprecated, please use linkbuttons instead -->
+            <div class="twc-links" v-if="linkitems">
+                <a
+                  v-for="(link, idx) in linkitems"
+                  :href="link.url"
+                  :key="idx"
+                >{{ link.title }}</a>
+            </div>
           </div>
       </div>
-
-      <div class="twc-combo-message" v-if="message.type==='linkbuttons'">
-        <div class="twc-linkbuttons">
-            <h5 class="twc-linkbuttons-title" v-if="message.title">{{ message.title }}</h5>
-            <a
-              v-for="(button, idx) in message.linkbutton_items"
-              role="link"
-              :key="idx"
-              :href="button.link"
-              :target="button.target"
-              class="twc-linkbutton"
-              @click="onLinkbuttonClick(button, $event)"
-              @keydown="handleReturnSpaceKeys($event, button, idx)"
-            >{{ button.title }}</a>
-        </div>
-      </div>
-
     </li>
   </ul>
 </template>
@@ -261,5 +280,10 @@ export default {
   margin: -3px;
   margin-right: 37px;
   text-align: center;
+}
+
+.twc-card .twc-linkbuttons {
+  width: auto;
+  margin: 0;
 }
 </style>

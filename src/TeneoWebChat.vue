@@ -270,6 +270,8 @@ export default {
   --card-bg-color: var(--light-fg-color);
   --card-link-color: var(--text-link-color);
   --link-button-fg-color: var(--text-link-color);
+  --link-button-bg-color: var(--light-fg-color);
+  --link-button-border-color: var(--light-border-color);
   --clickablelist-title-color: var(--dark-fg-color);
   --clickablelist-bg-color: var(--light-fg-color);
   --clickablelist-fg-color: var(--dark-fg-color);

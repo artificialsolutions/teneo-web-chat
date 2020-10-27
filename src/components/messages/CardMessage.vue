@@ -36,13 +36,6 @@
         >{{ button.title }}</a>
       </div>
     </div>
-    <div class="twc-links" v-if="linkitems">
-        <a
-          v-for="(link, idx) in linkitems"
-          :href="link.url"
-          :key="idx"
-        >{{ link.title }}</a>
-    </div>
     <div class="twc-linkbuttons" v-if="linkbutton_items">
         <a
           role="link"
@@ -50,10 +43,18 @@
           :key="idx"
           :href="button.url"
           :target="button.target"
+          :rel="button.target === '_blank' ? 'noopener': false"
           class="twc-linkbutton"
           @click="onLinkbuttonClick(button, $event)"
-          @keydown="handleReturnSpaceKeys($event, button, idx, 'linkbutton')"
         >{{ button.title }}</a>
+    </div>
+    <!-- link item in cards are deprecated, please use linkbuttons instead -->
+    <div class="twc-links" v-if="linkitems">
+        <a
+          v-for="(link, idx) in linkitems"
+          :href="link.url"
+          :key="idx"
+        >{{ link.title }}</a>
     </div>
   </div>
 </template>
@@ -139,18 +140,10 @@ export default {
       if (!this.replySent) {
         await handleButtonClick(reply, idx, this.$teneoApi)
       }
-      if (document.getElementById("twc-user-input-field")) {
-        document.getElementById("twc-user-input-field").focus();
-      }
     },
     handleReturnSpaceKeys(event, button, idx, type) {
       if (event.code === 'Space' || event.code === 'Enter') {
-        if (type === 'button' || type === 'clickablelist') {
-           this.onSelect(button, idx)
-        }
-        if (type === 'linkbutton') {
-          this.onLinkbuttonClick(button, event)
-        }
+        this.onSelect(button, idx)
       }
     },
   },
