@@ -3,6 +3,7 @@
 * New message type: [Link buttons](https://developers.artificial-solutions.com/engine/teneo-web-chat#link-buttons)
 * New configuration setting: sendIconUrl
 * New api's: [Set send icon](https://developers.artificial-solutions.com/engine/teneo-web-chat/web-chat-api#set-send-icon) and [Reset send icon](https://developers.artificial-solutions.com/engine/teneo-web-chat/web-chat-api#reset-send-icon)
+* New api: [On send button clicked](https://developers.artificial-solutions.com/engine/teneo-web-chat/web-chat-api#send-button-clicked)
 * New api: [Set engine URL](https://developers.artificial-solutions.com/engine/teneo-web-chat/web-chat-api#set-engine-url)
 * Improved accessibility
 * Added 'twc-' prefix to the followin classes:
