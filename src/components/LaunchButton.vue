@@ -8,7 +8,7 @@
     aria-roledescription="Chat with a digital assistant"
     aria-label="Open chat"
   >
-    <img v-if="launchIconUrl" class="twc-launch-button__open-icon" :src="launchIconUrl" aria-hidden="true"/>
+    <img v-if="launchIconUrl" class="twc-launch-button__open-icon" :src="launchIconUrl" aria-hidden="true" alt=""/>
     <BubbleIcon v-else class="twc-launch-button__open-icon" id="default-launch-button-icon" aria-hidden="true"/>
   </div>
 </template>

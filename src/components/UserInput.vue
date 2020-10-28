@@ -19,7 +19,7 @@
       ></div>
       <div class="twc-user-input__button">
         <button role="button" tabindex="0" aria-label="Send text" class="twc-user-input__send-icon-wrapper" @click.prevent="" @click="sendButtonClicked()" :aria-disabled="inputDisabled" :disabled="inputDisabled ? true : false">
-          <img v-if="sendIconUrl" class="twc-user-input__send-icon" :src="sendIconUrl" aria-hidden="true"/>
+          <img v-if="sendIconUrl" class="twc-user-input__send-icon" :src="sendIconUrl" aria-hidden="true" alt=""/>
           <SendIcon v-else class="twc-user-input__send-icon" aria-hidden="true"/>
         </button>
       </div>
