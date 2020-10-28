@@ -286,7 +286,7 @@ export default {
 }
 
 .twc-user-input__button {
-  width: 40px;
+  width: 44px;
   max-height: 200px;
   margin-left: 2px;
   margin-right: 2px;
@@ -328,7 +328,7 @@ export default {
   background: none;
   border: none;
   padding: 0px;
-  margin: 0 5px 0 0;
+  /* margin: 0 5px 0 0; */
   /* outline: none; */
   color: var(--sendicon-fg-color);
 }
