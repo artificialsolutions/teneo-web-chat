@@ -6,7 +6,7 @@
         ref="userInput"
         role="textbox"
         tabIndex="0"
-        aria-label="Input field"
+        aria-label="Message input field"
         :contentEditable="contentIsEditable"
         :placeholder="placeholder"
         class="twc-user-input__text"
@@ -16,9 +16,10 @@
         v-debounce:250="userTyping" :debounce-events="['input']"
         :aria-disabled="inputDisabled"
         :disabled="inputDisabled ? true : false"
-      ></div>
+        aria-readonly="false"
+      > </div>
       <div class="twc-user-input__button">
-        <button role="button" tabindex="0" aria-label="Send text" class="twc-user-input__send-icon-wrapper" @click.prevent="" @click="sendButtonClicked()" :aria-disabled="inputDisabled" :disabled="inputDisabled ? true : false">
+        <button role="button" tabindex="0" aria-label="Send message" title="Send message" class="twc-user-input__send-icon-wrapper" @click.prevent="" @click="sendButtonClicked()" :aria-disabled="inputDisabled" :disabled="inputDisabled ? true : false">
           <img v-if="sendIconUrl" class="twc-user-input__send-icon" :src="sendIconUrl" aria-hidden="true" alt=""/>
           <SendIcon v-else class="twc-user-input__send-icon" aria-hidden="true"/>
         </button>

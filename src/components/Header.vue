@@ -8,7 +8,7 @@
       <img v-if="minimizeIconUrl" class="twc-header__minimize-icon" :src="minimizeIconUrl" aria-hidden="true" alt=""/>
       <MinimizeIcon v-else class="twc-header__minimize-icon" aria-hidden="true"/>
     </button>
-    <button v-if="showCloseButton" class="twc-header__close-button" @click="onClose" id="header-close-button" aria-label="Close chat window" title="Minimize chat window">
+    <button v-if="showCloseButton" class="twc-header__close-button" @click="onClose" id="header-close-button" aria-label="Close chat window" title="Close chat window">
       <img v-if="closeIconUrl" class="twc-header__close-icon" :src="closeIconUrl" aria-hidden="true" alt=""/>
       <XIcon v-else class="twc-header__close-icon" aria-hidden="true"/>
     </button>
