@@ -294,6 +294,7 @@ export default {
   display: flex;
   flex-direction: column;
   justify-content: center;
+  cursor: pointer;
 }
 
 .twc-user-input.twc-active {
@@ -321,6 +322,7 @@ export default {
   color: var(--sendicon-fg-color);
   width: 44px;
   height: 44px;
+  cursor: pointer;
 }
 
 .twc-user-input__send-icon-wrapper:active {
