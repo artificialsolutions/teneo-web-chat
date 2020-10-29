@@ -64,7 +64,6 @@ export default {
   data() {
     return {
       inputActive: false,
-      contentIsEditable: true,
       inputDisabled: false,
     };
   },
@@ -77,7 +76,6 @@ export default {
 
     EventBus.$on(events.DISABLE_INPUT, () => {
           this.setInputActive(false);
-          this.setContentEditable(false);
           this.setInputDisabled(true);
           
           if (document.getElementById("twc-user-input-field")) {
@@ -86,7 +84,6 @@ export default {
     });
 
     EventBus.$on(events.ENABLE_INPUT, () => {
-          this.setContentEditable(true);
           this.setInputDisabled(false);
           this.setInputActive(true);
           
@@ -118,9 +115,6 @@ export default {
       if(onoff === true){
         EventBus.$emit(events.SCROLL_CHAT_DOWN);
       }
-    },
-    setContentEditable(onoff) {
-      this.contentIsEditable = onoff;
     },
     setInputDisabled(onoff) {
       this.inputDisabled = onoff;
