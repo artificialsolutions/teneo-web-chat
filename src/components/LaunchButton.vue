@@ -5,6 +5,7 @@
     @click.prevent="isOpen ? close() : open()"
     @keydown="handleReturnSpaceKeys"
     tabindex="0"
+    role="button"
     aria-roledescription="Chat with a digital assistant"
     aria-label="Open chat"
   >
