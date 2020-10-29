@@ -1,5 +1,5 @@
 <template>
-  <div class="twc-card">
+  <div class="twc-card" role="group" :aria-label="cardTitle">
     <div class="twc-card-img" v-if="imageUrl">
       <img :src="imageUrl" :alt="altText" />
     </div>
