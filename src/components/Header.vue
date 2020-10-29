@@ -103,10 +103,6 @@ export default {
   margin-left: auto;
 }
 
-.twc-header__minimize-button:active, .twc-header__close-button:active { 
-  outline: none;
-}
-
 .twc-header__minimize-icon {
   height: 32px;
   width: 32px;
@@ -114,9 +110,30 @@ export default {
     stroke-width: 1;
 }
 
+.twc-header__close-button:focus, .twc-header__minimize-button:focus {
+    outline: none;
+    border:1px solid var(--header-fg-color, #ffffff);
+    box-shadow: 0 0 3px #ffffff;
+}
+
+.twc-header__minimize-button:active, .twc-header__close-button:active { 
+  outline: none;
+}
+
 @media (max-width: 450px) {
   .twc-header {
     border-radius: 0px;
   }
+
+  .twc-header__minimize-button {
+    height: 44px;
+    width: 44px;
+  }
+
+  .twc-header__close-button {
+    height: 44px;
+    width: 44px;
+  }
+
 }
 </style>
