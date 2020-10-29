@@ -1,23 +1,6 @@
 <template>
   <div>
     <form class="twc-user-input" :class="{ 'twc-active': inputActive, 'twc-disabled': inputDisabled }">
-      <!-- <div
-        id="twc-user-input-field"
-        ref="userInput"
-        role="textbox"
-        tabIndex="0"
-        aria-label="Message input field"
-        :contentEditable="contentIsEditable"
-        :placeholder="placeholder"
-        class="twc-user-input__text"
-        @focus="setInputActive(true)"
-        @blur="setInputActive(false)"
-        @keydown="handleReturnKey"
-        v-debounce:250="userTyping" :debounce-events="['input']"
-        :aria-disabled="inputDisabled"
-        :disabled="inputDisabled ? true : false"
-        aria-readonly="false"
-      > </div> -->
       <textarea 
         rows="1" 
         class="twc-user-input__text" 
@@ -151,7 +134,7 @@ export default {
     },
     userTyping() {
       // create payload object
-      const payload = {"text" : this.$refs.userInput.textContent }
+      const payload = {"text" : this.$refs.userInput.value }
       // check if there is an extension that want to be notified about the user typing
       handleExtension(API_ON_USER_TYPING,payload);
     },
@@ -177,6 +160,9 @@ export default {
 
       // clear input field
       this.$refs.userInput.value = '';
+
+      // restore height of input box
+      this.auto_height();
 
       // check if there is an extension that want to intercept the user input
       // but only if the user actually submitted something
@@ -222,21 +208,6 @@ export default {
 </script>
 
 <style scoped>
-/* .twc-sr-only {
-      position: absolute;
-      width: 1px;
-      height: 1px;
-      padding: 0;
-      margin: -1px;
-      overflow: hidden;
-      clip: rect(0, 0, 0, 0);
-      white-space: nowrap;
-      border: 0;
-} */
-
-</style>
-
-<style scoped>
 .twc-user-input {
   min-height: 55px;
   margin: 0px;
@@ -261,7 +232,6 @@ export default {
 }
 
 .twc-user-input__text {
-  /* width: 320px; */
   width: 100%;
   resize: none;
   border: none;
@@ -272,28 +242,24 @@ export default {
   font-size: 0.95em;
   font-weight: 400;
   line-height: 1.33;
-  /* white-space: pre-wrap; */
+  white-space: pre-wrap;
   word-wrap: break-word;
   color: var(--user-input-fg-color, #565867);
-  background-color: var(--user-input-bg-color, #f4f7f9);
+  background-color: transparent;
   -webkit-font-smoothing: antialiased;
-  max-height: 200px;
+  max-height: 100px;
   overflow: scroll;
   bottom: 0;
   overflow-x: hidden;
   overflow-y: auto;
-  /* cursor: text; */
-  font-family: var(--primary-font);
+  font-family: var(--primary-font, Arial, Helvetica, Sans-serif);
 }
 
-.twc-user-input__text:focus {
-  background-color: var(--light-fg-color, #ffffff);
-}
 
 .twc-user-input__text:empty:before {
   content: attr(placeholder);
   display: block;
-  filter: contrast(15%);
+  /* filter: contrast(50%); */
   outline: none;
 }
 
@@ -319,7 +285,7 @@ export default {
 
 .twc-user-input__button {
   width: 44px;
-  max-height: 200px;
+  max-height: 100px;
   margin-left: 2px;
   margin-right: 2px;
   display: flex;
@@ -333,17 +299,6 @@ export default {
   box-shadow: 0px -2px 10px 0px rgba(150, 165, 190, 0.2);
 }
 
-.twc-user-input__button input {
-  position: absolute;
-  left: 0;
-  top: 0;
-  width: 100%;
-  z-index: 99999;
-  height: 100%;
-  opacity: 0;
-  cursor: pointer;
-  overflow: hidden;
-}
 
 .twc-user-input__send-icon-wrapper {
   background: none;
