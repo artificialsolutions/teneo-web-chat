@@ -1,7 +1,7 @@
 <template>
   <div>
     <form class="twc-user-input" :class="{ 'twc-active': inputActive, 'twc-disabled': inputDisabled }">
-      <div
+      <!-- <div
         id="twc-user-input-field"
         ref="userInput"
         role="textbox"
@@ -17,7 +17,24 @@
         :aria-disabled="inputDisabled"
         :disabled="inputDisabled ? true : false"
         aria-readonly="false"
-      > </div>
+      > </div> -->
+      <textarea 
+        rows="1" 
+        class="twc-user-input__text" 
+        id="twc-user-input-field"
+        ref="userInput"
+        role="textbox"
+        tabIndex="0"
+        aria-label="Message input field"
+        :placeholder="placeholder"
+        @focus="setInputActive(true)"
+        @blur="setInputActive(false)"
+        @keydown="handleReturnKey"
+        @input="auto_height"
+        v-debounce:250="userTyping" :debounce-events="['input']"
+        :aria-disabled="inputDisabled"
+        :disabled="inputDisabled ? true : false"
+      ></textarea>
       <div class="twc-user-input__button">
         <button role="button" tabindex="0" aria-label="Send message" title="Send message" class="twc-user-input__send-icon-wrapper" @click.prevent="" @click="sendButtonClicked()" :aria-disabled="inputDisabled" :disabled="inputDisabled ? true : false">
           <img v-if="sendIconUrl" class="twc-user-input__send-icon" :src="sendIconUrl" aria-hidden="true" alt=""/>
@@ -127,6 +144,7 @@ export default {
     },
     handleReturnKey(event) {
       if (event.keyCode === 13 && !event.shiftKey) {
+        console.log("Return!")
         this._submitText(event);
         event.preventDefault();
       }
@@ -155,10 +173,10 @@ export default {
       const payload = basePayload();
 
       // add user input to base payload
-      payload.text = this.$refs.userInput.textContent;
+      payload.text = this.$refs.userInput.value;
 
       // clear input field
-      this.$refs.userInput.innerHTML = '';
+      this.$refs.userInput.value = '';
 
       // check if there is an extension that want to intercept the user input
       // but only if the user actually submitted something
@@ -194,6 +212,11 @@ export default {
         this.$refs.userInput.focus();
       }
     },
+    auto_height() {
+      const userInput = document.getElementById("twc-user-input-field");
+      userInput.style.height = "1px";
+      userInput.style.height = (userInput.scrollHeight)+"px";
+    },
   },
 };
 </script>
@@ -210,6 +233,7 @@ export default {
       white-space: nowrap;
       border: 0;
 } */
+
 </style>
 
 <style scoped>
@@ -237,7 +261,8 @@ export default {
 }
 
 .twc-user-input__text {
-  width: 320px;
+  /* width: 320px; */
+  width: 100%;
   resize: none;
   border: none;
   outline: none;
@@ -247,16 +272,22 @@ export default {
   font-size: 0.95em;
   font-weight: 400;
   line-height: 1.33;
-  white-space: pre-wrap;
+  /* white-space: pre-wrap; */
   word-wrap: break-word;
   color: var(--user-input-fg-color, #565867);
+  background-color: var(--user-input-bg-color, #f4f7f9);
   -webkit-font-smoothing: antialiased;
   max-height: 200px;
   overflow: scroll;
   bottom: 0;
   overflow-x: hidden;
   overflow-y: auto;
-  cursor: text;
+  /* cursor: text; */
+  font-family: var(--primary-font);
+}
+
+.twc-user-input__text:focus {
+  background-color: var(--light-fg-color, #ffffff);
 }
 
 .twc-user-input__text:empty:before {
@@ -298,7 +329,7 @@ export default {
 
 .twc-user-input.twc-active {
   box-shadow: none;
-  background-color: white;
+  background-color: var(--light-fg-color, #ffffff);
   box-shadow: 0px -2px 10px 0px rgba(150, 165, 190, 0.2);
 }
 

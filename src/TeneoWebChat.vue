@@ -281,8 +281,9 @@ export default {
   --quickreply-bg-color: var(--light-fg-color);
   --quickreply-border-color: var(--primary-color);
   --quickreply-expired-color: var(--expired-color);
+  --primary-font: Arial, Helvetica, sans-serif;
 
-  font-family: Helvetica, Arial;
+  font-family: var(--primary-font);
   font: -apple-system-body;
 }
 </style>
