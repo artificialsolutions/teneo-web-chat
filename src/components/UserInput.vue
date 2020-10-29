@@ -301,17 +301,6 @@ export default {
   box-shadow: 0px -2px 10px 0px rgba(150, 165, 190, 0.2);
 }
 
-.twc-user-input__button label {
-  position: relative;
-  height: 24px;
-  padding-left: 3px;
-  cursor: pointer;
-}
-
-.twc-user-input__button label:hover path {
-  fill: rgba(86, 88, 103, 1);
-}
-
 .twc-user-input__button input {
   position: absolute;
   left: 0;
@@ -328,9 +317,9 @@ export default {
   background: none;
   border: none;
   padding: 0px;
-  /* margin: 0 5px 0 0; */
-  /* outline: none; */
   color: var(--sendicon-fg-color);
+  width: 44px;
+  height: 44px;
 }
 
 .twc-user-input__send-icon-wrapper:active {
@@ -342,9 +331,5 @@ export default {
   width: 20px;
   cursor: pointer;
   align-self: center;
-}
-
-.twc-user-input__send-icon:hover path {
-  filter: contrast(15%);
 }
 </style>
