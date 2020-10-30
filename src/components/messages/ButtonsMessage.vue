@@ -17,6 +17,7 @@
 <script>
 
 import handleButtonClick from '../../utils/handle-button-click.js';
+import keyIsSpaceOrEnter from '../../utils/is-space-or-enter.js';
 
 export default {
   name: 'ButtonsMessage',
@@ -65,7 +66,7 @@ export default {
       await handleButtonClick(button, idx, this.$teneoApi)
     },
     handleReturnSpaceKeys(event, reply, idx) {
-      if (event.code === 'Space' || event.code === 'Enter') {
+      if (keyIsSpaceOrEnter(event)) {
         this.onSelect(reply, idx)
       }
     },

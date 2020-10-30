@@ -18,6 +18,8 @@
 
 <script>
 import handleButtonClick from '../../utils/handle-button-click.js';
+import keyIsSpaceOrEnter from '../../utils/is-space-or-enter.js';
+
 export default {
   name: 'ClickablelistMessage',
   props: {
@@ -64,7 +66,7 @@ export default {
       }
     },
     handleReturnSpaceKeys(event, reply, idx) {
-      if (event.code === 'Space' || event.code === 'Enter') {
+      if (keyIsSpaceOrEnter(event)) {
         this.onSelect(reply, idx)
       }
     },

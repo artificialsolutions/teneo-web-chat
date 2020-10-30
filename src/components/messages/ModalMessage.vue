@@ -36,6 +36,7 @@ import handleExtension from '../../utils/handle-extension.js';
 import basePayload from '../../utils/base-payload.js';
 import { EventBus, events } from '../../utils/event-bus.js';
 import handleLinkButtonClick from '../../utils/handle-linkbutton-click.js';
+import keyIsSpaceOrEnter from '../../utils/is-space-or-enter.js';
 
 export default {
   name: 'ModalMessage',
@@ -106,7 +107,7 @@ export default {
       }
     },
     handleReturnSpaceKeys(event, reply, idx) {
-      if (event.code === 'Space' || event.code === 'Enter') {
+      if (keyIsSpaceOrEnter(event)) {
         event.preventDefault()
         this.onSelect(reply, idx)
       }

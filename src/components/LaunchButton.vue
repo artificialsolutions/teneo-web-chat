@@ -15,6 +15,7 @@
 </template>
 <script>
 import BubbleIcon from '../icons/bubble.vue';
+import keyIsSpaceOrEnter from '../utils/is-space-or-enter.js';
 import { mapState } from 'vuex';
 
 export default {
@@ -42,7 +43,7 @@ export default {
   },
   methods: {
     handleReturnSpaceKeys(event) {
-      if (event.code === 'Space' || event.code === 'Enter') {
+      if (keyIsSpaceOrEnter(event)) {
         this.open();
         event.preventDefault();
       }
