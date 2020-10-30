@@ -25,6 +25,7 @@
         </button>
       </div>
     </form>
+    <a v-if="isMobile()" href="#1" id="twc-focus-fix" aria-hidden="true"></a>
   </div>
 </template>
 
@@ -104,9 +105,16 @@ export default {
     }
 
     
-    // don't give user input focus on mobile devices, keyboard blocks the view too much
+    // give user input focus on on desktop
     if (!detectMobile()) {
       this.$refs.userInput.focus();
+    } else {
+      // if user gives input field focus without having first interacted with the chatwindow
+      // the chat window will shrink down and the keyboard will overlap the chat window 
+      // this is solved by giving a non visible dummy element focus as soon as the chat window loads
+      // it also prevents the keyboard from taking up too much space on other devices
+      const dummyFocusElement = document.getElementById("twc-focus-fix");
+      dummyFocusElement.focus();
     }
   },
   methods: {
@@ -121,7 +129,6 @@ export default {
     },
     handleReturnKey(event) {
       if (event.keyCode === 13 && !event.shiftKey) {
-        console.log("Return!")
         this._submitText(event);
         event.preventDefault();
       }
@@ -131,6 +138,9 @@ export default {
       const payload = {"text" : this.$refs.userInput.value }
       // check if there is an extension that want to be notified about the user typing
       handleExtension(API_ON_USER_TYPING,payload);
+    },
+    isMobile () {
+      return detectMobile();
     },
     async sendButtonClicked() {
 
@@ -214,6 +224,12 @@ export default {
   border-bottom-right-radius: 10px;
   transition: background-color 0.2s ease, box-shadow 0.2s ease;
   pointer-events:initial;
+}
+
+#twc-focus-fix {
+  outline: none;
+  position: absolute;
+  margin-left: -9999;
 }
 
 .twc-user-input.twc-disabled {
