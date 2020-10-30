@@ -264,7 +264,7 @@ export default {
   bottom: 0;
   overflow-x: hidden;
   overflow-y: auto;
-  font-family: var(--primary-font, Arial, Helvetica, Sans-serif);
+  font-family: inherit;
 }
 
 
