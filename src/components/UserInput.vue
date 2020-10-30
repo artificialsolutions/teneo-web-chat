@@ -249,6 +249,7 @@ export default {
   border-bottom-left-radius: 10px;
   box-sizing: border-box;
   padding: 18px;
+  margin: 0;
   font-size: 0.95em;
   font-weight: 400;
   line-height: 1.33;
@@ -258,6 +259,7 @@ export default {
   background-color: transparent;
   -webkit-font-smoothing: antialiased;
   max-height: 100px;
+  min-height: 55px;
   overflow: scroll;
   bottom: 0;
   overflow-x: hidden;
@@ -266,11 +268,9 @@ export default {
 }
 
 
-.twc-user-input__text:empty:before {
-  content: attr(placeholder);
-  display: block;
-  /* filter: contrast(50%); */
-  outline: none;
+.twc-user-input__text::placeholder {
+  color: var(--secondary-color,#6c757d);
+  /* font-size: 0.95em; */
 }
 
 /* fix placeholder issue on Edge browsers */
