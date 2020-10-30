@@ -270,7 +270,6 @@ export default {
 
 .twc-user-input__text::placeholder {
   color: var(--secondary-color,#6c757d);
-  /* font-size: 0.95em; */
 }
 
 /* fix placeholder issue on Edge browsers */
