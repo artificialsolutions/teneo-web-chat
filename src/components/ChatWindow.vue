@@ -87,6 +87,7 @@ export default {
 
 <style scoped>
 .twc-chat-window {
+  font-family: var(--primary-font, 'Helvetica Neue', Helvetica, Arial, sans-serif);
   width: 370px;
   height: calc(100% - 120px);
   max-height: 590px;
