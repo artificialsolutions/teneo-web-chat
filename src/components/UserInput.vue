@@ -9,17 +9,18 @@
         role="textbox"
         tabIndex="0"
         aria-label="Message input field"
+        :aria-placeholder="placeholder"
         :placeholder="placeholder"
         @focus="setInputActive(true)"
         @blur="setInputActive(false)"
         @keydown="handleReturnKey"
-        @input="auto_height"
+        @input="autoTextareaHeight"
         v-debounce:250="userTyping" :debounce-events="['input']"
         :aria-disabled="inputDisabled"
         :disabled="inputDisabled ? true : false"
       ></textarea>
       <div class="twc-user-input__button">
-        <button role="button" tabindex="0" aria-label="Send message" title="Send message" class="twc-user-input__send-icon-wrapper" @click.prevent="" @click="sendButtonClicked()" :aria-disabled="inputDisabled" :disabled="inputDisabled ? true : false">
+        <button role="button" tabindex="0" aria-label="Send message" title="Send message" class="twc-user-input__send-icon-wrapper" @click.prevent="" @focus="setInputActive(true)" @blur="setInputActive(false)" @click="sendButtonClicked()" :aria-disabled="inputDisabled" :disabled="inputDisabled ? true : false">
           <img v-if="sendIconUrl" class="twc-user-input__send-icon" :src="sendIconUrl" aria-hidden="true" alt=""/>
           <SendIcon v-else class="twc-user-input__send-icon" aria-hidden="true"/>
         </button>
@@ -166,7 +167,7 @@ export default {
       this.$refs.userInput.value = '';
 
       // restore height of input box
-      this.auto_height();
+      this.autoTextareaHeight();
 
       // check if there is an extension that want to intercept the user input
       // but only if the user actually submitted something
@@ -202,7 +203,7 @@ export default {
         this.$refs.userInput.focus();
       }
     },
-    auto_height() {
+    autoTextareaHeight() {
       const userInput = document.getElementById("twc-user-input-field");
       userInput.style.height = "1px";
       userInput.style.height = (userInput.scrollHeight)+"px";
@@ -226,6 +227,8 @@ export default {
   pointer-events:initial;
 }
 
+/* See above, we use a dummy <a> tag to fix a keyboard focus issue on safari */
+/* This style makes the dummy tag invisible but we can still give it foucs */
 #twc-focus-fix {
   outline: none;
   position: absolute;
@@ -246,20 +249,19 @@ export default {
   resize: none;
   border: none;
   outline: none;
-  border-bottom-left-radius: 10px;
   box-sizing: border-box;
-  padding: 18px;
-  margin: 0;
+  margin: 4px 4px 4px 4px;
+  padding: 12px;
   font-size: 0.95em;
   font-weight: 400;
-  line-height: 1.33;
+  line-height: 1.4;
   white-space: pre-wrap;
   word-wrap: break-word;
   color: var(--user-input-fg-color, #565867);
   background-color: transparent;
   -webkit-font-smoothing: antialiased;
-  max-height: 100px;
-  min-height: 55px;
+  max-height: 200px;
+  min-height: 44px;
   overflow: scroll;
   bottom: 0;
   overflow-x: hidden;
@@ -294,7 +296,7 @@ export default {
 
 .twc-user-input__button {
   width: 44px;
-  max-height: 100px;
+  max-height: 200px;
   margin-left: 2px;
   margin-right: 2px;
   display: flex;
@@ -304,9 +306,8 @@ export default {
 }
 
 .twc-user-input.twc-active {
-  box-shadow: none;
   background-color: var(--light-fg-color, #ffffff);
-  box-shadow: 0px -2px 10px 0px rgba(150, 165, 190, 0.2);
+  box-shadow: 0px -4px 15px 0px rgba(201,201, 201, 0.3);
 }
 
 

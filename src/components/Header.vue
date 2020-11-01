@@ -82,7 +82,7 @@ export default {
 
 .twc-header__close-button {
   background: none;
-  border: none;
+  border:  1px solid transparent;
   cursor: pointer;
   padding: 0;
   margin-left: 0px;
@@ -97,7 +97,7 @@ export default {
 
 .twc-header__minimize-button {
   background: none;
-  border: none;
+  border: 1px solid transparent;
   cursor: pointer;
   padding: 0;
   margin-left: auto;
@@ -107,7 +107,7 @@ export default {
   height: 32px;
   width: 32px;
   color: var(--header-fg-color, #ffffff);
-    stroke-width: 1;
+  stroke-width: 1;
 }
 
 .twc-header__close-button:focus, .twc-header__minimize-button:focus {

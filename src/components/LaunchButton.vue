@@ -1,17 +1,16 @@
 <template>
-  <div
+  <button
     class="twc-launch-button"
     :class="{ 'twc-opened': isOpen, 'twc-closed': !isOpen && !isMinimized, 'twc-minimized': isMinimized}"
     @click.prevent="isOpen ? close() : open()"
     @keydown="handleReturnSpaceKeys"
     tabindex="0"
-    role="button"
     aria-roledescription="Chat with a digital assistant"
     aria-label="Open chat"
   >
     <img v-if="launchIconUrl" class="twc-launch-button__open-icon" :src="launchIconUrl" aria-hidden="true" alt=""/>
     <BubbleIcon v-else class="twc-launch-button__open-icon" id="default-launch-button-icon" aria-hidden="true"/>
-  </div>
+  </button>
 </template>
 <script>
 import BubbleIcon from '../icons/bubble.vue';
@@ -62,6 +61,7 @@ export default {
   right: 25px;
   bottom: 25px;
   border-radius: 50%;
+  border: none;
   box-shadow: none;
   transition: box-shadow 0.2s ease-in-out;
   cursor: pointer;
@@ -87,7 +87,7 @@ export default {
   box-shadow: 0 0px 27px 1.5px rgba(0, 0, 0, 0.2);
 }
 
-.twc-launch-button:hover .twc-launch-button__open-icon {
+.twc-launch-button:hover .twc-launch-button__open-icon, .twc-launch-button:focus .twc-launch-button__open-icon {
   transform: scale(1.1);
 }
 
