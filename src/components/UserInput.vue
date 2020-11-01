@@ -1,23 +1,23 @@
 <template>
   <div>
     <form class="twc-user-input" :class="{ 'twc-active': inputActive, 'twc-disabled': inputDisabled }">
-      <div
+      <textarea 
+        rows="1" 
+        class="twc-user-input__text" 
         id="twc-user-input-field"
         ref="userInput"
         role="textbox"
         tabIndex="0"
         aria-label="Message input field"
-        :contentEditable="contentIsEditable"
         :placeholder="placeholder"
-        class="twc-user-input__text"
         @focus="setInputActive(true)"
         @blur="setInputActive(false)"
         @keydown="handleReturnKey"
+        @input="auto_height"
         v-debounce:250="userTyping" :debounce-events="['input']"
         :aria-disabled="inputDisabled"
         :disabled="inputDisabled ? true : false"
-        aria-readonly="false"
-      > </div>
+      ></textarea>
       <div class="twc-user-input__button">
         <button role="button" tabindex="0" aria-label="Send message" title="Send message" class="twc-user-input__send-icon-wrapper" @click.prevent="" @click="sendButtonClicked()" :aria-disabled="inputDisabled" :disabled="inputDisabled ? true : false">
           <img v-if="sendIconUrl" class="twc-user-input__send-icon" :src="sendIconUrl" aria-hidden="true" alt=""/>
@@ -25,6 +25,7 @@
         </button>
       </div>
     </form>
+    <a v-if="isMobile()" href="#1" id="twc-focus-fix" aria-hidden="true"></a>
   </div>
 </template>
 
@@ -64,7 +65,6 @@ export default {
   data() {
     return {
       inputActive: false,
-      contentIsEditable: true,
       inputDisabled: false,
     };
   },
@@ -77,7 +77,6 @@ export default {
 
     EventBus.$on(events.DISABLE_INPUT, () => {
           this.setInputActive(false);
-          this.setContentEditable(false);
           this.setInputDisabled(true);
           
           if (document.getElementById("twc-user-input-field")) {
@@ -86,7 +85,6 @@ export default {
     });
 
     EventBus.$on(events.ENABLE_INPUT, () => {
-          this.setContentEditable(true);
           this.setInputDisabled(false);
           this.setInputActive(true);
           
@@ -107,9 +105,16 @@ export default {
     }
 
     
-    // don't give user input focus on mobile devices, keyboard blocks the view too much
+    // give user input focus on on desktop
     if (!detectMobile()) {
       this.$refs.userInput.focus();
+    } else {
+      // if user gives input field focus without having first interacted with the chatwindow
+      // the chat window will shrink down and the keyboard will overlap the chat window 
+      // this is solved by giving a non visible dummy element focus as soon as the chat window loads
+      // it also prevents the keyboard from taking up too much space on other devices
+      const dummyFocusElement = document.getElementById("twc-focus-fix");
+      dummyFocusElement.focus();
     }
   },
   methods: {
@@ -118,9 +123,6 @@ export default {
       if(onoff === true){
         EventBus.$emit(events.SCROLL_CHAT_DOWN);
       }
-    },
-    setContentEditable(onoff) {
-      this.contentIsEditable = onoff;
     },
     setInputDisabled(onoff) {
       this.inputDisabled = onoff;
@@ -133,9 +135,12 @@ export default {
     },
     userTyping() {
       // create payload object
-      const payload = {"text" : this.$refs.userInput.textContent }
+      const payload = {"text" : this.$refs.userInput.value }
       // check if there is an extension that want to be notified about the user typing
       handleExtension(API_ON_USER_TYPING,payload);
+    },
+    isMobile () {
+      return detectMobile();
     },
     async sendButtonClicked() {
 
@@ -155,10 +160,13 @@ export default {
       const payload = basePayload();
 
       // add user input to base payload
-      payload.text = this.$refs.userInput.textContent;
+      payload.text = this.$refs.userInput.value;
 
       // clear input field
-      this.$refs.userInput.innerHTML = '';
+      this.$refs.userInput.value = '';
+
+      // restore height of input box
+      this.auto_height();
 
       // check if there is an extension that want to intercept the user input
       // but only if the user actually submitted something
@@ -194,23 +202,14 @@ export default {
         this.$refs.userInput.focus();
       }
     },
+    auto_height() {
+      const userInput = document.getElementById("twc-user-input-field");
+      userInput.style.height = "1px";
+      userInput.style.height = (userInput.scrollHeight)+"px";
+    },
   },
 };
 </script>
-
-<style scoped>
-/* .twc-sr-only {
-      position: absolute;
-      width: 1px;
-      height: 1px;
-      padding: 0;
-      margin: -1px;
-      overflow: hidden;
-      clip: rect(0, 0, 0, 0);
-      white-space: nowrap;
-      border: 0;
-} */
-</style>
 
 <style scoped>
 .twc-user-input {
@@ -227,6 +226,12 @@ export default {
   pointer-events:initial;
 }
 
+#twc-focus-fix {
+  outline: none;
+  position: absolute;
+  margin-left: -9999;
+}
+
 .twc-user-input.twc-disabled {
   pointer-events:none;
 }
@@ -237,33 +242,34 @@ export default {
 }
 
 .twc-user-input__text {
-  width: 320px;
+  width: 100%;
   resize: none;
   border: none;
   outline: none;
   border-bottom-left-radius: 10px;
   box-sizing: border-box;
   padding: 18px;
+  margin: 0;
   font-size: 0.95em;
   font-weight: 400;
   line-height: 1.33;
   white-space: pre-wrap;
   word-wrap: break-word;
   color: var(--user-input-fg-color, #565867);
+  background-color: transparent;
   -webkit-font-smoothing: antialiased;
-  max-height: 200px;
+  max-height: 100px;
+  min-height: 55px;
   overflow: scroll;
   bottom: 0;
   overflow-x: hidden;
   overflow-y: auto;
-  cursor: text;
+  font-family: inherit;
 }
 
-.twc-user-input__text:empty:before {
-  content: attr(placeholder);
-  display: block;
-  filter: contrast(15%);
-  outline: none;
+
+.twc-user-input__text::placeholder {
+  color: var(--secondary-color,#6c757d);
 }
 
 /* fix placeholder issue on Edge browsers */
@@ -288,7 +294,7 @@ export default {
 
 .twc-user-input__button {
   width: 44px;
-  max-height: 200px;
+  max-height: 100px;
   margin-left: 2px;
   margin-right: 2px;
   display: flex;
@@ -299,21 +305,10 @@ export default {
 
 .twc-user-input.twc-active {
   box-shadow: none;
-  background-color: white;
+  background-color: var(--light-fg-color, #ffffff);
   box-shadow: 0px -2px 10px 0px rgba(150, 165, 190, 0.2);
 }
 
-.twc-user-input__button input {
-  position: absolute;
-  left: 0;
-  top: 0;
-  width: 100%;
-  z-index: 99999;
-  height: 100%;
-  opacity: 0;
-  cursor: pointer;
-  overflow: hidden;
-}
 
 .twc-user-input__send-icon-wrapper {
   background: none;
