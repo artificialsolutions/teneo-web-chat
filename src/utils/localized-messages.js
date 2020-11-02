@@ -49,5 +49,22 @@ export const TRANSLATED_MESSAGES = {
           input_area_send_button_title: 'Enviar mensaje',
           message_typing_indicator: 'Escribiendo...'
       }
+    },
+    nl: {
+      message: {
+        launchbutton_aria_label: 'Chatvenster openen',
+        launchbutton_aria_roledescription: 'Chat met een digitale assistent',
+        chat_window_group_aria_label: 'Chatvenster',
+        header_minimize_button_aria_label: 'Chatvenster minimaliseren ',
+        header_minimize_button_title: 'Chatvenster minimaliseren ',
+        header_close_button_aria_label: 'Chatvenster sluiten',
+        header_close_button_title: 'Chatvenster sluiten',
+        chat_window_spinner_aria_valuetext: 'Wacht op reactie van server',
+        input_area_userinput_field_aria_label: 'Invoerveld bericht',//
+        input_area_userinput_field_placeholder: 'Typ een bericht...', //
+        input_area_send_button_aria_label: 'Verstuur bericht',
+        input_area_send_button_title: 'Verstuur bericht',
+        message_typing_indicator: 'Aan het typen...'
+      }
     }
   };
