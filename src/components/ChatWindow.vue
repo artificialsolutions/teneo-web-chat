@@ -1,5 +1,5 @@
 <template>
-    <div ref="chatWindowId" :class="chatWindowStyles()"  role="group" aria-label="Chat window">
+    <div ref="chatWindowId" :class="chatWindowStyles()"  role="group" :aria-label="$t('message.chat_window_group_aria_label')">
     <Header :on-close="onClose" :on-minimize="onMinimize"/>
     <MessageList id="twc-message-list" :message-list="$teneoApi.messageList" />
     <div v-if="spinnerIsLoading" class="twc-spinner" role="progressbar" aria-valuemin="0" :aria-valuetext="$t('message.chat_window_spinner_aria_valuetext')" aria-valuemax="100">
