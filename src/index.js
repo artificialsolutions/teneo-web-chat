@@ -9,6 +9,8 @@ import handleExtension from '../src/utils/handle-extension.js';
 import messageListCache from '../src/utils/message-list-cache.js';
 import { store } from '../src/store/store.js';
 import isValidUrl from '../src/utils/validate-url';
+import { TRANSLATED_MESSAGES } from '../src/utils/localized-messages';
+import VueI18n from 'vue-i18n';
 
 var functionMap = new Map();
 const validFunctionNames = Object.values(apiConstants)
@@ -81,6 +83,12 @@ window['TeneoWebChat'] = {
       return
     }
 
+    Vue.use(VueI18n);
+    const i18n = new VueI18n({
+      locale: 'en',
+      messages: TRANSLATED_MESSAGES
+    });
+
     Vue.use(teneoApiPlugin(store.getters.teneoEngineUrl));
     Vue.prototype.$extensionMethods = functionMap;
     
@@ -88,8 +96,12 @@ window['TeneoWebChat'] = {
       handleExtension(apiConstants.API_ON_READY);
     });
 
+    EventBus.$on(events.SET_LOCALE, (payload) => {
+      i18n.locale = payload
+    });
+
     new Vue({
-      render: (h) => h(TeneoWebChat, { props: { } }),
+      render: (h) => h(TeneoWebChat, { props: { } }), i18n
     }).$mount(element);
 
     // after initializing, freeze the boolean
@@ -155,6 +167,10 @@ window['TeneoWebChat'] = {
   call(function_name, payload = undefined) {
 
     switch (function_name) {
+      case apiConstants.API_SET_LOCALE:
+        console.log('Locale: '+payload)
+        EventBus.$emit(events.SET_LOCALE, payload);
+        break
       case apiConstants.API_CALL_MAXIMIZE:
         EventBus.$emit(events.MAXIMIZE_WINDOW);
         break

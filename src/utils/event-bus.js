@@ -20,7 +20,8 @@ export const events = {
   ENABLE_INPUT: 'enable_input',
   USER_INPUT_FOCUS_CHANGED: 'user_input_focus_changed',
   SCROLL_CHAT_DOWN: 'scroll_chat_down',
-  SET_ENGINE_URL: "set-engine-url"
+  SET_ENGINE_URL: "set-engine-url",
+  SET_LOCALE: 'set_locale'
 };
 
 export const EventBus = new Vue();
