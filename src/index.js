@@ -82,11 +82,20 @@ window['TeneoWebChat'] = {
       // TODO: thow error if engine url is missing?
       return
     }
+    
+    var fallbackLocale = 'en'
+    if(twcProps.fallbackLocale){
+      if(TRANSLATED_MESSAGES[twcProps.fallbackLocale]){
+        fallbackLocale = twcProps.fallbackLocale
+      }
+    }
 
     Vue.use(VueI18n);
     const i18n = new VueI18n({
-      locale: 'en',
-      messages: TRANSLATED_MESSAGES
+      locale: twcProps.locale,
+      fallbackLocale: fallbackLocale,
+      messages: TRANSLATED_MESSAGES,
+      silentTranslationWarn: true
     });
 
     Vue.use(teneoApiPlugin(store.getters.teneoEngineUrl));
