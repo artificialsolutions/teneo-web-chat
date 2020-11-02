@@ -20,6 +20,7 @@ export const store = new Vuex.Store({
         closeIconUrl: "",
         launchIconUrl: "",
         sendIconUrl: "",
+        locale: ""
     },
     mutations: {
         visibility(state, newVisibility) {
@@ -93,6 +94,9 @@ export const store = new Vuex.Store({
                 state.sendIconUrl = newUrl
             }
         },
+        locale(state, newLocale) {
+           state.locale = newLocale
+        }
     },
     getters: {
         teneoEngineUrl: state => state.teneoEngineUrl,
@@ -108,6 +112,7 @@ export const store = new Vuex.Store({
         closeIconUrl: state => state.closeIconUrl,
         launchIconUrl: state => state.launchIconUrl,
         sendIconUrl: state => state.sendIconUrl,
+        locale: state => state.locale,
         state: state => {
             return { 'visibility': state.visibility }
         },

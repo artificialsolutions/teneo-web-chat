@@ -3,13 +3,13 @@ import Vue from 'vue';
 import TeneoWebChat from './TeneoWebChat.vue';
 import teneoApiPlugin from './plugins/teneo-api.js';
 import { EventBus, events } from '../src/utils/event-bus.js';
-import { API_VERSION } from '../src/utils/constants.js';
+import { API_VERSION, FALLBACK_LOCALE } from '../src/utils/constants.js';
 import * as apiConstants from '../src/utils/api-function-names.js';
 import handleExtension from '../src/utils/handle-extension.js';
 import messageListCache from '../src/utils/message-list-cache.js';
 import { store } from '../src/store/store.js';
 import isValidUrl from '../src/utils/validate-url';
-import { TRANSLATED_MESSAGES } from '../src/utils/localized-messages';
+import { translatedMessages } from '../src/utils/localized-messages';
 import VueI18n from 'vue-i18n';
 
 var functionMap = new Map();
@@ -77,24 +77,22 @@ window['TeneoWebChat'] = {
       store.commit('sendIconUrl',twcProps.sendIconUrl);
     }
 
+    if (twcProps.locale) {
+      // TODO: error handling (once store thows error)
+      store.commit('locale',twcProps.locale);
+    }
+
     // check required properties
     if (!store.getters.teneoEngineUrl) {
       // TODO: thow error if engine url is missing?
       return
     }
-    
-    var fallbackLocale = 'en'
-    if(twcProps.fallbackLocale){
-      if(TRANSLATED_MESSAGES[twcProps.fallbackLocale]){
-        fallbackLocale = twcProps.fallbackLocale
-      }
-    }
 
     Vue.use(VueI18n);
     const i18n = new VueI18n({
       locale: twcProps.locale,
-      fallbackLocale: fallbackLocale,
-      messages: TRANSLATED_MESSAGES,
+      fallbackLocale: FALLBACK_LOCALE,
+      messages: translatedMessages,
       silentTranslationWarn: true
     });
 
@@ -177,8 +175,10 @@ window['TeneoWebChat'] = {
 
     switch (function_name) {
       case apiConstants.API_SET_LOCALE:
-        console.log('Locale: '+payload)
-        EventBus.$emit(events.SET_LOCALE, payload);
+        if(payload){
+          store.commit('locale',payload);
+          EventBus.$emit(events.SET_LOCALE, store.getters.locale);
+        }
         break
       case apiConstants.API_CALL_MAXIMIZE:
         EventBus.$emit(events.MAXIMIZE_WINDOW);
