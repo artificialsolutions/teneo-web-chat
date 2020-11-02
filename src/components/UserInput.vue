@@ -10,7 +10,7 @@
         tabIndex="0"
         :aria-label="$t('message.input_area_userinput_field_aria_label')"
         :aria-placeholder="$t('message.input_area_userinput_field_placeholder')"
-        :placeholder="$t('message.input_area_userinput_field_placeholder', { value: 'This is an example of content translation' })"
+        :placeholder="$t('message.input_area_userinput_field_placeholder')"
         @focus="setInputActive(true)"
         @blur="setInputActive(false)"
         @keydown="handleReturnKey"
@@ -20,7 +20,7 @@
         :disabled="inputDisabled ? true : false"
       ></textarea>
       <div class="twc-user-input__button">
-        <button role="button" tabindex="0" aria-label="Send message" title="Send message" class="twc-user-input__send-icon-wrapper" @click.prevent="" @focus="setInputActive(true)" @blur="setInputActive(false)" @click="sendButtonClicked()" :aria-disabled="inputDisabled" :disabled="inputDisabled ? true : false">
+        <button role="button" tabindex="0" :aria-label="$t('message.input_area_send_button_aria_label')" :title="$t('message.input_area_send_button_title')" class="twc-user-input__send-icon-wrapper" @click.prevent="" @focus="setInputActive(true)" @blur="setInputActive(false)" @click="sendButtonClicked()" :aria-disabled="inputDisabled" :disabled="inputDisabled ? true : false">
           <img v-if="sendIconUrl" class="twc-user-input__send-icon" :src="sendIconUrl" aria-hidden="true" alt=""/>
           <SendIcon v-else class="twc-user-input__send-icon" aria-hidden="true"/>
         </button>

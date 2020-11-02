@@ -5,8 +5,8 @@
     @click.prevent="isOpen ? close() : open()"
     @keydown="handleReturnSpaceKeys"
     tabindex="0"
-    aria-roledescription="Chat with a digital assistant"
-    aria-label="Open chat"
+    :aria-roledescription="$t('message.launchbutton_aria_roledescription')"
+    :aria-label="$t('message.launchbutton_aria_label')"
   >
     <img v-if="launchIconUrl" class="twc-launch-button__open-icon" :src="launchIconUrl" aria-hidden="true" alt=""/>
     <BubbleIcon v-else class="twc-launch-button__open-icon" id="default-launch-button-icon" aria-hidden="true"/>
