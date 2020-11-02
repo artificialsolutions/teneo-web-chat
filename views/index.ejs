@@ -21,6 +21,8 @@
     <button onclick="TeneoWebChat.call('set_locale','en-GB')">en-GB fallback test</button><br>
     <button onclick="TeneoWebChat.call('set_locale','nl-BE')">nl-BE fallback test</button><br>
     <button onclick="TeneoWebChat.call('set_locale','fr-GA')">fr-GA fallback test</button><br>
+    <button onclick="TeneoWebChat.call('set_locale','xx')">xx locale test</button><br>
+    <button onclick="TeneoWebChat.call('set_locale',true)">boolean locale test</button><br>
     <button onclick="TeneoWebChat.call('show_typing_indicator', {'author': 'agent'})">Typing indicator</button><br>
 
     
@@ -48,8 +50,7 @@
             'closeIconUrl' :  '<%= process.env.CLOSE_ICON_URL %>',
             'launchIconUrl' :  '<%= process.env.LAUNCH_ICON_URL %>',
             'sendIconUrl' :  '<%= process.env.SEND_ICON_URL %>',
-            'locale': '<%= process.env.VUE_APP_I18N_LOCALE %>',
-            'fallbackLocale': '<%= process.env.VUE_APP_I18N_FALLBACK_LOCALE %>'
+            'locale': '<%= process.env.LOCALE %>',
           }
 
           window.TeneoWebChat.initialize(element, teneoProps);

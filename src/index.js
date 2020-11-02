@@ -175,11 +175,11 @@ window['TeneoWebChat'] = {
 
     switch (function_name) {
       case apiConstants.API_SET_LOCALE:
-        if(payload){
-          store.commit('locale',payload);
-          EventBus.$emit(events.SET_LOCALE, store.getters.locale);
-        }
+        // TODO: throw error if payload is invalid or if store throws error
+        store.commit('locale',payload);
+        EventBus.$emit(events.SET_LOCALE, store.getters.locale);
         break
+
       case apiConstants.API_CALL_MAXIMIZE:
         EventBus.$emit(events.MAXIMIZE_WINDOW);
         break
