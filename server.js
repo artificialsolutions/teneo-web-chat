@@ -3,12 +3,7 @@ const app = express();
 
 const dotenv = require('dotenv');
 dotenv.config();
-const {
-  HEADER_TITLE,
-  TENEO_ENGINE_URL,
-  CLOSE_TIE_SESSION_ON_EXIT,
-  HEADER_ICON_URL
-} = process.env;
+const { TENEO_ENGINE_URL } = process.env;
 const port = process.env.PORT || 9000;
 
 if (!TENEO_ENGINE_URL) {
@@ -21,12 +16,7 @@ app.set('view engine', 'ejs');
 app.use(express.static('./dist/'));
 
 app.get('/', (req, res) =>
-  res.render('index', {
-    HEADER_TITLE,
-    TENEO_ENGINE_URL,
-    CLOSE_TIE_SESSION_ON_EXIT,
-    HEADER_ICON_URL
-  })
+  res.render('index', { TENEO_ENGINE_URL })
 );
 
 app.listen(port, () => {
