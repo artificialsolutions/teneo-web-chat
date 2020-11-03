@@ -12,7 +12,7 @@
             "required":true
         },
         "LOCALE": {
-            "description": "Optional Language code, used for things like the placeholder text in the input box. Defaults to 'en' if left blank.",
+            "description": "Optional language code. Used for things like the placeholder text in the input box. Defaults to 'en' if left blank.",
             "required":false
         }
     }
