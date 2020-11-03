@@ -152,4 +152,21 @@ export const translatedMessages = {
       message_typing_indicator: 'Yazıyor...'
     }
   },
+  ja: {
+    message: {
+      launchbutton_aria_label: 'チャットを開く',
+      launchbutton_aria_roledescription: 'バーチャルアシスタントとチャットする',
+      chat_window_group_aria_label: 'チャットウィンドウ',
+      header_minimize_button_aria_label: 'チャットウィンドウを最小化する',
+      header_minimize_button_title: 'チャットウィンドウを最小化する',
+      header_close_button_aria_label: 'チャットウィンドウを閉じる',
+      header_close_button_title: 'チャットウィンドウを閉じる',
+      chat_window_spinner_aria_valuetext: '返信を待っている',
+      input_area_userinput_field_aria_label: '入力フィールド',
+      input_area_userinput_field_placeholder: 'こちら入力してください',
+      input_area_send_button_aria_label: 'メッセージを送る',
+      input_area_send_button_title: 'メッセージを送る',
+      message_typing_indicator: '入力中...'
+    }
+  },
 };
