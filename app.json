@@ -10,6 +10,10 @@
         "TENEO_ENGINE_URL": {
             "description": "Please input your Teneo Engine URL. https://some.engine/instance/",
             "required":true
+        },
+        "LOCALE": {
+            "description": "Optional Language code, used for things like the placeholder text in the input box. Defaults to 'en' if left blank.",
+            "required":false
         }
     }
 }
