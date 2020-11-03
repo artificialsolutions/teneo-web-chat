@@ -82,6 +82,11 @@ window['TeneoWebChat'] = {
       store.commit('locale',twcProps.locale);
     }
 
+    if (twcProps.customLocalizations) {
+      // TODO: error handling (once store thows error)
+      translatedMessages[Object.keys(twcProps.customLocalizations)[0]]=twcProps.customLocalizations[Object.keys(twcProps.customLocalizations)[0]]
+    }
+
     // check required properties
     if (!store.getters.teneoEngineUrl) {
       // TODO: thow error if engine url is missing?

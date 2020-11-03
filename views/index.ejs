@@ -28,7 +28,6 @@
     <button onclick="TeneoWebChat.call('set_locale',true)">boolean locale test</button><br>
     <button onclick="TeneoWebChat.call('show_typing_indicator', {'author': 'agent'})">Typing indicator</button><br>
 
-    
     <script src="teneo-web-chat.js"></script> <!-- needed for Heroku -->
     <div id="teneo-web-chat"></div>
     <script>
@@ -54,6 +53,7 @@
             'launchIconUrl' :  '<%= process.env.LAUNCH_ICON_URL %>',
             'sendIconUrl' :  '<%= process.env.SEND_ICON_URL %>',
             'locale': '<%= process.env.LOCALE %>',
+            'customLocalizations':  {'zh': {'message': {'input_area_userinput_field_placeholder': 'Funky type here...'}}}
           }
 
           window.TeneoWebChat.initialize(element, teneoProps);

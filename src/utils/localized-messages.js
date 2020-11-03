@@ -1,4 +1,4 @@
-export const translatedMessages = {
+export var translatedMessages = {
   de: {
     message: {
       launchbutton_aria_label: 'Offnë Chat',
