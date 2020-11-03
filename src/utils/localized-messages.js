@@ -67,6 +67,40 @@ export const translatedMessages = {
       message_typing_indicator: 'Escribiendo...'
     }
   },
+  id: {
+    message: {
+      launchbutton_aria_label: 'Buka percakapan',
+      launchbutton_aria_roledescription: 'Berbicara dengan asisten digital',
+      chat_window_group_aria_label: 'Jendela percakapan',
+      header_minimize_button_aria_label: 'Minimalkan Jendela percakapan',
+      header_minimize_button_title: 'Minimalkan Jendela percakapan',
+      header_close_button_aria_label: 'Tutup Jendela percakapan',
+      header_close_button_title: 'Tutup Jendela percakapan',
+      chat_window_spinner_aria_valuetext: 'Menunggu respon',
+      input_area_userinput_field_aria_label: 'Halaman input pesan',
+      input_area_userinput_field_placeholder: 'Silahkan ketik di sini...',
+      input_area_send_button_aria_label: 'Kirim pesan',
+      input_area_send_button_title: 'Kirim pesan',
+      message_typing_indicator: 'Mengetik...'
+    }
+  },
+  ms: {
+    message: {
+      launchbutton_aria_label: 'Buka percakapan',
+      launchbutton_aria_roledescription: 'Bercakap dengan asisten digital',
+      chat_window_group_aria_label: 'Tingkap percakapan',
+      header_minimize_button_aria_label: 'Minimalkan Tingkap percakapan',
+      header_minimize_button_title: 'Minimalkan Tingkap percakapan',
+      header_close_button_aria_label: 'Tutup Tingkap percakapan',
+      header_close_button_title: 'Tutup Tingkap percakapan',
+      chat_window_spinner_aria_valuetext: 'Menunggu jawapan',
+      input_area_userinput_field_aria_label: 'Halaman input pesan',
+      input_area_userinput_field_placeholder: 'Silahkan taip di sini...',
+      input_area_send_button_aria_label: 'Hantar pesan',
+      input_area_send_button_title: 'Hantar pesan',
+      message_typing_indicator: 'Menaip...'
+    }
+  },
   nl: {
     message: {
       launchbutton_aria_label: 'Chatvenster openen',
@@ -100,5 +134,22 @@ export const translatedMessages = {
       input_area_send_button_title: 'Skicka meddelande',
       message_typing_indicator: 'Skriver...'
     }
-  }
+  },
+  tr: {
+    message: {
+      launchbutton_aria_label: 'Sohbeti aç',
+      launchbutton_aria_roledescription: 'Bir dijital asistanla sohbet edin',
+      chat_window_group_aria_label: 'Sohbet penceresi',
+      header_minimize_button_aria_label: 'Simge durumuna küçült',
+      header_minimize_button_title: 'Simge durumuna küçült',
+      header_close_button_aria_label: 'Sohbet penceresini kapat',
+      header_close_button_title: 'Sohbet penceresini kapat',
+      chat_window_spinner_aria_valuetext: 'Cevap bekleniyor',
+      input_area_userinput_field_aria_label: 'Mesaj giriş alanı',
+      input_area_userinput_field_placeholder: 'Lütfen buraya yazın...',
+      input_area_send_button_aria_label: 'Mesaj gönder',
+      input_area_send_button_title: 'Mesaj gönder',
+      message_typing_indicator: 'Yazıyor...'
+    }
+  },
 };
