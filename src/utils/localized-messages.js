@@ -52,7 +52,7 @@ export const translatedMessages = {
   },
   es: {
     message: {
-      launchbutton_aria_label: 'Abrir Chat',
+      launchbutton_aria_label: 'Abrir ventana de chat',
       launchbutton_aria_roledescription: 'Chatear con asistente virtual',
       chat_window_group_aria_label: 'Ventana de chat',
       header_minimize_button_aria_label: 'Minimizar ventana de chat',
@@ -82,6 +82,23 @@ export const translatedMessages = {
       input_area_send_button_aria_label: 'Kirim pesan',
       input_area_send_button_title: 'Kirim pesan',
       message_typing_indicator: 'Mengetik...'
+    }
+  },
+  ja: {
+    message: {
+      launchbutton_aria_label: 'チャットを開く',
+      launchbutton_aria_roledescription: 'バーチャルアシスタントとチャットする',
+      chat_window_group_aria_label: 'チャットウィンドウ',
+      header_minimize_button_aria_label: 'チャットウィンドウを最小化する',
+      header_minimize_button_title: 'チャットウィンドウを最小化する',
+      header_close_button_aria_label: 'チャットウィンドウを閉じる',
+      header_close_button_title: 'チャットウィンドウを閉じる',
+      chat_window_spinner_aria_valuetext: '返信を待っている',
+      input_area_userinput_field_aria_label: '入力フィールド',
+      input_area_userinput_field_placeholder: 'こちら入力してください',
+      input_area_send_button_aria_label: 'メッセージを送る',
+      input_area_send_button_title: 'メッセージを送る',
+      message_typing_indicator: '入力中...'
     }
   },
   ms: {
@@ -150,23 +167,6 @@ export const translatedMessages = {
       input_area_send_button_aria_label: 'Mesaj gönder',
       input_area_send_button_title: 'Mesaj gönder',
       message_typing_indicator: 'Yazıyor...'
-    }
-  },
-  ja: {
-    message: {
-      launchbutton_aria_label: 'チャットを開く',
-      launchbutton_aria_roledescription: 'バーチャルアシスタントとチャットする',
-      chat_window_group_aria_label: 'チャットウィンドウ',
-      header_minimize_button_aria_label: 'チャットウィンドウを最小化する',
-      header_minimize_button_title: 'チャットウィンドウを最小化する',
-      header_close_button_aria_label: 'チャットウィンドウを閉じる',
-      header_close_button_title: 'チャットウィンドウを閉じる',
-      chat_window_spinner_aria_valuetext: '返信を待っている',
-      input_area_userinput_field_aria_label: '入力フィールド',
-      input_area_userinput_field_placeholder: 'こちら入力してください',
-      input_area_send_button_aria_label: 'メッセージを送る',
-      input_area_send_button_title: 'メッセージを送る',
-      message_typing_indicator: '入力中...'
     }
   },
 };
