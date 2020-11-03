@@ -135,6 +135,23 @@ export var translatedMessages = {
       message_typing_indicator: 'Aan het typen...'
     }
   },
+  pt: {
+    message: {
+      launchbutton_aria_label: 'Abrir janela de chat',
+      launchbutton_aria_roledescription: 'Conversar com assistente virtual',
+      chat_window_group_aria_label: 'Janela de chat',
+      header_minimize_button_aria_label: 'Minimizar janela de chat',
+      header_minimize_button_title: 'Minimizar janela de chat',
+      header_close_button_aria_label: 'Fechar janela de chat',
+      header_close_button_title: 'Fechar janela de chat',
+      chat_window_spinner_aria_valuetext: 'Esperando resposta',
+      input_area_userinput_field_aria_label: 'Campo de entrada',
+      input_area_userinput_field_placeholder: 'Por favor escreva aqui...',
+      input_area_send_button_aria_label: 'Enviar mensagem',
+      input_area_send_button_title: 'Enviar mensagem',
+      message_typing_indicator: 'Escrevendo...'
+    }
+  },
   sv: {
     message: {
       launchbutton_aria_label: 'Öppna chattfönster',
