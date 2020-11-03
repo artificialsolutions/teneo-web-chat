@@ -83,8 +83,13 @@ window['TeneoWebChat'] = {
     }
 
     if (twcProps.customLocalizations) {
-      // TODO: error handling (once store thows error)
-      translatedMessages[Object.keys(twcProps.customLocalizations)[0]]=twcProps.customLocalizations[Object.keys(twcProps.customLocalizations)[0]]
+      // TODO: error handling
+      const customLocalizations = twcProps.customLocalizations
+      if (Object.keys(customLocalizations).length > 0 && customLocalizations.constructor === Object) {
+        // merge objects
+        Object.assign(translatedMessages, customLocalizations);
+        //translatedMessages[Object.keys(customLocalizations)[0]]=customLocalizations[Object.keys(customLocalizations)[0]]
+      }
     }
 
     // check required properties
