@@ -186,4 +186,38 @@ export var translatedMessages = {
       message_typing_indicator: 'Yazıyor...'
     }
   },
+  'zh-CN': {
+    message: {
+      launchbutton_aria_label: '打开聊天窗口',
+      launchbutton_aria_roledescription: '和聊天机器人对话',
+      chat_window_group_aria_label: '聊天窗口',
+      header_minimize_button_aria_label: '聊天窗口最小化',
+      header_minimize_button_title: '聊天窗口最小化',
+      header_close_button_aria_label: '关闭聊天窗口',
+      header_close_button_title: '关闭聊天窗口',
+      chat_window_spinner_aria_valuetext: '等待聊天机器人回复',
+      input_area_userinput_field_aria_label: '输入框',
+      input_area_userinput_field_placeholder: '请在此输入...',
+      input_area_send_button_aria_label: '发送',
+      input_area_send_button_title: '发送',
+      message_typing_indicator: '正在输入...'
+    }
+  },
+  'zh-TW': {
+    message: {
+      launchbutton_aria_label: '開啟聊天視窗',
+      launchbutton_aria_roledescription: '和聊天機器人對話',
+      chat_window_group_aria_label: '聊天視窗',
+      header_minimize_button_aria_label: '聊天視窗最小化',
+      header_minimize_button_title: '聊天視窗最小化',
+      header_close_button_aria_label: '關閉聊天視窗',
+      header_close_button_title: '關閉聊天視窗',
+      chat_window_spinner_aria_valuetext: '等候聊天機器人回覆',
+      input_area_userinput_field_aria_label: '輸入框',
+      input_area_userinput_field_placeholder: '請在此輸入...',
+      input_area_send_button_aria_label: '發送',
+      input_area_send_button_title: '發送',
+      message_typing_indicator: '正在輸入...'
+    }
+  },
 };
