@@ -84,6 +84,23 @@ export var translatedMessages = {
       message_typing_indicator: 'Escribiendo...'
     }
   },
+  fr: {
+    message: {
+      launchbutton_aria_label: 'Ouvrir chat',
+      launchbutton_aria_roledescription: 'Chatter avec un assistant digital',
+      chat_window_group_aria_label: 'Fenêtre de chat',
+      header_minimize_button_aria_label: 'Reduire la fenêtre de chat',
+      header_minimize_button_title: 'Reduire la fenêtre de chat',
+      header_close_button_aria_label: 'Fermer la fenêtre de chat',
+      header_close_button_title: 'Fermer la fenêtre de chat',
+      chat_window_spinner_aria_valuetext: 'Attendre une réponse',
+      input_area_userinput_field_aria_label: 'Champ de saisie',
+      input_area_userinput_field_placeholder: 'Ecrivez ici, svp.',
+      input_area_send_button_aria_label: 'Envoyer message',
+      input_area_send_button_title: 'Envoyer message',
+      message_typing_indicator: 'En train d\'écrire...'
+    }
+  },
   id: {
     message: {
       launchbutton_aria_label: 'Buka percakapan',
