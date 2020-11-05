@@ -18,18 +18,18 @@ export var translatedMessages = {
   },
   de: {
     message: {
-      launchbutton_aria_label: 'Offnë Chat',
-      launchbutton_aria_roledescription: 'Mit einem digitalen Assistant chatten',
+      launchbutton_aria_label: 'Öffne Chat',
+      launchbutton_aria_roledescription: 'Mit einem digitalen Assistenten chatten',
       chat_window_group_aria_label: 'Chatfenster',
-      header_minimize_button_aria_label: 'Chatfenster minimisieren',
-      header_minimize_button_title: 'Chatfenster minimisieren',
+      header_minimize_button_aria_label: 'Chatfenster minimieren',
+      header_minimize_button_title: 'Chatfenster minimieren',
       header_close_button_aria_label: 'Chatfenster schließen',
       header_close_button_title: 'Chatfenster schließen',
       chat_window_spinner_aria_valuetext: 'Auf Antwort warten',
-      input_area_userinput_field_aria_label: 'Message-Eingabefeld',
+      input_area_userinput_field_aria_label: 'Eingabefeld',
       input_area_userinput_field_placeholder: 'Bitte hier schreiben...',
-      input_area_send_button_aria_label: 'Message senden',
-      input_area_send_button_title: 'Message senden',
+      input_area_send_button_aria_label: 'Text senden',
+      input_area_send_button_title: 'Text senden',
       message_typing_indicator: 'Schreibt...'
     }
   },
