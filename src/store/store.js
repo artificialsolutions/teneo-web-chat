@@ -1,5 +1,5 @@
-import Vue from 'vue'
-import Vuex from 'vuex'
+import Vue from 'vue';
+import Vuex from 'vuex';
 import { DEFAULT_TITLE } from '../utils/constants.js';
 import isValidUrl from '../utils/validate-url';
 
@@ -20,6 +20,7 @@ export const store = new Vuex.Store({
         closeIconUrl: "",
         launchIconUrl: "",
         sendIconUrl: "",
+        locale: "",
     },
     mutations: {
         visibility(state, newVisibility) {
@@ -93,6 +94,12 @@ export const store = new Vuex.Store({
                 state.sendIconUrl = newUrl
             }
         },
+        locale(state, newLocale) {
+            // TODO: Improve check for valid locale and throw error if locale is invalid
+            if (typeof newLocale === "string") {
+                state.locale = newLocale
+            }
+        }
     },
     getters: {
         teneoEngineUrl: state => state.teneoEngineUrl,
@@ -108,6 +115,7 @@ export const store = new Vuex.Store({
         closeIconUrl: state => state.closeIconUrl,
         launchIconUrl: state => state.launchIconUrl,
         sendIconUrl: state => state.sendIconUrl,
+        locale: state => state.locale,
         state: state => {
             return { 'visibility': state.visibility }
         },
