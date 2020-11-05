@@ -1,4 +1,21 @@
 export var translatedMessages = {
+  da: {
+    message: {
+      launchbutton_aria_label: 'Åbn chat',
+      launchbutton_aria_roledescription: 'Snak med en digital assistent',
+      chat_window_group_aria_label: 'Chatvindue',
+      header_minimize_button_aria_label: 'Minimér chatvindue',
+      header_minimize_button_title: 'Minimér chatvindue',
+      header_close_button_aria_label: 'Luk chatvindue',
+      header_close_button_title: 'Luk chatvindue',
+      chat_window_spinner_aria_valuetext: 'Venter på svar',
+      input_area_userinput_field_aria_label: 'Indtastningsfelt for besked',
+      input_area_userinput_field_placeholder: 'Skriv din besked her...',
+      input_area_send_button_aria_label: 'Send besked',
+      input_area_send_button_title: 'Send besked',
+      message_typing_indicator: 'Skriver...'
+    }
+  },
   de: {
     message: {
       launchbutton_aria_label: 'Offnë Chat',
