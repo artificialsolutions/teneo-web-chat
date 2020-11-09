@@ -15,7 +15,6 @@ import teneoApiPlugin from '../../src/plugins/teneo-api.js'
 
 const index_js = path.resolve(__dirname, '../../src/index.js')
 
-
 ejs.renderFile(index_js, function (err, str) {
 
     if (str) {
@@ -38,7 +37,6 @@ ejs.renderFile(index_js, function (err, str) {
             }
           }
 
-
         //Mount TWC Component
         const wrapperTeneoWebChat = mount(TeneoWebChat, {
             title: 'Teneo Web Chat',
@@ -47,8 +45,9 @@ ejs.renderFile(index_js, function (err, str) {
                 isChatOpen: false
             },
             mocks:{
-                $store: mockStore
-            }
+                $store: mockStore,
+                $t: jest.fn()
+            },
         })
 
 
@@ -161,7 +160,8 @@ ejs.renderFile(index_js, function (err, str) {
                         onMinimize: jest.fn()
                     },
                     mocks:{
-                        $store: mockStore
+                        $store: mockStore,
+                        $t: jest.fn()
                     }
                 })
 
@@ -196,7 +196,8 @@ ejs.renderFile(index_js, function (err, str) {
                         onMinimize: jest.fn()
                     },
                     mocks:{
-                        $store: mockStore
+                        $store: mockStore,
+                        $t: jest.fn()
                     }
                 })
 
@@ -227,7 +228,8 @@ ejs.renderFile(index_js, function (err, str) {
                         onMinimize: jest.fn()
                     },
                     mocks:{
-                        $store: mockStore
+                        $store: mockStore,
+                        $t: jest.fn()
                     }
                 })
 
@@ -262,7 +264,8 @@ ejs.renderFile(index_js, function (err, str) {
                         onMinimize: jest.fn()
                     },
                     mocks:{
-                        $store: mockStore
+                        $store: mockStore,
+                        $t: jest.fn()
                     }
                 })
 
@@ -292,7 +295,8 @@ ejs.renderFile(index_js, function (err, str) {
                         isOpen: false
                     },
                     mocks:{
-                        $store: mockStore
+                        $store: mockStore,
+                        $t: jest.fn()
                     }
                 })
 

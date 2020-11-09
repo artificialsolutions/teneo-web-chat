@@ -1,5 +1,5 @@
 <template>
-  <div class="twc-card">
+  <div class="twc-card" role="group" :aria-label="cardTitle">
     <div class="twc-card-img" v-if="imageUrl">
       <img :src="imageUrl" :alt="altText" />
     </div>
@@ -64,6 +64,7 @@ import { PARTICIPANT_BOT } from '../../utils/constants.js';
 import sanitizeHtml from '../../utils/sanitize-html.js';
 import handleButtonClick from '../../utils/handle-button-click.js';
 import handleLinkButtonClick from '../../utils/handle-linkbutton-click.js';
+import keyIsSpaceOrEnter from '../../utils/is-space-or-enter.js';
 
 export default {
   name: 'CardMessage',
@@ -142,7 +143,7 @@ export default {
       }
     },
     handleReturnSpaceKeys(event, button, idx, type) {
-      if (event.code === 'Space' || event.code === 'Enter') {
+      if (keyIsSpaceOrEnter(event)) {
         this.onSelect(button, idx)
       }
     },

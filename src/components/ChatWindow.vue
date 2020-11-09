@@ -1,8 +1,8 @@
 <template>
-    <div ref="chatWindowId" :class="chatWindowStyles()">
+    <div ref="chatWindowId" :class="chatWindowStyles()"  role="group" :aria-label="$t('message.chat_window_group_aria_label')">
     <Header :on-close="onClose" :on-minimize="onMinimize"/>
     <MessageList id="twc-message-list" :message-list="$teneoApi.messageList" />
-    <div v-if="spinnerIsLoading" class="twc-spinner" role="progressbar" aria-valuemin="0" aria-valuetext="Bot is responding" aria-valuemax="100">
+    <div v-if="spinnerIsLoading" class="twc-spinner" role="progressbar" aria-valuemin="0" :aria-valuetext="$t('message.chat_window_spinner_aria_valuetext')" aria-valuemax="100">
       <div class="twc-bounce1" aria-hidden="true"></div>
       <div class="twc-bounce2" aria-hidden="true"></div>
       <div class="twc-bounce3" aria-hidden="true"></div>
@@ -87,7 +87,7 @@ export default {
 
 <style scoped>
 .twc-chat-window {
-  font-family: 'Helvetica Neue', Helvetica, Arial, sans-serif;
+  font-family: var(--primary-font, 'Helvetica Neue', Helvetica, Arial, sans-serif);
   width: 370px;
   height: calc(100% - 120px);
   max-height: 590px;

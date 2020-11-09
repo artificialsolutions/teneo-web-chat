@@ -282,7 +282,7 @@ export default {
   --quickreply-border-color: var(--primary-color);
   --quickreply-expired-color: var(--expired-color);
 
-  font-family: Helvetica, Arial;
+  --primary-font: 'Helvetica Neue', Helvetica, Arial, sans-serif;
   font: -apple-system-body;
 }
 </style>

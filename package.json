@@ -1,6 +1,6 @@
 {
   "name": "teneo-web-chat",
-  "version": "3.2.0",
+  "version": "3.3.0",
   "description": "Teneo Web Chat widget that can be embedded in websites.",
   "scripts": {
     "analyze": "NODE_ENV=production webpack --config webpack.prod.js --profile --json > stats-prod.json && webpack-bundle-analyzer stats-prod.json dist/",
@@ -24,6 +24,8 @@
     "vue": "^2.6.12"
   },
   "devDependencies": {
+    "vue-i18n": "^8.22.1",
+    "eslint": "6.8.0",
     "@babel/core": "^7.11.6",
     "@babel/node": "^7.10.5",
     "@babel/plugin-transform-modules-commonjs": "^7.10.4",

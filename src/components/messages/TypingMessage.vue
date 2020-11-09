@@ -6,7 +6,7 @@
     <div class="twc-avatar-text-wrapper">
       <div v-if="avatarUrl" class="twc-avatar" aria-hidden="true"><img :src="avatarUrl"></div>
       <div class="twc-typing-message">        
-        <div class="twc-spinner" role="progressbar" aria-valuemin="0" :aria-valuetext="this.message.author + ' is typing...'" aria-valuemax="100">
+        <div class="twc-spinner" role="progressbar" aria-valuemin="0" :aria-valuetext="$t('message.message_typing_indicator')" aria-valuemax="100">
           <div class="twc-bounce1" aria-hidden="true"></div>
           <div class="twc-bounce2" aria-hidden="true"></div>
           <div class="twc-bounce3" aria-hidden="true"></div>

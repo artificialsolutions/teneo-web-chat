@@ -224,9 +224,15 @@ ejs.renderFile(index_js, function (err, str) {
 
           //Mount UserInput component and simulate submitText event.
           const wrapperUserInput = shallowMount(UserInput, {
-            propsData: {onSubmit: jest.fn()}
+            propsData: {
+              onSubmit: jest.fn()
+            },
+            mocks: {
+              $t: jest.fn()
+            }
           })
           //Simulate submitting text and user typing
+          wrapperUserInput.vm.autoTextareaHeight = jest.fn()
           await wrapperUserInput.vm._submitText();
           await wrapperUserInput.vm.userTyping();
 
@@ -238,7 +244,6 @@ ejs.renderFile(index_js, function (err, str) {
           expect(onInputSubmittedCallbackSpy).toHaveBeenCalled;
           expect(onUserTypingCallbackSpy).toHaveBeenCalled;
         })
-
 
 
         test('API_ON_ENGINE_REQUEST and API_ON_ENGINE_RESPONSE trigger their respective callbacks', async ()=>{
@@ -345,7 +350,10 @@ ejs.renderFile(index_js, function (err, str) {
           const wrapper = mount(TeneoWebChat, {
             title: 'Teneo Web Chat',
             teneoEngineUrl: 'https://teneo-api.com/some-bot',
-            propsData: {isChatOpen: false}
+            propsData: {isChatOpen: false},
+            mocks: {
+              $t: jest.fn()
+            }
           })
 
           // click the LaunchButton 
@@ -380,6 +388,9 @@ ejs.renderFile(index_js, function (err, str) {
           const wrapper = mount(TeneoWebChat, {
             title: 'Teneo Web Chat',
             teneoEngineUrl: 'https://teneo-api.com/some-bot',
+            mocks:{
+              $t: jest.fn()
+            }
           }) 
           wrapper.vm.closeChat = jest.fn().mockImplementation( async() => {   
             await handleExtension(api.API_ON_CLOSE_BUTTON_CLICK);
@@ -398,6 +409,9 @@ ejs.renderFile(index_js, function (err, str) {
             computed: {
               showCloseButton: () => 'true' //mock .env variable to make CloseButton visible
             },
+            mocks:{
+              $t: jest.fn()
+            }
           })
           
           //Simulate user click on the CloseButton, then MinimizeButton
@@ -414,9 +428,9 @@ ejs.renderFile(index_js, function (err, str) {
           expect(onCloseButtonClickedCallbackSpy).toHaveBeenCalledTimes(1);
           expect(onMinimizeButtonClickedCallbackSpy).toHaveBeenCalledTimes(1);
         })
+//*/
 
-
-        test('API_ON_CLOSE_BUTTON_CLICKED triggers callback', async ()=>{
+        test('API_ON_MODAL_CLICKED triggers callback', async ()=>{
           //Set a Spy on the callback
           const onModalButtonClickCallbackSpy = jest.spyOn(callbacks,'onModalButtonClickCallback');
 

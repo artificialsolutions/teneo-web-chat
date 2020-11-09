@@ -182,6 +182,7 @@ import { PARTICIPANT_BOT } from '../../utils/constants.js';
 import handleButtonClick from '../../utils/handle-button-click.js';
 import { EventBus, events } from '../../utils/event-bus.js';
 import handleLinkButtonClick from '../../utils/handle-linkbutton-click.js';
+import keyIsSpaceOrEnter from '../../utils/is-space-or-enter.js';
 
 export default {
   name: 'ComboMessage',
@@ -230,7 +231,7 @@ export default {
       }
     },
     handleReturnSpaceKeys(event, reply, idx) {
-      if (event.code === 'Space' || event.code === 'Enter') {
+      if (keyIsSpaceOrEnter(event)) {
         this.onSelect(reply, idx)
       }
     },

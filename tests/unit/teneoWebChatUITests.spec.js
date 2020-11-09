@@ -92,7 +92,8 @@ describe('Check hierarchy of Components', () => {
       },
       localVue,
       mocks:{
-        $teneoApi : mockTeneoApi
+        $teneoApi : mockTeneoApi,
+        $t: jest.fn()
         }
     });
 
@@ -112,7 +113,8 @@ describe('Check hierarchy of Components', () => {
         $store: {
           state: {},
           getters: {}
-        }
+        },
+        $t: jest.fn()
       }
     });
     expect(wrapper.findComponent(MinimizeIcon).exists()).toBe(true)
@@ -129,12 +131,12 @@ describe('Check hierarchy of Components', () => {
         $store: {
           state: {},
           getters: {}
-        }
+        },
+        $t: jest.fn()
       }
     });
     expect(wrapper.findComponent(SendIcon).exists()).toBe(true)
   });
-  
 });
 
 
@@ -162,8 +164,7 @@ describe('Check behavior of UI components', () => {
     expect(wrapper.findComponent(LaunchButton).exists()).toBe(false);
   });
 
-
-  it('Assert BubbleIcon or custom imagw renders inside LaunchButton', async() => {
+  it('Assert BubbleIcon or custom image renders inside LaunchButton', async() => {
 
     //BubbleIcon is initially rendered when its parent, LaunchButton is rendered
     //ChatWindow is in a closed state.
@@ -175,6 +176,9 @@ describe('Check behavior of UI components', () => {
       computed: {
         launchIconUrl: () => 'www.someurl.com' //mock .env variable to make CloseButton visible
       },
+      mocks: {
+        $t: jest.fn()
+      }
     });
     // Expect Custom image to be rendered if launchIconUrl is available
     expect(wrapper.findAll('img').at(0).exists()).toBe(true)
@@ -189,6 +193,9 @@ describe('Check behavior of UI components', () => {
       computed: {
         launchIconUrl: () => false //mock .env variable to make CloseButton visible
       },
+      mocks: {
+        $t: jest.fn()
+      }
     });
     // Expect BubbleIcon to be rendered if no custom launchIconUrl is available
     expect(wrapper.findAll('img').exists()).toBe(false)
@@ -204,7 +211,8 @@ describe('Check behavior of UI components', () => {
       },
       mocks: {
         $teneoApi: mockTeneoApi,
-        $store: mockStore
+        $store: mockStore,
+        $t: jest.fn()
       }
     })
 
@@ -222,11 +230,11 @@ it('Renders Close Button inside Header, when showCloseButton is true.', async ()
       $store: {
         state: {'showCloseButton':true},
         getters: {}
-      }
+      },
+      $t: jest.jn()
     }
   });
   expect(wrapper.findComponent(MinimizeIcon).exists()).toBe(true)
   expect(wrapper.findComponent(XIcon).exists()).toBe(true)
 });
-
 })
