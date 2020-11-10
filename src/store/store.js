@@ -21,6 +21,7 @@ export const store = new Vuex.Store({
         launchIconUrl: "",
         sendIconUrl: "",
         locale: "",
+        storage: window.sessionStorage,
     },
     mutations: {
         visibility(state, newVisibility) {
@@ -99,6 +100,13 @@ export const store = new Vuex.Store({
             if (typeof newLocale === "string") {
                 state.locale = newLocale
             }
+        },
+        storage(state, newStorage) {
+            // TODO: Improve check for valid locale and throw error if locale is invalid
+            console.log(typeof newStorage)
+            if (typeof newStorage === "object") {
+                state.storage = newStorage
+            }
         }
     },
     getters: {
@@ -122,5 +130,6 @@ export const store = new Vuex.Store({
         engineUrlObj: state => {
             return { 'engineUrl' : state.teneoEngineUrl}
         },
+        storage: state => state.storage,
     }
 })

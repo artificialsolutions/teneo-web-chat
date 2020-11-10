@@ -39,6 +39,7 @@
             'launchIconUrl' :  '<%= process.env.LAUNCH_ICON_URL %>',
             'sendIconUrl' :  '<%= process.env.SEND_ICON_URL %>',
             'locale': '<%= process.env.LOCALE %>',
+            'storage' : window.localStorage,
           }
 
           window.TeneoWebChat.initialize(element, teneoProps);

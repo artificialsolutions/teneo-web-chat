@@ -92,6 +92,16 @@ window['TeneoWebChat'] = {
       }
     }
 
+    if (twcProps.locale) {
+      // TODO: error handling (once store thows error)
+      store.commit('locale',twcProps.locale);
+    }
+
+    if (twcProps.storage) {
+      // TODO: error handling (once store thows error)
+      store.commit('storage',twcProps.storage);
+    }
+
     // check required properties
     if (!store.getters.teneoEngineUrl) {
       // TODO: thow error if engine url is missing?
