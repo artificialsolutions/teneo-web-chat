@@ -17,7 +17,7 @@
     <div v-if="isCalloutVisible" class="twc-call-to-action">
       <div class="twc-call-to-action-button__close" @click="closeCallOut()"><CloseIcon class="twc-call-to-action-button__close-icon" aria-hidden="true"/></div>
       <div class="twc-call-to-action-message-box">
-        <p class="twc-call-to-action-message-text"  @click="open()">{{  calloutText }}</p>
+        <p class="twc-call-to-action-message-text"  @click="open()" v-html="sanitizedHtmlText"></p>
       </div>
     </div>
   </div>
@@ -31,6 +31,7 @@ import { EventBus, events } from '../utils/event-bus.js';
 import keyIsSpaceOrEnter from '../utils/is-space-or-enter.js';
 import { mapState } from 'vuex';
 import { store } from '../store/store.js';
+import sanitizeHtml from '../utils/sanitize-html.js';
 
 export default {
   components: {
@@ -55,6 +56,9 @@ export default {
     ...mapState([
         'launchIconUrl',
     ]),
+    sanitizedHtmlText() {
+      return sanitizeHtml(this.calloutText);
+    },
   },
   data() {
     return {
