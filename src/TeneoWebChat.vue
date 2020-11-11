@@ -255,6 +255,9 @@ export default {
   --sendicon-fg-color: var(--dark-fg-color);
   --launch-button-bg-color: var(--primary-color);
   --launchicon-fg-color: var(--light-fg-color);
+  --call-to-action-fg-color: var(--user-input-fg-color);
+  --call-to-action-bg-color: var(--light-fg-color);
+  --call-to-action-close-button-fg-color: var(--secondary-color);
   --header-bg-color: var(--primary-color);
   --header-fg-color: var(--light-fg-color);
   --chat-window-bg-color: #ffffff;
