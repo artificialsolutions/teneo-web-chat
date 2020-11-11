@@ -260,7 +260,7 @@ window['TeneoWebChat'] = {
         break
 
       case apiConstants.API_CALL_RESET_CHAT_WINDOW_TITLE:
-        store.commit('title',null)
+        store.commit('title',store.getters.initialTitle)
         break;
       
       case apiConstants.API_CALL_SET_CHAT_WINDOW_ICON:

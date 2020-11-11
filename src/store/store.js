@@ -8,6 +8,7 @@ Vue.use(Vuex)
 export const store = new Vuex.Store({
     state: {
         visibility: "minimized",
+        initialTitle: undefined,
         title: DEFAULT_TITLE,
         titleIconUrl: "",
         teneoEngineUrl: "",
@@ -27,7 +28,12 @@ export const store = new Vuex.Store({
             state.visibility = newVisibility
         },
         title(state, newTitle) {
-            state.title = newTitle
+            if (typeof newTitle === "string") {
+                if(state.initialTitle === undefined){
+                    state.initialTitle = newTitle
+                }
+                state.title = newTitle
+            }
         },
         titleIconUrl(state, newUrl) {
             // TODO: Throw error if url is invalid
@@ -104,6 +110,7 @@ export const store = new Vuex.Store({
     getters: {
         teneoEngineUrl: state => state.teneoEngineUrl,
         visibility: state => state.visibility,
+        initialTitle: state => state.initialTitle,
         title: state => state.title,
         titleIconUrl: state => state.titleIconUrl,
         teneoEngineParams: state => state.teneoEngineParams,
