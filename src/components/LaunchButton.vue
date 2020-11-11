@@ -1,21 +1,29 @@
 <template>
-  <button
-    class="twc-launch-button"
-    :class="{ 'twc-opened': isOpen, 'twc-closed': !isOpen && !isMinimized, 'twc-minimized': isMinimized}"
-    @click.prevent="isOpen ? close() : open()"
-    @keydown="handleReturnSpaceKeys"
-    tabindex="0"
-    :aria-roledescription="$t('message.launchbutton_aria_roledescription')"
-    :aria-label="$t('message.launchbutton_aria_label')"
-  >
-    <img v-if="launchIconUrl" class="twc-launch-button__open-icon" :src="launchIconUrl" aria-hidden="true" alt=""/>
-    <BubbleIcon v-else class="twc-launch-button__open-icon" id="default-launch-button-icon" aria-hidden="true"/>
-  </button>
+  <div >
+    <button
+      id="launchbutton"
+      class="twc-launch-button"
+      :class="{ 'twc-opened': isOpen, 'twc-closed': !isOpen && !isMinimized, 'twc-minimized': isMinimized}"
+      @click.prevent="isOpen ? close() : open()"
+      @keydown="handleReturnSpaceKeys"
+      tabindex="0"
+      :aria-roledescription="$t('message.launchbutton_aria_roledescription')"
+      :aria-label="$t('message.launchbutton_aria_label')"
+    >
+      <img v-if="launchIconUrl" class="twc-launch-button__open-icon" :src="launchIconUrl" aria-hidden="true" alt=""/>
+      <BubbleIcon v-else class="twc-launch-button__open-icon" id="default-launch-button-icon" aria-hidden="true"/>
+    </button>
+    <div v-if="isCalloutVisible" class="twc-callout">{{  calloutText }}</div>
+  </div>
+
+
 </template>
 <script>
 import BubbleIcon from '../icons/bubble.vue';
+import { EventBus, events } from '../utils/event-bus.js';
 import keyIsSpaceOrEnter from '../utils/is-space-or-enter.js';
 import { mapState } from 'vuex';
+import { store } from '../store/store.js';
 
 export default {
   components: {
@@ -40,6 +48,12 @@ export default {
         'launchIconUrl',
     ]),
   },
+  data() {
+    return {
+      isCalloutVisible: false,
+      calloutText: ''
+    };
+  },
   methods: {
     handleReturnSpaceKeys(event) {
       if (keyIsSpaceOrEnter(event)) {
@@ -47,10 +61,36 @@ export default {
         event.preventDefault();
       }
     },
+    isCalloutVisiblee(){
+      return this.isCalloutVisible;
+    }
   },
+  mounted() {
+
+
+    EventBus.$on(events.SHOW_CALLOUT, (payload) => {
+      this.isCalloutVisible = true;
+      this.calloutText = payload;
+      store.commit('calloutVisibility', this.isCalloutVisible);
+      store.commit('calloutText', payload)
+      console.log('CALLOUT Visibility: '+ store.getters.calloutVisibility)
+    });
+    EventBus.$on(events.HIDE_CALLOUT, () => {
+      this.isCalloutVisible = false;
+      store.commit('calloutVisibility', false);
+      console.log('CALLOUT Visibility: '+ store.getters.calloutVisibility)
+    });
+
+
+  }
 };
 </script>
 <style scoped>
+.twc-callout {
+  position: fixed;
+  right: 80px;
+  bottom: 90px;
+}
 .twc-launch-button {
   background-color: var(--launch-button-bg-color, #4e8cff);
   width: 60px;
