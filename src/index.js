@@ -271,7 +271,7 @@ window['TeneoWebChat'] = {
         break
 
       case apiConstants.API_CALL_RESET_CHAT_WINDOW_ICON:
-        store.commit('titleIconUrl',null);
+        store.commit('titleIconUrl',store.getters.initialTitleIconUrl);
         break
 
       case apiConstants.API_CALL_SET_LAUNCH_ICON:
@@ -282,7 +282,7 @@ window['TeneoWebChat'] = {
         break
 
       case apiConstants.API_CALL_RESET_LAUNCH_ICON:
-        store.commit('launchIconUrl',null);
+        store.commit('launchIconUrl', store.getters.initialLaunchIconUrl);
         break
         
       case apiConstants.API_CALL_SET_SEND_ICON:
@@ -293,7 +293,7 @@ window['TeneoWebChat'] = {
         break
 
       case apiConstants.API_CALL_RESET_SEND_ICON:
-        store.commit('sendIconUrl',null);
+        store.commit('sendIconUrl',store.getters.initialSendIconUrl);
         break
 
       case apiConstants.API_CALL_DISABLE_USERINPUT:

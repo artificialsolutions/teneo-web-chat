@@ -13,10 +13,22 @@
 
   <body>
     <button onclick="TeneoWebChat.call('reset')">Reset Chat</button><br>
-
-    <button onclick="TeneoWebChat.call('set_chat_window_title', 'This is the 1nd title')">Reset Window Title</button><br>
-    <button onclick="TeneoWebChat.call('set_chat_window_title', 'This is the 2nd title')">Reset Window Title</button><br>
+    <br>
+    <button onclick="TeneoWebChat.call('set_chat_window_title', 'This is the 1nd title')">Set Title 1</button><br>
+    <button onclick="TeneoWebChat.call('set_chat_window_title', 'This is the 2nd title')">SetTitle 2</button><br>
     <button onclick="TeneoWebChat.call('reset_chat_window_title')">Reset Window Title</button><br>
+    <br>
+    <button onclick="TeneoWebChat.call('set_chat_window_icon', 'https://cdn3.iconfinder.com/data/icons/star-wars-color/175/boba-fett-256.png')">Set Window Icon 1</button><br>
+    <button onclick="TeneoWebChat.call('set_chat_window_icon', 'https://cdn3.iconfinder.com/data/icons/star-wars-color/205/clone-trooper-256.png')">Set Window Icon 2</button><br>
+    <button onclick="TeneoWebChat.call('reset_chat_window_icon')">Reset Window Icon</button><br>
+    <br>
+    <button onclick="TeneoWebChat.call('set_launch_icon', 'https://cdn0.iconfinder.com/data/icons/streamline-emoji-1/48/093-robot-face-2-512.png')">Set LAUNCH Icon 1</button><br>
+    <button onclick="TeneoWebChat.call('set_launch_icon', 'https://cdn0.iconfinder.com/data/icons/streamline-emoji-1/48/092-robot-face-1-256.png')">Set LAUNCH Icon 2</button><br>
+    <button onclick="TeneoWebChat.call('reset_launch_icon')">Reset LAUNCH Icon</button><br>
+    <br>
+    <button onclick="TeneoWebChat.call('set_send_icon', 'https://cdn4.iconfinder.com/data/icons/basic-ui-2-line/32/paper-plane-craft-send-go-start-512.png')">Set SEND Icon 1</button><br>
+    <button onclick="TeneoWebChat.call('set_send_icon', 'https://cdn3.iconfinder.com/data/icons/faticons/32/send-01-256.png')">Set SEND Icon 2</button><br>
+    <button onclick="TeneoWebChat.call('reset_send_icon')">Reset SEND Icon</button><br>
 
     <script src="teneo-web-chat.js"></script> <!-- needed for Heroku -->
     <div id="teneo-web-chat"></div>

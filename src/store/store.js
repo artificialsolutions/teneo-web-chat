@@ -7,8 +7,11 @@ Vue.use(Vuex)
 
 export const store = new Vuex.Store({
     state: {
-        visibility: "minimized",
         initialTitle: undefined,
+        initialTitleIconUrl: undefined,
+        initialLaunchIconUrl: undefined,
+        initialSendIconUrl: undefined,
+        visibility: "minimized",
         title: DEFAULT_TITLE,
         titleIconUrl: "",
         teneoEngineUrl: "",
@@ -38,6 +41,9 @@ export const store = new Vuex.Store({
         titleIconUrl(state, newUrl) {
             // TODO: Throw error if url is invalid
             if (isValidUrl(newUrl)) {
+                if(state.initialTitleIconUrl === undefined){
+                    state.initialTitleIconUrl = newUrl
+                }
                 state.titleIconUrl = newUrl
             }
         },
@@ -91,12 +97,18 @@ export const store = new Vuex.Store({
         launchIconUrl(state, newUrl) {
             // TODO: Throw error if url is invalid
             if (isValidUrl(newUrl)) {
+                if(state.initialLaunchIconUrl === undefined){
+                    state.initialLaunchIconUrl = newUrl
+                }
                 state.launchIconUrl = newUrl
             }
         },
         sendIconUrl(state, newUrl) {
             // TODO: Throw error if url is invalid
             if (isValidUrl(newUrl)) {
+                if(state.initialSendIconUrl === undefined){
+                    state.initialSendIconUrl = newUrl
+                }
                 state.sendIconUrl = newUrl
             }
         },
@@ -111,6 +123,9 @@ export const store = new Vuex.Store({
         teneoEngineUrl: state => state.teneoEngineUrl,
         visibility: state => state.visibility,
         initialTitle: state => state.initialTitle,
+        initialTitleIconUrl: state => state.initialTitleIconUrl,
+        initialLaunchIconUrl: state => state.initialLaunchIconUrl,
+        initialSendIconUrl: state => state.initialSendIconUrl,
         title: state => state.title,
         titleIconUrl: state => state.titleIconUrl,
         teneoEngineParams: state => state.teneoEngineParams,
