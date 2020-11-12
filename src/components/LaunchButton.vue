@@ -1,9 +1,9 @@
 <template>
   <div>
     <button
-      id="launchbutton"
+      id="twc-launchbutton"
       class="twc-launch-button"
-      :class="{ 'twc-opened': isOpen, 'twc-closed': !isOpen && !isMinimized, 'twc-minimized': isMinimized, 'twc-has-call-to-action' : isCalloutVisible}"
+      :class="{ 'twc-opened': isOpen, 'twc-closed': !isOpen && !isMinimized, 'twc-minimized': isMinimized, 'twc-has-callout' : isCalloutVisible}"
       @click.prevent="isOpen ? close() : open()"
       @keydown="handleReturnSpaceKeys"
       tabindex="0"
@@ -14,10 +14,10 @@
       <BubbleIcon v-else class="twc-launch-button__open-icon" id="default-launch-button-icon" aria-hidden="true"/>
     </button>
 
-    <div v-if="isCalloutVisible" class="twc-call-to-action">
-      <div class="twc-call-to-action-button__close" @click="closeCallOut()"><CloseIcon class="twc-call-to-action-button__close-icon" aria-hidden="true"/></div>
-      <div class="twc-call-to-action-message-box">
-        <p class="twc-call-to-action-message-text"  @click="open()" v-html="sanitizedHtmlText"></p>
+    <div v-if="isCalloutVisible" class="twc-callout">
+      <div class="twc-callout-button__close" @click="closeCallOut()"><CloseIcon class="twc-callout-button__close-icon" aria-hidden="true"/></div>
+      <div class="twc-callout-message-box">
+        <p class="twc-callout-message-text"  @click="open()" v-html="sanitizedHtmlText"></p>
       </div>
     </div>
   </div>
@@ -137,12 +137,12 @@ export default {
   transform: scale(1.1);
 }
 
-.twc-launch-button.twc-has-call-to-action {
+.twc-launch-button.twc-has-callout {
   box-sizing: border-box;
   box-shadow: 0 2px 10px 0 rgba(0, 0, 0, 0.15);
 }
 
-.twc-call-to-action {
+.twc-callout {
   position: fixed;
   right: 25px;
   bottom: 98px;
@@ -152,7 +152,7 @@ export default {
   flex-direction: column;
 }
 
-.twc-call-to-action-message-box {
+.twc-callout-message-box {
   box-shadow: 0 2px 10px 0 rgba(0, 0, 0, 0.15);
   background-color: var(--call-to-action-bg-color, #ffffff);
   transition: 0.3s ease-in-out;
@@ -163,7 +163,7 @@ export default {
   animation: twc-fade-in 0.3s cubic-bezier(0.390, 0.575, 0.565, 1.000) both;
 }
 
-.twc-call-to-action-message-text {
+.twc-callout-message-text {
   color: var(--call-to-action-fg-color, #263238);
   font-family: var(--primary-font, 'Helvetica Neue', Helvetica, Arial, sans-serif);
   padding: 16px;
@@ -174,7 +174,7 @@ export default {
   margin: 0;
 }
 
-.twc-call-to-action-button__close {
+.twc-callout-button__close {
   margin-left: auto;
   margin-right: -6px;
   width: 32px;
@@ -185,11 +185,11 @@ export default {
   transition: opacity 0.3s linear;
 }
 
-.twc-call-to-action-button__close-icon {
+.twc-callout-button__close-icon {
   color: var(--call-to-action-close-button-fg-color, #6c757d);
 }
 
-.twc-call-to-action:hover .twc-call-to-action-button__close {
+.twc-callout:hover .twc-callout-button__close {
   opacity: 1;
   visibility: visible;
   display: flex;
