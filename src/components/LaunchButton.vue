@@ -154,7 +154,7 @@ export default {
 
 .twc-callout-message-box {
   box-shadow: 0 2px 10px 0 rgba(0, 0, 0, 0.15);
-  background-color: var(--call-to-action-bg-color, #ffffff);
+  background-color: var(--callout-bg-color, #ffffff);
   transition: 0.3s ease-in-out;
   border-radius: 10px;
   cursor: pointer;
@@ -164,7 +164,7 @@ export default {
 }
 
 .twc-callout-message-text {
-  color: var(--call-to-action-fg-color, #263238);
+  color: var(--callout-fg-color, #263238);
   font-family: var(--primary-font, 'Helvetica Neue', Helvetica, Arial, sans-serif);
   padding: 16px;
   border-radius: 10px;
@@ -186,7 +186,7 @@ export default {
 }
 
 .twc-callout-button__close-icon {
-  color: var(--call-to-action-close-button-fg-color, #6c757d);
+  color: var(--callout-close-button-fg-color, #6c757d);
 }
 
 .twc-callout:hover .twc-callout-button__close {
