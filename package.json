@@ -54,7 +54,6 @@
     "precss": "^4.0.0",
     "prettier": "^2.1.2",
     "style-loader": "^1.2.1",
-    "vue-concise-slider": "^3.4.4",
     "vue-debounce": "^2.5.7",
     "vue-i18n": "^8.22.1",
     "vue-loader": "^15.9.2",
