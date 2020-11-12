@@ -77,7 +77,7 @@ export default {
   text-align: center;
 }
 
-.twc-typing-message  .twc-spinner > div {
+.twc-typing-message .twc-spinner > div {
   width: 6px;
   height: 6px;
   background-color: var(--light-fg-color, #ffffff);
@@ -85,10 +85,6 @@ export default {
   display: inline-block;
   -webkit-animation: twc-sk-bouncedelay 1.4s infinite ease-in-out both;
   animation: twc-sk-bouncedelay 1.4s infinite ease-in-out both;
-}
-
-.twc-message.twc-bot .twc-typing-message .twc-spinner > div {
-  background-color: var(--secondary-color, #6c757d);
 }
 
 .twc-typing-message .twc-spinner .twc-bounce1 {
@@ -142,21 +138,33 @@ _:-ms-fullscreen, :root .twc-message.twc-bot .twc-text-message-wrapper {
   line-height: 1.4;
 }
 .twc-message.twc-bot .twc-typing-message {
-  background-color: var(--bot-message-bg-color, #eceff1);
+  background-color: var(--bot-typing-indicator-bg-color, #eceff1);
   margin-right: 40px;
   border-bottom-left-radius: 0px;
+}
+
+.twc-message.twc-bot .twc-typing-message .twc-spinner > div {
+  background-color: var(--bot-typing-indicator-fg-color, #6c757d);
 }
 
 .twc-message.twc-agent .twc-typing-message {
-  background-color: var(--agent-message-bg-color, #47b2fd);
+  background-color: var(--agent-typing-indicator-bg-color, #47b2fd);
   margin-right: 40px;
   border-bottom-left-radius: 0px;
 }
 
+.twc-message.twc-agent .twc-typing-message .twc-spinner > div {
+  background-color: var(--agent-typing-indicator-fg-color, #ffffff);
+}
+
 .twc-message.twc-user .twc-typing-message {
-  background: var(--user-message-bg-color, #4e8cff);
+  background: var(--user-typing-indicator-bg-color, #4e8cff);
   word-wrap: break-word;
   border-bottom-right-radius: 0px;
+}
+
+.twc-message.twc-user .twc-typing-message .twc-spinner > div {
+  background-color: var(--user-typing-indicator-fg-color, #ffffff);
 }
 
 </style>

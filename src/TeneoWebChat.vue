@@ -265,8 +265,14 @@ export default {
   --bot-message-bg-color: var(--light-bg-color);
   --agent-message-fg-color: var(--light-fg-color);
   --agent-message-bg-color: #47b2fd;
-  --user-message-bg-color: var(--primary-color);
   --user-message-fg-color: var(--light-fg-color);
+  --user-message-bg-color: var(--primary-color);
+  --bot-typing-indicator-fg-color: var(--secondary-color);
+  --bot-typing-indicator-bg-color: var(--bot-message-bg-color);
+  --agent-typing-indicator-fg-color: var(--agent-message-fg-color);
+  --agent-typing-indicator-bg-color: var(--agent-message-bg-color);
+  --user-typing-indicator-fg-color: var(--user-message-fg-color);
+  --user-typing-indicator-bg-color: var(--user-message-bg-color);
   --buttons-title-color: var(--dark-fg-color);
   --button-fg-color: var(--light-fg-color);
   --button-bg-color: var(--primary-color);

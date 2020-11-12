@@ -57,20 +57,6 @@
             'launchIconUrl' :  '<%= process.env.LAUNCH_ICON_URL %>',
             'sendIconUrl' :  '<%= process.env.SEND_ICON_URL %>',
             'locale': '<%= process.env.LOCALE %>',
-            'customLocalizations':  {
-                'zh': {
-                  'message': {
-                    'launchbutton_aria_label': 'Knock knock',
-                    'input_area_userinput_field_placeholder': 'Funky type here...'
-                  }
-                },
-                'nl-BE': {
-                  'message': {
-                    'launchbutton_aria_label': 'Knock knock',
-                    'input_area_userinput_field_placeholder': 'Belg...'
-                  }
-                }
-              }
           }
 
           window.TeneoWebChat.initialize(element, teneoProps);

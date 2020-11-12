@@ -1,3 +1,10 @@
+# v3.3.0
+## 9-11-2020
+* New: UI can be configured in multiple langauges
+* New: Added option to add custom translations
+* Accessibility improvements
+* Minor bugfixes
+
 # v3.2.0
 ## 27-10-2020
 * New message type: [Link buttons](https://developers.artificial-solutions.com/engine/teneo-web-chat#link-buttons)

@@ -1,18 +1,35 @@
 export var translatedMessages = {
+  da: {
+    message: {
+      launchbutton_aria_label: 'Åbn chat',
+      launchbutton_aria_roledescription: 'Snak med en digital assistent',
+      chat_window_group_aria_label: 'Chatvindue',
+      header_minimize_button_aria_label: 'Minimér chatvindue',
+      header_minimize_button_title: 'Minimér chatvindue',
+      header_close_button_aria_label: 'Luk chatvindue',
+      header_close_button_title: 'Luk chatvindue',
+      chat_window_spinner_aria_valuetext: 'Venter på svar',
+      input_area_userinput_field_aria_label: 'Indtastningsfelt for besked',
+      input_area_userinput_field_placeholder: 'Skriv din besked her...',
+      input_area_send_button_aria_label: 'Send besked',
+      input_area_send_button_title: 'Send besked',
+      message_typing_indicator: 'Skriver...'
+    }
+  },
   de: {
     message: {
-      launchbutton_aria_label: 'Offnë Chat',
-      launchbutton_aria_roledescription: 'Mit einem digitalen Assistant chatten',
+      launchbutton_aria_label: 'Öffne Chat',
+      launchbutton_aria_roledescription: 'Mit einem digitalen Assistenten chatten',
       chat_window_group_aria_label: 'Chatfenster',
-      header_minimize_button_aria_label: 'Chatfenster minimisieren',
-      header_minimize_button_title: 'Chatfenster minimisieren',
+      header_minimize_button_aria_label: 'Chatfenster minimieren',
+      header_minimize_button_title: 'Chatfenster minimieren',
       header_close_button_aria_label: 'Chatfenster schließen',
       header_close_button_title: 'Chatfenster schließen',
       chat_window_spinner_aria_valuetext: 'Auf Antwort warten',
-      input_area_userinput_field_aria_label: 'Message-Eingabefeld',
+      input_area_userinput_field_aria_label: 'Eingabefeld',
       input_area_userinput_field_placeholder: 'Bitte hier schreiben...',
-      input_area_send_button_aria_label: 'Message senden',
-      input_area_send_button_title: 'Message senden',
+      input_area_send_button_aria_label: 'Text senden',
+      input_area_send_button_title: 'Text senden',
       message_typing_indicator: 'Schreibt...'
     }
   },
@@ -67,6 +84,23 @@ export var translatedMessages = {
       message_typing_indicator: 'Escribiendo...'
     }
   },
+  fr: {
+    message: {
+      launchbutton_aria_label: 'Ouvrir chat',
+      launchbutton_aria_roledescription: 'Chatter avec un assistant digital',
+      chat_window_group_aria_label: 'Fenêtre de chat',
+      header_minimize_button_aria_label: 'Reduire la fenêtre de chat',
+      header_minimize_button_title: 'Reduire la fenêtre de chat',
+      header_close_button_aria_label: 'Fermer la fenêtre de chat',
+      header_close_button_title: 'Fermer la fenêtre de chat',
+      chat_window_spinner_aria_valuetext: 'Attendre une réponse',
+      input_area_userinput_field_aria_label: 'Champ de saisie',
+      input_area_userinput_field_placeholder: 'Ecrivez ici, svp.',
+      input_area_send_button_aria_label: 'Envoyer message',
+      input_area_send_button_title: 'Envoyer message',
+      message_typing_indicator: 'En train d\'écrire...'
+    }
+  },
   id: {
     message: {
       launchbutton_aria_label: 'Buka percakapan',
@@ -82,6 +116,23 @@ export var translatedMessages = {
       input_area_send_button_aria_label: 'Kirim pesan',
       input_area_send_button_title: 'Kirim pesan',
       message_typing_indicator: 'Mengetik...'
+    }
+  },
+  it: {
+    message: {
+      launchbutton_aria_label: 'Apri chat',
+      launchbutton_aria_roledescription: 'Parla con un assistente digitale',
+      chat_window_group_aria_label: 'Finestra chat',
+      header_minimize_button_aria_label: 'Minimizza finestra chat',
+      header_minimize_button_title: 'Minimizza finestra chat',
+      header_close_button_aria_label: 'Chiudi finestra chat',
+      header_close_button_title: 'Chiudi finestra chat',
+      chat_window_spinner_aria_valuetext: 'Aspettando risposta',
+      input_area_userinput_field_aria_label: 'Campo di input messaggio',
+      input_area_userinput_field_placeholder: 'Inizia a digitare...',
+      input_area_send_button_aria_label: 'Invia messaggio',
+      input_area_send_button_title: 'Invia messaggio',
+      message_typing_indicator: 'Scrivendo...'
     }
   },
   ja: {
@@ -184,6 +235,40 @@ export var translatedMessages = {
       input_area_send_button_aria_label: 'Mesaj gönder',
       input_area_send_button_title: 'Mesaj gönder',
       message_typing_indicator: 'Yazıyor...'
+    }
+  },
+  'zh-CN': {
+    message: {
+      launchbutton_aria_label: '打开聊天窗口',
+      launchbutton_aria_roledescription: '和聊天机器人对话',
+      chat_window_group_aria_label: '聊天窗口',
+      header_minimize_button_aria_label: '聊天窗口最小化',
+      header_minimize_button_title: '聊天窗口最小化',
+      header_close_button_aria_label: '关闭聊天窗口',
+      header_close_button_title: '关闭聊天窗口',
+      chat_window_spinner_aria_valuetext: '等待聊天机器人回复',
+      input_area_userinput_field_aria_label: '输入框',
+      input_area_userinput_field_placeholder: '请在此输入...',
+      input_area_send_button_aria_label: '发送',
+      input_area_send_button_title: '发送',
+      message_typing_indicator: '正在输入...'
+    }
+  },
+  'zh-TW': {
+    message: {
+      launchbutton_aria_label: '開啟聊天視窗',
+      launchbutton_aria_roledescription: '和聊天機器人對話',
+      chat_window_group_aria_label: '聊天視窗',
+      header_minimize_button_aria_label: '聊天視窗最小化',
+      header_minimize_button_title: '聊天視窗最小化',
+      header_close_button_aria_label: '關閉聊天視窗',
+      header_close_button_title: '關閉聊天視窗',
+      chat_window_spinner_aria_valuetext: '等候聊天機器人回覆',
+      input_area_userinput_field_aria_label: '輸入框',
+      input_area_userinput_field_placeholder: '請在此輸入...',
+      input_area_send_button_aria_label: '發送',
+      input_area_send_button_title: '發送',
+      message_typing_indicator: '正在輸入...'
     }
   },
 };
