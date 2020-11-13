@@ -28,11 +28,17 @@ window['TeneoWebChat'] = {
     }
     if (twcProps.title) {
       // TODO: Check if title is a string
+      console.log('env.HEADER_TITLE: '+twcProps.title)
       store.commit('title',twcProps.title);
+      store.commit('initialTitle',store.getters.title)
+    }
+    else{
+      console.log('env.HEADER_TITLE MISSING')
     }
     if (twcProps.titleIconUrl) {
       // TODO: error handling (once store thows error)
       store.commit('titleIconUrl',twcProps.titleIconUrl);
+      store.commit('initialTitleIconUrl',store.getters.titleIconUrl)
     }
     if (twcProps.teneoEngineParams) {
       // TODO: Check if twcProps.teneoEngineParams is a map
@@ -70,11 +76,13 @@ window['TeneoWebChat'] = {
     if (twcProps.launchIconUrl) {
       // TODO: error handling (once store thows error)
       store.commit('launchIconUrl',twcProps.launchIconUrl);
+      store.commit('initialLaunchIconUrl',store.getters.launchIconUrl)
     }
 
     if (twcProps.sendIconUrl) {
       // TODO: error handling (once store thows error)
       store.commit('sendIconUrl',twcProps.sendIconUrl);
+      store.commit('initialSendIconUrl',store.getters.sendIconUrl)
     }
 
     if (twcProps.locale) {

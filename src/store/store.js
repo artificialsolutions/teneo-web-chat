@@ -32,18 +32,32 @@ export const store = new Vuex.Store({
         },
         title(state, newTitle) {
             if (typeof newTitle === "string") {
-                if(state.initialTitle === undefined){
-                    state.initialTitle = newTitle
-                }
                 state.title = newTitle
+            }
+        },
+        initialLaunchIconUrl(state, newUrl){
+            if (isValidUrl(newUrl)) {
+                state.initialLaunchIconUrl = newUrl
+            }
+        },
+        initialSendIconUrl(state, newUrl){
+            if (isValidUrl(newUrl)) {
+                state.initialSendIconUrl = newUrl
+            }
+        },
+        initialTitle(state, title){
+            if (typeof title === 'string') {
+                state.initialTitle = title
+            }
+        },
+        initialTitleIconUrl(state, newUrl){
+            if (isValidUrl(newUrl)) {
+                state.initialTitleIconUrl = newUrl
             }
         },
         titleIconUrl(state, newUrl) {
             // TODO: Throw error if url is invalid
             if (isValidUrl(newUrl)) {
-                if(state.initialTitleIconUrl === undefined){
-                    state.initialTitleIconUrl = newUrl
-                }
                 state.titleIconUrl = newUrl
             }
         },
@@ -97,18 +111,12 @@ export const store = new Vuex.Store({
         launchIconUrl(state, newUrl) {
             // TODO: Throw error if url is invalid
             if (isValidUrl(newUrl)) {
-                if(state.initialLaunchIconUrl === undefined){
-                    state.initialLaunchIconUrl = newUrl
-                }
                 state.launchIconUrl = newUrl
             }
         },
         sendIconUrl(state, newUrl) {
             // TODO: Throw error if url is invalid
             if (isValidUrl(newUrl)) {
-                if(state.initialSendIconUrl === undefined){
-                    state.initialSendIconUrl = newUrl
-                }
                 state.sendIconUrl = newUrl
             }
         },
