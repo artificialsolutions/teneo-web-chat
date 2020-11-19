@@ -1,5 +1,5 @@
 <template>
-  <div class="teneo-web-chat">
+  <div class="teneo-web-chat" id="teneo-web-chat">
     <ChatWindow
       id="twc-chat-window" 
       v-if="isChatOpen"
