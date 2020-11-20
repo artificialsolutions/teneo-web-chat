@@ -292,6 +292,12 @@ export default {
   --quickreply-expired-color: var(--expired-color);
 
   --primary-font: 'Helvetica Neue', Helvetica, Arial, sans-serif;
-  font: -apple-system-body;
+}
+
+@supports (-webkit-touch-callout: none) {
+  /* CSS specific to iOS devices */ 
+  .teneo-web-chat {
+    font: -apple-system-body;
+  }
 }
 </style>
