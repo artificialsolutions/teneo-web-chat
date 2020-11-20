@@ -1,6 +1,6 @@
 import Vue from 'vue';
 import Vuex from 'vuex';
-import { DEFAULT_TITLE } from '../utils/constants.js';
+import { DEFAULT_TITLE, FALLBACK_LOCALE } from '../utils/constants.js';
 import isValidUrl from '../utils/validate-url';
 
 Vue.use(Vuex)
@@ -26,7 +26,7 @@ export const store = new Vuex.Store({
         closeIconUrl: "",
         launchIconUrl: "",
         sendIconUrl: "",
-        locale: "",
+        locale: FALLBACK_LOCALE,
         storage: window.sessionStorage,
     },
     mutations: {

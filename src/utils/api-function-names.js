@@ -30,6 +30,7 @@ export const API_GET_STATE = "state";
 export const API_GET_CHAT_HISTORY = "chat_history";
 export const API_GET_ENGINE_URL = "engine_url";
 export const API_GET_STORAGE = "storage";
+export const API_GET_LOCALE = "locale";
 
 // api callacks
 export const API_ON_READY = "ready";
