@@ -86,12 +86,10 @@ export default {
       this.calloutText = payload;
       store.commit('calloutVisibility', this.isCalloutVisible);
       store.commit('calloutText', payload)
-      console.log('CALLOUT Visibility: '+ store.getters.calloutVisibility)
     });
     EventBus.$on(events.HIDE_CALLOUT, () => {
       this.isCalloutVisible = false;
       store.commit('calloutVisibility', false);
-      console.log('CALLOUT Visibility: '+ store.getters.calloutVisibility)
     });
   }
 };

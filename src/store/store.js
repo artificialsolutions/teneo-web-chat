@@ -141,7 +141,6 @@ export const store = new Vuex.Store({
         },
         storage(state, newStorage) {
             // TODO: Improve check for valid locale and throw error if locale is invalid
-            console.log(typeof newStorage)
             if (typeof newStorage === "object") {
                 state.storage = newStorage
             }
