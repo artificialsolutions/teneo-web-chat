@@ -96,6 +96,16 @@ window['TeneoWebChat'] = {
       }
     }
 
+    if (twcProps.locale) {
+      // TODO: error handling (once store thows error)
+      store.commit('locale',twcProps.locale);
+    }
+
+    if (twcProps.storage) {
+      // TODO: error handling (once store thows error)
+      store.commit('storage',twcProps.storage);
+    }
+
     // check required properties
     if (!store.getters.teneoEngineUrl) {
       // TODO: thow error if engine url is missing?
@@ -180,6 +190,9 @@ window['TeneoWebChat'] = {
       
       case apiConstants.API_GET_ENGINE_URL:
         return store.getters.engineUrlObj;
+      
+      case apiConstants.API_GET_STORAGE:
+        return store.getters.storage;
             
       default:
         break
