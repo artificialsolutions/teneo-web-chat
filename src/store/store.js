@@ -7,6 +7,8 @@ Vue.use(Vuex)
 
 export const store = new Vuex.Store({
     state: {
+        calloutVisibility: false,
+        calloutText: "Teneo Web Chat",
         visibility: "minimized",
         title: DEFAULT_TITLE,
         titleIconUrl: "",
@@ -23,6 +25,12 @@ export const store = new Vuex.Store({
         locale: "",
     },
     mutations: {
+        calloutVisibility(state, newVisibility) {
+            state.calloutVisibility = newVisibility
+        },
+        calloutText(state, newText) {
+            state.calloutText = newText
+        },
         visibility(state, newVisibility) {
             state.visibility = newVisibility
         },
@@ -102,6 +110,8 @@ export const store = new Vuex.Store({
         }
     },
     getters: {
+        calloutVisibility: state => state.calloutVisibility,
+        calloutText: state => state.calloutText,
         teneoEngineUrl: state => state.teneoEngineUrl,
         visibility: state => state.visibility,
         title: state => state.title,

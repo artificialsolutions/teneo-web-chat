@@ -13,6 +13,24 @@
 
   <body>
     <button onclick="TeneoWebChat.call('reset')">Reset Chat</button><br>
+    <button onclick="TeneoWebChat.call('set_locale','de')">Deutsch</button><br>
+    <button onclick="TeneoWebChat.call('set_locale','es')">Castellano</button><br>
+    <button onclick="TeneoWebChat.call('set_locale','en')">English</button><br>
+    <button onclick="TeneoWebChat.call('set_locale','nl')">Nederlands</button><br>
+    <button onclick="TeneoWebChat.call('set_locale','sv')">Svenska</button><br>
+    <button onclick="TeneoWebChat.call('set_locale','tr')">Turkish</button><br>
+    <button onclick="TeneoWebChat.call('set_locale','id')">Indonesian</button><br>
+    <button onclick="TeneoWebChat.call('set_locale','ms')">Malay</button><br>
+    <button onclick="TeneoWebChat.call('set_locale','en-GB')">en-GB fallback test</button><br>
+    <button onclick="TeneoWebChat.call('set_locale','nl-BE')">nl-BE fallback test</button><br>
+    <button onclick="TeneoWebChat.call('set_locale','fr-GA')">fr-GA fallback test</button><br>
+    <button onclick="TeneoWebChat.call('set_locale','zh')">zh locale test</button><br>
+    <button onclick="TeneoWebChat.call('set_locale','xx')">xx locale test</button><br>
+    <button onclick="TeneoWebChat.call('set_locale',true)">boolean locale test</button><br>
+    <button onclick="TeneoWebChat.call('show_typing_indicator', {'author': 'agent'})">Typing indicator</button><br>
+    <br>
+    <button onclick="TeneoWebChat.call('show_callout','👋 Hi there! I am a callout message. Click me to open the <strong>chat window</strong>!')">Show Callout</button><br>
+    <button onclick="TeneoWebChat.call('hide_callout')">Hide Callout</button><br>
 
     <script src="teneo-web-chat.js"></script> <!-- needed for Heroku -->
     <div id="teneo-web-chat"></div>
