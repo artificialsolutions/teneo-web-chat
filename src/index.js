@@ -189,9 +189,11 @@ window['TeneoWebChat'] = {
           EventBus.$emit(events.SHOW_CALLOUT, payload)
         }
         break;
+        
       case apiConstants.API_CALL_HIDE_CALLOUT:
         EventBus.$emit(events.HIDE_CALLOUT)
         break;
+
       case apiConstants.API_SET_LOCALE:
         // TODO: throw error if payload is invalid or if store throws error
         store.commit('locale',payload);
