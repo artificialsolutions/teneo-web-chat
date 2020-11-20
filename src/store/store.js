@@ -7,7 +7,7 @@ Vue.use(Vuex)
 
 export const store = new Vuex.Store({
     state: {
-        initialTitle: undefined,
+        initialTitle: DEFAULT_TITLE,
         initialTitleIconUrl: undefined,
         initialLaunchIconUrl: undefined,
         initialSendIconUrl: undefined,
@@ -30,29 +30,21 @@ export const store = new Vuex.Store({
         visibility(state, newVisibility) {
             state.visibility = newVisibility
         },
+        initialTitle(state, title){
+            if (typeof title === 'string') {
+                state.initialTitle = title
+                state.title = title
+            }
+        },
         title(state, newTitle) {
             if (typeof newTitle === "string") {
                 state.title = newTitle
             }
         },
-        initialLaunchIconUrl(state, newUrl){
-            if (isValidUrl(newUrl)) {
-                state.initialLaunchIconUrl = newUrl
-            }
-        },
-        initialSendIconUrl(state, newUrl){
-            if (isValidUrl(newUrl)) {
-                state.initialSendIconUrl = newUrl
-            }
-        },
-        initialTitle(state, title){
-            if (typeof title === 'string') {
-                state.initialTitle = title
-            }
-        },
         initialTitleIconUrl(state, newUrl){
             if (isValidUrl(newUrl)) {
                 state.initialTitleIconUrl = newUrl
+                state.titleIconUrl = newUrl
             }
         },
         titleIconUrl(state, newUrl) {
@@ -108,10 +100,22 @@ export const store = new Vuex.Store({
                 state.closeIconUrl = newUrl
             }
         },
+        initialLaunchIconUrl(state, newUrl){
+            if (isValidUrl(newUrl)) {
+                state.initialLaunchIconUrl = newUrl
+                state.launchIconUrl = newUrl
+            }
+        },
         launchIconUrl(state, newUrl) {
             // TODO: Throw error if url is invalid
             if (isValidUrl(newUrl)) {
                 state.launchIconUrl = newUrl
+            }
+        },
+        initialSendIconUrl(state, newUrl){
+            if (isValidUrl(newUrl)) {
+                state.initialSendIconUrl = newUrl
+                state.sendIconUrl = newUrl
             }
         },
         sendIconUrl(state, newUrl) {
@@ -144,7 +148,13 @@ export const store = new Vuex.Store({
         minimizeIconUrl: state => state.minimizeIconUrl,
         closeIconUrl: state => state.closeIconUrl,
         launchIconUrl: state => state.launchIconUrl,
-        sendIconUrl: state => state.sendIconUrl,
+        sendIconUrl: state => {
+            if (state.sendIconUrl) {
+                return state.sendIconUrl
+            } else {
+                return state.initialSendIconUrl
+            }
+        },
         locale: state => state.locale,
         state: state => {
             return { 'visibility': state.visibility }
