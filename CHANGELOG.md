@@ -3,6 +3,7 @@
 * Added new api to add a callout message to the launch button to catch the web visitor's attention
 * When icons and window title are reset using the api, reset to init value instead of teneo web chat default value
 * Added config option to allow use of localStorage instead of sessionStorage
+* Added api to get locale
 * Use dedicated css variables for typing indicators
 * Use Chinese Traditional if locale is set to just 'cn'
 * Added id's to teneo web chat container and send icon
