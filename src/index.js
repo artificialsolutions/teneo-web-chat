@@ -26,18 +26,22 @@ window['TeneoWebChat'] = {
       // TODO: error handling (once store thows error)
       store.commit('teneoEngineUrl',twcProps.teneoEngineUrl);
     }
+    
     if (twcProps.title) {
       // TODO: Check if title is a string
-      store.commit('title',twcProps.title);
+      store.commit('initialTitle',twcProps.title)
     }
+
     if (twcProps.titleIconUrl) {
       // TODO: error handling (once store thows error)
-      store.commit('titleIconUrl',twcProps.titleIconUrl);
+      store.commit('initialTitleIconUrl',twcProps.titleIconUrl);
     }
+
     if (twcProps.teneoEngineParams) {
       // TODO: Check if twcProps.teneoEngineParams is a map
       store.commit('teneoEngineParams',twcProps.teneoEngineParams);
     }
+
     if (twcProps.showCloseButton === true || twcProps.showCloseButton === "true") {
       store.commit('showCloseButton',true);
     }
@@ -69,12 +73,12 @@ window['TeneoWebChat'] = {
 
     if (twcProps.launchIconUrl) {
       // TODO: error handling (once store thows error)
-      store.commit('launchIconUrl',twcProps.launchIconUrl);
+      store.commit('initialLaunchIconUrl',twcProps.launchIconUrl);
     }
 
     if (twcProps.sendIconUrl) {
       // TODO: error handling (once store thows error)
-      store.commit('sendIconUrl',twcProps.sendIconUrl);
+      store.commit('initialSendIconUrl',twcProps.sendIconUrl);
     }
 
     if (twcProps.locale) {
@@ -270,7 +274,7 @@ window['TeneoWebChat'] = {
         break
 
       case apiConstants.API_CALL_RESET_CHAT_WINDOW_TITLE:
-        store.commit('title',null)
+        store.commit('title',store.getters.initialTitle)
         break;
       
       case apiConstants.API_CALL_SET_CHAT_WINDOW_ICON:
@@ -281,7 +285,7 @@ window['TeneoWebChat'] = {
         break
 
       case apiConstants.API_CALL_RESET_CHAT_WINDOW_ICON:
-        store.commit('titleIconUrl',null);
+        store.commit('titleIconUrl',store.getters.initialTitleIconUrl);
         break
 
       case apiConstants.API_CALL_SET_LAUNCH_ICON:
@@ -292,7 +296,7 @@ window['TeneoWebChat'] = {
         break
 
       case apiConstants.API_CALL_RESET_LAUNCH_ICON:
-        store.commit('launchIconUrl',null);
+        store.commit('launchIconUrl', store.getters.initialLaunchIconUrl);
         break
         
       case apiConstants.API_CALL_SET_SEND_ICON:
@@ -303,7 +307,7 @@ window['TeneoWebChat'] = {
         break
 
       case apiConstants.API_CALL_RESET_SEND_ICON:
-        store.commit('sendIconUrl',null);
+        store.commit('sendIconUrl',store.getters.initialSendIconUrl);
         break
 
       case apiConstants.API_CALL_DISABLE_USERINPUT:
