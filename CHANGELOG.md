@@ -7,7 +7,7 @@
 * Use dedicated css variables for typing indicators
 * Use Chinese Traditional if locale is set to just 'cn'
 * Added id's to teneo web chat container and send icon
-
+* Fix font size in Safari on macOS Big Sur
 
 # v3.3.0
 ## 9-11-2020
