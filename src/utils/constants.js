@@ -5,6 +5,7 @@ export const TENEO_OUTPUTTEXTSEGMENTS_PARAM = 'outputTextSegmentIndexes';
 export const DEFAULT_TITLE = 'Teneo Web Chat';
 export const CHANNEL_PARAM = 'teneo-webchat';
 export const BUBBLE_DELAY = 600;
+export const COMBO_MESSAGE_DELAY = 400;
 export const SESSION_ID_STORAGE_KEY = 'teneo-web-chat-session-id';
 export const FALLBACK_LOCALE = 'en';
 

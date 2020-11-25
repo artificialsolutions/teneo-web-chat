@@ -1,4 +1,4 @@
-import { PARTICIPANT_BOT, TENEO_PARAM_KEY, TENEO_OUTPUTTEXTSEGMENTS_PARAM, BUBBLE_DELAY } from './constants.js';
+import { PARTICIPANT_BOT, TENEO_PARAM_KEY, TENEO_OUTPUTTEXTSEGMENTS_PARAM, BUBBLE_DELAY, COMBO_MESSAGE_DELAY } from './constants.js';
 import { EventBus, events } from '../utils/event-bus.js';
 
 const defaultMessageType = 'text';
@@ -99,13 +99,36 @@ export default async function parseTeneoResponse(teneoResponse) {
   }
 
   if (data) {
-    messages.push({
-      author: PARTICIPANT_BOT,
-      type: data.type || defaultMessageType,
-      data,
-    });
+    if (data.type && data.type == "combo") {
+      for (var i = 0; i < data.components.length; ++i) {
+        const component = data.components[i];
+        console.log("component",component)
+        messages.push({
+          author: PARTICIPANT_BOT,
+          type: component.type || defaultMessageType,
+          data: component,
+        });
+        // Emit event that updates UI with new bubble, with a delay timer
+        // EventBus.$emit(events.PUSH_BUBBLE,messages[messages.length-1]);
+        await Promise.all([   
+          EventBus.$emit(events.PUSH_BUBBLE,messages[messages.length-1]),
+          timeout(COMBO_MESSAGE_DELAY),
+        ]);
+
+      }
+    } else {
+      console.log("message",data)
+      messages.push({
+        author: PARTICIPANT_BOT,
+        type: data.type || defaultMessageType,
+        data,
+      });
+      // Emit event that updates UI with new bubble, with a delay timer
+      EventBus.$emit(events.PUSH_BUBBLE,messages[messages.length-1]);
+    }
+    
     // Emit event that updates UI with new bubble, with a delay timer
-    EventBus.$emit(events.PUSH_BUBBLE,messages[messages.length-1]);
+    //EventBus.$emit(events.PUSH_BUBBLE,messages[messages.length-1]);
   }
 
   return messages;
