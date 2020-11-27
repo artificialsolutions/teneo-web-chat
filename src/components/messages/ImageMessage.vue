@@ -1,18 +1,11 @@
 <template>
   <div class="twc-image-message">
-
-    <!-- original ImageMessage
-    <img :src="imageUrl" :alt="altText" @load="scrollChatUp"/>
-     -->
-
-    <!-- Thumbnail Image wrapped in a link -->
     <a v-if="!(thumbnailUrl && !imageUrl)">
       <img :src="thumbnailUrl" :alt="altText" @load="scrollChatUp" v-on:click = "zoomIn">
     </a>
     <a v-else>
       <img :src="thumbnailUrl" :alt="altText" @load="scrollChatUp">
     </a>
-
   </div>
 </template>
 
