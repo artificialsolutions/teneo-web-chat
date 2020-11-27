@@ -2,12 +2,19 @@
     <div ref="chatWindowId" :class="chatWindowStyles()"  role="group" :aria-label="$t('message.chat_window_group_aria_label')">
     <Header :on-close="onClose" :on-minimize="onMinimize"/>
     <MessageList id="twc-message-list" :message-list="$teneoApi.messageList" />
+    
+    <a id="twc-lightbox-background" href="#" v-if="isImageZoomed" class="twc-lightbox" >
+      <span id="twc-lightbox-image" :style="this.zoomedImageUrl" v-on:click='zoomOut'></span>
+    </a> 
+
     <div v-if="spinnerIsLoading" class="twc-spinner" role="progressbar" aria-valuemin="0" :aria-valuetext="$t('message.chat_window_spinner_aria_valuetext')" aria-valuemax="100">
       <div class="twc-bounce1" aria-hidden="true"></div>
       <div class="twc-bounce2" aria-hidden="true"></div>
       <div class="twc-bounce3" aria-hidden="true"></div>
     </div>
     <UserInput :on-submit="sendMessage" />
+
+
   </div>
 </template>
 
@@ -34,6 +41,8 @@ export default {
   },
   data() {
     return {
+      zoomedImageUrl: '',
+      isImageZoomed: false,
       spinnerIsLoading: false,
       chatWindowBaseStyle: "twc-chat-window",
       keyboardUp: false,
@@ -62,12 +71,27 @@ export default {
     EventBus.$on(events.START_SPINNER, () => {
       this.spinnerIsLoading = true;
     });
+    EventBus.$on(events.ZOOM_IMAGE, (zoomedImageUrl) => {
+      this.zoomedImageUrl = "background-image: url('" + zoomedImageUrl + "')";
+      this.isImageZoomed = true;
+      //console.log('*events.ZOOM_IMAGE', this.zoomedImageUrl, this.isImageZoomed)
+    });
     // Send an empty init message to trigger a welcoming message from Teneo
     if (this.$teneoApi.messageList.length === 0) {
       this.$teneoApi.sendSilentMessage('');
     }
   },
   methods: {
+      zoomOut(event) {
+        console.log('target', event.target)
+        console.log('currrent target', event.currentTarget)
+        //this.isImageZoomed = false;
+        
+        if(event.target === event.currentTarget){
+          this.isImageZoomed = false;
+        }
+        //*/
+      },
       sendMessage(message) {
         this.spinnerIsLoading=true;
         this.$teneoApi.sendMessage(message);
@@ -86,6 +110,42 @@ export default {
 </script>
 
 <style scoped>
+
+/** LIGHTBOX MARKUP **/
+.twc-lightbox {
+  /* Default to hidden */
+  display: block;
+
+  /* Overlay entire screen */
+  position: fixed;
+  z-index: 999;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  width: 100%;
+  height: 100%;
+  
+  /* A bit of padding around image */
+  padding: 1em;
+
+  /* Translucent background */
+  background: rgba(0, 0, 0, 0.8);
+}
+.twc-lightbox span {
+  /* Full width and height */
+  display: block;
+  width: 100%;
+  height: 100%;
+
+  /* Size and position background image */
+  background-position: center;
+  background-repeat: no-repeat;
+  background-size: contain;
+}
+
+
+
 .twc-chat-window {
   font-family: var(--primary-font, 'Helvetica Neue', Helvetica, Arial, sans-serif);
   width: 370px;

@@ -6,15 +6,10 @@
      -->
 
     <!-- Thumbnail Image wrapped in a link -->
-    <a href="#twc-zoomable-image">
-      <img :src="thumbnailUrl">
-    </a>
-    <!-- Zoomed Image container hidden with CSS -->
-    <a v-if="message.data.image_url" href="#" class="twc-lightbox" id="twc-zoomable-image">
-      <span :style="imageUrl"></span>
+    <a v-on:click = "zoomIn">
+      <img :src="thumbnailUrl" :alt="altText" @load="scrollChatUp">
     </a>
 
-    
   </div>
 </template>
 
@@ -24,6 +19,11 @@ import { EventBus, events } from '../../utils/event-bus.js';
 
 export default {
   name: 'ImageMessage',
+  data() {
+      return{
+        zoomedIn: false
+      }
+  },
   props: {
     message: {
       type: Object,
@@ -48,13 +48,19 @@ export default {
       }
     },
     imageUrl() {
-      return "background-image: url('"+this.message.data.image_url+"')"
+      //used later as: "background-image: url('"+this.message.data.image_url+"')"
+      return this.message.data.image_url;
     },
     altText() {
       return this.message.data.alt;
     },
   },
   methods: {
+    zoomIn() {
+      if(this.message.data.image_url) {
+        EventBus.$emit(events.ZOOM_IMAGE, this.imageUrl);
+      }
+    },
     scrollChatUp() {
       EventBus.$emit(events.SCROLL_CHAT_DOWN);
     }
@@ -64,42 +70,7 @@ export default {
 
 <style>
 
-/** LIGHTBOX MARKUP **/
-.twc-lightbox {
-  /* Default to hidden */
-  display: none;
 
-  /* Overlay entire screen */
-  position: fixed;
-  z-index: 999;
-  top: 0;
-  left: 0;
-  right: 0;
-  bottom: 0;
-  
-  /* A bit of padding around image */
-  padding: 1em;
-
-  /* Translucent background */
-  background: rgba(0, 0, 0, 0.8);
-}
-
-/* Unhide the lightbox when it's the target */
-.twc-lightbox:target {
-  display: block;
-}
-
-.twc-lightbox span {
-  /* Full width and height */
-  display: block;
-  width: 100%;
-  height: 100%;
-
-  /* Size and position background image */
-  background-position: center;
-  background-repeat: no-repeat;
-  background-size: contain;
-}
 
 
 .twc-image-message {
