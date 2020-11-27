@@ -2,19 +2,15 @@
     <div ref="chatWindowId" :class="chatWindowStyles()"  role="group" :aria-label="$t('message.chat_window_group_aria_label')">
     <Header :on-close="onClose" :on-minimize="onMinimize"/>
     <MessageList id="twc-message-list" :message-list="$teneoApi.messageList" />
-    
-    <a id="twc-lightbox-background" href="#" v-if="isImageZoomed" class="twc-lightbox" >
-      <span id="twc-lightbox-image" :style="this.zoomedImageUrl" v-on:click='zoomOut'></span>
-    </a> 
-
     <div v-if="spinnerIsLoading" class="twc-spinner" role="progressbar" aria-valuemin="0" :aria-valuetext="$t('message.chat_window_spinner_aria_valuetext')" aria-valuemax="100">
       <div class="twc-bounce1" aria-hidden="true"></div>
       <div class="twc-bounce2" aria-hidden="true"></div>
       <div class="twc-bounce3" aria-hidden="true"></div>
     </div>
     <UserInput :on-submit="sendMessage" />
-
-
+    <a id="twc-lightbox-background" href="#" v-if="isImageZoomed" class="twc-lightbox" >
+      <span id="twc-lightbox-image" :style="this.zoomedImageUrl" v-on:click='zoomOut'></span>
+    </a> 
   </div>
 </template>
 
@@ -83,14 +79,9 @@ export default {
   },
   methods: {
       zoomOut(event) {
-        console.log('target', event.target)
-        console.log('currrent target', event.currentTarget)
-        //this.isImageZoomed = false;
-        
         if(event.target === event.currentTarget){
           this.isImageZoomed = false;
         }
-        //*/
       },
       sendMessage(message) {
         this.spinnerIsLoading=true;

@@ -6,7 +6,10 @@
      -->
 
     <!-- Thumbnail Image wrapped in a link -->
-    <a v-on:click = "zoomIn">
+    <a v-if="!(thumbnailUrl && !imageUrl)">
+      <img :src="thumbnailUrl" :alt="altText" @load="scrollChatUp" v-on:click = "zoomIn">
+    </a>
+    <a v-else>
       <img :src="thumbnailUrl" :alt="altText" @load="scrollChatUp">
     </a>
 
