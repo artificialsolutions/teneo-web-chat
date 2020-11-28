@@ -1,11 +1,13 @@
 <template>
   <div class="twc-image-message">
-    <a v-if="!(thumbnailUrl && !imageUrl)">
-      <img :src="thumbnailUrl" :alt="altText" @load="scrollChatUp" v-on:click = "zoomIn">
-    </a>
-    <a v-else>
+    <span v-if="!(thumbnailUrl && !imageUrl)">
+      <a href="#" v-on:click="zoomIn" title="Click to enlarge" class="twc-image-link">
+        <img :src="thumbnailUrl" :alt="altText" @load="scrollChatUp">
+      </a>
+    </span>
+    <span v-else>
       <img :src="thumbnailUrl" :alt="altText" @load="scrollChatUp">
-    </a>
+    </span>
   </div>
 </template>
 
@@ -44,7 +46,6 @@ export default {
       }
     },
     imageUrl() {
-      //used later as: "background-image: url('"+this.message.data.image_url+"')"
       return this.message.data.image_url;
     },
     altText() {
@@ -53,9 +54,15 @@ export default {
   },
   methods: {
     zoomIn() {
+      event.preventDefault(); // prevent anchor from being added to url
+
+      // TODO: handle extension 
+      // await handleExtension(API_MESSAGE_IMAGE_CLICKED, payload);
+
       if(this.message.data.image_url) {
         EventBus.$emit(events.ZOOM_IMAGE, this.imageUrl);
       }
+      
     },
     scrollChatUp() {
       EventBus.$emit(events.SCROLL_CHAT_DOWN);
@@ -65,10 +72,6 @@ export default {
 </script>
 
 <style>
-
-
-
-
 .twc-image-message {
   width: 100%;
   margin-right: 40px;

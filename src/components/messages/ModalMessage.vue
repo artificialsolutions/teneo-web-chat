@@ -129,7 +129,7 @@ export default {
   position: fixed;
   z-index: 2700; /* Sit on top */
   overflow: hidden;
-  background-color: rgba(0, 0, 0, 0.5); 
+  background-color: var(--modal-overlay-color, rgba(0, 0, 0, 0.5)); 
   width: 370px;
   height: calc(100% - 120px);
   max-height: 590px;
