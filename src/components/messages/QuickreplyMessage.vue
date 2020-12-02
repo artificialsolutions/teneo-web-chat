@@ -14,8 +14,10 @@
 </template>
 
 <script>
-import handleButtonClick from '../../utils/handle-button-click.js';
+import handleButtonClick, { handleComboButtonClick } from '../../utils/handle-button-click.js';
 import keyIsSpaceOrEnter from '../../utils/is-space-or-enter.js';
+import { EventBus, events } from '../../utils/event-bus.js';
+
 export default {
   name: 'QuickreplyMessage',
   props: {
@@ -30,32 +32,63 @@ export default {
           message.data.quick_replies &&
           message.data.quick_replies.length > 0
         );
-      },
-    },
+      }
+    }
+  },
+  data() {
+    return {
+      isComboExpired: false
+    };
+  },
+  mounted() {
+    EventBus.$on(events.EXPIRE_PREVIOUS_COMBOS, () => {
+        this.isComboExpired = true;
+        console.log("events.EXPIRE_PREVIOUS_COMBOS: " + this.isComboExpired)
+    });
   },
   computed: {
     quickreplies() {
       return this.message.data.quick_replies;
     },
     replySent() {
+      //console.log('reply sent?: '+ !!this.message.selected || this.message.selected === 0 )
       return !!this.message.selected || this.message.selected === 0;
     },
     selected() {
       return this.message.selected;
     },
-    isExpired() {
-      const { messageList } = this.$teneoApi;
-      const latestMessage = messageList[messageList.length - 1];
-
-      return latestMessage && latestMessage !== this.message;
+    msgID() {
+      return this.message.msgID
+    },
+    isPartOfCombo() {
+      return this.message.isPartOfCombo
+    },
+    isExpired() {      
+      if((this.message.isPartOfCombo === true)){
+        //console.log('isPartOfCombo: TRUE, isComboExpired: '+this.isComboExpired)
+        return this.isComboExpired;
+      }
+      else{
+        const { messageList } = this.$teneoApi;
+        const latestMessage = messageList[messageList.length - 1];
+        return latestMessage && latestMessage !== this.message;
+      }
     },
   },
   methods: {
     async onSelect(reply, idx) {
-      if (this.replySent || this.isExpired) {
+      if (this.replySent || this.isExpired ) {
         return;
       }
-      await handleButtonClick(reply, idx, this.$teneoApi)
+      
+      if(this.isPartOfCombo){
+        console.log("onSelect, msgID: " + this.msgID + ", idx: " + idx)
+        await handleComboButtonClick(reply, this.msgID, idx, this.$teneoApi, this.message)
+      }
+      else{
+        await handleButtonClick(reply, idx, this.$teneoApi)
+      }
+      
     },
     handleReturnSpaceKeys(event, reply, idx) {
       if (keyIsSpaceOrEnter(event)) {

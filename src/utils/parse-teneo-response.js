@@ -1,7 +1,9 @@
 import { PARTICIPANT_BOT, TENEO_PARAM_KEY, TENEO_OUTPUTTEXTSEGMENTS_PARAM, BUBBLE_DELAY, COMBO_MESSAGE_DELAY } from './constants.js';
 import { EventBus, events } from '../utils/event-bus.js';
+import messageListCache from '../utils/message-list-cache.js';
 
 const defaultMessageType = 'text';
+const messageList = new messageListCache();
 
 export default async function parseTeneoResponse(teneoResponse) {
 
@@ -11,7 +13,7 @@ export default async function parseTeneoResponse(teneoResponse) {
 
   const { parameters, text } = teneoResponse.output;
   const messages = [];
-
+  EventBus.$emit(events.EXPIRE_PREVIOUS_COMBOS)
   // get ouputTextSegments parameter for speech bubbles
   // it is a list with start and end indexes that looks like this
   // [[0, 39], [40, 67], [68, 96], [97, 97]]
@@ -102,11 +104,14 @@ export default async function parseTeneoResponse(teneoResponse) {
     if (data.type && data.type == "combo") {
       for (var i = 0; i < data.components.length; ++i) {
         const component = data.components[i];
-        console.log("component",component)
+        console.log("msgID: "+messageList.get().length)
         messages.push({
           author: PARTICIPANT_BOT,
           type: component.type || defaultMessageType,
           data: component,
+          // Mark the component as belonging to a Combo group, and with a message ID
+          isPartOfCombo: true,
+          msgID: messageList.get().length 
         });
         // Emit event that updates UI with new bubble, with a delay timer
         // EventBus.$emit(events.PUSH_BUBBLE,messages[messages.length-1]);
@@ -117,7 +122,6 @@ export default async function parseTeneoResponse(teneoResponse) {
 
       }
     } else {
-      console.log("message",data)
       messages.push({
         author: PARTICIPANT_BOT,
         type: data.type || defaultMessageType,

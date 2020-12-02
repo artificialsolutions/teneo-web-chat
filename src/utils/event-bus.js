@@ -23,7 +23,8 @@ export const events = {
   SET_ENGINE_URL: "set-engine-url",
   SET_LOCALE: 'set_locale',
   SHOW_CALLOUT: 'show_callout',
-  HIDE_CALLOUT: 'hide_calllout'
+  HIDE_CALLOUT: 'hide_calllout',
+  EXPIRE_PREVIOUS_COMBOS: 'expire_previous_combo'
 };
 
 export const EventBus = new Vue();
