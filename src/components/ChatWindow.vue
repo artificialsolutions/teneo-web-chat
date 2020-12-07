@@ -106,6 +106,7 @@ export default {
   overscroll-behavior: contain;
   -webkit-animation: twc-fade-in 0.3s cubic-bezier(0.390, 0.575, 0.565, 1.000) both;
   animation: twc-fade-in 0.3s cubic-bezier(0.390, 0.575, 0.565, 1.000) both;
+  z-index: 2699; /* Sit on top, but right below modal messages */
 }
 
 @media (max-width: 450px) {

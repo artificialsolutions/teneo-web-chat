@@ -114,6 +114,7 @@ export default {
   align-items: center;
   -webkit-animation: twc-fade-in 0.3s cubic-bezier(0.390, 0.575, 0.565, 1.000) both;
   animation: twc-fade-in 0.3s cubic-bezier(0.390, 0.575, 0.565, 1.000) both;
+  z-index: 2700; /* sit on top */
 }
 
 .twc-launch-button__open-icon {
