@@ -135,10 +135,13 @@ export default {
       }
     },
     userTyping() {
-      // create payload object
-      const payload = {"text" : this.$refs.userInput.value }
-      // check if there is an extension that want to be notified about the user typing
-      handleExtension(API_ON_USER_TYPING,payload);
+      // check if userinput field still exists to prevent error in IE11
+      if (document.getElementById("twc-user-input-field")) {
+        // create payload object
+        const payload = {"text" : this.$refs.userInput.value }
+        // check if there is an extension that want to be notified about the user typing
+        handleExtension(API_ON_USER_TYPING,payload);
+      }
     },
     isMobile () {
       return detectMobile();
