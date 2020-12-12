@@ -9,6 +9,7 @@
 * Added id's to teneo web chat container and send icon
 * Fix font size in Safari on macOS Big Sur
 * Fix issue with launch button and chat window dropping behind some layers
+* Fix URL validation issue
 
 # v3.3.0
 ## 9-11-2020
