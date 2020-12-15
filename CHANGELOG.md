@@ -1,6 +1,7 @@
 # v3.4.0
 ## DATE
 * Added new api to add a callout message to the launch button to catch the web visitor's attention
+* Images can now be enlarged
 * When icons and window title are reset using the api, reset to init value instead of teneo web chat default value
 * Added config option to allow use of localStorage instead of sessionStorage
 * Added api to get locale
