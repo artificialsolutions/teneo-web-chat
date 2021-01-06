@@ -17,7 +17,7 @@ import LaunchButton from './components/LaunchButton.vue';
 import { EventBus, events } from './utils/event-bus.js';
 import handleExtension from './utils/handle-extension.js';
 import basePayload from './utils/base-payload.js';
-import { API_ON_OPEN_BUTTON_CLICK, API_ON_CLOSE_BUTTON_CLICK, API_ON_MINIMIZE_BUTTON_CLICK, API_ON_VISIBILITY_CHANGED } from './utils/api-function-names.js';
+import { API_ON_OPEN_BUTTON_CLICK, API_ON_CLOSE_BUTTON_CLICK, API_ON_MINIMIZE_BUTTON_CLICK, API_ON_VISIBILITY_CHANGED, API_ON_RESET } from './utils/api-function-names.js';
 import { API_KEY_VISIBILITY, API_STATE_MAXIMIZED, API_STATE_MINIMIZED, DEFAULT_TITLE, SESSION_ID_STORAGE_KEY } from './utils/constants.js';
 import detectSafari from './utils/detect-safari.js';
 registerMessageComponents();
@@ -75,11 +75,13 @@ export default {
     
 
     EventBus.$on(events.RESET_SESSION, () => {
-      this.minimize()
-      this.clearHistory()
-      this.closeSession()
-      this.isChatMinimized = false
-      this.isChatClosed = true
+      this.resetChat()
+
+      // this.minimize()
+      // this.clearHistory()
+      // this.closeSession()
+      // this.isChatMinimized = false
+      // this.isChatClosed = true
     });
 
     EventBus.$on(events.END_SESSION, () => {
@@ -126,11 +128,12 @@ export default {
     },
     changeWindowState(chatWindowTargetState) {
       if (chatWindowTargetState === events.CLOSE_WINDOW) {
-        this.minimize()
-        this.closeSession()
-        this.clearHistory()
-        this.isChatMinimized = false
-        this.isChatClosed = true
+        this.resetChat()
+        // this.minimize()
+        // this.closeSession()
+        // this.clearHistory()
+        // this.isChatMinimized = false
+        // this.isChatClosed = true
       } 
       if (chatWindowTargetState === events.MINIMIZE_WINDOW) {
         this.minimize()
@@ -205,6 +208,22 @@ export default {
         }
         
       }
+    },
+    async resetChat() {
+      // add handledState to payload
+      const payload = basePayload();
+
+      // check for extension
+      await handleExtension(API_ON_RESET, payload);
+
+      // proceed if extension does not handle function itself
+      if(!payload.handledState.handled === true) {
+        this.minimize()
+        this.closeSession()
+        this.clearHistory()
+        this.isChatMinimized = false
+        this.isChatClosed = true
+      } 
     },
     clearHistory() {
       this.$teneoApi.clearHistory()

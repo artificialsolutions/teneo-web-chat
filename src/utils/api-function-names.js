@@ -46,3 +46,4 @@ export const API_ON_CLOSE_BUTTON_CLICK = "close_button_clicked";
 export const API_ON_MINIMIZE_BUTTON_CLICK = "minimize_button_clicked";
 export const API_ON_MODAL_BUTTON_CLICK = "modal_button_clicked";
 export const API_ON_SEND_BUTTON_CLICK = "send_button_clicked";
+export const API_ON_RESET = "reset";
