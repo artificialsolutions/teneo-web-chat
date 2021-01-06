@@ -195,7 +195,7 @@ window['TeneoWebChat'] = {
         return store.getters.storage;
 
       case apiConstants.API_GET_LOCALE:
-        return store.getters.locale;
+        return store.getters.localeObj;
             
       default:
         break

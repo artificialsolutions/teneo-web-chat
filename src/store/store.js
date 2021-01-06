@@ -173,6 +173,9 @@ export const store = new Vuex.Store({
             }
         },
         locale: state => state.locale,
+        localeObj: state => {
+            return { 'locale' : state.locale}
+        },
         state: state => {
             return { 'visibility': state.visibility }
         },
