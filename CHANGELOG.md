@@ -1,5 +1,5 @@
 # v3.4.0
-## DATE
+## 07-01-2021
 * Added new api to add a callout message to the launch button to catch the web visitor's attention
 * Added new callback api 'reset' to intercept chat window reset events
 * Images can now be enlarged
