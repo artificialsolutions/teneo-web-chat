@@ -119,21 +119,14 @@ ejs.renderFile(index_js, function (err, str) {
             test('Assert API_CALL_RESET', async() => {
 
                 //Mock methods at TeneoWebChat.vue
-                const minimizeMock = jest.fn();
-                const mockClearHistory = jest.fn();
-                const mockCloseSession = jest.fn();
-                wrapperTeneoWebChat.vm.minimize = minimizeMock;
-                wrapperTeneoWebChat.vm.clearHistory = mockClearHistory
-                wrapperTeneoWebChat.vm.closeSession = mockCloseSession
+                const mockresetChat = jest.fn();
+                wrapperTeneoWebChat.vm.resetChat = mockresetChat
 
                 //Make API method calls
                 await window.TeneoWebChat.call(api.API_CALL_RESET);        
 
-                //RESET is a combination of Minimize + Clear History + End Session
-                //Assert these 3 method calls
-                expect(minimizeMock).toHaveBeenCalledTimes(1);
-                expect(mockClearHistory).toHaveBeenCalledTimes(1);
-                expect(mockCloseSession).toHaveBeenCalledTimes(1);
+                //Assert that the resetChat method has been called
+                expect(mockresetChat).toHaveBeenCalledTimes(1);
             })
 
 
