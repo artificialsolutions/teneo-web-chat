@@ -76,12 +76,6 @@ export default {
 
     EventBus.$on(events.RESET_SESSION, () => {
       this.resetChat()
-
-      // this.minimize()
-      // this.clearHistory()
-      // this.closeSession()
-      // this.isChatMinimized = false
-      // this.isChatClosed = true
     });
 
     EventBus.$on(events.END_SESSION, () => {
@@ -129,11 +123,6 @@ export default {
     changeWindowState(chatWindowTargetState) {
       if (chatWindowTargetState === events.CLOSE_WINDOW) {
         this.resetChat()
-        // this.minimize()
-        // this.closeSession()
-        // this.clearHistory()
-        // this.isChatMinimized = false
-        // this.isChatClosed = true
       } 
       if (chatWindowTargetState === events.MINIMIZE_WINDOW) {
         this.minimize()
