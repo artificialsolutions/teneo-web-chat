@@ -73,9 +73,6 @@ export default {
         event.preventDefault();
       }
     },
-    isCalloutVisiblee(){
-      return this.isCalloutVisible;
-    },
     closeCallOut() {
       this.isCalloutVisible = false;
     }
