@@ -357,7 +357,7 @@ ejs.renderFile(index_js, function (err, str) {
           })
 
           // click the LaunchButton 
-          wrapper.findComponent(LaunchButton).trigger('click')
+          wrapper.find('#twc-launchbutton').trigger('click');
 
           //Clean up callback
           testWindow.TeneoWebChat.off(api.API_ON_OPEN_BUTTON_CLICK);
