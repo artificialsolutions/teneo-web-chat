@@ -1,12 +1,18 @@
 import Vue from 'vue';
 import Vuex from 'vuex';
-import { DEFAULT_TITLE } from '../utils/constants.js';
+import { DEFAULT_TITLE, FALLBACK_LOCALE } from '../utils/constants.js';
 import isValidUrl from '../utils/validate-url';
 
 Vue.use(Vuex)
 
 export const store = new Vuex.Store({
     state: {
+        calloutVisibility: false,
+        calloutText: "Teneo Web Chat",
+        initialTitle: DEFAULT_TITLE,
+        initialTitleIconUrl: undefined,
+        initialLaunchIconUrl: undefined,
+        initialSendIconUrl: undefined,
         visibility: "minimized",
         title: DEFAULT_TITLE,
         titleIconUrl: "",
@@ -20,14 +26,35 @@ export const store = new Vuex.Store({
         closeIconUrl: "",
         launchIconUrl: "",
         sendIconUrl: "",
-        locale: "",
+        locale: FALLBACK_LOCALE,
+        storage: window.sessionStorage,
     },
     mutations: {
+        calloutVisibility(state, newVisibility) {
+            state.calloutVisibility = newVisibility
+        },
+        calloutText(state, newText) {
+            state.calloutText = newText
+        },
         visibility(state, newVisibility) {
             state.visibility = newVisibility
         },
+        initialTitle(state, title){
+            if (typeof title === 'string') {
+                state.initialTitle = title
+                state.title = title
+            }
+        },
         title(state, newTitle) {
-            state.title = newTitle
+            if (typeof newTitle === "string") {
+                state.title = newTitle
+            }
+        },
+        initialTitleIconUrl(state, newUrl){
+            if (isValidUrl(newUrl)) {
+                state.initialTitleIconUrl = newUrl
+                state.titleIconUrl = newUrl
+            }
         },
         titleIconUrl(state, newUrl) {
             // TODO: Throw error if url is invalid
@@ -82,10 +109,22 @@ export const store = new Vuex.Store({
                 state.closeIconUrl = newUrl
             }
         },
+        initialLaunchIconUrl(state, newUrl){
+            if (isValidUrl(newUrl)) {
+                state.initialLaunchIconUrl = newUrl
+                state.launchIconUrl = newUrl
+            }
+        },
         launchIconUrl(state, newUrl) {
             // TODO: Throw error if url is invalid
             if (isValidUrl(newUrl)) {
                 state.launchIconUrl = newUrl
+            }
+        },
+        initialSendIconUrl(state, newUrl){
+            if (isValidUrl(newUrl)) {
+                state.initialSendIconUrl = newUrl
+                state.sendIconUrl = newUrl
             }
         },
         sendIconUrl(state, newUrl) {
@@ -99,11 +138,23 @@ export const store = new Vuex.Store({
             if (typeof newLocale === "string") {
                 state.locale = newLocale
             }
+        },
+        storage(state, newStorage) {
+            // TODO: Improve check for valid locale and throw error if locale is invalid
+            if (typeof newStorage === "object") {
+                state.storage = newStorage
+            }
         }
     },
     getters: {
+        calloutVisibility: state => state.calloutVisibility,
+        calloutText: state => state.calloutText,
         teneoEngineUrl: state => state.teneoEngineUrl,
         visibility: state => state.visibility,
+        initialTitle: state => state.initialTitle,
+        initialTitleIconUrl: state => state.initialTitleIconUrl,
+        initialLaunchIconUrl: state => state.initialLaunchIconUrl,
+        initialSendIconUrl: state => state.initialSendIconUrl,
         title: state => state.title,
         titleIconUrl: state => state.titleIconUrl,
         teneoEngineParams: state => state.teneoEngineParams,
@@ -114,13 +165,23 @@ export const store = new Vuex.Store({
         minimizeIconUrl: state => state.minimizeIconUrl,
         closeIconUrl: state => state.closeIconUrl,
         launchIconUrl: state => state.launchIconUrl,
-        sendIconUrl: state => state.sendIconUrl,
+        sendIconUrl: state => {
+            if (state.sendIconUrl) {
+                return state.sendIconUrl
+            } else {
+                return state.initialSendIconUrl
+            }
+        },
         locale: state => state.locale,
+        localeObj: state => {
+            return { 'locale' : state.locale}
+        },
         state: state => {
             return { 'visibility': state.visibility }
         },
         engineUrlObj: state => {
             return { 'engineUrl' : state.teneoEngineUrl}
         },
+        storage: state => state.storage,
     }
 })

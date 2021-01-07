@@ -26,18 +26,22 @@ window['TeneoWebChat'] = {
       // TODO: error handling (once store thows error)
       store.commit('teneoEngineUrl',twcProps.teneoEngineUrl);
     }
+    
     if (twcProps.title) {
       // TODO: Check if title is a string
-      store.commit('title',twcProps.title);
+      store.commit('initialTitle',twcProps.title)
     }
+
     if (twcProps.titleIconUrl) {
       // TODO: error handling (once store thows error)
-      store.commit('titleIconUrl',twcProps.titleIconUrl);
+      store.commit('initialTitleIconUrl',twcProps.titleIconUrl);
     }
+
     if (twcProps.teneoEngineParams) {
       // TODO: Check if twcProps.teneoEngineParams is a map
       store.commit('teneoEngineParams',twcProps.teneoEngineParams);
     }
+
     if (twcProps.showCloseButton === true || twcProps.showCloseButton === "true") {
       store.commit('showCloseButton',true);
     }
@@ -69,12 +73,12 @@ window['TeneoWebChat'] = {
 
     if (twcProps.launchIconUrl) {
       // TODO: error handling (once store thows error)
-      store.commit('launchIconUrl',twcProps.launchIconUrl);
+      store.commit('initialLaunchIconUrl',twcProps.launchIconUrl);
     }
 
     if (twcProps.sendIconUrl) {
       // TODO: error handling (once store thows error)
-      store.commit('sendIconUrl',twcProps.sendIconUrl);
+      store.commit('initialSendIconUrl',twcProps.sendIconUrl);
     }
 
     if (twcProps.locale) {
@@ -90,6 +94,16 @@ window['TeneoWebChat'] = {
         Object.assign(translatedMessages, customLocalizations);
         //translatedMessages[Object.keys(customLocalizations)[0]]=customLocalizations[Object.keys(customLocalizations)[0]]
       }
+    }
+
+    if (twcProps.locale) {
+      // TODO: error handling (once store thows error)
+      store.commit('locale',twcProps.locale);
+    }
+
+    if (twcProps.storage) {
+      // TODO: error handling (once store thows error)
+      store.commit('storage',twcProps.storage);
     }
 
     // check required properties
@@ -176,6 +190,12 @@ window['TeneoWebChat'] = {
       
       case apiConstants.API_GET_ENGINE_URL:
         return store.getters.engineUrlObj;
+      
+      case apiConstants.API_GET_STORAGE:
+        return store.getters.storage;
+
+      case apiConstants.API_GET_LOCALE:
+        return store.getters.localeObj;
             
       default:
         break
@@ -184,6 +204,16 @@ window['TeneoWebChat'] = {
   call(function_name, payload = undefined) {
 
     switch (function_name) {
+      case apiConstants.API_CALL_SHOW_CALLOUT:
+        if (payload && typeof payload === "string") {
+          EventBus.$emit(events.SHOW_CALLOUT, payload)
+        }
+        break;
+        
+      case apiConstants.API_CALL_HIDE_CALLOUT:
+        EventBus.$emit(events.HIDE_CALLOUT)
+        break;
+
       case apiConstants.API_SET_LOCALE:
         // TODO: throw error if payload is invalid or if store throws error
         store.commit('locale',payload);
@@ -260,7 +290,7 @@ window['TeneoWebChat'] = {
         break
 
       case apiConstants.API_CALL_RESET_CHAT_WINDOW_TITLE:
-        store.commit('title',null)
+        store.commit('title',store.getters.initialTitle)
         break;
       
       case apiConstants.API_CALL_SET_CHAT_WINDOW_ICON:
@@ -271,7 +301,7 @@ window['TeneoWebChat'] = {
         break
 
       case apiConstants.API_CALL_RESET_CHAT_WINDOW_ICON:
-        store.commit('titleIconUrl',null);
+        store.commit('titleIconUrl',store.getters.initialTitleIconUrl);
         break
 
       case apiConstants.API_CALL_SET_LAUNCH_ICON:
@@ -282,7 +312,7 @@ window['TeneoWebChat'] = {
         break
 
       case apiConstants.API_CALL_RESET_LAUNCH_ICON:
-        store.commit('launchIconUrl',null);
+        store.commit('launchIconUrl', store.getters.initialLaunchIconUrl);
         break
         
       case apiConstants.API_CALL_SET_SEND_ICON:
@@ -293,7 +323,7 @@ window['TeneoWebChat'] = {
         break
 
       case apiConstants.API_CALL_RESET_SEND_ICON:
-        store.commit('sendIconUrl',null);
+        store.commit('sendIconUrl',store.getters.initialSendIconUrl);
         break
 
       case apiConstants.API_CALL_DISABLE_USERINPUT:

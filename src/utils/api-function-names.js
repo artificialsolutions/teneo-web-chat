@@ -12,8 +12,10 @@ export const API_CALL_SET_CHAT_WINDOW_ICON = "set_chat_window_icon"
 export const API_CALL_RESET_CHAT_WINDOW_ICON = "reset_chat_window_icon"
 export const API_CALL_SET_LAUNCH_ICON = "set_launch_icon"
 export const API_CALL_RESET_LAUNCH_ICON = "reset_launch_icon"
-export const API_CALL_SET_SEND_ICON = "set_send_icon";
 export const API_CALL_RESET_SEND_ICON = "reset_send_icon";
+export const API_CALL_SET_SEND_ICON = "set_send_icon";
+export const API_CALL_HIDE_CALLOUT = "hide_callout"
+export const API_CALL_SHOW_CALLOUT = "show_callout"
 export const API_CALL_SET_ENGINE_URL = "set_engine_url";
 export const API_CALL_DISABLE_USERINPUT = 'disable_user_input';
 export const API_CALL_ENABLE_USERINPUT = 'enable_user_input';
@@ -27,6 +29,8 @@ export const API_CALL_SHOW_TYPING_INDICATOR = 'show_typing_indicator';
 export const API_GET_STATE = "state";
 export const API_GET_CHAT_HISTORY = "chat_history";
 export const API_GET_ENGINE_URL = "engine_url";
+export const API_GET_STORAGE = "storage";
+export const API_GET_LOCALE = "locale";
 
 // api callacks
 export const API_ON_READY = "ready";
@@ -42,3 +46,4 @@ export const API_ON_CLOSE_BUTTON_CLICK = "close_button_clicked";
 export const API_ON_MINIMIZE_BUTTON_CLICK = "minimize_button_clicked";
 export const API_ON_MODAL_BUTTON_CLICK = "modal_button_clicked";
 export const API_ON_SEND_BUTTON_CLICK = "send_button_clicked";
+export const API_ON_RESET = "reset";

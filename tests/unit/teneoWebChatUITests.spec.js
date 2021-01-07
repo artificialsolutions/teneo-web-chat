@@ -231,7 +231,7 @@ it('Renders Close Button inside Header, when showCloseButton is true.', async ()
         state: {'showCloseButton':true},
         getters: {}
       },
-      $t: jest.jn()
+      $t: jest.fn()
     }
   });
   expect(wrapper.findComponent(MinimizeIcon).exists()).toBe(true)

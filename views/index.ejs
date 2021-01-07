@@ -20,12 +20,8 @@
       
       window.onload = function () {
 
-        if (
-          window.TeneoWebChat &&
-            typeof window.TeneoWebChat.initialize === 'function'
-        ) {
+        if (window.TeneoWebChat && typeof window.TeneoWebChat.initialize === 'function') {
           var element = document.getElementById('teneo-web-chat');
-
           const teneoProps = {
             'teneoEngineUrl': '<%= process.env.TENEO_ENGINE_URL %>',
             'title':'<%= process.env.HEADER_TITLE %>',

@@ -1,5 +1,5 @@
 <template>
-  <div class="teneo-web-chat">
+  <div class="teneo-web-chat" id="teneo-web-chat">
     <ChatWindow
       id="twc-chat-window" 
       v-if="isChatOpen"
@@ -17,7 +17,7 @@ import LaunchButton from './components/LaunchButton.vue';
 import { EventBus, events } from './utils/event-bus.js';
 import handleExtension from './utils/handle-extension.js';
 import basePayload from './utils/base-payload.js';
-import { API_ON_OPEN_BUTTON_CLICK, API_ON_CLOSE_BUTTON_CLICK, API_ON_MINIMIZE_BUTTON_CLICK, API_ON_VISIBILITY_CHANGED } from './utils/api-function-names.js';
+import { API_ON_OPEN_BUTTON_CLICK, API_ON_CLOSE_BUTTON_CLICK, API_ON_MINIMIZE_BUTTON_CLICK, API_ON_VISIBILITY_CHANGED, API_ON_RESET } from './utils/api-function-names.js';
 import { API_KEY_VISIBILITY, API_STATE_MAXIMIZED, API_STATE_MINIMIZED, DEFAULT_TITLE, SESSION_ID_STORAGE_KEY } from './utils/constants.js';
 import detectSafari from './utils/detect-safari.js';
 registerMessageComponents();
@@ -75,11 +75,7 @@ export default {
     
 
     EventBus.$on(events.RESET_SESSION, () => {
-      this.minimize()
-      this.clearHistory()
-      this.closeSession()
-      this.isChatMinimized = false
-      this.isChatClosed = true
+      this.resetChat()
     });
 
     EventBus.$on(events.END_SESSION, () => {
@@ -126,11 +122,7 @@ export default {
     },
     changeWindowState(chatWindowTargetState) {
       if (chatWindowTargetState === events.CLOSE_WINDOW) {
-        this.minimize()
-        this.closeSession()
-        this.clearHistory()
-        this.isChatMinimized = false
-        this.isChatClosed = true
+        this.resetChat()
       } 
       if (chatWindowTargetState === events.MINIMIZE_WINDOW) {
         this.minimize()
@@ -206,6 +198,22 @@ export default {
         
       }
     },
+    async resetChat() {
+      // add handledState to payload
+      const payload = basePayload();
+
+      // check for extension
+      await handleExtension(API_ON_RESET, payload);
+
+      // proceed if extension does not handle function itself
+      if(!payload.handledState.handled === true) {
+        this.minimize()
+        this.closeSession()
+        this.clearHistory()
+        this.isChatMinimized = false
+        this.isChatClosed = true
+      } 
+    },
     clearHistory() {
       this.$teneoApi.clearHistory()
     },
@@ -215,7 +223,7 @@ export default {
       // when opened in Safari, we explicitly store the session id in the browser storage
       // it's a bit cleaner to delete it again when the engine session is closed
       if (isSafari) {
-        window.sessionStorage.removeItem(sessionKey);
+        this.$store.getters.storage.removeItem(sessionKey);
       }
     },
     setWindowTitle(newTitle) { 
@@ -255,6 +263,9 @@ export default {
   --sendicon-fg-color: var(--dark-fg-color);
   --launch-button-bg-color: var(--primary-color);
   --launchicon-fg-color: var(--light-fg-color);
+  --callout-fg-color: var(--user-input-fg-color);
+  --callout-bg-color: var(--light-fg-color);
+  --callout-close-button-fg-color: var(--secondary-color);
   --header-bg-color: var(--primary-color);
   --header-fg-color: var(--light-fg-color);
   --chat-window-bg-color: #ffffff;
@@ -262,8 +273,14 @@ export default {
   --bot-message-bg-color: var(--light-bg-color);
   --agent-message-fg-color: var(--light-fg-color);
   --agent-message-bg-color: #47b2fd;
-  --user-message-bg-color: var(--primary-color);
   --user-message-fg-color: var(--light-fg-color);
+  --user-message-bg-color: var(--primary-color);
+  --bot-typing-indicator-fg-color: var(--secondary-color);
+  --bot-typing-indicator-bg-color: var(--bot-message-bg-color);
+  --agent-typing-indicator-fg-color: var(--agent-message-fg-color);
+  --agent-typing-indicator-bg-color: var(--agent-message-bg-color);
+  --user-typing-indicator-fg-color: var(--user-message-fg-color);
+  --user-typing-indicator-bg-color: var(--user-message-bg-color);
   --buttons-title-color: var(--dark-fg-color);
   --button-fg-color: var(--light-fg-color);
   --button-bg-color: var(--primary-color);
@@ -281,8 +298,17 @@ export default {
   --quickreply-bg-color: var(--light-fg-color);
   --quickreply-border-color: var(--primary-color);
   --quickreply-expired-color: var(--expired-color);
+  --lightbox-overlay-color: rgba(0, 0, 0, 0.8);
+  --lightbox-image-background-color: #ffffff;
+  --modal-overlay-color: rgba(0, 0, 0, 0.5); 
 
   --primary-font: 'Helvetica Neue', Helvetica, Arial, sans-serif;
-  font: -apple-system-body;
+}
+
+@supports (-webkit-touch-callout: none) {
+  /* CSS specific to iOS devices */ 
+  .teneo-web-chat {
+    font: -apple-system-body;
+  }
 }
 </style>

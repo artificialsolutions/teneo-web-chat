@@ -1,3 +1,21 @@
+# v3.4.0
+## 07-01-2021
+* Added new api to add a callout message to the launch button to catch the web visitor's attention
+* Added new callback api 'reset' to intercept chat window reset events
+* Images can now be enlarged
+* Added css variables for lightbox colors used for enlarged images
+* When icons and window title are reset using the api, reset to init value instead of teneo web chat default value
+* Added config option to allow use of localStorage instead of sessionStorage
+* Added api to get the storage object
+* Added api to get locale
+* Use dedicated css variables for typing indicators
+* Use css variable for modal background color
+* Use Chinese Traditional if locale is set to just 'cn'
+* Added id's to teneo web chat container and send icon
+* Fix font size in Safari on macOS Big Sur
+* Fix issue with launch button and chat window dropping behind some layers
+* Fix URL validation issue
+
 # v3.3.0
 ## 9-11-2020
 * New: UI can be configured in multiple langauges
@@ -13,7 +31,7 @@
 * New api: [On send button clicked](https://developers.artificial-solutions.com/engine/teneo-web-chat/web-chat-api#on-send-button-clicked)
 * New api: [Set engine URL](https://developers.artificial-solutions.com/engine/teneo-web-chat/web-chat-api#set-engine-url)
 * Improved accessibility
-* Added 'twc-' prefix to the followin classes:
+* Added 'twc-' prefix to the following classes:
     * active -> twc-active
 	* disabled -> twc-disabled
 	* expired -> twc-expired

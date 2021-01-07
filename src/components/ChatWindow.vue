@@ -1,5 +1,5 @@
 <template>
-    <div ref="chatWindowId" :class="chatWindowStyles()"  role="group" :aria-label="$t('message.chat_window_group_aria_label')">
+  <div ref="chatWindowId" :class="chatWindowStyles()"  role="group" :aria-label="$t('message.chat_window_group_aria_label')">
     <Header :on-close="onClose" :on-minimize="onMinimize"/>
     <MessageList id="twc-message-list" :message-list="$teneoApi.messageList" />
     <div v-if="spinnerIsLoading" class="twc-spinner" role="progressbar" aria-valuemin="0" :aria-valuetext="$t('message.chat_window_spinner_aria_valuetext')" aria-valuemax="100">
@@ -8,6 +8,14 @@
       <div class="twc-bounce3" aria-hidden="true"></div>
     </div>
     <UserInput :on-submit="sendMessage" />
+
+    <div href="#" v-if="isImageZoomed" class="twc-lightbox" v-on:click='zoomOut'>
+      <span class="twc-lightbox-image-wrapper" v-on:click='zoomOut'>
+        <a href="#" v-on:click='zoomOut' tabindex="0" id="twc-lightbox-close" title="Click to close">
+          <img :src="this.zoomedImageUrl" v-on:click='zoomOut' class="twc-lightbox-image" alt="This is my image">
+        </a>
+      </span>
+    </div> 
   </div>
 </template>
 
@@ -34,6 +42,8 @@ export default {
   },
   data() {
     return {
+      zoomedImageUrl: '',
+      isImageZoomed: false,
       spinnerIsLoading: false,
       chatWindowBaseStyle: "twc-chat-window",
       keyboardUp: false,
@@ -62,12 +72,30 @@ export default {
     EventBus.$on(events.START_SPINNER, () => {
       this.spinnerIsLoading = true;
     });
+    EventBus.$on(events.ZOOM_IMAGE, (zoomedImageUrl) => {
+      // we may also need to get the alt text
+      this.zoomedImageUrl = zoomedImageUrl;
+      this.isImageZoomed = true;
+
+      setTimeout(function(){ document.getElementById("twc-lightbox-close").focus(); }, 50);
+    });
     // Send an empty init message to trigger a welcoming message from Teneo
     if (this.$teneoApi.messageList.length === 0) {
       this.$teneoApi.sendSilentMessage('');
     }
   },
   methods: {
+      zoomOut(event) {
+        event.preventDefault(); // prevent anchor from being appended to url
+
+        // TODO: handle extension
+        //await handleExtension(API_ON_CLOSE_LIGHTBOX, payload);
+
+        // close zoomed image
+        if(event.target === event.currentTarget){
+          this.isImageZoomed = false;
+        }
+      },
       sendMessage(message) {
         this.spinnerIsLoading=true;
         this.$teneoApi.sendMessage(message);
@@ -106,6 +134,7 @@ export default {
   overscroll-behavior: contain;
   -webkit-animation: twc-fade-in 0.3s cubic-bezier(0.390, 0.575, 0.565, 1.000) both;
   animation: twc-fade-in 0.3s cubic-bezier(0.390, 0.575, 0.565, 1.000) both;
+  z-index: 2699; /* Sit on top, but right below modal messages */
 }
 
 @media (max-width: 450px) {
@@ -153,6 +182,36 @@ export default {
 .twc-spinner .twc-bounce2 {
   -webkit-animation-delay: -0.16s;
   animation-delay: -0.16s;
+}
+
+.twc-lightbox {
+  display: block;
+  position: fixed;
+  z-index: 999;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background: var(--lightbox-overlay-color, rgba(0, 0, 0, 0.8));
+  -webkit-animation: twc-fade-in 0.3s cubic-bezier(0.390, 0.575, 0.565, 1.000) both;
+  animation: twc-fade-in 0.3s cubic-bezier(0.390, 0.575, 0.565, 1.000) both;
+}
+
+.twc-lightbox-image-wrapper {
+    width: 100%;
+    height: 100%;
+}
+
+.twc-lightbox-image {
+    max-width: 90vw;
+    max-height: 90vh;
+    position: fixed;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    background-color: var(--lightbox-image-background-color, #ffffff);
+    -webkit-animation: twc-fade-in 0.3s cubic-bezier(0.390, 0.575, 0.565, 1.000) both;
+    animation: twc-fade-in 0.3s cubic-bezier(0.390, 0.575, 0.565, 1.000) both;
 }
 
 @-webkit-keyframes twc-sk-bouncedelay {

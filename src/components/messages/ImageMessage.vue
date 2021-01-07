@@ -1,6 +1,13 @@
 <template>
   <div class="twc-image-message">
-    <img :src="imageUrl" :alt="altText" @load="scrollChatUp"/>
+    <span v-if="!(thumbnailUrl && !imageUrl)">
+      <a href="#" v-on:click="zoomIn" title="Click to enlarge" class="twc-image-link">
+        <img :src="thumbnailUrl" :alt="altText" @load="scrollChatUp">
+      </a>
+    </span>
+    <span v-else>
+      <img :src="thumbnailUrl" :alt="altText" @load="scrollChatUp">
+    </span>
   </div>
 </template>
 
@@ -10,6 +17,11 @@ import { EventBus, events } from '../../utils/event-bus.js';
 
 export default {
   name: 'ImageMessage',
+  data() {
+      return{
+        zoomedIn: false
+      }
+  },
   props: {
     message: {
       type: Object,
@@ -19,12 +31,20 @@ export default {
           message &&
           message.type === 'image' &&
           message.data &&
-          message.data.image_url
+          (message.data.image_url || message.data.thumbnail_url )
         );
       },
     },
   },
   computed: {
+    thumbnailUrl() {
+      if(this.message.data.thumbnail_url) {
+        return this.message.data.thumbnail_url
+      }
+      else {
+        return this.message.data.image_url
+      }
+    },
     imageUrl() {
       return this.message.data.image_url;
     },
@@ -33,6 +53,17 @@ export default {
     },
   },
   methods: {
+    zoomIn() {
+      event.preventDefault(); // prevent anchor from being added to url
+
+      // TODO: handle extension 
+      // await handleExtension(API_MESSAGE_IMAGE_CLICKED, payload);
+
+      if(this.message.data.image_url) {
+        EventBus.$emit(events.ZOOM_IMAGE, this.imageUrl);
+      }
+      
+    },
     scrollChatUp() {
       EventBus.$emit(events.SCROLL_CHAT_DOWN);
     }

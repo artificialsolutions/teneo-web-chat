@@ -21,8 +21,8 @@
       ></textarea>
       <div class="twc-user-input__button">
         <button role="button" tabindex="0" :aria-label="$t('message.input_area_send_button_aria_label')" :title="$t('message.input_area_send_button_title')" class="twc-user-input__send-icon-wrapper" @click.prevent="" @focus="setInputActive(true)" @blur="setInputActive(false)" @click="sendButtonClicked()" :aria-disabled="inputDisabled" :disabled="inputDisabled ? true : false">
-          <img v-if="sendIconUrl" class="twc-user-input__send-icon" :src="sendIconUrl" aria-hidden="true" alt=""/>
-          <SendIcon v-else class="twc-user-input__send-icon" aria-hidden="true"/>
+          <img v-if="sendIconUrl" class="twc-user-input__send-icon" id="twc-user-input__send-icon" :src="sendIconUrl" aria-hidden="true" alt=""/>
+          <SendIcon v-else class="twc-user-input__send-icon" id="twc-user-input__send-icon" aria-hidden="true"/>
         </button>
       </div>
     </form>
@@ -135,10 +135,13 @@ export default {
       }
     },
     userTyping() {
-      // create payload object
-      const payload = {"text" : this.$refs.userInput.value }
-      // check if there is an extension that want to be notified about the user typing
-      handleExtension(API_ON_USER_TYPING,payload);
+      // check if userinput field still exists to prevent error in IE11
+      if (document.getElementById("twc-user-input-field")) {
+        // create payload object
+        const payload = {"text" : this.$refs.userInput.value }
+        // check if there is an extension that want to be notified about the user typing
+        handleExtension(API_ON_USER_TYPING,payload);
+      }
     },
     isMobile () {
       return detectMobile();

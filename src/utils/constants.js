@@ -9,7 +9,7 @@ export const SESSION_ID_STORAGE_KEY = 'teneo-web-chat-session-id';
 export const FALLBACK_LOCALE = 'en';
 
 // api version
-export const API_VERSION = "3.3.0";
+export const API_VERSION = "3.4.0";
 
 // state object keys
 export const API_KEY_VISIBILITY = "visibility";
