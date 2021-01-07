@@ -13,38 +13,6 @@
 
   <body>
     <button onclick="TeneoWebChat.call('reset')">Reset Chat</button><br>
-    <button onclick="TeneoWebChat.call('set_locale','de')">Deutsch</button><br>
-    <button onclick="TeneoWebChat.call('set_locale','es')">Castellano</button><br>
-    <button onclick="TeneoWebChat.call('set_locale','en')">English</button><br>
-    <button onclick="TeneoWebChat.call('set_locale','nl')">Nederlands</button><br>
-    <button onclick="TeneoWebChat.call('set_locale','sv')">Svenska</button><br>
-    <button onclick="TeneoWebChat.call('set_locale','tr')">Turkish</button><br>
-    <button onclick="TeneoWebChat.call('set_locale','id')">Indonesian</button><br>
-    <button onclick="TeneoWebChat.call('set_locale','ms')">Malay</button><br>
-    <button onclick="TeneoWebChat.call('set_locale','en-GB')">en-GB fallback test</button><br>
-    <button onclick="TeneoWebChat.call('set_locale','nl-BE')">nl-BE fallback test</button><br>
-    <button onclick="TeneoWebChat.call('set_locale','fr-GA')">fr-GA fallback test</button><br>
-    <button onclick="TeneoWebChat.call('set_locale','zh')">zh locale test</button><br>
-    <button onclick="TeneoWebChat.call('set_locale','xx')">xx locale test</button><br>
-    <button onclick="TeneoWebChat.call('set_locale',true)">boolean locale test</button><br>
-    <button onclick="TeneoWebChat.call('show_typing_indicator', {'author': 'agent'})">Typing indicator</button><br>
-    <br>
-    <button onclick="TeneoWebChat.call('show_callout','👋 Hi there! I am a callout message. Click me to open the <strong>chat window</strong>!')">Show Callout</button><br>
-    <button onclick="TeneoWebChat.call('hide_callout')">Hide Callout</button><br>
-    <br>
-    <button onclick="TeneoWebChat.call('set_chat_window_title', 'A Title set with the API')">Set TITLE with API</button><br>
-    <button onclick="TeneoWebChat.call('reset_chat_window_title')">Reset Window Title</button><br>
-    <br>
-    <button onclick="TeneoWebChat.call('set_chat_window_icon', 'https://cdn3.iconfinder.com/data/icons/star-wars-color/205/clone-trooper-256.png')">Set Window Icon with API</button><br>
-    <button onclick="TeneoWebChat.call('reset_chat_window_icon')">Reset Window Icon</button><br>
-    <br>
-    <button onclick="TeneoWebChat.call('set_launch_icon', 'https://cdn0.iconfinder.com/data/icons/streamline-emoji-1/48/092-robot-face-1-256.png')">Set LAUNCH Icon with API</button><br>
-    <button onclick="TeneoWebChat.call('reset_launch_icon')">Reset LAUNCH Icon</button><br>
-    <br>
-    <button onclick="TeneoWebChat.call('set_send_icon', 'https://cdn4.iconfinder.com/data/icons/basic-ui-2-line/32/paper-plane-craft-send-go-start-512.png')">Set SEND Icon with API</button><br>
-    <button onclick="TeneoWebChat.call('reset_send_icon')">Reset SEND Icon</button><br>
-    <button onclick="console.log(TeneoWebChat.get('storage'))">Get storage</button><br>
-    <button onclick="console.log(TeneoWebChat.get('locale'))">Get locale</button><br>
 
     <script src="teneo-web-chat.js"></script> <!-- needed for Heroku -->
     <div id="teneo-web-chat"></div>
@@ -52,12 +20,8 @@
       
       window.onload = function () {
 
-        if (
-          window.TeneoWebChat &&
-            typeof window.TeneoWebChat.initialize === 'function'
-        ) {
+        if (window.TeneoWebChat && typeof window.TeneoWebChat.initialize === 'function') {
           var element = document.getElementById('teneo-web-chat');
-
           const teneoProps = {
             'teneoEngineUrl': '<%= process.env.TENEO_ENGINE_URL %>',
             'title':'<%= process.env.HEADER_TITLE %>',
