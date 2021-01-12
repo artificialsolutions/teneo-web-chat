@@ -6,7 +6,7 @@
     <div class="twc-card-body" v-if="cardTitle || cardSubtitle || messageText">
       <h5 class="twc-card-title" v-if="cardTitle">{{ cardTitle }}</h5>
       <h6 class="twc-card-subtitle" v-if="cardSubtitle">{{ cardSubtitle }}</h6>
-      <p class="twc-card-text" v-if="messageText">{{ messageText }}</p>
+      <p class="twc-card-text" v-if="messageText" v-html="sanitizedHtmlText"></p>
     </div>
     <div class="twc-clickablelist" :class="{ 'twc-expired': replySent || isExpired}" v-if="clickablelistitems">
       <ul class="twc-clickablelist-message" :class="{ replied: replySent}">

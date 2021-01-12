@@ -121,7 +121,7 @@
             <div class="twc-card-body" v-if="message.title || message.subtitle || message.text">
               <h5 class="twc-card-title" v-if="message.title">{{ message.title }}</h5>
               <h6 class="twc-card-subtitle" v-if="message.subtitle">{{ message.subtitle }}</h6>
-              <p class="twc-card-text" v-if="message.text">{{ message.text }}</p>
+              <p class="twc-card-text" v-if="message.text" v-html="sanitizedHtmlText(message.text)"></p>
             </div>
             <div class="twc-clickablelist" :class="{ 'twc-expired': replySent || isExpired}" v-if="message.list_items">
               <ul class="twc-clickablelist-message" :class="{ 'twc-replied': replySent}">
@@ -183,6 +183,7 @@ import handleButtonClick from '../../utils/handle-button-click.js';
 import { EventBus, events } from '../../utils/event-bus.js';
 import handleLinkButtonClick from '../../utils/handle-linkbutton-click.js';
 import keyIsSpaceOrEnter from '../../utils/is-space-or-enter.js';
+import sanitizeHtml from '../../utils/sanitize-html.js';
 
 export default {
   name: 'ComboMessage',
@@ -240,6 +241,9 @@ export default {
     },
     scrollChatUp() {
       EventBus.$emit(events.SCROLL_CHAT_DOWN);
+    },
+    sanitizedHtmlText(text) {
+      return sanitizeHtml(text);
     }
   },
 };
