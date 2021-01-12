@@ -1,3 +1,7 @@
+# v3.x.x
+## DATE
+* Allow html in body of cards
+
 # v3.4.0
 ## 07-01-2021
 * Added new api to add a callout message to the launch button to catch the web visitor's attention
