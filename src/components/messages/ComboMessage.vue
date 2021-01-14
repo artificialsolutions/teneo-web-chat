@@ -5,6 +5,7 @@
         <div class="twc-text-message">
           <p class="twc-text-message__text" v-html="message.text"></p>
         </div>
+        <!-- <TextMessage :message="message"/> -->
       </div>
 
       <div class="twc-combo-message" v-if="message.type==='audio'">
@@ -80,7 +81,10 @@
       </div>
 
       <div class="twc-combo-message" v-if="message.type==='buttons'">
-        <div class="twc-buttons" :class="{ 'twc-expired': replySent || isExpired}">
+
+        <ButtonsMessage :message="comboMessage(message)"/>
+
+        <!-- <div class="twc-buttons" :class="{ 'twc-expired': replySent || isExpired}">
             <h5 class="twc-buttons-title" v-if="message.title">{{ message.title }}</h5>
             <div>
               <a
@@ -94,7 +98,7 @@
                 @keydown="handleReturnSpaceKeys($event, button, idx +'btn')"
               >{{ button.title }}</a>
             </div>
-          </div>
+          </div> -->
       </div>
 
       <div class="twc-combo-message" v-if="message.type==='linkbuttons'">
@@ -178,6 +182,8 @@
 </template>
 <script>
 
+import TextMessage from './TextMessage.vue';
+import ButtonsMessage from './ButtonsMessage.vue';
 import { PARTICIPANT_BOT } from '../../utils/constants.js';
 import handleButtonClick from '../../utils/handle-button-click.js';
 import { EventBus, events } from '../../utils/event-bus.js';
@@ -235,6 +241,12 @@ export default {
       if (keyIsSpaceOrEnter(event)) {
         this.onSelect(reply, idx)
       }
+    },
+    comboMessage(myMessage) {
+      console.log("myMessage", myMessage)
+      const message = {'data' : myMessage, 'type' : myMessage.type}
+      console.log("message", message)
+      return message;
     },
     videoUrl(url) {
       return url + '#t=0.1';

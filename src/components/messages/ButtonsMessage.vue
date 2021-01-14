@@ -26,6 +26,7 @@ export default {
       type: Object,
       required: true,
       validator: (message) => {
+        console.log(message)
         return (
           message &&
           message.type === 'buttons' &&
