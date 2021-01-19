@@ -52,6 +52,7 @@
 import Vue from 'vue';
 import vueDebounce from 'vue-debounce';
 import SendIcon from '../icons/send.vue';
+import UploadIcon from '../icons/upload.vue';
 import { PARTICIPANT_USER } from '../utils/constants.js';
 import { API_ON_INPUT_SUBMITTED, API_ON_USER_TYPING, API_ON_SEND_BUTTON_CLICK } from '../utils/api-function-names.js';
 import { EventBus, events } from '../utils/event-bus.js';
@@ -65,6 +66,7 @@ Vue.use(vueDebounce);
 export default {
   components: {
     SendIcon,
+    UploadIcon
   },
   props: {
     onSubmit: {
@@ -91,6 +93,12 @@ export default {
         this.$refs.userInput.focus();
       }
     });
+
+
+    EventBus.$on(events.DISABLE_UPLOAD, () => {});
+    EventBus.$on(events.ENABLE_UPLOAD, () => {});
+    EventBus.$on(events.SHOW_UPLOAD_ICON, () => {});
+    EventBus.$on(events.HIDE_UPLOAD_ICON, () => {});
 
     EventBus.$on(events.DISABLE_INPUT, () => {
       this.setInputActive(false);

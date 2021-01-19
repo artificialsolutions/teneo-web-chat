@@ -302,6 +302,14 @@ return filteredMessageList;
         }
         break;
 
+        case apiConstants.API_CALL_HIDE_UPLOAD_ICON:
+        EventBus.$emit(events.HIDE_UPLOAD_ICON, payload);
+        break;
+
+      case apiConstants.API_CALL_SHOW_UPLOAD_ICON:
+           EventBus.$emit(events.SHOW_UPLOAD_ICON, payload);
+        break;
+
       case apiConstants.API_CALL_SET_CHAT_WINDOW_TITLE:
         // TODO: throw error if payload is invalid or if store throws error
         if (typeof payload === 'string') {
@@ -345,29 +353,29 @@ return filteredMessageList;
       case apiConstants.API_CALL_SET_UPLOAD_ICON:
         // TODO: throw error if payload is invalid or if store throws error
         if (typeof payload === 'string') {
-          store.commit('sendIconUrl', payload);
+          store.commit('uploadIconUrl', payload);
         }
         break;
 
       case apiConstants.API_CALL_RESET_SEND_ICON:
         store.commit('sendIconUrl', store.getters.initialSendIconUrl);
         break;
-      case apiConstants.API_CALL_SET_UPLOAD_ICON:
-        store.commit('sendIconUrl', store.getters.initialUploadIconUrl);
+      case apiConstants.API_CALL_RESET_UPLOAD_ICON:
+        store.commit('uploadIconUrl', store.getters.initialUploadIconUrl);
         break;
 
       case apiConstants.API_CALL_DISABLE_USERINPUT:
         EventBus.$emit(events.DISABLE_INPUT);
         break;
 
-      case apiConstants.API_CALL_DISABLE_USERUPLOAD:
+      case apiConstants.API_CALL_DISABLE_UPLOAD_ICON:
         EventBus.$emit(events.DISABLE_UPLOAD);
         break;
 
       case apiConstants.API_CALL_ENABLE_USERINPUT:
         EventBus.$emit(events.ENABLE_INPUT);
         break;
-      case apiConstants.API_CALL_ENABLE_USERINPUT:
+      case apiConstants.API_CALL_ENABLE_UPLOAD_ICON:
         EventBus.$emit(events.ENABLE_UPLOAD);
         break;
 
