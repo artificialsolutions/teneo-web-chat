@@ -12,17 +12,17 @@ module.exports = {
         loader: 'babel-loader',
         exclude: /node_modules/,
         options: {
-          "presets": [
+          'presets': [
             [
-              "@babel/preset-env",
+              '@babel/preset-env',
               {
-                "corejs": 3,
-                "useBuiltIns": "usage",
-                "debug": false
+                'corejs': 3,
+                'useBuiltIns': 'usage',
+                'debug': false
               }
             ]
           ],
-          plugins: ["@babel/plugin-transform-modules-commonjs"],
+          plugins: ['@babel/plugin-transform-modules-commonjs'],
         }
       },
       {

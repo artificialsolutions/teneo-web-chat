@@ -17,7 +17,7 @@
     <script src="teneo-web-chat.js"></script> <!-- needed for Heroku -->
     <div id="teneo-web-chat"></div>
     <script>
-      
+
       window.onload = function () {
 
         if (window.TeneoWebChat && typeof window.TeneoWebChat.initialize === 'function') {
@@ -34,6 +34,7 @@
             'closeIconUrl' :  '<%= process.env.CLOSE_ICON_URL %>',
             'launchIconUrl' :  '<%= process.env.LAUNCH_ICON_URL %>',
             'sendIconUrl' :  '<%= process.env.SEND_ICON_URL %>',
+            'uploadIconUrl' :  '<%= process.env.UPLOAD_ICON_URL %>',
             'locale': '<%= process.env.LOCALE %>',
           }
 
