@@ -108,8 +108,8 @@ export var translatedMessages = {
             input_area_userinput_field_placeholder: 'Ecrivez ici, svp.',
             input_area_send_button_aria_label: 'Envoyer message',
             input_area_send_button_title: 'Envoyer message',
-            input_area_upload_button_aria_label: 'Téléverser un fichier',
-            input_area_upload_button_title: 'Téléverser un fichier',
+            input_area_upload_button_aria_label: 'Télécharger un fichier',
+            input_area_upload_button_title: 'Télécharger un fichier',
             message_typing_indicator: 'En train d\'écrire...'
         }
     },
@@ -165,8 +165,8 @@ export var translatedMessages = {
             input_area_userinput_field_placeholder: 'こちら入力してください',
             input_area_send_button_aria_label: 'メッセージを送る',
             input_area_send_button_title: 'メッセージを送る',
-            input_area_upload_button_aria_label: 'ファイルをアップロードする',
-            input_area_upload_button_title: 'ファイルをアップロードする',
+            input_area_upload_button_aria_label: 'アップロード',
+            input_area_upload_button_title: 'アップロード',
             message_typing_indicator: '入力中...'
         }
     },
@@ -222,8 +222,8 @@ export var translatedMessages = {
             input_area_userinput_field_placeholder: 'Por favor escreva aqui...',
             input_area_send_button_aria_label: 'Enviar mensagem',
             input_area_send_button_title: 'Enviar mensagem',
-            input_area_upload_button_aria_label: 'Subir arquivo',
-            input_area_upload_button_title: 'Subir arquivo',
+            input_area_upload_button_aria_label: 'Carregar ficheiro',
+            input_area_upload_button_title: 'Carregar ficheiro',
             message_typing_indicator: 'Escrevendo...'
         }
     },
