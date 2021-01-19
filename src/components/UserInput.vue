@@ -94,11 +94,24 @@ export default {
       }
     });
 
+const uploadBtn = document.getElementsByClassName('twc-user-input__upload-icon-wrapper')[0];
 
-    EventBus.$on(events.DISABLE_UPLOAD, () => {});
-    EventBus.$on(events.ENABLE_UPLOAD, () => {});
-    EventBus.$on(events.SHOW_UPLOAD_ICON, () => {});
-    EventBus.$on(events.HIDE_UPLOAD_ICON, () => {});
+    EventBus.$on(events.DISABLE_UPLOAD, () => {
+      this.setUploadDisabled(true);
+      uploadBtn.setAttribute('disabled', 'true');
+    });
+    EventBus.$on(events.ENABLE_UPLOAD, () => {
+      this.setUploadDisabled(false);
+      uploadBtn.removeAttribute('disabled');
+    });
+    EventBus.$on(events.HIDE_UPLOAD_ICON, () => {
+      this.setUploadHidden(true);
+      uploadBtn.style.display = 'none';
+    });
+    EventBus.$on(events.SHOW_UPLOAD_ICON, () => {
+      this.setUploadHidden(false);
+      uploadBtn.style.display = 'block';
+    });
 
     EventBus.$on(events.DISABLE_INPUT, () => {
       this.setInputActive(false);
@@ -158,6 +171,12 @@ export default {
     },
     setInputDisabled(onoff) {
       this.inputDisabled = onoff;
+    },
+    setUploadDisabled(onoff) {
+      this.uploadDisabled = onoff;
+    },
+    setUploadHidden(onoff) {
+      this.uploadHidden = onoff;
     },
     handleReturnKey(event) {
       if (event.keyCode === 13 && !event.shiftKey) {
@@ -362,6 +381,10 @@ export default {
   width: 44px;
   height: 44px;
   cursor: pointer;
+}
+
+.twc-user-input__upload-icon-wrapper:disabled{
+  opacity: 0.25;
 }
 
 .twc-user-input__send-icon-wrapper:active {
