@@ -20,18 +20,6 @@
         @input="autoTextareaHeight"
       ></textarea>
       <div class="twc-user-input__button">
-        <button role="button" tabindex="0" :aria-label="$t('message.input_area_send_button_aria_label')"
-                :title="$t('message.input_area_send_button_title')" class="twc-user-input__send-icon-wrapper"
-                :aria-disabled="inputDisabled" :disabled="inputDisabled ? true : false" @click.prevent=""
-                @focus="setInputActive(true)" @blur="setInputActive(false)" @click="sendButtonClicked()"
-        >
-          <img v-if="sendIconUrl" id="twc-user-input__send-icon" class="twc-user-input__send-icon" :src="sendIconUrl"
-               aria-hidden="true" alt=""
-          />
-          <SendIcon v-else id="twc-user-input__send-icon" class="twc-user-input__send-icon" aria-hidden="true" />
-        </button>
-      </div>
-      <div class="twc-user-upload__button">
         <button role="button" tabindex="0" :aria-label="$t('message.input_area_upload_button_aria_label')"
                 :title="$t('message.input_area_upload_button_title')" class="twc-user-input__upload-icon-wrapper"
                 :aria-disabled="inputDisabled" :disabled="inputDisabled ? true : false" @click.prevent=""
@@ -41,6 +29,18 @@
                aria-hidden="true" alt=""
           />
           <UploadIcon v-else id="twc-user-input__upload-icon" class="twc-user-input__upload-icon" aria-hidden="true" />
+        </button>
+      </div>
+      <div class="twc-user-input__button">
+        <button role="button" tabindex="0" :aria-label="$t('message.input_area_send_button_aria_label')"
+                :title="$t('message.input_area_send_button_title')" class="twc-user-input__send-icon-wrapper"
+                :aria-disabled="inputDisabled" :disabled="inputDisabled ? true : false" @click.prevent=""
+                @focus="setInputActive(true)" @blur="setInputActive(false)" @click="sendButtonClicked()"
+        >
+          <img v-if="sendIconUrl" id="twc-user-input__send-icon" class="twc-user-input__send-icon" :src="sendIconUrl"
+               aria-hidden="true" alt=""
+          />
+          <SendIcon v-else id="twc-user-input__send-icon" class="twc-user-input__send-icon" aria-hidden="true" />
         </button>
       </div>
     </form>
@@ -353,7 +353,8 @@ export default {
 }
 
 
-.twc-user-input__send-icon-wrapper {
+.twc-user-input__send-icon-wrapper,
+.twc-user-input__upload-icon-wrapper {
   background: none;
   border: none;
   padding: 0px;
