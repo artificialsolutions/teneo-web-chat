@@ -38,7 +38,7 @@ export const API_GET_ENGINE_URL = 'engine_url';
 export const API_GET_STORAGE = 'storage';
 export const API_GET_LOCALE = 'locale';
 
-// Api callacks
+// Api callbacks
 export const API_ON_READY = 'ready';
 export const API_ON_VISIBILITY_CHANGED = 'visibility_changed';
 export const API_ON_INPUT_SUBMITTED = 'input_submitted';
@@ -52,4 +52,5 @@ export const API_ON_CLOSE_BUTTON_CLICK = 'close_button_clicked';
 export const API_ON_MINIMIZE_BUTTON_CLICK = 'minimize_button_clicked';
 export const API_ON_MODAL_BUTTON_CLICK = 'modal_button_clicked';
 export const API_ON_SEND_BUTTON_CLICK = 'send_button_clicked';
+export const API_ON_UPLOAD_BUTTON_CLICK = 'upload_button_clicked';
 export const API_ON_RESET = 'reset';

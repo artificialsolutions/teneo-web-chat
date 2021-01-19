@@ -1,47 +1,50 @@
 <!DOCTYPE html>
 <html lang="en">
-  <head>
-    <meta charset="UTF-8" />
+<head>
+    <meta charset="UTF-8"/>
     <title>Teneo Web Chat</title>
     <meta name="viewport" content="width=device-width, height=device-height, initial-scale=1.0 user-scalable=no">
     <style>
-      body {
-        background: #E5F5FE;
-      }
+        body {
+            background: #E5F5FE;
+        }
     </style>
-  </head>
+</head>
 
-  <body>
-    <button onclick="TeneoWebChat.call('reset')">Reset Chat</button><br>
+<body>
+<button onclick="TeneoWebChat.call('reset')">Reset Chat</button>
+<br>
 
-    <script src="teneo-web-chat.js"></script> <!-- needed for Heroku -->
-    <div id="teneo-web-chat"></div>
-    <script>
+<script src="teneo-web-chat.js"></script> <!-- needed for Heroku -->
+<div id="teneo-web-chat"></div>
+<script>
 
-      window.onload = function () {
-
+    window.onload = function () {
         if (window.TeneoWebChat && typeof window.TeneoWebChat.initialize === 'function') {
-          var element = document.getElementById('teneo-web-chat');
-          const teneoProps = {
-            'teneoEngineUrl': '<%= process.env.TENEO_ENGINE_URL %>',
-            'title':'<%= process.env.HEADER_TITLE %>',
-            'titleIconUrl': '<%= process.env.HEADER_ICON_URL %>',
-            'showCloseButton' : '<%= process.env.SHOW_CLOSE_BUTTON %>',
-            'agentAvatarUrl' : '<%= process.env.AGENT_AVATAR_URL %>',
-            'botAvatarUrl' : '<%= process.env.BOT_AVATAR_URL %>',
-            'userAvatarUrl' : '<%= process.env.USER_AVATAR_URL %>',
-            'minimizeIconUrl' :  '<%= process.env.MINIMIZE_ICON_URL %>',
-            'closeIconUrl' :  '<%= process.env.CLOSE_ICON_URL %>',
-            'launchIconUrl' :  '<%= process.env.LAUNCH_ICON_URL %>',
-            'sendIconUrl' :  '<%= process.env.SEND_ICON_URL %>',
-            'uploadIconUrl' :  '<%= process.env.UPLOAD_ICON_URL %>',
-            'locale': '<%= process.env.LOCALE %>',
-          }
+            TeneoWebChat.on('upload_button_clicked', function (e) {
+                console.log('I worked');
+            });
+            var element = document.getElementById('teneo-web-chat');
+            const teneoProps = {
+                'teneoEngineUrl': '<%= process.env.TENEO_ENGINE_URL %>',
+                'title': '<%= process.env.HEADER_TITLE %>',
+                'titleIconUrl': '<%= process.env.HEADER_ICON_URL %>',
+                'showCloseButton': '<%= process.env.SHOW_CLOSE_BUTTON %>',
+                'agentAvatarUrl': '<%= process.env.AGENT_AVATAR_URL %>',
+                'botAvatarUrl': '<%= process.env.BOT_AVATAR_URL %>',
+                'userAvatarUrl': '<%= process.env.USER_AVATAR_URL %>',
+                'minimizeIconUrl': '<%= process.env.MINIMIZE_ICON_URL %>',
+                'closeIconUrl': '<%= process.env.CLOSE_ICON_URL %>',
+                'launchIconUrl': '<%= process.env.LAUNCH_ICON_URL %>',
+                'sendIconUrl': '<%= process.env.SEND_ICON_URL %>',
+                'uploadIconUrl': '<%= process.env.UPLOAD_ICON_URL %>',
+                'locale': '<%= process.env.LOCALE %>',
+            };
 
-          window.TeneoWebChat.initialize(element, teneoProps);
+            window.TeneoWebChat.initialize(element, teneoProps);
 
         }
-      }
-    </script>
-  </body>
+    };
+</script>
+</body>
 </html>

@@ -23,7 +23,7 @@
         <button role="button" tabindex="0" :aria-label="$t('message.input_area_upload_button_aria_label')"
                 :title="$t('message.input_area_upload_button_title')" class="twc-user-input__upload-icon-wrapper"
                 :aria-disabled="inputDisabled" :disabled="inputDisabled ? true : false" @click.prevent=""
-                @focus="setInputActive(true)" @blur="setInputActive(false)" @click="sendButtonClicked()"
+                @focus="setInputActive(true)" @blur="setInputActive(false)" @click="uploadButtonClicked()"
         >
           <img v-if="uploadIconUrl" id="twc-user-input__upload-icon" class="twc-user-input__upload-icon" :src="uploadIconUrl"
                aria-hidden="true" alt=""
@@ -54,7 +54,7 @@ import vueDebounce from 'vue-debounce';
 import SendIcon from '../icons/send.vue';
 import UploadIcon from '../icons/upload.vue';
 import { PARTICIPANT_USER } from '../utils/constants.js';
-import { API_ON_INPUT_SUBMITTED, API_ON_USER_TYPING, API_ON_SEND_BUTTON_CLICK } from '../utils/api-function-names.js';
+import { API_ON_INPUT_SUBMITTED, API_ON_USER_TYPING, API_ON_SEND_BUTTON_CLICK, API_ON_UPLOAD_BUTTON_CLICK } from '../utils/api-function-names.js';
 import { EventBus, events } from '../utils/event-bus.js';
 import handleExtension from '../utils/handle-extension.js';
 import basePayload from '../utils/base-payload.js';
@@ -209,6 +209,9 @@ const uploadBtn = document.getElementsByClassName('twc-user-input__upload-icon-w
       }
       // Call submit function
       this._submitText();
+    },
+    async uploadButtonClicked() {
+      await handleExtension(API_ON_UPLOAD_BUTTON_CLICK);
     },
     async _submitText() {
       // Create payload object
