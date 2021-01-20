@@ -1,85 +1,85 @@
 <template>
   <div>
     <form
-      class="twc-user-input"
-      :class="{ 'twc-active': inputActive, 'twc-disabled': inputDisabled }"
+        class="twc-user-input"
+        :class="{ 'twc-active': inputActive, 'twc-disabled': inputDisabled }"
     >
       <textarea
-        id="twc-user-input-field"
-        ref="userInput"
-        v-debounce:250="userTyping"
-        rows="1"
-        class="twc-user-input__text"
-        role="textbox"
-        tabIndex="0"
-        :aria-label="$t('message.input_area_userinput_field_aria_label')"
-        :aria-placeholder="$t('message.input_area_userinput_field_placeholder')"
-        :placeholder="$t('message.input_area_userinput_field_placeholder')"
-        :debounce-events="['input']"
-        :aria-disabled="inputDisabled"
-        :disabled="inputDisabled ? true : false"
-        @focus="setInputActive(true)"
-        @blur="setInputActive(false)"
-        @keydown="handleReturnKey"
-        @input="autoTextareaHeight"
-      ></textarea>
-      <div class="twc-user-input__button">
-        <button
-          role="button"
-          tabindex="0"
-          :aria-label="$t('message.input_area_upload_button_aria_label')"
-          :title="$t('message.input_area_upload_button_title')"
-          class="twc-user-input__upload-icon-wrapper"
+          id="twc-user-input-field"
+          ref="userInput"
+          v-debounce:250="userTyping"
+          rows="1"
+          class="twc-user-input__text"
+          role="textbox"
+          tabIndex="0"
+          :aria-label="$t('message.input_area_userinput_field_aria_label')"
+          :aria-placeholder="$t('message.input_area_userinput_field_placeholder')"
+          :placeholder="$t('message.input_area_userinput_field_placeholder')"
+          :debounce-events="['input']"
           :aria-disabled="inputDisabled"
           :disabled="inputDisabled ? true : false"
-          @click.prevent=""
           @focus="setInputActive(true)"
           @blur="setInputActive(false)"
-          @click="uploadButtonClicked()"
+          @keydown="handleReturnKey"
+          @input="autoTextareaHeight"
+      ></textarea>
+      <div v-if="showUploadButton" class="twc-user-input__button">
+        <button
+            role="button"
+            tabindex="0"
+            :aria-label="$t('message.input_area_upload_button_aria_label')"
+            :title="$t('message.input_area_upload_button_title')"
+            class="twc-user-input__upload-icon-wrapper"
+            :aria-disabled="inputDisabled"
+            :disabled="inputDisabled ? true : false"
+            @click.prevent=""
+            @focus="setInputActive(true)"
+            @blur="setInputActive(false)"
+            @click="uploadButtonClicked()"
         >
           <img
-            v-if="uploadIconUrl"
-            id="twc-user-input__upload-icon"
-            class="twc-user-input__upload-icon"
-            :src="uploadIconUrl"
-            aria-hidden="true"
-            alt=""
+              v-if="uploadIconUrl"
+              id="twc-user-input__upload-icon"
+              class="twc-user-input__upload-icon"
+              :src="uploadIconUrl"
+              aria-hidden="true"
+              alt=""
           />
           <UploadIcon
-            v-else
-            id="twc-user-input__upload-icon"
-            class="twc-user-input__upload-icon"
-            aria-hidden="true"
+              v-else
+              id="twc-user-input__upload-icon"
+              class="twc-user-input__upload-icon"
+              aria-hidden="true"
           />
         </button>
       </div>
       <div class="twc-user-input__button">
         <button
-          role="button"
-          tabindex="0"
-          :aria-label="$t('message.input_area_send_button_aria_label')"
-          :title="$t('message.input_area_send_button_title')"
-          class="twc-user-input__send-icon-wrapper"
-          :aria-disabled="inputDisabled"
-          :disabled="inputDisabled ? true : false"
-          @click.prevent=""
-          @focus="setInputActive(true)"
-          @blur="setInputActive(false)"
-          @click="sendButtonClicked()"
+            role="button"
+            tabindex="0"
+            :aria-label="$t('message.input_area_send_button_aria_label')"
+            :title="$t('message.input_area_send_button_title')"
+            class="twc-user-input__send-icon-wrapper"
+            :aria-disabled="inputDisabled"
+            :disabled="inputDisabled ? true : false"
+            @click.prevent=""
+            @focus="setInputActive(true)"
+            @blur="setInputActive(false)"
+            @click="sendButtonClicked()"
         >
           <img
-            v-if="sendIconUrl"
-            id="twc-user-input__send-icon"
-            class="twc-user-input__send-icon"
-            :src="sendIconUrl"
-            aria-hidden="true"
-            alt=""
+              v-if="sendIconUrl"
+              id="twc-user-input__send-icon"
+              class="twc-user-input__send-icon"
+              :src="sendIconUrl"
+              aria-hidden="true"
+              alt=""
           />
           <SendIcon
-            v-else
-            id="twc-user-input__send-icon"
-            class="twc-user-input__send-icon"
-            aria-hidden="true"
+              v-else
+              id="twc-user-input__send-icon"
+              class="twc-user-input__send-icon"
+              aria-hidden="true"
           />
         </button>
       </div>
@@ -124,7 +124,7 @@ export default {
     },
   },
   computed: {
-    ...mapState(['sendIconUrl', 'uploadIconUrl']),
+    ...mapState(['sendIconUrl', 'showUploadButton', 'uploadIconUrl']),
   },
   data() {
     return {
@@ -139,25 +139,20 @@ export default {
       }
     });
 
-    const uploadBtn = document.getElementsByClassName(
-      'twc-user-input__upload-icon-wrapper'
-    )[0];
 
     EventBus.$on(events.DISABLE_UPLOAD, () => {
-      this.setUploadDisabled(true);
-      uploadBtn.setAttribute('disabled', 'true');
+      if (this.showUploadButton) {
+        document.getElementsByClassName('twc-user-input__upload-icon-wrapper')[0]
+            .setAttribute('disabled', 'true');
+        this.setUploadDisabled(true);
+      }
     });
     EventBus.$on(events.ENABLE_UPLOAD, () => {
-      this.setUploadDisabled(false);
-      uploadBtn.removeAttribute('disabled');
-    });
-    EventBus.$on(events.HIDE_UPLOAD_ICON, () => {
-      this.setUploadHidden(true);
-      uploadBtn.style.display = 'none';
-    });
-    EventBus.$on(events.SHOW_UPLOAD_ICON, () => {
-      this.setUploadHidden(false);
-      uploadBtn.style.display = 'block';
+      if (this.showUploadButton) {
+        document.getElementsByClassName('twc-user-input__upload-icon-wrapper')[0]
+            .removeAttribute('disabled');
+        this.setUploadDisabled(false);
+      }
     });
 
     EventBus.$on(events.DISABLE_INPUT, () => {
@@ -165,7 +160,8 @@ export default {
       this.setInputDisabled(true);
 
       if (document.getElementById('twc-user-input-field')) {
-        document.getElementById('twc-user-input-field').blur();
+        document.getElementById('twc-user-input-field')
+            .blur();
       }
     });
 
@@ -174,7 +170,8 @@ export default {
       this.setInputActive(true);
 
       if (document.getElementById('twc-user-input-field')) {
-        document.getElementById('twc-user-input-field').focus();
+        document.getElementById('twc-user-input-field')
+            .focus();
       }
     });
 
@@ -194,6 +191,7 @@ export default {
     if (!detectMobile()) {
       this.$refs.userInput.focus();
     } else {
+
       /*
        * If user gives input field focus without having first interacted with the chatwindow
        * the chat window will shrink down and the keyboard will overlap the chat window
@@ -217,9 +215,6 @@ export default {
     },
     setUploadDisabled(onoff) {
       this.uploadDisabled = onoff;
-    },
-    setUploadHidden(onoff) {
-      this.uploadHidden = onoff;
     },
     handleReturnKey(event) {
       if (event.keyCode === 13 && !event.shiftKey) {
@@ -448,5 +443,10 @@ export default {
   width: 20px;
   cursor: pointer;
   align-self: center;
+}
+
+.twc-user-input__send-icon:disabled,
+.twc-user-input__upload-icon:disabled {
+  cursor: default;
 }
 </style>

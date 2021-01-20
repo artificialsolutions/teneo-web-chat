@@ -303,11 +303,11 @@ return filteredMessageList;
         break;
 
         case apiConstants.API_CALL_HIDE_UPLOAD_ICON:
-        EventBus.$emit(events.HIDE_UPLOAD_ICON, payload);
+          store.commit('showUploadButton', false);
         break;
 
       case apiConstants.API_CALL_SHOW_UPLOAD_ICON:
-           EventBus.$emit(events.SHOW_UPLOAD_ICON, payload);
+           store.commit('showUploadButton', true);
         break;
 
       case apiConstants.API_CALL_SET_CHAT_WINDOW_TITLE:

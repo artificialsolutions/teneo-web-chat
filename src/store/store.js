@@ -28,6 +28,7 @@ export const store = new Vuex.Store({
         launchIconUrl: '',
         sendIconUrl: '',
         uploadIconUrl: '',
+        showUploadButton: false,
         locale: FALLBACK_LOCALE,
         storage: window.sessionStorage,
     },
@@ -147,6 +148,11 @@ export const store = new Vuex.Store({
                 state.uploadIconUrl = newUrl;
             }
         },
+        showUploadButton(state, showButtonBool) {
+            if (typeof showButtonBool === 'boolean') {
+                state.showUploadButton = showButtonBool;
+            }
+        },
         locale(state, newLocale) {
             // TODO: Improve check for valid locale and throw error if locale is invalid
             if (typeof newLocale === 'string') {
@@ -194,6 +200,7 @@ export const store = new Vuex.Store({
 
             return state.initialUploadIconUrl;
         },
+        showUploadButton: (state) => state.showUploadButton,
         locale: (state) => state.locale,
         localeObj: (state) => {
             return { 'locale': state.locale };
