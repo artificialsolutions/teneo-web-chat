@@ -48,6 +48,12 @@ export const store = new Vuex.Store({
                 state.title = title;
             }
         },
+        teneoEngineUrl(state, newUrl) {
+            // TODO: Throw error if url is invalid
+            if (isValidUrl(newUrl)) {
+                state.teneoEngineUrl = newUrl;
+            }
+        },
         title(state, newTitle) {
             if (typeof newTitle === 'string') {
                 state.title = newTitle;
@@ -63,12 +69,6 @@ export const store = new Vuex.Store({
             // TODO: Throw error if url is invalid
             if (isValidUrl(newUrl)) {
                 state.titleIconUrl = newUrl;
-            }
-        },
-        teneoEngineUrl(state, newUrl) {
-            // TODO: Throw error if url is invalid
-            if (isValidUrl(newUrl)) {
-                state.teneoEngineUrl = newUrl;
             }
         },
         teneoEngineParams(state, params) {
@@ -120,7 +120,7 @@ export const store = new Vuex.Store({
         },
         launchIconUrl(state, newUrl) {
             // TODO: Throw error if url is invalid
-            if (isValidUrl(newUrl)) {
+            if (isValidUrl(newUrl) || newUrl == undefined) {
                 state.launchIconUrl = newUrl;
             }
         },
@@ -130,21 +130,21 @@ export const store = new Vuex.Store({
                 state.sendIconUrl = newUrl;
             }
         },
+        sendIconUrl(state, newUrl) {
+            // TODO: Throw error if url is invalid
+            if (isValidUrl(newUrl) || newUrl == undefined) {
+                state.sendIconUrl = newUrl;
+            }
+        },
         initialUploadIconUrl(state, newUrl) {
             if (isValidUrl(newUrl)) {
                 state.initialUploadIconUrl = newUrl;
                 state.uploadIconUrl = newUrl;
             }
         },
-        sendIconUrl(state, newUrl) {
-            // TODO: Throw error if url is invalid
-            if (isValidUrl(newUrl)) {
-                state.sendIconUrl = newUrl;
-            }
-        },
         uploadIconUrl(state, newUrl) {
             // TODO: Throw error if url is invalid
-            if (isValidUrl(newUrl)) {
+            if (isValidUrl(newUrl) || newUrl == undefined) {
                 state.uploadIconUrl = newUrl;
             }
         },
