@@ -148,7 +148,7 @@ describe('Check hierarchy of Components', () => {
       },
       mocks: {
         $store: {
-          state: {},
+          state: { 'showUploadButton': true },
           getters: {}
         },
         $t: jest.fn()
