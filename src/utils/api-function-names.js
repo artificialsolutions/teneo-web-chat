@@ -12,19 +12,19 @@ export const API_CALL_SET_CHAT_WINDOW_ICON = 'set_chat_window_icon';
 export const API_CALL_RESET_CHAT_WINDOW_ICON = 'reset_chat_window_icon';
 export const API_CALL_SET_LAUNCH_ICON = 'set_launch_icon';
 export const API_CALL_RESET_LAUNCH_ICON = 'reset_launch_icon';
-export const API_CALL_RESET_SEND_ICON = 'reset_send_icon';
 export const API_CALL_SET_SEND_ICON = 'set_send_icon';
-export const API_CALL_RESET_UPLOAD_ICON = 'reset_upload_icon';
+export const API_CALL_RESET_SEND_ICON = 'reset_send_icon';
 export const API_CALL_SET_UPLOAD_ICON = 'set_upload_icon';
-export const API_CALL_HIDE_UPLOAD_ICON = 'hide_upload_icon';
-export const API_CALL_SHOW_UPLOAD_ICON = 'show_upload_icon';
-export const API_CALL_ENABLE_UPLOAD_ICON = 'enable_upload_icon';
-export const API_CALL_DISABLE_UPLOAD_ICON = 'disable_upload_icon';
+export const API_CALL_RESET_UPLOAD_ICON = 'reset_upload_icon';
+export const API_CALL_HIDE_UPLOAD_BUTTON = 'hide_upload_button';
+export const API_CALL_SHOW_UPLOAD_BUTTON = 'show_upload_button';
+export const API_CALL_ENABLE_UPLOAD_BUTTON = 'enable_upload_button';
+export const API_CALL_DISABLE_UPLOAD_BUTTON = 'disable_upload_button';
 export const API_CALL_HIDE_CALLOUT = 'hide_callout';
 export const API_CALL_SHOW_CALLOUT = 'show_callout';
 export const API_CALL_SET_ENGINE_URL = 'set_engine_url';
-export const API_CALL_DISABLE_USERINPUT = 'disable_user_input';
 export const API_CALL_ENABLE_USERINPUT = 'enable_user_input';
+export const API_CALL_DISABLE_USERINPUT = 'disable_user_input';
 export const API_SET_LOCALE = 'set_locale';
 
 // Add dedicated add typing indicator method

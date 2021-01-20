@@ -300,11 +300,11 @@ return filteredMessageList;
         }
         break;
 
-        case apiConstants.API_CALL_HIDE_UPLOAD_ICON:
+        case apiConstants.API_CALL_HIDE_UPLOAD_BUTTON:
           store.commit('showUploadButton', false);
         break;
 
-      case apiConstants.API_CALL_SHOW_UPLOAD_ICON:
+      case apiConstants.API_CALL_SHOW_UPLOAD_BUTTON:
            store.commit('showUploadButton', true);
         break;
 
@@ -371,11 +371,11 @@ return filteredMessageList;
         EventBus.$emit(events.ENABLE_INPUT);
         break;
 
-      case apiConstants.API_CALL_DISABLE_UPLOAD_ICON:
+      case apiConstants.API_CALL_DISABLE_UPLOAD_BUTTON:
         EventBus.$emit(events.DISABLE_UPLOAD);
         break;
 
-      case apiConstants.API_CALL_ENABLE_UPLOAD_ICON:
+      case apiConstants.API_CALL_ENABLE_UPLOAD_BUTTON:
         EventBus.$emit(events.ENABLE_UPLOAD);
         break;
 
