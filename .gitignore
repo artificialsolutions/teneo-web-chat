@@ -8,4 +8,6 @@ stats-prod.json
 !dist/index.html
 env.env
 .env
+/.idea/
+.idea/
 
