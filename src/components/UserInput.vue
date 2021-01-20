@@ -23,10 +23,11 @@
           @keydown="handleReturnKey"
           @input="autoTextareaHeight"
       ></textarea>
-      <div v-if="showUploadButton" class="twc-user-input__button">
+      <div v-if="showUploadButton" class="twc-user-input__button" :class="{ 'twc-disabled': uploadDisabled }">
         <button
             role="button"
             tabindex="0"
+            ref="uploadButton"
             :aria-label="$t('message.input_area_upload_button_aria_label')"
             :title="$t('message.input_area_upload_button_title')"
             class="twc-user-input__upload-icon-wrapper"
@@ -130,6 +131,7 @@ export default {
     return {
       inputActive: false,
       inputDisabled: false,
+      uploadDisabled: false,
     };
   },
   mounted() {
@@ -139,18 +141,20 @@ export default {
       }
     });
 
-
     EventBus.$on(events.DISABLE_UPLOAD, () => {
       if (this.showUploadButton) {
-        document.getElementsByClassName('twc-user-input__upload-icon-wrapper')[0]
-            .setAttribute('disabled', 'true');
+        if (this.$refs.uploadButton) {
+          this.$refs.uploadButton.setAttribute('disabled', 'true');
+        }
         this.setUploadDisabled(true);
       }
     });
+
     EventBus.$on(events.ENABLE_UPLOAD, () => {
       if (this.showUploadButton) {
-        document.getElementsByClassName('twc-user-input__upload-icon-wrapper')[0]
-            .removeAttribute('disabled');
+        if (this.$refs.uploadButton) {
+          this.$refs.uploadButton.removeAttribute('disabled');
+        }
         this.setUploadDisabled(false);
       }
     });
@@ -337,9 +341,19 @@ export default {
   pointer-events: none;
 }
 
-.twc-user-input.twc-disabled .twc-user-input__button,
 .twc-user-input.twc-disabled .twc-user-input__text,
-.twc-user-input.twc-disabled .twc-user-input__send-icon {
+.twc-user-input.twc-disabled .twc-user-input__button,
+.twc-user-input.twc-disabled .twc-user-input__send-icon,
+.twc-user-input.twc-disabled .twc-user-input__upload-icon {
+  filter: grayscale(100%);
+  opacity: 0.4;
+}
+
+/* 
+When the upload button is disabled and then the input box is disabled as well
+We should not dim it twice, so we check: .twc-user-input:not(.twc-disabled)
+*/
+.twc-user-input:not(.twc-disabled) .twc-user-input__button.twc-disabled .twc-user-input__upload-icon-wrapper  {
   filter: grayscale(100%);
   opacity: 0.4;
 }
@@ -428,10 +442,6 @@ export default {
   cursor: pointer;
 }
 
-.twc-user-input__upload-icon-wrapper:disabled {
-  opacity: 0.25;
-}
-
 .twc-user-input__send-icon-wrapper:active,
 .twc-user-input__upload-icon-wrapper:active {
   outline: none;
@@ -441,12 +451,11 @@ export default {
 .twc-user-input__upload-icon {
   height: 20px;
   width: 20px;
-  cursor: pointer;
   align-self: center;
 }
 
-.twc-user-input__send-icon:disabled,
-.twc-user-input__upload-icon:disabled {
+.twc-user-input__button.twc-disabled,
+.twc-user-input__button.twc-disabled button {
   cursor: default;
 }
 </style>
