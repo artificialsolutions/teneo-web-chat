@@ -1,6 +1,15 @@
 # v3.x.x
 ## DATE
 * Allow html in body of cards
+* Added api's to display an upload button next to the send icon. An extension can then be used to handle the 'on upload_button_clicked' click event. The following api's were added to support this:
+    * call set_upload_icon
+    * call reset_upload_icon
+    * call show_upload_button
+    * call hide_upload_button
+    * call disable_upload_button
+    * call enable_upload_button
+    * on upload_button_clicked
+
 
 # v3.4.0
 ## 07-01-2021
