@@ -1,6 +1,9 @@
 <template>
   <div>
-    <form class="twc-user-input" :class="{ 'twc-active': inputActive, 'twc-disabled': inputDisabled }">
+    <form
+      class="twc-user-input"
+      :class="{ 'twc-active': inputActive, 'twc-disabled': inputDisabled }"
+    >
       <textarea
         id="twc-user-input-field"
         ref="userInput"
@@ -15,32 +18,69 @@
         :debounce-events="['input']"
         :aria-disabled="inputDisabled"
         :disabled="inputDisabled ? true : false"
-        @focus="setInputActive(true)" @blur="setInputActive(false)"
+        @focus="setInputActive(true)"
+        @blur="setInputActive(false)"
         @keydown="handleReturnKey"
         @input="autoTextareaHeight"
       ></textarea>
       <div class="twc-user-input__button">
-        <button role="button" tabindex="0" :aria-label="$t('message.input_area_upload_button_aria_label')"
-                :title="$t('message.input_area_upload_button_title')" class="twc-user-input__upload-icon-wrapper"
-                :aria-disabled="inputDisabled" :disabled="inputDisabled ? true : false" @click.prevent=""
-                @focus="setInputActive(true)" @blur="setInputActive(false)" @click="uploadButtonClicked()"
+        <button
+          role="button"
+          tabindex="0"
+          :aria-label="$t('message.input_area_upload_button_aria_label')"
+          :title="$t('message.input_area_upload_button_title')"
+          class="twc-user-input__upload-icon-wrapper"
+          :aria-disabled="inputDisabled"
+          :disabled="inputDisabled ? true : false"
+          @click.prevent=""
+          @focus="setInputActive(true)"
+          @blur="setInputActive(false)"
+          @click="uploadButtonClicked()"
         >
-          <img v-if="uploadIconUrl" id="twc-user-input__upload-icon" class="twc-user-input__upload-icon" :src="uploadIconUrl"
-               aria-hidden="true" alt=""
+          <img
+            v-if="uploadIconUrl"
+            id="twc-user-input__upload-icon"
+            class="twc-user-input__upload-icon"
+            :src="uploadIconUrl"
+            aria-hidden="true"
+            alt=""
           />
-          <UploadIcon v-else id="twc-user-input__upload-icon" class="twc-user-input__upload-icon" aria-hidden="true" />
+          <UploadIcon
+            v-else
+            id="twc-user-input__upload-icon"
+            class="twc-user-input__upload-icon"
+            aria-hidden="true"
+          />
         </button>
       </div>
       <div class="twc-user-input__button">
-        <button role="button" tabindex="0" :aria-label="$t('message.input_area_send_button_aria_label')"
-                :title="$t('message.input_area_send_button_title')" class="twc-user-input__send-icon-wrapper"
-                :aria-disabled="inputDisabled" :disabled="inputDisabled ? true : false" @click.prevent=""
-                @focus="setInputActive(true)" @blur="setInputActive(false)" @click="sendButtonClicked()"
+        <button
+          role="button"
+          tabindex="0"
+          :aria-label="$t('message.input_area_send_button_aria_label')"
+          :title="$t('message.input_area_send_button_title')"
+          class="twc-user-input__send-icon-wrapper"
+          :aria-disabled="inputDisabled"
+          :disabled="inputDisabled ? true : false"
+          @click.prevent=""
+          @focus="setInputActive(true)"
+          @blur="setInputActive(false)"
+          @click="sendButtonClicked()"
         >
-          <img v-if="sendIconUrl" id="twc-user-input__send-icon" class="twc-user-input__send-icon" :src="sendIconUrl"
-               aria-hidden="true" alt=""
+          <img
+            v-if="sendIconUrl"
+            id="twc-user-input__send-icon"
+            class="twc-user-input__send-icon"
+            :src="sendIconUrl"
+            aria-hidden="true"
+            alt=""
           />
-          <SendIcon v-else id="twc-user-input__send-icon" class="twc-user-input__send-icon" aria-hidden="true" />
+          <SendIcon
+            v-else
+            id="twc-user-input__send-icon"
+            class="twc-user-input__send-icon"
+            aria-hidden="true"
+          />
         </button>
       </div>
     </form>
@@ -54,7 +94,12 @@ import vueDebounce from 'vue-debounce';
 import SendIcon from '../icons/send.vue';
 import UploadIcon from '../icons/upload.vue';
 import { PARTICIPANT_USER } from '../utils/constants.js';
-import { API_ON_INPUT_SUBMITTED, API_ON_USER_TYPING, API_ON_SEND_BUTTON_CLICK, API_ON_UPLOAD_BUTTON_CLICK } from '../utils/api-function-names.js';
+import {
+  API_ON_INPUT_SUBMITTED,
+  API_ON_USER_TYPING,
+  API_ON_SEND_BUTTON_CLICK,
+  API_ON_UPLOAD_BUTTON_CLICK,
+} from '../utils/api-function-names.js';
 import { EventBus, events } from '../utils/event-bus.js';
 import handleExtension from '../utils/handle-extension.js';
 import basePayload from '../utils/base-payload.js';
@@ -66,7 +111,7 @@ Vue.use(vueDebounce);
 export default {
   components: {
     SendIcon,
-    UploadIcon
+    UploadIcon,
   },
   props: {
     onSubmit: {
@@ -94,7 +139,9 @@ export default {
       }
     });
 
-const uploadBtn = document.getElementsByClassName('twc-user-input__upload-icon-wrapper')[0];
+    const uploadBtn = document.getElementsByClassName(
+      'twc-user-input__upload-icon-wrapper'
+    )[0];
 
     EventBus.$on(events.DISABLE_UPLOAD, () => {
       this.setUploadDisabled(true);
@@ -118,8 +165,7 @@ const uploadBtn = document.getElementsByClassName('twc-user-input__upload-icon-w
       this.setInputDisabled(true);
 
       if (document.getElementById('twc-user-input-field')) {
-        document.getElementById('twc-user-input-field')
-            .blur();
+        document.getElementById('twc-user-input-field').blur();
       }
     });
 
@@ -128,8 +174,7 @@ const uploadBtn = document.getElementsByClassName('twc-user-input__upload-icon-w
       this.setInputActive(true);
 
       if (document.getElementById('twc-user-input-field')) {
-        document.getElementById('twc-user-input-field')
-            .focus();
+        document.getElementById('twc-user-input-field').focus();
       }
     });
 
@@ -145,12 +190,10 @@ const uploadBtn = document.getElementsByClassName('twc-user-input__upload-icon-w
       });
     }
 
-
     // Give user input focus on on desktop
     if (!detectMobile()) {
       this.$refs.userInput.focus();
     } else {
-
       /*
        * If user gives input field focus without having first interacted with the chatwindow
        * the chat window will shrink down and the keyboard will overlap the chat window
@@ -188,7 +231,7 @@ const uploadBtn = document.getElementsByClassName('twc-user-input__upload-icon-w
       // Check if userinput field still exists to prevent error in IE11
       if (document.getElementById('twc-user-input-field')) {
         // Create payload object
-        const payload = { 'text': this.$refs.userInput.value };
+        const payload = { text: this.$refs.userInput.value };
         // Check if there is an extension that want to be notified about the user typing
 
         handleExtension(API_ON_USER_TYPING, payload);
@@ -198,7 +241,6 @@ const uploadBtn = document.getElementsByClassName('twc-user-input__upload-icon-w
       return detectMobile();
     },
     async sendButtonClicked() {
-
       const payload = basePayload();
 
       await handleExtension(API_ON_SEND_BUTTON_CLICK, payload);
@@ -239,7 +281,6 @@ const uploadBtn = document.getElementsByClassName('twc-user-input__upload-icon-w
         return;
       }
 
-
       if (payload.text && payload.text.trim().length > 0) {
         const { text } = payload;
 
@@ -254,11 +295,9 @@ const uploadBtn = document.getElementsByClassName('twc-user-input__upload-icon-w
           type: 'text',
           data: {
             text,
-            parameters
-          }
+            parameters,
+          },
         });
-
-
       }
 
       // Don't give user input focus on mobile devices, keyboard blocks the view too much
@@ -303,7 +342,9 @@ const uploadBtn = document.getElementsByClassName('twc-user-input__upload-icon-w
   pointer-events: none;
 }
 
-.twc-user-input.twc-disabled .twc-user-input__button, .twc-user-input.twc-disabled .twc-user-input__text, .twc-user-input.twc-disabled .twc-user-input__send-icon {
+.twc-user-input.twc-disabled .twc-user-input__button,
+.twc-user-input.twc-disabled .twc-user-input__text,
+.twc-user-input.twc-disabled .twc-user-input__send-icon {
   filter: grayscale(100%);
   opacity: 0.4;
 }
@@ -333,15 +374,14 @@ const uploadBtn = document.getElementsByClassName('twc-user-input__upload-icon-w
   font-family: inherit;
 }
 
-
 .twc-user-input__text::placeholder {
   color: var(--secondary-color, #6c757d);
 }
 
 /* fix placeholder issue on Edge browsers */
-@supports (-ms-ime-align:auto) {
+@supports (-ms-ime-align: auto) {
   [placeholder]:empty:focus::before {
-    content: "";
+    content: '';
     margin-top: 14px;
   }
 }
@@ -349,7 +389,7 @@ const uploadBtn = document.getElementsByClassName('twc-user-input__upload-icon-w
 /* fix placeholder issue on IE11 browsers */
 @media all and (-ms-high-contrast: none) {
   [placeholder]:empty:focus::before {
-    content: "";
+    content: '';
     margin-bottom: 0px;
   }
 
@@ -359,7 +399,6 @@ const uploadBtn = document.getElementsByClassName('twc-user-input__upload-icon-w
 }
 
 .twc-user-input__button {
-  width: 44px;
   max-height: 200px;
   margin-left: 2px;
   margin-right: 2px;
@@ -374,23 +413,32 @@ const uploadBtn = document.getElementsByClassName('twc-user-input__upload-icon-w
   box-shadow: 0px -4px 15px 0px rgba(201, 201, 201, 0.3);
 }
 
-
-.twc-user-input__send-icon-wrapper,
-.twc-user-input__upload-icon-wrapper {
+.twc-user-input__send-icon-wrapper {
   background: none;
   border: none;
   padding: 0px;
-  color: var(--sendicon-fg-color);
+  color: var(--sendicon-fg-color, #263238);
   width: 44px;
   height: 44px;
   cursor: pointer;
 }
 
-.twc-user-input__upload-icon-wrapper:disabled{
+.twc-user-input__upload-icon-wrapper {
+  background: none;
+  border: none;
+  padding: 0px;
+  color: var(--uploadicon-fg-color, #263238);
+  width: 28px;
+  height: 44px;
+  cursor: pointer;
+}
+
+.twc-user-input__upload-icon-wrapper:disabled {
   opacity: 0.25;
 }
 
-.twc-user-input__send-icon-wrapper:active {
+.twc-user-input__send-icon-wrapper:active,
+.twc-user-input__upload-icon-wrapper:active {
   outline: none;
 }
 
