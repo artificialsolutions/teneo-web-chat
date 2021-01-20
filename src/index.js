@@ -80,9 +80,14 @@ window.TeneoWebChat = {
       // TODO: error handling (once store thows error)
       store.commit('initialSendIconUrl', twcProps.sendIconUrl);
     }
+
     if (twcProps.uploadIconUrl) {
       // TODO: error handling (once store thows error)
       store.commit('initialUploadIconUrl', twcProps.uploadIconUrl);
+    }
+
+    if (twcProps.showUploadButton === true || twcProps.showUploadButton === 'true') {
+      store.commit('showUploadButton', true);
     }
 
     if (twcProps.locale) {
