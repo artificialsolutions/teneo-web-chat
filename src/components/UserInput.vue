@@ -437,7 +437,7 @@ We should not dim it twice, so we check: .twc-user-input:not(.twc-disabled)
   border: none;
   padding: 0px;
   color: var(--uploadicon-fg-color, #263238);
-  width: 28px;
+  width: 24px;
   height: 44px;
   cursor: pointer;
 }
@@ -457,5 +457,13 @@ We should not dim it twice, so we check: .twc-user-input:not(.twc-disabled)
 .twc-user-input__button.twc-disabled,
 .twc-user-input__button.twc-disabled button {
   cursor: default;
+}
+
+/* Increase tap target on mobile */
+@media (max-width: 450px) {
+  .twc-user-input__upload-icon-wrapper {
+    width: 44px;
+  }
+
 }
 </style>
