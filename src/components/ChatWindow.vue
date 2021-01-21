@@ -1,6 +1,6 @@
 <template>
-  <div ref="chatWindowId" :class="chatWindowStyles()"  role="group" :aria-label="$t('message.chat_window_group_aria_label')">
-    <Header :on-close="onClose" :on-minimize="onMinimize"/>
+  <div ref="chatWindowId" :class="chatWindowStyles()" role="group" :aria-label="$t('message.chat_window_group_aria_label')">
+    <Header :on-close="onClose" :on-minimize="onMinimize" />
     <MessageList id="twc-message-list" :message-list="$teneoApi.messageList" />
     <div v-if="spinnerIsLoading" class="twc-spinner" role="progressbar" aria-valuemin="0" :aria-valuetext="$t('message.chat_window_spinner_aria_valuetext')" aria-valuemax="100">
       <div class="twc-bounce1" aria-hidden="true"></div>
@@ -9,13 +9,13 @@
     </div>
     <UserInput :on-submit="sendMessage" />
 
-    <div href="#" v-if="isImageZoomed" class="twc-lightbox" v-on:click='zoomOut'>
-      <span class="twc-lightbox-image-wrapper" v-on:click='zoomOut'>
-        <a href="#" v-on:click='zoomOut' tabindex="0" id="twc-lightbox-close" title="Click to close">
-          <img :src="this.zoomedImageUrl" v-on:click='zoomOut' class="twc-lightbox-image" alt="This is my image">
+    <div v-if="isImageZoomed" href="#" class="twc-lightbox" @click="zoomOut">
+      <span class="twc-lightbox-image-wrapper" @click="zoomOut">
+        <a id="twc-lightbox-close" href="#" tabindex="0" title="Click to close" @click="zoomOut">
+          <img :src="this.zoomedImageUrl" class="twc-lightbox-image" alt="This is my image" @click="zoomOut">
         </a>
       </span>
-    </div> 
+    </div>
   </div>
 </template>
 
@@ -45,7 +45,7 @@ export default {
       zoomedImageUrl: '',
       isImageZoomed: false,
       spinnerIsLoading: false,
-      chatWindowBaseStyle: "twc-chat-window",
+      chatWindowBaseStyle: 'twc-chat-window',
       keyboardUp: false,
       isIosSafari: false,
       lastScrollY: 0
@@ -53,13 +53,12 @@ export default {
   },
   beforeMount() {
     this.isIosSafari = detectIosSafari();
-    if(this.isIosSafari === true){
+    if (this.isIosSafari === true) {
       EventBus.$on(events.USER_INPUT_FOCUS_CHANGED, (onoff) => {
-        if(!(this.lastScrollY === window.scrollY)){
+        if (!(this.lastScrollY === window.scrollY)) {
           this.keyboardUp = onoff;
-        }
-        else{
-            this.keyboardUp = true; //reactive variable, will update style
+        } else {
+            this.keyboardUp = true; // Reactive variable, will update style
         }
         this.lastScrollY = window.scrollY;
       });
@@ -73,11 +72,13 @@ export default {
       this.spinnerIsLoading = true;
     });
     EventBus.$on(events.ZOOM_IMAGE, (zoomedImageUrl) => {
-      // we may also need to get the alt text
+      // We may also need to get the alt text
       this.zoomedImageUrl = zoomedImageUrl;
       this.isImageZoomed = true;
 
-      setTimeout(function(){ document.getElementById("twc-lightbox-close").focus(); }, 50);
+      setTimeout(() => {
+ document.getElementById('twc-lightbox-close').focus();
+}, 50);
     });
     // Send an empty init message to trigger a welcoming message from Teneo
     if (this.$teneoApi.messageList.length === 0) {
@@ -86,30 +87,32 @@ export default {
   },
   methods: {
       zoomOut(event) {
-        event.preventDefault(); // prevent anchor from being appended to url
+        event.preventDefault(); // Prevent anchor from being appended to url
 
-        // TODO: handle extension
-        //await handleExtension(API_ON_CLOSE_LIGHTBOX, payload);
+        /*
+         *  TODO: handle extension
+         * await handleExtension(API_ON_CLOSE_LIGHTBOX, payload);
+         */
 
-        // close zoomed image
-        if(event.target === event.currentTarget){
+        // Close zoomed image
+        if (event.target === event.currentTarget) {
           this.isImageZoomed = false;
         }
       },
       sendMessage(message) {
-        this.spinnerIsLoading=true;
+        this.spinnerIsLoading = true;
         this.$teneoApi.sendMessage(message);
       },
       chatWindowStyles() {
-        if(this.isIosSafari){
-          return this.chatWindowBaseStyle.concat((this.keyboardUp ? " ios-keyboard-shown" : " ios-keyboard-hidden"))
+        if (this.isIosSafari) {
+          return this.chatWindowBaseStyle.concat((this.keyboardUp ? ' ios-keyboard-shown' : ' ios-keyboard-hidden'));
          }
-         else{
+
            return this.chatWindowBaseStyle;
-         }
+
       }
     }
-    
+
 };
 </script>
 
@@ -220,10 +223,10 @@ export default {
 }
 
 @keyframes twc-sk-bouncedelay {
-  0%, 80%, 100% { 
+  0%, 80%, 100% {
     -webkit-transform: scale(0);
     transform: scale(0);
-  } 40% { 
+  } 40% {
     -webkit-transform: scale(1.0);
     transform: scale(1.0);
   }

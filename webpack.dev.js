@@ -3,8 +3,10 @@ const path = require('path');
 const merge = require('webpack-merge');
 const HtmlWebpackPlugin = require('html-webpack-plugin');
 const baseConfig = require('./webpack.base.js');
-require('dotenv').config(); 
-var dotenv = require('dotenv').config({path: __dirname + '/.env'});
+
+require('dotenv').config();
+
+const dotenv = require('dotenv').config({ path: `${__dirname}/.env` });
 
 module.exports = merge(baseConfig, {
   mode: 'development',
