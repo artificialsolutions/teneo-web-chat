@@ -1,8 +1,8 @@
 <template>
-  <div class="teneo-web-chat" id="teneo-web-chat">
+  <div id="teneo-web-chat" class="teneo-web-chat">
     <ChatWindow
-      id="twc-chat-window" 
       v-if="isChatOpen"
+      id="twc-chat-window"
       :on-close="closeChat"
       :on-minimize="minimizeChat"
     />
@@ -25,8 +25,8 @@ registerMessageComponents();
 // SAFARI IOS ADAPTATIONS
 import detectIosSafari from './utils/detect-ios-safari';
 const bodyScrollLock = require('body-scroll-lock');
-const disableBodyScroll = bodyScrollLock.disableBodyScroll;
-const enableBodyScroll = bodyScrollLock.enableBodyScroll;
+const { disableBodyScroll } = bodyScrollLock;
+const { enableBodyScroll } = bodyScrollLock;
 const messageListId = '#twc-message-list';
 
 // Detect safari (not just iOS) so we can clear session id from storage in closeSession
@@ -48,42 +48,43 @@ export default {
     };
   },
   mounted() {
-    this.isIosSafari=detectIosSafari();
+    this.isIosSafari = detectIosSafari();
 
     // Set the name of the hidden property and the change event for visibility
-    var hidden, visibilityChange; 
-    if (typeof document.hidden !== "undefined") { // Opera 12.10 and Firefox 18 and later support 
-      hidden = "hidden";
-      visibilityChange = "visibilitychange";
-    } else if (typeof document.msHidden !== "undefined") {
-      hidden = "msHidden";
-      visibilityChange = "msvisibilitychange";
-    } else if (typeof document.webkitHidden !== "undefined") {
-      hidden = "webkitHidden";
-      visibilityChange = "webkitvisibilitychange";
+    let hidden, visibilityChange;
+
+    if (typeof document.hidden !== 'undefined') { // Opera 12.10 and Firefox 18 and later support
+      hidden = 'hidden';
+      visibilityChange = 'visibilitychange';
+    } else if (typeof document.msHidden !== 'undefined') {
+      hidden = 'msHidden';
+      visibilityChange = 'msvisibilitychange';
+    } else if (typeof document.webkitHidden !== 'undefined') {
+      hidden = 'webkitHidden';
+      visibilityChange = 'webkitvisibilitychange';
     }
 
-    if(this.isIosSafari === true){
+    if (this.isIosSafari === true) {
       // Warn if the browser doesn't support addEventListener or the Page Visibility API
-      if ((typeof document.addEventListener === "undefined" || hidden === undefined)) {
-        // console.log("This application requires a browser, such as Google Chrome or Firefox, that supports the Page Visibility API.");
+      if ((typeof document.addEventListener === 'undefined' || hidden === undefined)) {
+        // Console.log("This application requires a browser, such as Google Chrome or Firefox, that supports the Page Visibility API.");
       } else {
-        // Handle page visibility change   
+        // Handle page visibility change
         document.addEventListener(visibilityChange, this.handleBrowserMinimize, false);
       }
     }
-    
+
 
     EventBus.$on(events.RESET_SESSION, () => {
-      this.resetChat()
+      this.resetChat();
     });
 
     EventBus.$on(events.END_SESSION, () => {
-      this.closeSession()
+      this.closeSession();
     });
 
     EventBus.$on(events.CLEAR_HISTORY, () => {
-      this.clearHistory()
+      this.clearHistory();
     });
 
     EventBus.$on(events.MAXIMIZE_WINDOW, async () => {
@@ -98,144 +99,149 @@ export default {
       this._onMessageReceived(message);
     });
 
-    EventBus.$on(events.SEND_INPUT, (text,parameters,isSilent) => {
-      this.sendBaseMessage(text,parameters,isSilent)
+    EventBus.$on(events.SEND_INPUT, (text, parameters, isSilent) => {
+      this.sendBaseMessage(text, parameters, isSilent);
     });
 
-    EventBus.$on(events.HIDE_TYPING_INDICATOR, (data)=> {
+    EventBus.$on(events.HIDE_TYPING_INDICATOR, (data) => {
       this.$teneoApi.hideTypingIndicator(data);
-    })
+    });
 
-    EventBus.$on(events.SHOW_TYPING_INDICATOR, (data)=> {
+    EventBus.$on(events.SHOW_TYPING_INDICATOR, (data) => {
       this.$teneoApi.showTypingIndicator(data);
-    })
+    });
 
     EventBus.$emit(events.API_STATE_READY);
     },
   methods: {
-    //encapsulating dependency methods makes Testing easier
-    async _onMessageReceived(message){
+    // Encapsulating dependency methods makes Testing easier
+    async _onMessageReceived(message) {
       await this.$teneoApi._onMessageReceived(message);
     },
-    sendBaseMessage(text,parameters,isSilent){ 
-      this.$teneoApi.sendBaseMessage(text,parameters,isSilent);
+    sendBaseMessage(text, parameters, isSilent) {
+      this.$teneoApi.sendBaseMessage(text, parameters, isSilent);
     },
     changeWindowState(chatWindowTargetState) {
       if (chatWindowTargetState === events.CLOSE_WINDOW) {
-        this.resetChat()
-      } 
+        this.resetChat();
+      }
       if (chatWindowTargetState === events.MINIMIZE_WINDOW) {
-        this.minimize()
-      } 
+        this.minimize();
+      }
       if (chatWindowTargetState === events.MAXIMIZE_WINDOW) {
-        this.maximize()
+        this.maximize();
       }
     },
-    async openChat() { 
-      // add handledState to payload
+    async openChat() {
+      // Add handledState to payload
       const payload = basePayload();
 
-      // check for extension
+      // Check for extension
       await handleExtension(API_ON_OPEN_BUTTON_CLICK, payload);
 
-      // proceed if extension does not handle function itself
-      if(!payload.handledState.handled === true) {
-        this.changeWindowState( events.MAXIMIZE_WINDOW);
-      } 
-      
-    },
-    async minimizeChat() { 
+      // Proceed if extension does not handle function itself
+      if (!payload.handledState.handled === true) {
+        this.changeWindowState(events.MAXIMIZE_WINDOW);
+      }
 
-      // add handledState to payload
+    },
+    async minimizeChat() {
+
+      // Add handledState to payload
       const payload = basePayload();
 
-      // check for extension
+      // Check for extension
       await handleExtension(API_ON_MINIMIZE_BUTTON_CLICK, payload);
 
-      // proceed if extension does not handle function itself
-      if(!payload.handledState.handled === true) {
+      // Proceed if extension does not handle function itself
+      if (!payload.handledState.handled === true) {
         this.changeWindowState(events.MINIMIZE_WINDOW);
       }
     },
-    async closeChat() { 
-      var chatWindowTargetState = events.CLOSE_WINDOW
-      // add handledState to payload
+    async closeChat() {
+      const chatWindowTargetState = events.CLOSE_WINDOW;
+      // Add handledState to payload
       const payload = basePayload();
 
-      // check for extension
+      // Check for extension
       await handleExtension(API_ON_CLOSE_BUTTON_CLICK, payload);
 
-      // proceed if extension does not handle function itself
-      if(!payload.handledState.handled === true) {
+      // Proceed if extension does not handle function itself
+      if (!payload.handledState.handled === true) {
         this.changeWindowState(events.CLOSE_WINDOW);
-      } 
+      }
     },
-    async minimize(){
+    async minimize() {
       if (this.$store.getters.visibility == API_STATE_MAXIMIZED) {
-        this.$store.commit('visibility',API_STATE_MINIMIZED);
-        this.isChatOpen = false
-        this.isChatMinimized = true
+        this.$store.commit('visibility', API_STATE_MINIMIZED);
+        this.isChatOpen = false;
+        this.isChatMinimized = true;
 
-        if(this.isIosSafari){
+        if (this.isIosSafari) {
           const targetElement = document.querySelector(messageListId);
+
           enableBodyScroll(targetElement);
         }
 
         await this.apiOnVisibilityChange();
       }
     },
-    async maximize(){
+    async maximize() {
       if (this.$store.getters.visibility == API_STATE_MINIMIZED) {
-        this.$store.commit('visibility',API_STATE_MAXIMIZED);
-        this.isChatOpen = true
-        this.isChatMinimized = false
+        this.$store.commit('visibility', API_STATE_MAXIMIZED);
+        this.isChatOpen = true;
+        this.isChatMinimized = false;
         await this.apiOnVisibilityChange();
 
-        if(this.isIosSafari){
+        if (this.isIosSafari) {
           const targetElement = document.querySelector(messageListId);
+
           disableBodyScroll(targetElement);
         }
-        
+
       }
     },
     async resetChat() {
-      // add handledState to payload
+      // Add handledState to payload
       const payload = basePayload();
 
-      // check for extension
+      // Check for extension
       await handleExtension(API_ON_RESET, payload);
 
-      // proceed if extension does not handle function itself
-      if(!payload.handledState.handled === true) {
-        this.minimize()
-        this.closeSession()
-        this.clearHistory()
-        this.isChatMinimized = false
-        this.isChatClosed = true
-      } 
+      // Proceed if extension does not handle function itself
+      if (!payload.handledState.handled === true) {
+        this.minimize();
+        this.closeSession();
+        this.clearHistory();
+        this.isChatMinimized = false;
+        this.isChatClosed = true;
+      }
     },
     clearHistory() {
-      this.$teneoApi.clearHistory()
+      this.$teneoApi.clearHistory();
     },
     closeSession() {
-      this.$teneoApi.closeSession()
+      this.$teneoApi.closeSession();
 
-      // when opened in Safari, we explicitly store the session id in the browser storage
-      // it's a bit cleaner to delete it again when the engine session is closed
+      /*
+       * When opened in Safari, we explicitly store the session id in the browser storage
+       * it's a bit cleaner to delete it again when the engine session is closed
+       */
       if (isSafari) {
         this.$store.getters.storage.removeItem(sessionKey);
       }
     },
-    setWindowTitle(newTitle) { 
-      this.serviceName = newTitle
+    setWindowTitle(newTitle) {
+      this.serviceName = newTitle;
     },
     async apiOnVisibilityChange() {
         const data = {};
+
         data[API_KEY_VISIBILITY] = this.$store.getters.visibility;
         await handleExtension(API_ON_VISIBILITY_CHANGED, data);
     },
-    async handleBrowserMinimize(){
-      //console.log('handleBrowserMinimize: '+document.hidden)
+    async handleBrowserMinimize() {
+      // Console.log('handleBrowserMinimize: '+document.hidden)
       await this.minimize();
     }
   },
@@ -261,6 +267,7 @@ export default {
   --user-input-fg-color: #565867;
   --spinner-color: var(--light-border-color);
   --sendicon-fg-color: var(--dark-fg-color);
+  --uploadicon-fg-color: var(--dark-fg-color);
   --launch-button-bg-color: var(--primary-color);
   --launchicon-fg-color: var(--light-fg-color);
   --callout-fg-color: var(--user-input-fg-color);
@@ -300,13 +307,13 @@ export default {
   --quickreply-expired-color: var(--expired-color);
   --lightbox-overlay-color: rgba(0, 0, 0, 0.8);
   --lightbox-image-background-color: #ffffff;
-  --modal-overlay-color: rgba(0, 0, 0, 0.5); 
+  --modal-overlay-color: rgba(0, 0, 0, 0.5);
 
   --primary-font: 'Helvetica Neue', Helvetica, Arial, sans-serif;
 }
 
 @supports (-webkit-touch-callout: none) {
-  /* CSS specific to iOS devices */ 
+  /* CSS specific to iOS devices */
   .teneo-web-chat {
     font: -apple-system-body;
   }

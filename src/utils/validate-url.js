@@ -1,5 +1,5 @@
 export default function isValidURL(str) {
-    if (isRegularURL(str) || isDataURL(str)) {
+    if (str && (isRegularURL(str) || isDataURL(str))) {
         return true
     } else {
         return false
