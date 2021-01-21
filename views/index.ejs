@@ -13,19 +13,6 @@
 
 <body>
 <button onclick="TeneoWebChat.call('reset')">Reset Chat</button><br>
-<button onclick="TeneoWebChat.call('show_upload_button')">show_upload_button</button><br>
-<button onclick="TeneoWebChat.call('hide_upload_button')">hide_upload_button</button><br>
-<button onclick="TeneoWebChat.call('disable_upload_button')">disable_upload_button</button><br>
-<button onclick="TeneoWebChat.call('enable_upload_button')">enable_upload_button</button><br>
-<button onclick="TeneoWebChat.call('disable_user_input')">disable_user_input</button><br>
-<button onclick="TeneoWebChat.call('enable_user_input')">enable_user_input</button><br>
-<button onclick="TeneoWebChat.call('set_upload_icon','https://cdn3.iconfinder.com/data/icons/star-wars-color/205/clone-trooper-256.png')">set_upload_icon</button><br>
-<button onclick="TeneoWebChat.call('reset_upload_icon')">reset_upload_icon</button><br>
-<button onclick="TeneoWebChat.call('set_send_icon','https://cdn3.iconfinder.com/data/icons/star-wars-color/205/clone-trooper-256.png')">set_send_icon</button><br>
-<button onclick="TeneoWebChat.call('reset_send_icon')">reset_send_icon</button><br>
-<button onclick="TeneoWebChat.call('set_launch_icon','https://cdn3.iconfinder.com/data/icons/star-wars-color/205/clone-trooper-256.png')">set_launch_icon</button><br>
-<button onclick="TeneoWebChat.call('reset_launch_icon')">reset_launch_icon</button><br>
-<br>
 
 <script src="teneo-web-chat.js"></script> <!-- needed for Heroku -->
 <div id="teneo-web-chat"></div>
@@ -33,9 +20,7 @@
 
     window.onload = function () {
         if (window.TeneoWebChat && typeof window.TeneoWebChat.initialize === 'function') {
-            TeneoWebChat.on('upload_button_clicked', function (e) {
-                console.log('I worked');
-            });
+
             var element = document.getElementById('teneo-web-chat');
             const teneoProps = {
                 'teneoEngineUrl': '<%= process.env.TENEO_ENGINE_URL %>',
