@@ -67,7 +67,7 @@ export const store = new Vuex.Store({
         },
         titleIconUrl(state, newUrl) {
             // TODO: Throw error if url is invalid
-            if (isValidUrl(newUrl)) {
+            if (isValidUrl(newUrl) || newUrl == undefined) {
                 state.titleIconUrl = newUrl;
             }
         },
