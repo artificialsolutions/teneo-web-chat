@@ -6,13 +6,13 @@ import basePayload from './base-payload';
 
 export default async function handleButtonClick(button, idx, teneoApi) {
 
-    const numMessages = teneoApi.messageList.length;
-    const messages =  teneoApi.messageList.slice(0, numMessages - 1);
-    const buttonMessage = teneoApi.messageList[numMessages - 1];
+    // const numMessages = teneoApi.messageList.length;
+    // const messages =  teneoApi.messageList.slice(0, numMessages - 1);
+    // const buttonMessage = teneoApi.messageList[numMessages - 1];
 
-    const selectedButton = { ...buttonMessage, selected: idx };
+    // const selectedButton = { ...buttonMessage, selected: idx };
 
-    teneoApi.messageList = [...messages, selectedButton];
+    // teneoApi.messageList = [...messages, selectedButton];
 
     const payload = basePayload()
     payload.button = JSON.parse(JSON.stringify(button))

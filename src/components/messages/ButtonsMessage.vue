@@ -1,13 +1,13 @@
 <template>
-  <div class="twc-buttons" :class="{ 'twc-expired': replySent || isExpired}">
+  <div class="twc-buttons" :class="{ 'twc-expired': replySent || isItExpired}">
     <h5 class="twc-buttons-title" v-if="buttonsTitle">{{ buttonsTitle }}</h5>
       <a
         role="button"
-        :tabindex="replySent || isExpired ? -1 : 0"
+        :tabindex="replySent || isItExpired ? -1 : 0"
         v-for="(button, idx) in buttonitems"
         :key="idx"
         class="twc-btn"
-        :class="{ 'twc-selected': replySent && selected === idx, 'twc-primary': button.style == 'primary', 'twc-secondary': button.style == 'secondary', 'twc-success': button.style == 'success', 'twc-danger': button.style == 'danger', 'twc-warning': button.style == 'warning', 'twc-info': button.style == 'info'}"
+        :class="{ 'twc-selected': button.selected, 'twc-primary': button.style == 'primary', 'twc-secondary': button.style == 'secondary', 'twc-success': button.style == 'success', 'twc-danger': button.style == 'danger', 'twc-warning': button.style == 'warning', 'twc-info': button.style == 'info'}"
         @click="onSelect(button, idx)"
         @keydown="handleReturnSpaceKeys($event, button, idx)"
       >{{ button.title }}</a>
@@ -36,6 +36,10 @@ export default {
         );
       },
     },
+    isExpired: {
+      type: Number,
+      required: false
+    }
   },
   computed: {
     buttonsTitle() {
@@ -52,18 +56,35 @@ export default {
     selected() {
       return this.message.selected;
     },
-    isExpired() {
-      const { messageList } = this.$teneoApi;
-      const latestMessage = messageList[messageList.length - 1];
+    isItExpired() {
+      console.log("isExpired",this.isExpired)
+      if (this.isExpired === undefined) {
+        const { messageList } = this.$teneoApi;
+        const latestMessage = messageList[messageList.length - 1];
 
-      return latestMessage && latestMessage !== this.message;
+        return latestMessage && latestMessage !== this.message;
+      } else {
+        if (this.isExpired === 1) {
+          return true
+        } else {
+          return false
+        }
+        
+      }
+      
     },
   },
   methods: {
     async onSelect(button, idx) {
-      if (this.replySent || this.isExpired) {
+      console.log("idx", idx)
+      console.log("button",button)
+      console.log("this.replySent",this.replySent)
+      console.log("this.isItExpired",this.isItExpired)
+      if (button.selected === true || this.replySent || this.isItExpired) {
         return;
       }
+      button.selected = true
+      console.log("button",button)
       await handleButtonClick(button, idx, this.$teneoApi)
     },
     handleReturnSpaceKeys(event, reply, idx) {

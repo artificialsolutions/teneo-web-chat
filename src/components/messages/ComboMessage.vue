@@ -82,7 +82,7 @@
 
       <div class="twc-combo-message" v-if="message.type==='buttons'">
 
-        <ButtonsMessage :message="comboMessage(message)"/>
+        <ButtonsMessage :message="comboMessage(message)" :isExpired="isExpired ? 1 : -1" v-if="message.type==='buttons'"/>
 
         <!-- <div class="twc-buttons" :class="{ 'twc-expired': replySent || isExpired}">
             <h5 class="twc-buttons-title" v-if="message.title">{{ message.title }}</h5>
@@ -183,7 +183,7 @@
 <script>
 
 import TextMessage from './TextMessage.vue';
-import ButtonsMessage from './ButtonsMessage.vue';
+// import ButtonsMessage from './ButtonsMessage.vue';
 import { PARTICIPANT_BOT } from '../../utils/constants.js';
 import handleButtonClick from '../../utils/handle-button-click.js';
 import { EventBus, events } from '../../utils/event-bus.js';
