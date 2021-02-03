@@ -1,9 +1,20 @@
 <template>
   <div class="twc-carousel">
-    <button class="twc-carousel-bck"
-            @click="slideBack()"
-    >&#171;
-    </button>
+    <div class="twc-carousel-ctrl">
+      <button class="twc-carousel-bck twc-carousel-ctrl-arrows"
+              @click="slideBack()"
+      >&#171;
+      </button>
+      <button class="twc-carousel-ctrl-numbers"
+              v-for="(btnIndex) in carouselItemCount"
+              @click="skipToSlide(btnIndex)"
+      >{{ btnIndex }}
+      </button>
+      <button class="twc-carousel-fwd twc-carousel-ctrl-arrows"
+              @click="slideForward()"
+      >&#187;
+      </button>
+    </div>
     <ul class="twc-carousel-list">
       <li v-for="(message, idx) in carouselItems"
           :key="idx"
@@ -71,11 +82,7 @@
         </div>
       </li>
     </ul>
-    <button class="twc-carousel-fwd"
 
-            @click="slideForward()"
-    >&#187;
-    </button>
   </div>
 </template>
 <script>
@@ -108,6 +115,9 @@ export default {
     carouselItems() {
       return this.message.data.carousel_items;
     },
+    carouselItemCount() {
+      return this.message.data.carousel_items.length;
+    },
     linkitems() {
       return this.message.data.link_items;
     },
@@ -122,14 +132,7 @@ export default {
       const latestMessage = messageList[messageList.length - 1];
 
       return latestMessage && latestMessage !== this.message;
-    },
-    // gActiveSlide() {
-    //   return this.data.activeSlide;
-    // },
-    // sActiveSlide(idx) {
-    //   this.data.activeSlide = idx;
-    //   return true
-    // }
+    }
   },
   data() {
     return {
@@ -139,6 +142,10 @@ export default {
   methods: {
     showSlide(idx) {
       return idx === this.activeSlide;
+    },
+    skipToSlide(idx) {
+      this.activeSlide = idx - 1;
+      this.showSlide(this.activeSlide);
     },
     slideBack() {
       if (this.activeSlide === 0) {
@@ -189,7 +196,10 @@ export default {
   justify-content: center;
   list-style: none;
   padding: 0;
-  margin: 0 0 -10px 0;
+  margin-block-start: 0.5rem;
+  margin-block-end: 0.5em;
+  margin-inline-start: 0;
+  margin-inline-end: 0;
   width: 100%;
 }
 
@@ -198,15 +208,17 @@ export default {
 }
 
 .twc-carousel {
-  border: 1px solid black;
+  background: lightgray;
   height: max-content;
+  display: flex;
+  flex-direction: column;
 }
 
 </style>
 
 <style scoped>
 .twc-carousel .twc-card {
-  width: 90%;
+  width: 95%;
   margin: 0 auto;
 }
 
@@ -232,5 +244,34 @@ export default {
   margin: 0;
 }
 
+.twc-carousel-bck {
+  float: left;
+}
+
+.twc-carousel-fwd {
+  float: right;
+}
+
+.twc-carousel-ctrl {
+  display: flex;
+  background: #4e8cff;
+  padding: 0.5rem 0;
+}
+
+.twc-carousel-ctrl-arrows {
+  background: none;
+  border: none;
+  font-size: xx-large;
+  outline: none;
+}
+
+.twc-carousel-ctrl-numbers {
+  border-radius: 2rem;
+  background: none;
+  margin: auto;
+  width: 2rem;
+  height: 2rem;
+  outline: none;
+}
 
 </style>
