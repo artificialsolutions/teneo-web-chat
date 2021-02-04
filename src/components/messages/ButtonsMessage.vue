@@ -7,7 +7,7 @@
         v-for="(button, idx) in buttonitems"
         :key="idx"
         class="twc-btn"
-        :class="{ 'twc-selected': replySent && selected === idx, 'twc-primary': button.style == 'primary', 'twc-secondary': button.style == 'secondary', 'twc-success': button.style == 'success', 'twc-danger': button.style == 'danger', 'twc-warning': button.style == 'warning', 'twc-info': button.style == 'info'}"
+        :class="buttonClasses(button, idx, replySent, selected)"
         @click="onSelect(button, idx)"
         @keydown="handleReturnSpaceKeys($event, button, idx)"
       >{{ button.title }}</a>
@@ -70,6 +70,17 @@ export default {
         this.onSelect(reply, idx)
       }
     },
+    buttonClasses(button, idx, replySent, selected) {
+      let classes = ""
+      if (replySent && selected === idx) {
+          classes += "twc-selected "
+      }
+      if (button.style && typeof button.style === 'string') {
+          classes += "twc-" + button.style + " "
+      }
+      return classes.trim()
+    },
+
   },
 };
 </script>
