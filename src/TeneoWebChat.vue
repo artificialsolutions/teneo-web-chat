@@ -308,6 +308,9 @@ export default {
   --lightbox-overlay-color: rgba(0, 0, 0, 0.8);
   --lightbox-image-background-color: #ffffff;
   --modal-overlay-color: rgba(0, 0, 0, 0.5);
+  --carousel-ctrl-panel-bg-color: var(--primary-color);
+  --carousel-ctrl-panel-fg-color: var(--light-fg-color);
+  --carousel-ctrl-panel-active-color: var(--secondary-color);
 
   --primary-font: 'Helvetica Neue', Helvetica, Arial, sans-serif;
 }

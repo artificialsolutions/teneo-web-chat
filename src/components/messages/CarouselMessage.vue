@@ -5,22 +5,28 @@
               @click="slideBack()"
       >&#171;
       </button>
-      <button class="twc-carousel-ctrl-numbers"
+      <span class="twc-carousel-ctrl-dots-container">
+      <button class="twc-carousel-ctrl-dots"
               v-for="(btnIndex) in carouselItemCount"
               @click="skipToSlide(btnIndex)"
-      >{{ btnIndex }}
+              v-bind:class="{'twc-carousel-ctrl-dots-active': showSlide(btnIndex-1)}"
+      >
       </button>
+      </span>
       <button class="twc-carousel-fwd twc-carousel-ctrl-arrows"
               @click="slideForward()"
       >&#187;
       </button>
     </div>
+
     <ul class="twc-carousel-list">
       <li v-for="(message, idx) in carouselItems"
-          :key="idx"
-          v-show="showSlide(idx)"
           class="twc-carousel-list-item"
+          :key="idx + 'Slide'"
+          v-show="showSlide(idx)"
+          v-bind:data-slide="idx"
       >
+
         <div class="twc-card" v-if="message.type==='card'">
           <div class="twc-card-img" v-if="message.image">
             <img :src="message.image.image_url" :alt="message.image.alt"/>
@@ -140,6 +146,24 @@ export default {
     };
   },
   methods: {
+    // beforeEnterSlide(el) {
+    //
+    //
+    // },
+    // enterSlide(el, done) {
+    //   done()
+    // },
+    // afterEnterSlide(el) {
+    // },
+    // beforeLeaveSlide(el) {
+    //   console.log(this.activeSlide, el.dataset.slide)
+    // },
+    // leaveSlide(el, done) {
+    //   done()
+    // },
+    // afterLeaveSlide(el) {
+    // },
+
     showSlide(idx) {
       return idx === this.activeSlide;
     },
@@ -187,9 +211,17 @@ export default {
     }
   },
 };
+
+/*TODO => Make swipeable cards in mobile.
+   Animate slide transition.
+   Give card text area minimum height.
+   Round corners for carousel container.
+*/
 </script>
 
 <style>
+
+
 .twc-carousel-list {
   display: flex;
   flex-direction: column;
@@ -201,10 +233,12 @@ export default {
   margin-inline-start: 0;
   margin-inline-end: 0;
   width: 100%;
+  white-space: nowrap;
+  overflow: hidden;
 }
 
 .twc-carousel-list-item {
-
+  overflow: hidden;
 }
 
 .twc-carousel {
@@ -213,6 +247,7 @@ export default {
   display: flex;
   flex-direction: column;
 }
+
 
 </style>
 
@@ -254,7 +289,7 @@ export default {
 
 .twc-carousel-ctrl {
   display: flex;
-  background: #4e8cff;
+  background: var(--carousel-ctrl-panel-bg-color, #4e8cff);
   padding: 0.5rem 0;
 }
 
@@ -263,15 +298,31 @@ export default {
   border: none;
   font-size: xx-large;
   outline: none;
+  color: var(--carousel-ctrl-panel-fg-color, #ffffff);
+  flex: 1;
 }
 
-.twc-carousel-ctrl-numbers {
-  border-radius: 2rem;
-  background: none;
+.twc-carousel-ctrl-dots-container {
+  display: flex;
+  flex: 3;
+}
+
+.twc-carousel-ctrl-dots {
+  border-radius: 0.5rem;
   margin: auto;
-  width: 2rem;
-  height: 2rem;
+  width: 1rem;
+  height: 1rem;
   outline: none;
+  background: var(--carousel-ctrl-panel-fg-color, #ffffff);
+  border: none;
+}
+
+.twc-carousel-ctrl-dots:hover {
+  filter: invert(100%);
+}
+
+.twc-carousel-ctrl-dots-active {
+  background: var(--carousel-ctrl-panel-active-color, #6c757d);
 }
 
 </style>
