@@ -3,24 +3,34 @@
     <div class="twc-carousel-ctrl">
       <button class="twc-carousel-bck twc-carousel-ctrl-arrows"
               @click="slideBack()"
+              v
       >&#171;
       </button>
-      <button class="twc-carousel-ctrl-numbers"
+      <span class="twc-carousel-ctrl-dots-container">
+      <button class="twc-carousel-ctrl-dots"
               v-for="(btnIndex) in carouselItemCount"
               @click="skipToSlide(btnIndex)"
-      >{{ btnIndex }}
+              v-bind:class="{'twc-carousel-ctrl-dots-active': isActiveSlide(btnIndex-1)}"
+      >
       </button>
+      </span>
       <button class="twc-carousel-fwd twc-carousel-ctrl-arrows"
               @click="slideForward()"
       >&#187;
       </button>
     </div>
-    <ul class="twc-carousel-list">
+
+    <transition-group
+        name="twc-carousel-transitions"
+        class="twc-carousel-list"
+        tag="ul"
+    >
       <li v-for="(message, idx) in carouselItems"
-          :key="idx"
-          v-show="showSlide(idx)"
           class="twc-carousel-list-item"
+          :key="idx + 'Slide'"
+          v-bind:data-slide="idx"
       >
+
         <div class="twc-card" v-if="message.type==='card'">
           <div class="twc-card-img" v-if="message.image">
             <img :src="message.image.image_url" :alt="message.image.alt"/>
@@ -81,7 +91,7 @@
           </div>
         </div>
       </li>
-    </ul>
+    </transition-group>
 
   </div>
 </template>
@@ -140,12 +150,20 @@ export default {
     };
   },
   methods: {
-    showSlide(idx) {
+    moveSlideElements() {
+      let slides = document.getElementsByClassName('twc-carousel-list-item');
+
+      for (let slide of slides) {
+          slide.style.transform = 'translateX('+(this.activeSlide*-100)+'%)';
+      }
+
+    },
+    isActiveSlide(idx) {
       return idx === this.activeSlide;
     },
     skipToSlide(idx) {
       this.activeSlide = idx - 1;
-      this.showSlide(this.activeSlide);
+      this.moveSlideElements();
     },
     slideBack() {
       if (this.activeSlide === 0) {
@@ -153,7 +171,7 @@ export default {
       } else {
         this.activeSlide--;
       }
-      this.showSlide(this.activeSlide);
+      this.moveSlideElements();
     },
     slideForward() {
       if (this.activeSlide === this.message.data.carousel_items.length - 1) {
@@ -161,7 +179,7 @@ export default {
       } else {
         this.activeSlide++;
       }
-      this.showSlide(this.activeSlide);
+      this.moveSlideElements();
     },
     async onLinkbuttonClick(linkbutton, event) {
       await handleLinkButtonClick(linkbutton, event);
@@ -187,12 +205,18 @@ export default {
     }
   },
 };
+
+/*TODO => Make swipeable cards in mobile.
+   Move active cards to middle so that previous and next cards are visible.
+   Give card text area minimum height.
+   Round corners for carousel container.
+*/
 </script>
 
 <style>
+
+
 .twc-carousel-list {
-  display: flex;
-  flex-direction: column;
   justify-content: center;
   list-style: none;
   padding: 0;
@@ -201,10 +225,16 @@ export default {
   margin-inline-start: 0;
   margin-inline-end: 0;
   width: 100%;
+  white-space: nowrap;
+  overflow: hidden;
 }
 
 .twc-carousel-list-item {
-
+  overflow: hidden;
+  transition: all 2s ease;
+  display: inline-block;
+  width: 95%;
+  vertical-align: top;
 }
 
 .twc-carousel {
@@ -212,7 +242,9 @@ export default {
   height: max-content;
   display: flex;
   flex-direction: column;
+  max-width: 100%;
 }
+
 
 </style>
 
@@ -254,7 +286,7 @@ export default {
 
 .twc-carousel-ctrl {
   display: flex;
-  background: #4e8cff;
+  background: var(--carousel-ctrl-panel-bg-color, #4e8cff);
   padding: 0.5rem 0;
 }
 
@@ -263,15 +295,31 @@ export default {
   border: none;
   font-size: xx-large;
   outline: none;
+  color: var(--carousel-ctrl-panel-fg-color, #ffffff);
+  flex: 1;
 }
 
-.twc-carousel-ctrl-numbers {
-  border-radius: 2rem;
-  background: none;
+.twc-carousel-ctrl-dots-container {
+  display: flex;
+  flex: 3;
+}
+
+.twc-carousel-ctrl-dots {
+  border-radius: 0.5rem;
   margin: auto;
-  width: 2rem;
-  height: 2rem;
+  width: 1rem;
+  height: 1rem;
   outline: none;
+  background: var(--carousel-ctrl-panel-fg-color, #ffffff);
+  border: none;
+}
+
+.twc-carousel-ctrl-dots:hover {
+  filter: invert(100%);
+}
+
+.twc-carousel-ctrl-dots-active {
+  background: var(--carousel-ctrl-panel-active-color, #6c757d);
 }
 
 </style>
