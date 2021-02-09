@@ -1,12 +1,12 @@
 <template>
   <div id="teneo-web-chat" class="teneo-web-chat">
     <ChatWindow
-      v-if="isChatOpen"
-      id="twc-chat-window"
-      :on-close="closeChat"
-      :on-minimize="minimizeChat"
+        v-if="isChatOpen"
+        id="twc-chat-window"
+        :on-close="closeChat"
+        :on-minimize="minimizeChat"
     />
-    <LaunchButton v-if="!isChatOpen" :open="openChat" :is-open="isChatOpen" :is-minimized="isChatMinimized" />
+    <LaunchButton v-if="!isChatOpen" :open="openChat" :is-open="isChatOpen" :is-minimized="isChatMinimized"/>
   </div>
 </template>
 
@@ -17,13 +17,27 @@ import LaunchButton from './components/LaunchButton.vue';
 import { EventBus, events } from './utils/event-bus.js';
 import handleExtension from './utils/handle-extension.js';
 import basePayload from './utils/base-payload.js';
-import { API_ON_OPEN_BUTTON_CLICK, API_ON_CLOSE_BUTTON_CLICK, API_ON_MINIMIZE_BUTTON_CLICK, API_ON_VISIBILITY_CHANGED, API_ON_RESET } from './utils/api-function-names.js';
-import { API_KEY_VISIBILITY, API_STATE_MAXIMIZED, API_STATE_MINIMIZED, DEFAULT_TITLE, SESSION_ID_STORAGE_KEY } from './utils/constants.js';
+import {
+  API_ON_OPEN_BUTTON_CLICK,
+  API_ON_CLOSE_BUTTON_CLICK,
+  API_ON_MINIMIZE_BUTTON_CLICK,
+  API_ON_VISIBILITY_CHANGED,
+  API_ON_RESET
+} from './utils/api-function-names.js';
+import {
+  API_KEY_VISIBILITY,
+  API_STATE_MAXIMIZED,
+  API_STATE_MINIMIZED,
+  DEFAULT_TITLE,
+  SESSION_ID_STORAGE_KEY
+} from './utils/constants.js';
 import detectSafari from './utils/detect-safari.js';
+
 registerMessageComponents();
 
 // SAFARI IOS ADAPTATIONS
 import detectIosSafari from './utils/detect-ios-safari';
+
 const bodyScrollLock = require('body-scroll-lock');
 const { disableBodyScroll } = bodyScrollLock;
 const { enableBodyScroll } = bodyScrollLock;
@@ -51,7 +65,8 @@ export default {
     this.isIosSafari = detectIosSafari();
 
     // Set the name of the hidden property and the change event for visibility
-    let hidden, visibilityChange;
+    let hidden,
+        visibilityChange;
 
     if (typeof document.hidden !== 'undefined') { // Opera 12.10 and Firefox 18 and later support
       hidden = 'hidden';
@@ -112,7 +127,7 @@ export default {
     });
 
     EventBus.$emit(events.API_STATE_READY);
-    },
+  },
   methods: {
     // Encapsulating dependency methods makes Testing easier
     async _onMessageReceived(message) {
@@ -235,10 +250,10 @@ export default {
       this.serviceName = newTitle;
     },
     async apiOnVisibilityChange() {
-        const data = {};
+      const data = {};
 
-        data[API_KEY_VISIBILITY] = this.$store.getters.visibility;
-        await handleExtension(API_ON_VISIBILITY_CHANGED, data);
+      data[API_KEY_VISIBILITY] = this.$store.getters.visibility;
+      await handleExtension(API_ON_VISIBILITY_CHANGED, data);
     },
     async handleBrowserMinimize() {
       // Console.log('handleBrowserMinimize: '+document.hidden)
@@ -308,7 +323,10 @@ export default {
   --lightbox-overlay-color: rgba(0, 0, 0, 0.8);
   --lightbox-image-background-color: #ffffff;
   --modal-overlay-color: rgba(0, 0, 0, 0.5);
-
+  --carousel-ctrl-panel-bg-color: var(--primary-color);
+  --carousel-ctrl-panel-fg-color: var(--light-fg-color);
+  --carousel-ctrl-panel-active-color: var(--secondary-color);
+  --carousel-ctrl-panel-disabled-color: var(--expired-color);
   --primary-font: 'Helvetica Neue', Helvetica, Arial, sans-serif;
 }
 

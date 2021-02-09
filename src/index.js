@@ -403,8 +403,12 @@ return filteredMessageList;
 };
 //Directive to v-visible to use visibility="hidden" instead of v-show to display="none"
 Vue.directive('visible', (el, binding) => {
-  el.style.flex = !!binding.value ? 1 : 0;
+  el.style.visibility = !!binding.value ? 'visible' : 'hidden'
 });
+
+
+
+
 if ((process.env.NODE_ENV === 'undefined') || (process.env.NODE_ENV !== 'test')) {
   Object.freeze(window.TeneoWebChat);
 }

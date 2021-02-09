@@ -3,7 +3,7 @@
     <div class="twc-carousel-ctrl">
       <button class="twc-carousel-bck twc-carousel-ctrl-arrows"
               @click="slideBack()"
-              v
+              v-bind:disabled="this.isFirstSlide"
       >&#171;
       </button>
       <span class="twc-carousel-ctrl-dots-container">
@@ -16,19 +16,17 @@
       </span>
       <button class="twc-carousel-fwd twc-carousel-ctrl-arrows"
               @click="slideForward()"
+              v-bind:disabled="this.isLastSlide"
       >&#187;
       </button>
     </div>
 
-    <transition-group
-        name="twc-carousel-transitions"
-        class="twc-carousel-list"
-        tag="ul"
-    >
+    <ul class="twc-carousel-list">
       <li v-for="(message, idx) in carouselItems"
           class="twc-carousel-list-item"
           :key="idx + 'Slide'"
           v-bind:data-slide="idx"
+          ref="cards"
       >
 
         <div class="twc-card" v-if="message.type==='card'">
@@ -89,9 +87,10 @@
                 :key="idx"
             >{{ link.title }}</a>
           </div>
+          <div class="twc-card-spacer"></div>
         </div>
       </li>
-    </transition-group>
+    </ul>
 
   </div>
 </template>
@@ -146,15 +145,21 @@ export default {
   },
   data() {
     return {
-      activeSlide: 0
+      activeSlide: 0,
+      isFirstSlide: true,
+      isLastSlide: false,
+      touchstartX: 0
     };
   },
   methods: {
     moveSlideElements() {
-      let slides = document.getElementsByClassName('twc-carousel-list-item');
 
+      this.isFirstSlide = this.activeSlide === 0;
+      this.isLastSlide = this.activeSlide === this.message.data.carousel_items.length - 1;
+
+      let slides = document.getElementsByClassName('twc-carousel-list-item');
       for (let slide of slides) {
-          slide.style.transform = 'translateX('+(this.activeSlide*-100)+'%)';
+        slide.style.transform = 'translateX(' + ((this.activeSlide * -100) + 4) + '%)';
       }
 
     },
@@ -202,14 +207,35 @@ export default {
     },
     sanitizedHtmlText(text) {
       return sanitizeHtml(text);
+    },
+    additionalCardProcessing() {
+      let maxCardHeight = 0;
+      for (let card of this.$refs.cards) {
+        maxCardHeight = card.clientHeight > maxCardHeight ? card.clientHeight : maxCardHeight;
+        card.addEventListener('touchstart', function (evt) {
+          this.touchstartX = evt.changedTouches[0].screenX;
+
+        });
+        card.addEventListener('touchend', function (evt) {
+          (this.touchstartX > evt.changedTouches[0].screenX) ? this.slideBack() : this.slideForward();
+        }.bind(this));
+      }
+      ;
+      for (let card of this.$refs.cards) {
+        let spacer = card.getElementsByClassName('twc-card-spacer')[0];
+        spacer.style.height = maxCardHeight - card.clientHeight + 'px';
+      }
+      ;
+
     }
   },
+  mounted() {
+    this.additionalCardProcessing();
+  }
 };
 
-/*TODO => Make swipeable cards in mobile.
-   Move active cards to middle so that previous and next cards are visible.
-   Give card text area minimum height.
-   Round corners for carousel container.
+
+
 */
 </script>
 
@@ -233,8 +259,9 @@ export default {
   overflow: hidden;
   transition: all 2s ease;
   display: inline-block;
-  width: 95%;
+  width: 90%;
   vertical-align: top;
+  padding: 1%;
 }
 
 .twc-carousel {
@@ -243,14 +270,10 @@ export default {
   display: flex;
   flex-direction: column;
   max-width: 100%;
+  border-radius: 5px;
 }
 
-
-</style>
-
-<style scoped>
 .twc-carousel .twc-card {
-  width: 95%;
   margin: 0 auto;
 }
 
@@ -288,6 +311,7 @@ export default {
   display: flex;
   background: var(--carousel-ctrl-panel-bg-color, #4e8cff);
   padding: 0.5rem 0;
+  border-radius: 5px 5px 0 0;
 }
 
 .twc-carousel-ctrl-arrows {
@@ -299,14 +323,20 @@ export default {
   flex: 1;
 }
 
+.twc-carousel-ctrl-arrows:disabled {
+  color: var(--carousel-ctrl-panel-disabled-color, #a9a9a9);
+}
+
 .twc-carousel-ctrl-dots-container {
   display: flex;
   flex: 3;
+  justify-content: space-evenly;
+  align-items: center;
 }
 
 .twc-carousel-ctrl-dots {
   border-radius: 0.5rem;
-  margin: auto;
+  margin: 0 5px;
   width: 1rem;
   height: 1rem;
   outline: none;
@@ -315,7 +345,7 @@ export default {
 }
 
 .twc-carousel-ctrl-dots:hover {
-  filter: invert(100%);
+  filter: invert(50%);
 }
 
 .twc-carousel-ctrl-dots-active {
