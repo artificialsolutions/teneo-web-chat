@@ -171,20 +171,16 @@ export default {
       this.moveSlideElements();
     },
     slideBack() {
-      if (this.activeSlide === 0) {
-        this.activeSlide = this.message.data.carousel_items.length - 1;
-      } else {
+      if (this.activeSlide !== 0) {
         this.activeSlide--;
+        this.moveSlideElements();
       }
-      this.moveSlideElements();
     },
     slideForward() {
-      if (this.activeSlide === this.message.data.carousel_items.length - 1) {
-        this.activeSlide = 0;
-      } else {
+      if (this.activeSlide < this.message.data.carousel_items.length - 1) {
         this.activeSlide++;
+        this.moveSlideElements();
       }
-      this.moveSlideElements();
     },
     async onLinkbuttonClick(linkbutton, event) {
       await handleLinkButtonClick(linkbutton, event);
@@ -217,7 +213,7 @@ export default {
 
         });
         card.addEventListener('touchend', function (evt) {
-          (this.touchstartX > evt.changedTouches[0].screenX) ? this.slideBack() : this.slideForward();
+          (this.touchstartX < evt.changedTouches[0].screenX) ? this.slideBack() : this.slideForward();
         }.bind(this));
       }
       ;
@@ -234,9 +230,6 @@ export default {
   }
 };
 
-
-
-*/
 </script>
 
 <style>
@@ -257,7 +250,7 @@ export default {
 
 .twc-carousel-list-item {
   overflow: hidden;
-  transition: all 2s ease;
+  transition: all 1s ease;
   display: inline-block;
   width: 90%;
   vertical-align: top;
