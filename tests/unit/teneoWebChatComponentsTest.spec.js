@@ -6,6 +6,7 @@ import ButtonsMessage from '@/components/messages/ButtonsMessage.vue'
 import CardMessage from '@/components/messages/CardMessage.vue'
 import ClickablelistMessage from '@/components/messages/ClickablelistMessage.vue'
 import ComboMessage from '@/components/messages/ComboMessage.vue'
+import CarouselMessage from '@/components/messages/CarouselMessage.vue'
 import FilevideoMessage from '@/components/messages/FilevideoMessage.vue'
 import ImageMessage from '@/components/messages/ImageMessage.vue'
 import ModalMessage from '@/components/messages/ModalMessage.vue'
@@ -18,6 +19,7 @@ import LinkButtonsMessage from '@/components/messages/LinkButtonsMessage.vue'
 import * as sampleJSON  from "../../src/utils/sample-message-json";
 
 
+
 describe('Test Message Components', () => {
 
     test('Assert TextMessage JSON', () => {
@@ -26,7 +28,7 @@ describe('Test Message Components', () => {
                 message: sampleJSON.textMessage
             }
         });
-        expect(wrapper.exists()).toBe(true)  
+        expect(wrapper.exists()).toBe(true)
     })
 
 
@@ -101,7 +103,7 @@ describe('Test Message Components', () => {
         expect(wrapperWithLinkButtons.html()).toContain("<a role=\"link\" href=\"https://developers.artificial-solutions.com/engine\" target=\"_blank\" rel=\"noopener\" class=\"twc-linkbutton\">Engine</a>")
     })
 
-    
+
     test('Assert ClickablelistMessage JSON', () =>{
         const wrapper = mount(ClickablelistMessage, {
             propsData: {
@@ -115,6 +117,7 @@ describe('Test Message Components', () => {
         })
         expect(wrapper.html()).toContain('<li tabindex=\"-1\" role=\"button\" class=\"twc-clickablelist-message__item\">Two</li>')
     })
+
 
     test('Assert LinkButtonsMessage JSON', () =>{
         const wrapper = mount(LinkButtonsMessage, {
@@ -132,10 +135,10 @@ describe('Test Message Components', () => {
                 message : sampleJSON.comboMessageJSON
             },
             computed: {
-                isExpired: jest.fn().mockImplementation( () => {   
+                isExpired: jest.fn().mockImplementation( () => {
                     return false;
                   }),
-                replySent: jest.fn().mockImplementation( () => {   
+                replySent: jest.fn().mockImplementation( () => {
                     return false;
                 }),
             }
@@ -156,15 +159,52 @@ describe('Test Message Components', () => {
     })
 
 
+    test('Assert CarouselMessage JSON loads with nested components', () =>{ ///check number of rendered items
+        const wrapper = mount(CarouselMessage, {
+            propsData: {
+                message : sampleJSON.carouselMessageJSON
+            },
+            computed: {
+                isExpired: jest.fn().mockImplementation( () => {
+                    return false;
+                }),
+                replySent: jest.fn().mockImplementation( () => {
+                    return false;
+                }),
+            }
+        })
+
+        expect(wrapper.exists()).toBe(true)
+        //Check for controlbox elements
+        expect(wrapper.html()).toContain('twc-carousel-ctrl')
+        expect(wrapper.html()).toContain('twc-carousel-ctrl-dots-container')
+        expect(wrapper.findAll('button.twc-carousel-ctrl-arrows')).toHaveLength(2)
+        expect(wrapper.findAll('button.twc-carousel-ctrl-dots').length).toBeGreaterThan(0)
+
+        //Check there are three cards in the example
+        expect(wrapper.findAll('.twc-carousel-list-item')).toHaveLength(3)
+
+        //Check sliding functions
+        expect(wrapper.vm.$data.activeSlide).toBe(0);
+        wrapper.vm.slideForward()
+        expect(wrapper.vm.$data.activeSlide).toBe(1);
+        wrapper.vm.slideBack()
+        expect(wrapper.vm.$data.activeSlide).toBe(0);
+        wrapper.vm.skipToSlide(3)
+        expect(wrapper.vm.$data.activeSlide).toBe(2);
+
+    })
+
+
     test('Assert FilevideoMessage JSON', () =>{
         const wrapper = mount(FilevideoMessage, {
             propsData: {
                 message: sampleJSON.filevideoMessageJSON
             },
             computed: {
-                videoUrl: jest.fn().mockImplementation( () => {   
+                videoUrl: jest.fn().mockImplementation( () => {
                     return sampleJSON.filevideoMessageJSON.data.video_url + '#t=0.1';
-                  }), 
+                  }),
             }
         })
         expect(wrapper.html()).toContain('twc-file-video')
@@ -177,30 +217,30 @@ describe('Test Message Components', () => {
                 message: sampleJSON.imageMessageJSON
             },
             computed: {
-                imageUrl: jest.fn().mockImplementation( () => {   
+                imageUrl: jest.fn().mockImplementation( () => {
                     return sampleJSON.imageMessageJSON.data.image_url;
-                  }), 
+                  }),
             }
         })
-        expect(wrapper.html()).toContain('twc-image-message') 
+        expect(wrapper.html()).toContain('twc-image-message')
     })
-    
-    
+
+
     test('Assert ModalMessage JSON', () =>{
         const wrapper = mount(ModalMessage, {
             propsData: {
                 message: sampleJSON.modalMessageJSON
             },
             computed: {
-                imageUrl: jest.fn().mockImplementation( () => {   
+                imageUrl: jest.fn().mockImplementation( () => {
                     return sampleJSON.modalMessageJSON.data.image_url;
-                  }), 
+                  }),
             }
         })
         expect(wrapper.html()).toContain('twc-modal')
     })
 
-    
+
     test('Assert QuickreplyMessage JSON', () =>{
         const wrapper = mount(QuickreplyMessage, {
             propsData: {
@@ -213,7 +253,7 @@ describe('Test Message Components', () => {
                 isExpired: () => jest.fn().mockImplementation( () => {
                     return false;
                 }),
-                
+
             }
         })
         const onSelectMock = jest.fn().mockImplementation( () => {
@@ -230,9 +270,9 @@ describe('Test Message Components', () => {
                 message: sampleJSON.systemMessageJSON
             },
             computed: {
-                sanitizedHtmlText: jest.fn().mockImplementation( () => {   
+                sanitizedHtmlText: jest.fn().mockImplementation( () => {
                     return sampleJSON.systemMessageJSON.data.text ;
-                }), 
+                }),
             }
         })
         expect(wrapper.html()).toContain("<p class=\"twc-system-message__text\">This is a system message.</p>")
@@ -245,29 +285,29 @@ describe('Test Message Components', () => {
                 message: sampleJSON.vimeovideoMessageJSON
             },
             computed: {
-                videoUrl: jest.fn().mockImplementation( () => {   
+                videoUrl: jest.fn().mockImplementation( () => {
                     return sampleJSON.vimeovideoMessageJSON.data.video_url ;
-                }), 
+                }),
             }
         })
         expect(wrapper.html()).toContain('twc-vimeo-video')
     })
 
-    
+
     test('Assert YoutubevideoMessage JSON', () =>{
         const wrapper = mount(YoutubevideoMessage, {
             propsData: {
                 message: sampleJSON.youtubevideoMessageJSON
             },
             computed: {
-                videoUrl: jest.fn().mockImplementation( () => {   
+                videoUrl: jest.fn().mockImplementation( () => {
                     return sampleJSON.youtubevideoMessageJSON.data.video_url ;
-                }), 
+                }),
             }
         })
         expect(wrapper.html()).toContain('twc-youtube-video')
     })
-     
+
 })
 
 
