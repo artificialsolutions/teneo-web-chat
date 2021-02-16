@@ -1,3 +1,7 @@
+# v3.x.x
+## [TBD]
+* Fix reset title icon issue
+
 # v3.5.0
 ## 21-01-2021
 * Allow html in body of cards

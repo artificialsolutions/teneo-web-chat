@@ -356,7 +356,7 @@ return filteredMessageList;
       case apiConstants.API_CALL_RESET_SEND_ICON:
         store.commit('sendIconUrl', store.getters.initialSendIconUrl);
         break;
-      
+
       case apiConstants.API_CALL_SET_UPLOAD_ICON:
         // TODO: throw error if payload is invalid or if store throws error
         if (typeof payload === 'string') {
@@ -401,6 +401,14 @@ return filteredMessageList;
     return API_VERSION;
   }
 };
+//Directive to v-visible to use visibility="hidden" instead of v-show to display="none"
+Vue.directive('visible', (el, binding) => {
+  el.style.visibility = !!binding.value ? 'visible' : 'hidden'
+});
+
+
+
+
 if ((process.env.NODE_ENV === 'undefined') || (process.env.NODE_ENV !== 'test')) {
   Object.freeze(window.TeneoWebChat);
 }
