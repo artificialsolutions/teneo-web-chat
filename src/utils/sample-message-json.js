@@ -165,6 +165,16 @@ export const clickableListMessageJSON = {
     }
 };
 
+export const linkPreviewMessageJSON = {
+    'type': 'linkpreview',
+    data: {
+        'title': 'Link title',
+        'description': 'Short text for the preview',
+        'url': 'https://example.com',
+        'image': 'https://url.to/an/image.png'
+    }
+};
+
 export const linkButtonsMessageJSON = {
     'type': 'linkbuttons',
     data: {

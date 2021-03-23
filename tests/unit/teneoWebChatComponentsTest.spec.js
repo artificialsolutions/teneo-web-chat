@@ -15,6 +15,7 @@ import SystemMessage from '@/components/messages/SystemMessage.vue'
 import VimeovideoMessage from '@/components/messages/VimeovideoMessage.vue'
 import YoutubevideoMessage from '@/components/messages/YoutubevideoMessage.vue'
 import LinkButtonsMessage from '@/components/messages/LinkButtonsMessage.vue'
+import LinkPreviewMessage from '@/components/messages/LinkPreviewMessage.vue'
 
 import * as sampleJSON  from "../../src/utils/sample-message-json";
 
@@ -126,6 +127,20 @@ describe('Test Message Components', () => {
             }
         })
         expect(wrapper.html()).toContain("<a role=\"link\" href=\"https://developers.artificial-solutions.com/\" target=\"_blank\" rel=\"noopener\" class=\"twc-linkbutton\">Link 3</a>")
+    })
+
+    test('Assert LinkPreviewMessage JSON', () =>{
+        const wrapper = mount(LinkPreviewMessage, {
+            propsData: {
+                message: sampleJSON.linkPreviewMessageJSON
+            }
+        })
+        expect(wrapper.html()).toContain('twc-link-preview');
+        expect(wrapper.html()).toContain('twc-link-preview-left-column');
+        expect(wrapper.html()).toContain('twc-link-preview-right-column');
+        expect(wrapper.html()).toContain('twc-link-preview-title');
+        expect(wrapper.html()).toContain('twc-link-preview-description');
+        expect(wrapper.html()).toContain('twc-link-preview-domain');
     })
 
 

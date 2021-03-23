@@ -15,7 +15,9 @@ export var translatedMessages = {
             input_area_send_button_title: 'Send besked',
             input_area_upload_button_aria_label: 'Upload Fil',
             input_area_upload_button_title: 'Upload Fil',
-            message_typing_indicator: 'Skriver...'
+            message_typing_indicator: 'Skriver...',
+            preview_title_not_available: "Uden titel",
+            preview_description_not_available: "Ingen beskrivelse tilgængelig"
         }
     },
     de: {
@@ -34,7 +36,9 @@ export var translatedMessages = {
             input_area_send_button_title: 'Text senden',
             input_area_upload_button_aria_label: 'Datei hochladen',
             input_area_upload_button_title: 'Datei hochladen',
-            message_typing_indicator: 'Schreibt...'
+            message_typing_indicator: 'Schreibt...',
+            preview_title_not_available: "Unbenannt",
+            preview_description_not_available: "Keine Beschreibung verfügbar"
         }
     },
     en: {
@@ -53,7 +57,9 @@ export var translatedMessages = {
             input_area_send_button_title: 'Send message',
             input_area_upload_button_aria_label: 'Upload File',
             input_area_upload_button_title: 'Upload File',
-            message_typing_indicator: 'Typing...'
+            message_typing_indicator: 'Typing...',
+            preview_title_not_available: "Untitled",
+            preview_description_not_available: "No Description Available"
         }
     },
     'en-GB': {
@@ -72,7 +78,9 @@ export var translatedMessages = {
             input_area_send_button_title: 'Send message',
             input_area_upload_button_aria_label: 'Upload File',
             input_area_upload_button_title: 'Upload File',
-            message_typing_indicator: 'Typing...'
+            message_typing_indicator: 'Typing...',
+            preview_title_not_available: "Untitled",
+            preview_description_not_available: "No Description Available"
         }
     },
     es: {
@@ -91,7 +99,9 @@ export var translatedMessages = {
             input_area_send_button_title: 'Enviar mensaje',
             input_area_upload_button_aria_label: 'Subir Archivo',
             input_area_upload_button_title: 'Subir Archivo',
-            message_typing_indicator: 'Escribiendo...'
+            message_typing_indicator: 'Escribiendo...',
+            preview_title_not_available: "Sin Título",
+            preview_description_not_available: "Descripción no disponible"
         }
     },
     fr: {
@@ -110,7 +120,9 @@ export var translatedMessages = {
             input_area_send_button_title: 'Envoyer message',
             input_area_upload_button_aria_label: 'Télécharger un fichier',
             input_area_upload_button_title: 'Télécharger un fichier',
-            message_typing_indicator: 'En train d\'écrire...'
+            message_typing_indicator: 'En train d\'écrire...',
+            preview_title_not_available: "Sans titre",
+            preview_description_not_available: "Aucune description disponible"
         }
     },
     id: {
@@ -129,7 +141,9 @@ export var translatedMessages = {
             input_area_send_button_title: 'Kirim pesan',
             input_area_upload_button_aria_label: 'Unggah data',
             input_area_upload_button_title: 'Unggah data',
-            message_typing_indicator: 'Mengetik...'
+            message_typing_indicator: 'Mengetik...',
+            preview_title_not_available: "Tanpa judul",
+            preview_description_not_available: "Deskripsi tidak tersedia"
         }
     },
     it: {
@@ -148,7 +162,9 @@ export var translatedMessages = {
             input_area_send_button_title: 'Invia messaggio',
             input_area_upload_button_aria_label: 'Carica il file',
             input_area_upload_button_title: 'Carica il file',
-            message_typing_indicator: 'Scrivendo...'
+            message_typing_indicator: 'Scrivendo...',
+            preview_title_not_available: "Senza Titolo",
+            preview_description_not_available: "Descrizione non disponibile"
         }
     },
     ja: {
@@ -167,7 +183,9 @@ export var translatedMessages = {
             input_area_send_button_title: 'メッセージを送る',
             input_area_upload_button_aria_label: 'アップロード',
             input_area_upload_button_title: 'アップロード',
-            message_typing_indicator: '入力中...'
+            message_typing_indicator: '入力中...',
+            preview_title_not_available: "タイトルなし",
+            preview_description_not_available: "説明なし"
         }
     },
     ms: {
@@ -186,7 +204,9 @@ export var translatedMessages = {
             input_area_send_button_title: 'Hantar pesan',
             input_area_upload_button_aria_label: 'Muat naik fail',
             input_area_upload_button_title: 'Muat naik fail',
-            message_typing_indicator: 'Menaip...'
+            message_typing_indicator: 'Menaip...',
+            preview_title_not_available: "Tanpa tajuk",
+            preview_description_not_available: "Tidak ada keterangan"
         }
     },
     nl: {
@@ -205,7 +225,9 @@ export var translatedMessages = {
             input_area_send_button_title: 'Verstuur bericht',
             input_area_upload_button_aria_label: 'Upload bestand',
             input_area_upload_button_title: 'Upload bestand',
-            message_typing_indicator: 'Aan het typen...'
+            message_typing_indicator: 'Aan het typen...',
+            preview_title_not_available: "Geen titel",
+            preview_description_not_available: "Geen beschrijving beschikbaar"
         }
     },
     pt: {
@@ -224,7 +246,9 @@ export var translatedMessages = {
             input_area_send_button_title: 'Enviar mensagem',
             input_area_upload_button_aria_label: 'Carregar ficheiro',
             input_area_upload_button_title: 'Carregar ficheiro',
-            message_typing_indicator: 'Escrevendo...'
+            message_typing_indicator: 'Escrevendo...',
+            preview_title_not_available: "Sem título",
+            preview_description_not_available: "Descrição não disponível"
         }
     },
     sv: {
@@ -243,7 +267,9 @@ export var translatedMessages = {
             input_area_send_button_title: 'Skicka meddelande',
             input_area_upload_button_aria_label: 'Ladda upp en fil',
             input_area_upload_button_title: 'Ladda upp en fil',
-            message_typing_indicator: 'Skriver...'
+            message_typing_indicator: 'Skriver...',
+            preview_title_not_available: "Namnlös",
+            preview_description_not_available: "Beskrivning saknas"
         }
     },
     tr: {
@@ -262,7 +288,9 @@ export var translatedMessages = {
             input_area_send_button_title: 'Mesaj gönder',
             input_area_upload_button_aria_label: 'Dosya yükleme',
             input_area_upload_button_title: 'Dosya yükleme',
-            message_typing_indicator: 'Yazıyor...'
+            message_typing_indicator: 'Yazıyor...',
+            preview_title_not_available: "İsimsiz",
+            preview_description_not_available: "Açıklama Yok"
         }
     },
     zh: {
@@ -281,7 +309,9 @@ export var translatedMessages = {
             input_area_send_button_title: '發送',
             input_area_upload_button_aria_label: '上传文件',
             input_area_upload_button_title: '上传文件',
-            message_typing_indicator: '正在輸入...'
+            message_typing_indicator: '正在輸入...',
+            preview_title_not_available: "無標題",
+            preview_description_not_available: "無可用描述"
         }
     },
     'zh-CN': {
@@ -300,7 +330,9 @@ export var translatedMessages = {
             input_area_send_button_title: '发送',
             input_area_upload_button_aria_label: '上傳文件',
             input_area_upload_button_title: '上傳文件',
-            message_typing_indicator: '正在输入...'
+            message_typing_indicator: '正在输入...',
+            preview_title_not_available: "无标题",
+            preview_description_not_available: "没有可用的描述"
         }
     },
 };

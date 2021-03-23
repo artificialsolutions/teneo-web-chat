@@ -269,6 +269,7 @@ export default {
   --light-bg-color: #eceff1;
   --light-border-color: #c9c9c9;
   --dark-fg-color: #263238;
+  --dark-bg-color: #7b7b7b;
   --primary-color: #4e8cff;
   --secondary-color: #6c757d;
   --danger-color: #dc3545;
@@ -328,6 +329,9 @@ export default {
   --carousel-ctrl-panel-active-color: var(--secondary-color);
   --carousel-ctrl-panel-disabled-color: var(--expired-color);
   --primary-font: 'Helvetica Neue', Helvetica, Arial, sans-serif;
+  --link-preview-background-color: var(--light-bg-color);
+  --link-preview-text-color: var(--dark-fg-color);
+  --link-preview-image-background-color: var(--dark-bg-color);
 }
 
 @supports (-webkit-touch-callout: none) {

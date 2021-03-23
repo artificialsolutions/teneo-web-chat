@@ -86,7 +86,7 @@ window.TeneoWebChat = {
       store.commit('initialUploadIconUrl', twcProps.uploadIconUrl);
     }
 
-    if (twcProps.showUploadButton === true || twcProps.showUploadButton === 'true') {
+    if (twcProps.showUploadButton === true || twcProps.showUploadButton === "true") {
       store.commit('showUploadButton', true);
     }
 
@@ -109,6 +109,11 @@ window.TeneoWebChat = {
     if (twcProps.locale) {
       // TODO: error handling (once store thows error)
       store.commit('locale', twcProps.locale);
+    }
+
+    if (twcProps.autoRedirect) {
+      // TODO: error handling (once store thows error)
+      store.commit('autoRedirect', twcProps.autoRedirect == "true");
     }
 
     if (twcProps.storage) {
