@@ -4,6 +4,37 @@
         class="twc-user-input"
         :class="{ 'twc-active': inputActive, 'twc-disabled': inputDisabled }"
     >
+      <div v-if="showAsrButton" class="twc-user-input__button" :class="{ 'twc-disabled': asrDisabled }">
+        <button
+            role="button"
+            tabindex="0"
+            ref="asrButton"
+            :aria-label="$t('message.input_area_asr_button_aria_label')"
+            :title="$t('message.input_area_asr_button_title')"
+            class="twc-user-input__asr-icon-wrapper"
+            :aria-disabled="inputDisabled"
+            :disabled="inputDisabled ? true : false"
+            @click.prevent=""
+            @focus="setInputActive(true)"
+            @blur="setInputActive(false)"
+            @click="asrButtonClicked($refs.asrButton)"
+        >
+          <img
+              v-if="asrIconUrl"
+              id="twc-user-input__asr-icon-img"
+              class="twc-user-input__asr-icon"
+              :src="asrIconUrl"
+              aria-hidden="true"
+              alt=""
+          />
+          <AsrIcon
+              v-else
+              id="twc-user-input__asr-icon"
+              class="twc-user-input__asr-icon"
+              aria-hidden="true"
+          />
+        </button>
+      </div>
       <textarea
           id="twc-user-input-field"
           ref="userInput"
@@ -40,7 +71,7 @@
         >
           <img
               v-if="uploadIconUrl"
-              id="twc-user-input__upload-icon"
+              id="twc-user-input__upload-icon-img"
               class="twc-user-input__upload-icon"
               :src="uploadIconUrl"
               aria-hidden="true"
@@ -50,6 +81,38 @@
               v-else
               id="twc-user-input__upload-icon"
               class="twc-user-input__upload-icon"
+              aria-hidden="true"
+          />
+        </button>
+      </div>
+
+      <div v-if="showTtsButton" class="twc-user-input__button" :class="{ 'twc-disabled': ttsDisabled }">
+        <button
+            role="button"
+            tabindex="0"
+            ref="ttsButton"
+            :aria-label="$t('message.input_area_tts_button_aria_label')"
+            :title="$t('message.input_area_tts_button_title')"
+            class="twc-user-input__tts-icon-wrapper"
+            :aria-disabled="inputDisabled"
+            :disabled="inputDisabled ? true : false"
+            @click.prevent=""
+            @focus="setInputActive(true)"
+            @blur="setInputActive(false)"
+            @click="ttsButtonClicked($refs.ttsButton)"
+        >
+          <img
+              v-if="ttsIconUrl"
+              id="twc-user-input__tts-icon-img"
+              class="twc-user-input__tts-icon"
+              :src="ttsIconUrl"
+              aria-hidden="true"
+              alt=""
+          />
+          <TtsIcon
+              v-else
+              id="twc-user-input__tts-icon"
+              class="twc-user-input__tts-icon"
               aria-hidden="true"
           />
         </button>
@@ -70,7 +133,7 @@
         >
           <img
               v-if="sendIconUrl"
-              id="twc-user-input__send-icon"
+              id="twc-user-input__send-icon-img"
               class="twc-user-input__send-icon"
               :src="sendIconUrl"
               aria-hidden="true"
@@ -94,18 +157,22 @@ import Vue from 'vue';
 import vueDebounce from 'vue-debounce';
 import SendIcon from '../icons/send.vue';
 import UploadIcon from '../icons/upload.vue';
-import { PARTICIPANT_USER } from '../utils/constants.js';
+import AsrIcon from '../icons/asr.vue';
+import TtsIcon from '../icons/tts.vue';
+import {PARTICIPANT_USER} from '../utils/constants.js';
 import {
   API_ON_INPUT_SUBMITTED,
   API_ON_USER_TYPING,
   API_ON_SEND_BUTTON_CLICK,
   API_ON_UPLOAD_BUTTON_CLICK,
+  API_ON_ASR_BUTTON_CLICK,
+  API_ON_TTS_BUTTON_CLICK
 } from '../utils/api-function-names.js';
-import { EventBus, events } from '../utils/event-bus.js';
+import {EventBus, events} from '../utils/event-bus.js';
 import handleExtension from '../utils/handle-extension.js';
 import basePayload from '../utils/base-payload.js';
 import detectMobile from '../utils/detect-mobile.js';
-import { mapState } from 'vuex';
+import {mapState} from 'vuex';
 
 Vue.use(vueDebounce);
 
@@ -113,6 +180,8 @@ export default {
   components: {
     SendIcon,
     UploadIcon,
+    AsrIcon,
+    TtsIcon,
   },
   props: {
     onSubmit: {
@@ -125,13 +194,15 @@ export default {
     },
   },
   computed: {
-    ...mapState(['sendIconUrl', 'showUploadButton', 'uploadIconUrl']),
+    ...mapState(['sendIconUrl', 'showUploadButton', 'uploadIconUrl', 'showAsrButton', 'asrIconUrl','showTtsButton', 'ttsIconUrl']),
   },
   data() {
     return {
       inputActive: false,
       inputDisabled: false,
       uploadDisabled: false,
+      asrDisabled: false,
+      ttsDisabled: false
     };
   },
   mounted() {
@@ -140,6 +211,8 @@ export default {
         this.$refs.userInput.focus();
       }
     });
+
+
 
     EventBus.$on(events.DISABLE_UPLOAD, () => {
       if (this.showUploadButton) {
@@ -156,6 +229,40 @@ export default {
           this.$refs.uploadButton.removeAttribute('disabled');
         }
         this.setUploadDisabled(false);
+      }
+    });
+    EventBus.$on(events.DISABLE_ASR, () => {
+      if (this.showAsrButton) {
+        if (this.$refs.asrButton) {
+          this.$refs.asrButton.setAttribute('disabled', 'true');
+        }
+        this.setAsrDisabled(true);
+      }
+    });
+
+    EventBus.$on(events.ENABLE_ASR, () => {
+      if (this.showAsrButton) {
+        if (this.$refs.asrButton) {
+          this.$refs.asrButton.removeAttribute('disabled');
+        }
+        this.setAsrDisabled(false);
+      }
+    });
+    EventBus.$on(events.DISABLE_TTS, () => {
+      if (this.showTtsButton) {
+        if (this.$refs.ttsButton) {
+          this.$refs.ttsButton.setAttribute('disabled', 'true');
+        }
+        this.setTtsDisabled(true);
+      }
+    });
+
+    EventBus.$on(events.ENABLE_TTS, () => {
+      if (this.showTtsButton) {
+        if (this.$refs.ttsButton) {
+          this.$refs.ttsButton.removeAttribute('disabled');
+        }
+        this.setTtsDisabled(false);
       }
     });
 
@@ -219,6 +326,10 @@ export default {
     },
     setUploadDisabled(onoff) {
       this.uploadDisabled = onoff;
+    }, setAsrDisabled(onoff) {
+      this.asrDisabled = onoff;
+    }, setTtsDisabled(onoff) {
+      this.ttsDisabled = onoff;
     },
     handleReturnKey(event) {
       if (event.keyCode === 13 && !event.shiftKey) {
@@ -230,7 +341,7 @@ export default {
       // Check if userinput field still exists to prevent error in IE11
       if (document.getElementById('twc-user-input-field')) {
         // Create payload object
-        const payload = { text: this.$refs.userInput.value };
+        const payload = {text: this.$refs.userInput.value};
         // Check if there is an extension that want to be notified about the user typing
 
         handleExtension(API_ON_USER_TYPING, payload);
@@ -253,6 +364,12 @@ export default {
     },
     async uploadButtonClicked() {
       await handleExtension(API_ON_UPLOAD_BUTTON_CLICK);
+    },
+    async asrButtonClicked(e) {
+      await handleExtension(API_ON_ASR_BUTTON_CLICK, e);
+    },
+    async ttsButtonClicked(e) {
+      await handleExtension(API_ON_TTS_BUTTON_CLICK, e);
     },
     async _submitText() {
       // Create payload object
@@ -281,7 +398,7 @@ export default {
       }
 
       if (payload.text && payload.text.trim().length > 0) {
-        const { text } = payload;
+        const {text} = payload;
 
         let parameters = {};
 
@@ -344,16 +461,22 @@ export default {
 .twc-user-input.twc-disabled .twc-user-input__text,
 .twc-user-input.twc-disabled .twc-user-input__button,
 .twc-user-input.twc-disabled .twc-user-input__send-icon,
-.twc-user-input.twc-disabled .twc-user-input__upload-icon {
+.twc-user-input.twc-disabled .twc-user-input__upload-icon,
+.twc-user-input.twc-disabled .twc-user-input__asr-icon,
+.twc-user-input.twc-disabled .twc-user-input__tts-icon {
   filter: grayscale(100%);
   opacity: 0.4;
 }
 
 /* 
-When the upload button is disabled and then the input box is disabled as well
+When the upload, asr or tts buttons are disabled and then the input box is disabled as well
 We should not dim it twice, so we check: .twc-user-input:not(.twc-disabled)
 */
-.twc-user-input:not(.twc-disabled) .twc-user-input__button.twc-disabled .twc-user-input__upload-icon-wrapper  {
+.twc-user-input:not(.twc-disabled) .twc-user-input__button.twc-disabled .twc-user-input__upload-icon-wrapper,
+.twc-user-input:not(.twc-disabled) .twc-user-input__button.twc-disabled .twc-user-input__asr-icon-wrapper,
+.twc-user-input:not(.twc-disabled) .twc-user-input__button.twc-disabled .twc-user-input__tts-icon-wrapper
+
+{
   filter: grayscale(100%);
   opacity: 0.4;
 }
@@ -432,23 +555,39 @@ We should not dim it twice, so we check: .twc-user-input:not(.twc-disabled)
   cursor: pointer;
 }
 
-.twc-user-input__upload-icon-wrapper {
+
+.twc-user-input__upload-icon-wrapper,
+.twc-user-input__asr-icon-wrapper,
+.twc-user-input__tts-icon-wrapper
+{
   background: none;
   border: none;
-  padding: 0px;
-  color: var(--uploadicon-fg-color, #263238);
+  padding: 0;
   width: 24px;
   height: 44px;
   cursor: pointer;
-}
-
-.twc-user-input__send-icon-wrapper:active,
-.twc-user-input__upload-icon-wrapper:active {
   outline: none;
 }
 
+.twc-user-input__upload-icon-wrapper
+{
+  color: var(--uploadicon-fg-color, #263238);
+}
+.twc-user-input__asr-icon-wrapper
+{
+  color: var(--asricon-fg-color, #263238);
+}
+
+.twc-user-input__tts-icon-wrapper
+{
+  color: var(--ttsicon-fg-color, #263238);
+}
+
+
 .twc-user-input__send-icon,
-.twc-user-input__upload-icon {
+.twc-user-input__upload-icon,
+.twc-user-input__asr-icon,
+.twc-user-input__tts-icon {
   height: 20px;
   width: 20px;
   align-self: center;
@@ -461,7 +600,10 @@ We should not dim it twice, so we check: .twc-user-input:not(.twc-disabled)
 
 /* Increase tap target on mobile */
 @media (max-width: 450px) {
-  .twc-user-input__upload-icon-wrapper {
+  .twc-user-input__upload-icon-wrapper,
+  .twc-user-input__asr-icon-wrapper,
+  .twc-user-input__tts-icon-wrapper
+  {
     width: 44px;
   }
 

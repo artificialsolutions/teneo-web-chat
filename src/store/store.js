@@ -1,6 +1,6 @@
 import Vue from 'vue';
 import Vuex from 'vuex';
-import { DEFAULT_TITLE, FALLBACK_LOCALE } from '../utils/constants.js';
+import {DEFAULT_TITLE, FALLBACK_LOCALE} from '../utils/constants.js';
 import isValidUrl from '../utils/validate-url';
 
 Vue.use(Vuex);
@@ -14,6 +14,8 @@ export const store = new Vuex.Store({
         initialLaunchIconUrl: undefined,
         initialSendIconUrl: undefined,
         initialUploadIconUrl: undefined,
+        initialAsrIconUrl: undefined,
+        initialTtsIconUrl: undefined,
         visibility: 'minimized',
         title: DEFAULT_TITLE,
         titleIconUrl: '',
@@ -28,7 +30,11 @@ export const store = new Vuex.Store({
         launchIconUrl: '',
         sendIconUrl: '',
         uploadIconUrl: '',
+        asrIconUrl: '',
+        ttsIconUrl: '',
         showUploadButton: false,
+        showAsrButton: false,
+        showTtsButton: false,
         locale: FALLBACK_LOCALE,
         storage: window.sessionStorage,
         autoRedirect: true
@@ -145,7 +151,7 @@ export const store = new Vuex.Store({
         },
         uploadIconUrl(state, newUrl) {
             // TODO: Throw error if url is invalid
-            if (isValidUrl(newUrl) || newUrl == undefined) {
+            if (isValidUrl(newUrl) || newUrl === undefined) {
                 state.uploadIconUrl = newUrl;
             }
         },
@@ -155,7 +161,43 @@ export const store = new Vuex.Store({
             }
         },
 
-        autoRedirect(state, autoRedirectBool){
+        initialAsrIconUrl(state, newUrl) {
+            if (isValidUrl(newUrl)) {
+                state.initialAsrIconUrl = newUrl;
+                state.asrIconUrl = newUrl;
+            }
+        },
+        asrIconUrl(state, newUrl) {
+            // TODO: Throw error if url is invalid
+            if (isValidUrl(newUrl) || newUrl === undefined) {
+                state.asrIconUrl = newUrl;
+            }
+        },
+        showAsrButton(state, showButtonBool) {
+            if (typeof showButtonBool === 'boolean') {
+                state.showAsrButton = showButtonBool;
+            }
+        },
+
+        initialTtsIconUrl(state, newUrl) {
+            if (isValidUrl(newUrl)) {
+                state.initialTtsIconUrl = newUrl;
+                state.ttsIconUrl = newUrl;
+            }
+        },
+        ttsIconUrl(state, newUrl) {
+            // TODO: Throw error if url is invalid
+            if (isValidUrl(newUrl) || newUrl === undefined) {
+                state.ttsIconUrl = newUrl;
+            }
+        },
+        showTtsButton(state, showButtonBool) {
+            if (typeof showButtonBool === 'boolean') {
+                state.showTtsButton = showButtonBool;
+            }
+        },
+
+        autoRedirect(state, autoRedirectBool) {
             if (typeof autoRedirectBool === 'boolean') {
                 state.autoRedirect = autoRedirectBool;
             }
@@ -183,6 +225,8 @@ export const store = new Vuex.Store({
         initialLaunchIconUrl: (state) => state.initialLaunchIconUrl,
         initialSendIconUrl: (state) => state.initialSendIconUrl,
         initialUploadIconUrl: (state) => state.initialUploadIconUrl,
+        initialAsrIconUrl: (state) => state.initialAsrIconUrl,
+        initialTtsIconUrl: (state) => state.initialTtsIconUrl,
         title: (state) => state.title,
         titleIconUrl: (state) => state.titleIconUrl,
         teneoEngineParams: (state) => state.teneoEngineParams,
@@ -208,16 +252,32 @@ export const store = new Vuex.Store({
             return state.initialUploadIconUrl;
         },
         showUploadButton: (state) => state.showUploadButton,
+        asrIconUrl: (state) => {
+            if (state.asrIconUrl) {
+                return state.asrIconUrl;
+            }
+
+            return state.initialAsrIconUrl;
+        },
+        showAsrButton: (state) => state.showAsrButton,
+        ttsIconUrl: (state) => {
+            if (state.ttsIconUrl) {
+                return state.ttsIconUrl;
+            }
+
+            return state.initialTtsIconUrl;
+        },
+        showTtsButton: (state) => state.showTtsButton,
         locale: (state) => state.locale,
         autoRedirect: (state) => state.autoRedirect,
         localeObj: (state) => {
-            return { 'locale': state.locale };
+            return {'locale': state.locale};
         },
         state: (state) => {
-            return { 'visibility': state.visibility };
+            return {'visibility': state.visibility};
         },
         engineUrlObj: (state) => {
-            return { 'engineUrl': state.teneoEngineUrl };
+            return {'engineUrl': state.teneoEngineUrl};
         },
         storage: (state) => state.storage,
     }

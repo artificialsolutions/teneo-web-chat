@@ -9,6 +9,8 @@ import LaunchButton from '@/components/LaunchButton.vue';
 import BubbleIcon from '@/icons/bubble.vue';
 import SendIcon from '@/icons/send.vue';
 import UploadIcon from '@/icons/upload.vue';
+import AsrIcon from '@/icons/asr.vue';
+import TtsIcon from '@/icons/tts.vue';
 import MinimizeIcon from '@/icons/minimize-caret.vue';
 import XIcon from '@/icons/x.vue';
 
@@ -156,6 +158,36 @@ describe('Check hierarchy of Components', () => {
     });
 
     expect(wrapper.findComponent(UploadIcon).exists()).toBe(true);
+  });  it('Renders AsrIcon inside UserInput', async () => {
+    const wrapper = shallowMount(UserInput, {
+      propsData: {
+        onSubmit: jest.fn()
+      },
+      mocks: {
+        $store: {
+          state: { 'showAsrButton': true },
+          getters: {}
+        },
+        $t: jest.fn()
+      }
+    });
+
+    expect(wrapper.findComponent(AsrIcon).exists()).toBe(true);
+  });it('Renders TtsIcon inside UserInput', async () => {
+    const wrapper = shallowMount(UserInput, {
+      propsData: {
+        onSubmit: jest.fn()
+      },
+      mocks: {
+        $store: {
+          state: { 'showTtsButton': true },
+          getters: {}
+        },
+        $t: jest.fn()
+      }
+    });
+
+    expect(wrapper.findComponent(TtsIcon).exists()).toBe(true);
   });
 });
 

@@ -3,7 +3,7 @@ const tmpVue = new Vue();
 
 export default async function handleExtension(method_name,payload) {
     // get list of callback functions for method name
-    var extensionCallback = tmpVue.$extensionMethods.get(method_name)
+    let extensionCallback = tmpVue.$extensionMethods.get(method_name)
 
     // execute each callback one after another
     if(extensionCallback){

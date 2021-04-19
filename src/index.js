@@ -88,6 +88,22 @@ window.TeneoWebChat = {
 
     if (twcProps.showUploadButton === true || twcProps.showUploadButton === "true") {
       store.commit('showUploadButton', true);
+    }  
+    if (twcProps.asrIconUrl) {
+      // TODO: error handling (once store thows error)
+      store.commit('initialAsrIconUrl', twcProps.asrIconUrl);
+    }
+
+    if (twcProps.showAsrButton === true || twcProps.showAsrButton === "true") {
+      store.commit('showAsrButton', true);
+    }   
+    if (twcProps.ttsIconUrl) {
+      // TODO: error handling (once store thows error)
+      store.commit('initialTtsIconUrl', twcProps.ttsIconUrl);
+    }
+
+    if (twcProps.showTtsButton === true || twcProps.showTtsButton === "true") {
+      store.commit('showTtsButton', true);
     }
 
     if (twcProps.locale) {
@@ -316,6 +332,21 @@ return filteredMessageList;
 
       case apiConstants.API_CALL_SHOW_UPLOAD_BUTTON:
            store.commit('showUploadButton', true);
+        break;   
+        
+        case apiConstants.API_CALL_HIDE_ASR_BUTTON:
+          store.commit('showAsrButton', false);
+        break;
+
+      case apiConstants.API_CALL_SHOW_ASR_BUTTON:
+           store.commit('showAsrButton', true);
+        break;  
+        case apiConstants.API_CALL_HIDE_TTS_BUTTON:
+          store.commit('showTtsButton', false);
+        break;
+
+      case apiConstants.API_CALL_SHOW_TTS_BUTTON:
+           store.commit('showTtsButton', true);
         break;
 
       case apiConstants.API_CALL_SET_CHAT_WINDOW_TITLE:
@@ -373,6 +404,28 @@ return filteredMessageList;
         store.commit('uploadIconUrl', store.getters.initialUploadIconUrl);
         break;
 
+      case apiConstants.API_CALL_RESET_ASR_ICON:
+        store.commit('asrIconUrl', store.getters.initialAsrIconUrl);
+        break;
+
+      case apiConstants.API_CALL_SET_ASR_ICON:
+        // TODO: throw error if payload is invalid or if store throws error
+        if (typeof payload === 'string') {
+          store.commit('asrIconUrl', payload);
+        }
+        break;
+
+      case apiConstants.API_CALL_RESET_TTS_ICON:
+        store.commit('ttsIconUrl', store.getters.initialTtsIconUrl);
+        break;
+
+      case apiConstants.API_CALL_SET_TTS_ICON:
+        // TODO: throw error if payload is invalid or if store throws error
+        if (typeof payload === 'string') {
+          store.commit('ttsIconUrl', payload);
+        }
+        break;
+
       case apiConstants.API_CALL_DISABLE_USERINPUT:
         EventBus.$emit(events.DISABLE_INPUT);
         break;
@@ -387,6 +440,22 @@ return filteredMessageList;
 
       case apiConstants.API_CALL_ENABLE_UPLOAD_BUTTON:
         EventBus.$emit(events.ENABLE_UPLOAD);
+        break;
+
+        case apiConstants.API_CALL_DISABLE_ASR_BUTTON:
+        EventBus.$emit(events.DISABLE_ASR);
+        break;
+
+      case apiConstants.API_CALL_ENABLE_ASR_BUTTON:
+        EventBus.$emit(events.ENABLE_ASR);
+        break;
+
+        case apiConstants.API_CALL_DISABLE_TTS_BUTTON:
+        EventBus.$emit(events.DISABLE_TTS);
+        break;
+
+      case apiConstants.API_CALL_ENABLE_TTS_BUTTON:
+        EventBus.$emit(events.ENABLE_TTS);
         break;
 
       case apiConstants.API_CALL_SET_ENGINE_URL:
