@@ -35,6 +35,37 @@
           />
         </button>
       </div>
+      <div v-if="showTtsButton" class="twc-user-input__button" :class="{ 'twc-disabled': ttsDisabled }">
+        <button
+            role="button"
+            tabindex="0"
+            ref="ttsButton"
+            :aria-label="$t('message.input_area_tts_button_aria_label')"
+            :title="$t('message.input_area_tts_button_title')"
+            class="twc-user-input__tts-icon-wrapper"
+            :aria-disabled="inputDisabled"
+            :disabled="inputDisabled ? true : false"
+            @click.prevent=""
+            @focus="setInputActive(true)"
+            @blur="setInputActive(false)"
+            @click="ttsButtonClicked($refs.ttsButton)"
+        >
+          <img
+              v-if="ttsIconUrl"
+              id="twc-user-input__tts-icon-img"
+              class="twc-user-input__tts-icon"
+              :src="ttsIconUrl"
+              aria-hidden="true"
+              alt=""
+          />
+          <TtsIcon
+              v-else
+              id="twc-user-input__tts-icon"
+              class="twc-user-input__tts-icon"
+              aria-hidden="true"
+          />
+        </button>
+      </div>
       <textarea
           id="twc-user-input-field"
           ref="userInput"
@@ -86,37 +117,7 @@
         </button>
       </div>
 
-      <div v-if="showTtsButton" class="twc-user-input__button" :class="{ 'twc-disabled': ttsDisabled }">
-        <button
-            role="button"
-            tabindex="0"
-            ref="ttsButton"
-            :aria-label="$t('message.input_area_tts_button_aria_label')"
-            :title="$t('message.input_area_tts_button_title')"
-            class="twc-user-input__tts-icon-wrapper"
-            :aria-disabled="inputDisabled"
-            :disabled="inputDisabled ? true : false"
-            @click.prevent=""
-            @focus="setInputActive(true)"
-            @blur="setInputActive(false)"
-            @click="ttsButtonClicked($refs.ttsButton)"
-        >
-          <img
-              v-if="ttsIconUrl"
-              id="twc-user-input__tts-icon-img"
-              class="twc-user-input__tts-icon"
-              :src="ttsIconUrl"
-              aria-hidden="true"
-              alt=""
-          />
-          <TtsIcon
-              v-else
-              id="twc-user-input__tts-icon"
-              class="twc-user-input__tts-icon"
-              aria-hidden="true"
-          />
-        </button>
-      </div>
+
       <div class="twc-user-input__button">
         <button
             role="button"
@@ -444,10 +445,11 @@ export default {
   border-bottom-right-radius: 10px;
   transition: background-color 0.2s ease, box-shadow 0.2s ease;
   pointer-events: initial;
+  padding: 0 5px;
 }
 
 /* See above, we use a dummy <a> tag to fix a keyboard focus issue on safari */
-/* This style makes the dummy tag invisible but we can still give it foucs */
+/* This style makes the dummy tag invisible but we can still give it focus */
 #twc-focus-fix {
   outline: none;
   position: absolute;
@@ -550,7 +552,7 @@ We should not dim it twice, so we check: .twc-user-input:not(.twc-disabled)
   border: none;
   padding: 0px;
   color: var(--sendicon-fg-color, #263238);
-  width: 44px;
+  width: 24px;
   height: 44px;
   cursor: pointer;
 }
@@ -600,6 +602,7 @@ We should not dim it twice, so we check: .twc-user-input:not(.twc-disabled)
 
 /* Increase tap target on mobile */
 @media (max-width: 450px) {
+  .twc-user-input__send-icon-wrapper,
   .twc-user-input__upload-icon-wrapper,
   .twc-user-input__asr-icon-wrapper,
   .twc-user-input__tts-icon-wrapper
