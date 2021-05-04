@@ -15,10 +15,6 @@
 <button onclick="TeneoWebChat.call('reset')">Reset Chat</button><br>
 
 <script src="teneo-web-chat.js"></script> <!-- needed for Heroku -->
-<% if(process.env.NODE_ENV === 'development') { %>
-    <script src="common_extensions.js"></script>
-
-<% } %>
 <div id="teneo-web-chat"></div>
 <script>
 
@@ -44,12 +40,11 @@
                 'showAsrButton': '<%= process.env.SHOW_ASR_BUTTON %>',
                 'ttsIconUrl': '<%= process.env.TTS_ICON_URL %>',
                 'showTtsButton': '<%= process.env.SHOW_TTS_BUTTON %>',
+                'msCognitiveSubscriptionKey': '<%= process.env.MS_COGNITIVE_SUBSCRIPTION_KEY %>',
+                'msCognitiveRegion': '<%= process.env.MS_COGNITIVE_REGION %>',
                 'locale': '<%= process.env.LOCALE %>',
                 'autoRedirect': '<%= process.env.AUTO_OUTPUT_LINK_REDIRECT%>'
             };
-            <% if(process.env.NODE_ENV === 'development') { %>
-            common_extensions.init();
-            <% } %>
             window.TeneoWebChat.initialize(element, teneoProps);
 
         }

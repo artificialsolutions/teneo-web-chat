@@ -65,7 +65,7 @@ export default {
     }
   },
   mounted() {
-    EventBus.$on(events.ENGINE_REPLIED, () => {
+    EventBus.$on(events.ENGINE_REPLIED, (e) => {
       this.spinnerIsLoading = false;
     });
     EventBus.$on(events.START_SPINNER, () => {

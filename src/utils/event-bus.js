@@ -12,6 +12,7 @@ export const events = {
     MINIMIZE_WINDOW: 'minimize',
     CLOSE_WINDOW: 'close',
     ADD_MESSAGE: 'add_message',
+    BOT_MESSAGE_RECEIVED: 'bot_message_received',
     HIDE_TYPING_INDICATOR: 'hide_typing_indicator',
     SHOW_TYPING_INDICATOR: 'show_typing_indicator',
     HIDE_UPLOAD_ICON: 'hide_upload_icon',

@@ -131,7 +131,7 @@ export default {
   methods: {
     // Encapsulating dependency methods makes Testing easier
     async _onMessageReceived(message) {
-      await this.$teneoApi._onMessageReceived(message);
+            await this.$teneoApi._onMessageReceived(message);
     },
     sendBaseMessage(text, parameters, isSilent) {
       this.$teneoApi.sendBaseMessage(text, parameters, isSilent);

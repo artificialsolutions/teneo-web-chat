@@ -19,11 +19,13 @@ let isInitialised = false;
 
 window.TeneoWebChat = {
   initialize(element, twcProps) {
+
+    // TODO: error handling (once store throws error)
     Vue.prototype.$store = store;
 
     // Store properties in storage
     if (twcProps.teneoEngineUrl) {
-      // TODO: error handling (once store thows error)
+
       store.commit('teneoEngineUrl', twcProps.teneoEngineUrl);
     }
 
@@ -33,7 +35,7 @@ window.TeneoWebChat = {
     }
 
     if (twcProps.titleIconUrl) {
-      // TODO: error handling (once store thows error)
+
       store.commit('initialTitleIconUrl', twcProps.titleIconUrl);
     }
 
@@ -47,50 +49,60 @@ window.TeneoWebChat = {
     }
 
     if (twcProps.agentAvatarUrl) {
-      // TODO: error handling (once store thows error)
+
       store.commit('agentAvatarUrl', twcProps.agentAvatarUrl);
     }
 
     if (twcProps.botAvatarUrl) {
-      // TODO: error handling (once store thows error)
+
       store.commit('botAvatarUrl', twcProps.botAvatarUrl);
     }
 
     if (twcProps.userAvatarUrl) {
-      // TODO: error handling (once store thows error)
+
       store.commit('userAvatarUrl', twcProps.userAvatarUrl);
     }
 
     if (twcProps.minimizeIconUrl) {
-      // TODO: error handling (once store thows error)
+
       store.commit('minimizeIconUrl', twcProps.minimizeIconUrl);
     }
 
     if (twcProps.closeIconUrl) {
-      // TODO: error handling (once store thows error)
+
       store.commit('closeIconUrl', twcProps.closeIconUrl);
     }
 
     if (twcProps.launchIconUrl) {
-      // TODO: error handling (once store thows error)
+
       store.commit('initialLaunchIconUrl', twcProps.launchIconUrl);
     }
 
     if (twcProps.sendIconUrl) {
-      // TODO: error handling (once store thows error)
+
       store.commit('initialSendIconUrl', twcProps.sendIconUrl);
     }
 
     if (twcProps.uploadIconUrl) {
-      // TODO: error handling (once store thows error)
+
       store.commit('initialUploadIconUrl', twcProps.uploadIconUrl);
     }
 
     if (twcProps.showUploadButton === true || twcProps.showUploadButton === "true") {
       store.commit('showUploadButton', true);
-    }  
+    }
+
+    if (twcProps.msCognitiveSubscriptionKey) {
+      store.commit('msCognitiveSubscriptionKey', twcProps.msCognitiveSubscriptionKey);
+    }
+
+    if (twcProps.msCognitiveRegion) {
+      store.commit('msCognitiveRegion', twcProps.msCognitiveRegion);
+    }
+
+
+
     if (twcProps.asrIconUrl) {
-      // TODO: error handling (once store thows error)
       store.commit('initialAsrIconUrl', twcProps.asrIconUrl);
     }
 
@@ -98,7 +110,7 @@ window.TeneoWebChat = {
       store.commit('showAsrButton', true);
     }   
     if (twcProps.ttsIconUrl) {
-      // TODO: error handling (once store thows error)
+
       store.commit('initialTtsIconUrl', twcProps.ttsIconUrl);
     }
 
@@ -107,7 +119,7 @@ window.TeneoWebChat = {
     }
 
     if (twcProps.locale) {
-      // TODO: error handling (once store thows error)
+
       store.commit('locale', twcProps.locale);
     }
 
@@ -123,23 +135,23 @@ window.TeneoWebChat = {
     }
 
     if (twcProps.locale) {
-      // TODO: error handling (once store thows error)
+
       store.commit('locale', twcProps.locale);
     }
 
     if (twcProps.autoRedirect) {
-      // TODO: error handling (once store thows error)
+
       store.commit('autoRedirect', twcProps.autoRedirect == "true");
     }
 
     if (twcProps.storage) {
-      // TODO: error handling (once store thows error)
+
       store.commit('storage', twcProps.storage);
     }
 
     // Check required properties
     if (!store.getters.teneoEngineUrl) {
-      // TODO: thow error if engine url is missing?
+      // TODO: throw error if engine url is missing?
       return;
     }
 
@@ -186,7 +198,7 @@ window.TeneoWebChat = {
 
       // Only continue if function name provided is valid
       if (!validFunctionNames.includes(function_name)) {
-        // TODO: thow error if invalid function_name was provided?
+        // TODO: throw error if invalid function_name was provided?
         return;
       }
 
@@ -312,7 +324,7 @@ return filteredMessageList;
          * TODO: check if message type is valid?
          */
         if (Object.keys(payload).length > 0 && payload.constructor === Object) {
-          EventBus.$emit(events.ADD_MESSAGE, payload);
+                 EventBus.$emit(events.ADD_MESSAGE, payload);
         }
         break;
 

@@ -15,7 +15,7 @@ let devServerOptions = {
     port: 9000
 };
 
-if (dotenv.parsed.ALLOW_LAN_ON_DEV) {
+if (dotenv.parsed.ALLOW_LAN_ON_DEV === "true") {
 // Host set to 0.0.0.0 with a public IP to allow for connections over LAN.
 
     const os = require('os');

@@ -2,6 +2,7 @@ import Vue from 'vue';
 import Vuex from 'vuex';
 import {DEFAULT_TITLE, FALLBACK_LOCALE} from '../utils/constants.js';
 import isValidUrl from '../utils/validate-url';
+import {getMSToken} from '../utils/ms-asr-tts'
 
 Vue.use(Vuex);
 
@@ -35,6 +36,10 @@ export const store = new Vuex.Store({
         showUploadButton: false,
         showAsrButton: false,
         showTtsButton: false,
+        msCognitiveSubscriptionKey: '',
+        msCognitiveRegion: '',
+        msCognitiveToken: '',
+        msCognitiveTokenTimeStamp: 0,
         locale: FALLBACK_LOCALE,
         storage: window.sessionStorage,
         autoRedirect: true
@@ -197,6 +202,20 @@ export const store = new Vuex.Store({
             }
         },
 
+        msCognitiveRegion(state, msCognitiveRegionString) {
+            if (typeof msCognitiveRegionString === 'string') {
+                state.msCognitiveRegion = msCognitiveRegionString;
+            }
+        },
+        msCognitiveSubscriptionKey(state, msCognitiveSubscriptionKeyString) {
+            if (typeof msCognitiveSubscriptionKeyString === 'string') {
+                state.msCognitiveSubscriptionKey = msCognitiveSubscriptionKeyString;
+            }
+        },
+        msCognitiveToken(state, token) {
+            state.msCognitiveTokenTimeStamp = Date.now();
+            state.msCognitiveToken = token;
+        },
         autoRedirect(state, autoRedirectBool) {
             if (typeof autoRedirectBool === 'boolean') {
                 state.autoRedirect = autoRedirectBool;
@@ -209,7 +228,6 @@ export const store = new Vuex.Store({
             }
         },
         storage(state, newStorage) {
-            // TODO: Improve check for valid locale and throw error if locale is invalid
             if (typeof newStorage === 'object') {
                 state.storage = newStorage;
             }
@@ -268,6 +286,23 @@ export const store = new Vuex.Store({
             return state.initialTtsIconUrl;
         },
         showTtsButton: (state) => state.showTtsButton,
+        msCognitiveSubscriptionKey: (state) => {
+            if (state.msCognitiveSubscriptionKey) {
+                return state.msCognitiveSubscriptionKey;
+            }
+            return false;
+        },
+        msCognitiveRegion: (state) => {
+            if (state.msCognitiveRegion) {
+                return state.msCognitiveRegion;
+            }
+            return false;
+        },
+        msCognitiveToken: (state) => {
+            return state.msCognitiveToken;
+        }, msCognitiveTokenTimeStamp: (state) => {
+            return state.msCognitiveTokenTimeStamp;
+        },
         locale: (state) => state.locale,
         autoRedirect: (state) => state.autoRedirect,
         localeObj: (state) => {

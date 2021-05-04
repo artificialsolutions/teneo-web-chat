@@ -46,4 +46,7 @@ module.exports = {
     ],
   },
   plugins: [new VueLoaderPlugin()],
+  watchOptions: {
+    ignored: /node_modules/
+  }
 };

@@ -12,11 +12,10 @@
             :aria-label="$t('message.input_area_asr_button_aria_label')"
             :title="$t('message.input_area_asr_button_title')"
             class="twc-user-input__asr-icon-wrapper"
-            :aria-disabled="inputDisabled"
-            :disabled="inputDisabled ? true : false"
+            :class="{ 'twc-active': asrActive}"
+            :aria-disabled="asrDisabled"
+            :disabled="asrDisabled ? true : false"
             @click.prevent=""
-            @focus="setInputActive(true)"
-            @blur="setInputActive(false)"
             @click="asrButtonClicked($refs.asrButton)"
         >
           <img
@@ -43,11 +42,10 @@
             :aria-label="$t('message.input_area_tts_button_aria_label')"
             :title="$t('message.input_area_tts_button_title')"
             class="twc-user-input__tts-icon-wrapper"
-            :aria-disabled="inputDisabled"
-            :disabled="inputDisabled ? true : false"
+            :class="{ 'twc-active': ttsActive}"
+            :aria-disabled="ttsDisabled"
+            :disabled="ttsDisabled ? true : false"
             @click.prevent=""
-            @focus="setInputActive(true)"
-            @blur="setInputActive(false)"
             @click="ttsButtonClicked($refs.ttsButton)"
         >
           <img
@@ -160,20 +158,22 @@ import SendIcon from '../icons/send.vue';
 import UploadIcon from '../icons/upload.vue';
 import AsrIcon from '../icons/asr.vue';
 import TtsIcon from '../icons/tts.vue';
+import {getMSToken, processAudioToText, processTextToAudio, generateSsml} from '../utils/ms-asr-tts'
 import {PARTICIPANT_USER} from '../utils/constants.js';
 import {
-  API_ON_INPUT_SUBMITTED,
-  API_ON_USER_TYPING,
-  API_ON_SEND_BUTTON_CLICK,
-  API_ON_UPLOAD_BUTTON_CLICK,
   API_ON_ASR_BUTTON_CLICK,
-  API_ON_TTS_BUTTON_CLICK
+  API_ON_INPUT_SUBMITTED,
+  API_ON_SEND_BUTTON_CLICK,
+  API_ON_TTS_BUTTON_CLICK,
+  API_ON_UPLOAD_BUTTON_CLICK,
+  API_ON_USER_TYPING
 } from '../utils/api-function-names.js';
 import {EventBus, events} from '../utils/event-bus.js';
 import handleExtension from '../utils/handle-extension.js';
 import basePayload from '../utils/base-payload.js';
 import detectMobile from '../utils/detect-mobile.js';
 import {mapState} from 'vuex';
+import {store} from "../store/store";
 
 Vue.use(vueDebounce);
 
@@ -195,7 +195,7 @@ export default {
     },
   },
   computed: {
-    ...mapState(['sendIconUrl', 'showUploadButton', 'uploadIconUrl', 'showAsrButton', 'asrIconUrl','showTtsButton', 'ttsIconUrl']),
+    ...mapState(['sendIconUrl', 'showUploadButton', 'uploadIconUrl', 'showAsrButton', 'asrIconUrl', 'showTtsButton', 'ttsIconUrl']),
   },
   data() {
     return {
@@ -203,9 +203,12 @@ export default {
       inputDisabled: false,
       uploadDisabled: false,
       asrDisabled: false,
-      ttsDisabled: false
+      ttsDisabled: false,
+      asrActive: false,
+      ttsActive: false
     };
   },
+
   mounted() {
     EventBus.$on(events.MESSAGE_SENT, () => {
       if (this.$refs.userInput) {
@@ -213,7 +216,19 @@ export default {
       }
     });
 
+    EventBus.$on(events.BOT_MESSAGE_RECEIVED, async (messageData) => {
+      if(this.ttsActive){
+      let utteranceString = generateSsml(messageData);
 
+        this.msTokenCheck().then(()=>{
+          processTextToAudio(store.getters.msCognitiveToken, store.getters.msCognitiveRegion, store.getters.locale, utteranceString).then((audioResult)=>{
+            console.log(audioResult);
+          })
+        })
+
+
+      }
+    });
 
     EventBus.$on(events.DISABLE_UPLOAD, () => {
       if (this.showUploadButton) {
@@ -322,6 +337,12 @@ export default {
         EventBus.$emit(events.SCROLL_CHAT_DOWN);
       }
     },
+    setAsrActive(onoff) {
+      this.asrActive = onoff;
+    },
+    setTtsActive(onoff) {
+      this.ttsActive = onoff;
+    },
     setInputDisabled(onoff) {
       this.inputDisabled = onoff;
     },
@@ -361,16 +382,58 @@ export default {
         return;
       }
       // Call submit function
-      this._submitText();
+
+      await this._submitText();
     },
     async uploadButtonClicked() {
       await handleExtension(API_ON_UPLOAD_BUTTON_CLICK);
     },
+    msTokenCheck(){
+      return new Promise(resolve => {
+        let now = Date.now();
+        if (now - store.getters.msCognitiveTokenTimeStamp >= 540000) {
+          console.log('Token not found or expired, getting a new one');
+          getMSToken(store.getters.msCognitiveRegion, store.getters.msCognitiveSubscriptionKey)
+              .then((token) => {
+                store.commit('msCognitiveToken', token);
+                console.log('New token set at ' + store.getters.msCognitiveTokenTimeStamp);
+                resolve();
+              })
+        } else {
+          resolve();
+        }
+      })
+    },
     async asrButtonClicked(e) {
-      await handleExtension(API_ON_ASR_BUTTON_CLICK, e);
+
+      //Check if any extensions are set up to handle them. If not, use default functionality with Azure.
+      let asrExtension = await handleExtension(API_ON_ASR_BUTTON_CLICK, e);
+      if (!asrExtension) {
+        this.setAsrDisabled(true);
+        this.setAsrActive(true);
+
+       this.msTokenCheck().then(() => {
+          processAudioToText(store.getters.msCognitiveToken, store.getters.msCognitiveRegion, store.getters.locale)
+              .then(async (processedText) => {
+                console.log(processedText);
+                this.$refs.userInput.value = processedText;
+                await this._submitText();
+                this.setAsrActive(false);
+                this.setAsrDisabled(false);
+
+              })
+
+        })
+
+
+      }
     },
     async ttsButtonClicked(e) {
-      await handleExtension(API_ON_TTS_BUTTON_CLICK, e);
+      console.log('TTS Button clicked!')
+      let ttsExtension = await handleExtension(API_ON_TTS_BUTTON_CLICK, e);
+      if (!ttsExtension) {
+        this.setTtsActive(!this.ttsActive);
+      }
     },
     async _submitText() {
       // Create payload object
@@ -453,7 +516,7 @@ export default {
 #twc-focus-fix {
   outline: none;
   position: absolute;
-  margin-left: -9999;
+  margin-left: -9999px;
 }
 
 .twc-user-input.twc-disabled {
@@ -476,9 +539,7 @@ We should not dim it twice, so we check: .twc-user-input:not(.twc-disabled)
 */
 .twc-user-input:not(.twc-disabled) .twc-user-input__button.twc-disabled .twc-user-input__upload-icon-wrapper,
 .twc-user-input:not(.twc-disabled) .twc-user-input__button.twc-disabled .twc-user-input__asr-icon-wrapper,
-.twc-user-input:not(.twc-disabled) .twc-user-input__button.twc-disabled .twc-user-input__tts-icon-wrapper
-
-{
+.twc-user-input:not(.twc-disabled) .twc-user-input__button.twc-disabled .twc-user-input__tts-icon-wrapper {
   filter: grayscale(100%);
   opacity: 0.4;
 }
@@ -560,8 +621,7 @@ We should not dim it twice, so we check: .twc-user-input:not(.twc-disabled)
 
 .twc-user-input__upload-icon-wrapper,
 .twc-user-input__asr-icon-wrapper,
-.twc-user-input__tts-icon-wrapper
-{
+.twc-user-input__tts-icon-wrapper {
   background: none;
   border: none;
   padding: 0;
@@ -571,17 +631,15 @@ We should not dim it twice, so we check: .twc-user-input:not(.twc-disabled)
   outline: none;
 }
 
-.twc-user-input__upload-icon-wrapper
-{
+.twc-user-input__upload-icon-wrapper {
   color: var(--uploadicon-fg-color, #263238);
 }
-.twc-user-input__asr-icon-wrapper
-{
+
+.twc-user-input__asr-icon-wrapper {
   color: var(--asricon-fg-color, #263238);
 }
 
-.twc-user-input__tts-icon-wrapper
-{
+.twc-user-input__tts-icon-wrapper {
   color: var(--ttsicon-fg-color, #263238);
 }
 
@@ -595,6 +653,15 @@ We should not dim it twice, so we check: .twc-user-input:not(.twc-disabled)
   align-self: center;
 }
 
+.twc-user-input:not(.twc-disabled) .twc-user-input__button.twc-disabled .twc-user-input__asr-icon-wrapper.twc-active,
+.twc-user-input__tts-icon-wrapper.twc-active {
+  fill: darkred !important;
+  stroke: red !important;
+  filter: grayscale(0);
+  opacity: 100%;
+}
+
+
 .twc-user-input__button.twc-disabled,
 .twc-user-input__button.twc-disabled button {
   cursor: default;
@@ -605,8 +672,7 @@ We should not dim it twice, so we check: .twc-user-input:not(.twc-disabled)
   .twc-user-input__send-icon-wrapper,
   .twc-user-input__upload-icon-wrapper,
   .twc-user-input__asr-icon-wrapper,
-  .twc-user-input__tts-icon-wrapper
-  {
+  .twc-user-input__tts-icon-wrapper {
     width: 44px;
   }
 
