@@ -115,7 +115,7 @@ export default function teneoApiPlugin(teneoApiUrl) {
 
 
             EventBus.$emit(events.ENGINE_REPLIED, response);
-console.log('Engine Reply emitted from teneo-api')
+
             // abort if extension says so
             if (responsePayload.handledState.handled === true) {
                 return

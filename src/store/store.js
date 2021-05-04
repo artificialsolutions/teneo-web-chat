@@ -36,6 +36,8 @@ export const store = new Vuex.Store({
         showUploadButton: false,
         showAsrButton: false,
         showTtsButton: false,
+        asrActive: false,
+        ttsActive: false,
         msCognitiveSubscriptionKey: '',
         msCognitiveRegion: '',
         msCognitiveToken: '',
@@ -183,7 +185,11 @@ export const store = new Vuex.Store({
                 state.showAsrButton = showButtonBool;
             }
         },
-
+        asrActive(state, activeBool) {
+            if (typeof activeBool === 'boolean') {
+                state.asrActive = activeBool;
+            }
+        },
         initialTtsIconUrl(state, newUrl) {
             if (isValidUrl(newUrl)) {
                 state.initialTtsIconUrl = newUrl;
@@ -201,7 +207,11 @@ export const store = new Vuex.Store({
                 state.showTtsButton = showButtonBool;
             }
         },
-
+        ttsActive(state, activeBool) {
+            if (typeof activeBool === 'boolean') {
+                state.ttsActive = activeBool;
+            }
+        },
         msCognitiveRegion(state, msCognitiveRegionString) {
             if (typeof msCognitiveRegionString === 'string') {
                 state.msCognitiveRegion = msCognitiveRegionString;
@@ -278,6 +288,7 @@ export const store = new Vuex.Store({
             return state.initialAsrIconUrl;
         },
         showAsrButton: (state) => state.showAsrButton,
+        asrActive: (state) => state.asrActive,
         ttsIconUrl: (state) => {
             if (state.ttsIconUrl) {
                 return state.ttsIconUrl;
@@ -286,6 +297,7 @@ export const store = new Vuex.Store({
             return state.initialTtsIconUrl;
         },
         showTtsButton: (state) => state.showTtsButton,
+        ttsActive: (state) => state.ttsActive,
         msCognitiveSubscriptionKey: (state) => {
             if (state.msCognitiveSubscriptionKey) {
                 return state.msCognitiveSubscriptionKey;

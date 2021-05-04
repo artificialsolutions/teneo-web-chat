@@ -95,7 +95,7 @@ export default async function parseTeneoResponse(teneoResponse) {
 
             //Signal engine reply if no more data is expected.
             if (!data) {
-//Commented out since event is always emitted from tenao-api
+//Commented out since event is always emitted from teneo-api
                  //EventBus.$emit(events.ENGINE_REPLIED);
 
             }

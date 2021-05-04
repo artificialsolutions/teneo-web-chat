@@ -40,7 +40,6 @@ function processAudioToText(authToken, region, locale) {
 
 function processTextToAudio(authToken, region, locale, textToRead) {
     return new Promise((resolve, reject) => {
-        console.log('Text Processing Started!')
         const speechConfig = speechSDK.SpeechConfig.fromAuthorizationToken(authToken, region);
         speechConfig.speechRecognitionLanguage = locale;
         const audioConfig = speechSDK.AudioConfig.fromDefaultSpeakerOutput();
@@ -58,7 +57,7 @@ function processTextToAudio(authToken, region, locale, textToRead) {
     })
 }
 
-function generateSsml(messageData){
+function generateText(messageData){
     let utteranceArray = [];
     let validKeys = ['type', 'alt', 'title', 'subtitle', 'text'];
     JSON.stringify(messageData, function (key, value) {
@@ -72,4 +71,4 @@ function generateSsml(messageData){
     return utteranceArray.join('.\n')
 }
 
-module.exports = {getMSToken, processTextToAudio, processAudioToText, generateSsml}
+module.exports = {getMSToken, processTextToAudio, processAudioToText, generateText}

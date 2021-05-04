@@ -108,14 +108,20 @@ window.TeneoWebChat = {
 
     if (twcProps.showAsrButton === true || twcProps.showAsrButton === "true") {
       store.commit('showAsrButton', true);
-    }   
+    }
+    if (twcProps.asrActive === true || twcProps.asrActive === "true") {
+      //Always set to false regardless - ASR on start is a silly proposal.
+      store.commit('asrActive', false);
+    }
     if (twcProps.ttsIconUrl) {
-
       store.commit('initialTtsIconUrl', twcProps.ttsIconUrl);
     }
 
     if (twcProps.showTtsButton === true || twcProps.showTtsButton === "true") {
       store.commit('showTtsButton', true);
+    }
+    if (twcProps.ttsActive === true || twcProps.ttsActive === "true") {
+      store.commit('ttsActive', true);
     }
 
     if (twcProps.locale) {
@@ -352,15 +358,30 @@ return filteredMessageList;
 
       case apiConstants.API_CALL_SHOW_ASR_BUTTON:
            store.commit('showAsrButton', true);
-        break;  
-        case apiConstants.API_CALL_HIDE_TTS_BUTTON:
+        break;
+        case apiConstants.API_CALL_ASR_ACTIVE:
+          EventBus.$emit(events.ASR_ACTIVE);
+           store.commit('asrActive', true);
+        break;
+      case apiConstants.API_CALL_ASR_INACTIVE:
+        EventBus.$emit(events.ASR_INACTIVE);
+        store.commit('asrActive', false);
+        break;
+      case apiConstants.API_CALL_HIDE_TTS_BUTTON:
           store.commit('showTtsButton', false);
         break;
 
       case apiConstants.API_CALL_SHOW_TTS_BUTTON:
            store.commit('showTtsButton', true);
         break;
-
+      case apiConstants.API_CALL_TTS_ACTIVE:
+        EventBus.$emit(events.TTS_ACTIVE);
+        store.commit('ttsActive', true);
+        break;
+        case apiConstants.API_CALL_TTS_INACTIVE:
+          EventBus.$emit(events.TTS_INACTIVE);
+        store.commit('ttsActive', false);
+        break;
       case apiConstants.API_CALL_SET_CHAT_WINDOW_TITLE:
         // TODO: throw error if payload is invalid or if store throws error
         if (typeof payload === 'string') {

@@ -158,7 +158,7 @@ import SendIcon from '../icons/send.vue';
 import UploadIcon from '../icons/upload.vue';
 import AsrIcon from '../icons/asr.vue';
 import TtsIcon from '../icons/tts.vue';
-import {getMSToken, processAudioToText, processTextToAudio, generateSsml} from '../utils/ms-asr-tts'
+import {getMSToken, processAudioToText, processTextToAudio, generateText} from '../utils/ms-asr-tts'
 import {PARTICIPANT_USER} from '../utils/constants.js';
 import {
   API_ON_ASR_BUTTON_CLICK,
@@ -204,8 +204,8 @@ export default {
       uploadDisabled: false,
       asrDisabled: false,
       ttsDisabled: false,
-      asrActive: false,
-      ttsActive: false
+      asrActive: store.getters.asrActive,
+      ttsActive: store.getters.ttsActive
     };
   },
 
@@ -217,11 +217,11 @@ export default {
     });
 
     EventBus.$on(events.BOT_MESSAGE_RECEIVED, async (messageData) => {
-      if(this.ttsActive){
-      let utteranceString = generateSsml(messageData);
+      if (this.ttsActive) {
+        let utteranceString = generateText(messageData);
 
-        this.msTokenCheck().then(()=>{
-          processTextToAudio(store.getters.msCognitiveToken, store.getters.msCognitiveRegion, store.getters.locale, utteranceString).then((audioResult)=>{
+        this.msTokenCheck().then(() => {
+          processTextToAudio(store.getters.msCognitiveToken, store.getters.msCognitiveRegion, store.getters.locale, utteranceString).then((audioResult) => {
             console.log(audioResult);
           })
         })
@@ -264,6 +264,20 @@ export default {
         this.setAsrDisabled(false);
       }
     });
+
+    EventBus.$on(events.ASR_ACTIVE, () => {
+      if (this.showAsrButton && this.$refs.asrButton) {
+         this.asrButtonClicked(this.$refs.asrButton)
+      }
+    });
+
+    EventBus.$on(events.ASR_INACTIVE, () => {
+      if (this.showAsrButton && this.$refs.asrButton) {
+          this.setAsrActive(false);
+      }
+    });
+
+
     EventBus.$on(events.DISABLE_TTS, () => {
       if (this.showTtsButton) {
         if (this.$refs.ttsButton) {
@@ -281,7 +295,17 @@ export default {
         this.setTtsDisabled(false);
       }
     });
+    EventBus.$on(events.TTS_ACTIVE, () => {
+      if (this.showTtsButton && this.$refs.ttsButton) {
+          this.setTtsActive(true);
+      }
+    });
 
+    EventBus.$on(events.TTS_INACTIVE, () => {
+      if (this.showTtsButton && this.$refs.ttsButton) {
+          this.setTtsActive(false);
+      }
+    });
     EventBus.$on(events.DISABLE_INPUT, () => {
       this.setInputActive(false);
       this.setInputDisabled(true);
@@ -337,6 +361,7 @@ export default {
         EventBus.$emit(events.SCROLL_CHAT_DOWN);
       }
     },
+
     setAsrActive(onoff) {
       this.asrActive = onoff;
     },
@@ -388,15 +413,13 @@ export default {
     async uploadButtonClicked() {
       await handleExtension(API_ON_UPLOAD_BUTTON_CLICK);
     },
-    msTokenCheck(){
+    msTokenCheck() {
       return new Promise(resolve => {
         let now = Date.now();
         if (now - store.getters.msCognitiveTokenTimeStamp >= 540000) {
-          console.log('Token not found or expired, getting a new one');
           getMSToken(store.getters.msCognitiveRegion, store.getters.msCognitiveSubscriptionKey)
               .then((token) => {
                 store.commit('msCognitiveToken', token);
-                console.log('New token set at ' + store.getters.msCognitiveTokenTimeStamp);
                 resolve();
               })
         } else {
@@ -412,10 +435,9 @@ export default {
         this.setAsrDisabled(true);
         this.setAsrActive(true);
 
-       this.msTokenCheck().then(() => {
+        this.msTokenCheck().then(() => {
           processAudioToText(store.getters.msCognitiveToken, store.getters.msCognitiveRegion, store.getters.locale)
               .then(async (processedText) => {
-                console.log(processedText);
                 this.$refs.userInput.value = processedText;
                 await this._submitText();
                 this.setAsrActive(false);
@@ -429,7 +451,6 @@ export default {
       }
     },
     async ttsButtonClicked(e) {
-      console.log('TTS Button clicked!')
       let ttsExtension = await handleExtension(API_ON_TTS_BUTTON_CLICK, e);
       if (!ttsExtension) {
         this.setTtsActive(!this.ttsActive);
