@@ -31,6 +31,7 @@ export const store = new Vuex.Store({
         showUploadButton: false,
         locale: FALLBACK_LOCALE,
         storage: window.sessionStorage,
+        autoRedirect: true
     },
     mutations: {
         calloutVisibility(state, newVisibility) {
@@ -153,6 +154,12 @@ export const store = new Vuex.Store({
                 state.showUploadButton = showButtonBool;
             }
         },
+
+        autoRedirect(state, autoRedirectBool){
+            if (typeof autoRedirectBool === 'boolean') {
+                state.autoRedirect = autoRedirectBool;
+            }
+        },
         locale(state, newLocale) {
             // TODO: Improve check for valid locale and throw error if locale is invalid
             if (typeof newLocale === 'string') {
@@ -202,6 +209,7 @@ export const store = new Vuex.Store({
         },
         showUploadButton: (state) => state.showUploadButton,
         locale: (state) => state.locale,
+        autoRedirect: (state) => state.autoRedirect,
         localeObj: (state) => {
             return { 'locale': state.locale };
         },
