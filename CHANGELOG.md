@@ -1,6 +1,7 @@
-# v3.x.x
-## [TBD]
+# v3.6.0
+## 05-05-2021
 * Fix reset title icon issue
+* Implemented ASR and TTS with Microsoft Azure Speech services as default provider, with other providers available through extensions
 
 # v3.5.0
 ## 21-01-2021
