@@ -286,6 +286,8 @@ export default {
   --uploadicon-fg-color: var(--dark-fg-color);
   --asricon-fg-color: var(--dark-fg-color);
   --ttsicon-fg-color: var(--dark-fg-color);
+  --asricon-active-color: var(--danger-color);
+  --ttsicon-active-color: var(--danger-color);
   --launch-button-bg-color: var(--primary-color);
   --launchicon-fg-color: var(--light-fg-color);
   --callout-fg-color: var(--user-input-fg-color);

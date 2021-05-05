@@ -15,6 +15,10 @@
 <button onclick="TeneoWebChat.call('reset')">Reset Chat</button><br>
 
 <script src="teneo-web-chat.js"></script> <!-- needed for Heroku -->
+<!--<% if(process.env.NODE_ENV === 'development') { %>-->
+<!--    <script src="common_extensions.js"></script>-->
+
+<!--<% } %>-->
 <div id="teneo-web-chat"></div>
 <script>
 
@@ -47,6 +51,9 @@
                 'locale': '<%= process.env.LOCALE %>',
                 'autoRedirect': '<%= process.env.AUTO_OUTPUT_LINK_REDIRECT%>'
             };
+<!--            <% if(process.env.NODE_ENV === 'development') { %>-->
+<!--            common_extensions.init();-->
+<!--            <% } %>-->
             window.TeneoWebChat.initialize(element, teneoProps);
 
         }

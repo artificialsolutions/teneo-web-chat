@@ -674,10 +674,16 @@ We should not dim it twice, so we check: .twc-user-input:not(.twc-disabled)
   align-self: center;
 }
 
-.twc-user-input:not(.twc-disabled) .twc-user-input__button.twc-disabled .twc-user-input__asr-icon-wrapper.twc-active,
+.twc-user-input:not(.twc-disabled) .twc-user-input__button.twc-disabled .twc-user-input__asr-icon-wrapper.twc-active {
+  fill: var(--asricon-active-color, darkred);
+  stroke: var(--asricon-active-color, red);
+  filter: grayscale(0);
+  opacity: 100%;
+}
+
 .twc-user-input__tts-icon-wrapper.twc-active {
-  fill: darkred !important;
-  stroke: red !important;
+  fill: var(--ttsicon-active-color, darkred);
+  stroke: var(--ttsicon-active-color, red);
   filter: grayscale(0);
   opacity: 100%;
 }

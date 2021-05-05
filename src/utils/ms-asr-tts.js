@@ -1,5 +1,7 @@
 import * as speechSDK from "microsoft-cognitiveservices-speech-sdk";
 
+
+
 function getMSToken(region, key) {
 
     return new Promise(function (resolve) {
