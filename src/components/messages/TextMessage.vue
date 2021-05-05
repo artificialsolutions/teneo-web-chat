@@ -15,6 +15,7 @@
 </template>
 
 <script>
+//TODO => Remove additional newlines from text messages
 import { PARTICIPANT_BOT } from '../../utils/constants.js';
 import sanitizeHtml from '../../utils/sanitize-html.js';
 import isValidUrl from '../../utils/validate-url';

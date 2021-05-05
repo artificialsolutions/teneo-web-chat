@@ -1,6 +1,6 @@
 {
   "name": "teneo-web-chat",
-  "version": "3.5.0",
+  "version": "3.6.0",
   "description": "Teneo Web Chat widget that can be embedded in websites.",
   "scripts": {
     "analyze": "NODE_ENV=production webpack --config webpack.prod.js --profile --json > stats-prod.json && webpack-bundle-analyzer stats-prod.json dist/",
@@ -21,6 +21,9 @@
     "dotenv": "^8.2.0",
     "ejs": "^3.1.5",
     "express": "^4.17.1",
+    "install": "^0.13.0",
+    "microsoft-cognitiveservices-speech-sdk": "^1.16.0",
+    "npm": "^7.11.2",
     "vue": "^2.6.12"
   },
   "devDependencies": {

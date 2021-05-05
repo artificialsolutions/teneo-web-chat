@@ -6,7 +6,6 @@ import {store} from '../store/store';
 const defaultMessageType = 'text';
 
 export default async function parseTeneoResponse(teneoResponse) {
-
     let timeout = function (ms) {
         return new Promise(resolve => setTimeout(resolve, ms));
     }
@@ -42,7 +41,7 @@ export default async function parseTeneoResponse(teneoResponse) {
     if (outputTextSegmentIndexes && Array.isArray(outputTextSegmentIndexes)) {
 
         if (text) {
-            // each segment (a list that contians a start and an end index) in the list is a bubble
+            // each segment (a list that contains a start and an end index) in the list is a bubble
             for (var i = 0; i < outputTextSegmentIndexes.length; ++i) {
                 try {
                     // get the start and end index for this bubble
@@ -96,7 +95,9 @@ export default async function parseTeneoResponse(teneoResponse) {
 
             //Signal engine reply if no more data is expected.
             if (!data) {
-                EventBus.$emit(events.ENGINE_REPLIED);
+//Commented out since event is always emitted from teneo-api
+                 //EventBus.$emit(events.ENGINE_REPLIED);
+
             }
         }
     }
@@ -112,7 +113,7 @@ export default async function parseTeneoResponse(teneoResponse) {
     }
 
     if (link) {
-       let parsedLink = JSON.parse(link);
+        let parsedLink = JSON.parse(link);
         if (store.getters.autoRedirect) {
             window.location.href = parsedLink.url;
         } else {

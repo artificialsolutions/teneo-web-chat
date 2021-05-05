@@ -19,11 +19,13 @@ let isInitialised = false;
 
 window.TeneoWebChat = {
   initialize(element, twcProps) {
+
+    // TODO: error handling (once store throws error)
     Vue.prototype.$store = store;
 
     // Store properties in storage
     if (twcProps.teneoEngineUrl) {
-      // TODO: error handling (once store thows error)
+
       store.commit('teneoEngineUrl', twcProps.teneoEngineUrl);
     }
 
@@ -33,7 +35,7 @@ window.TeneoWebChat = {
     }
 
     if (twcProps.titleIconUrl) {
-      // TODO: error handling (once store thows error)
+
       store.commit('initialTitleIconUrl', twcProps.titleIconUrl);
     }
 
@@ -47,42 +49,42 @@ window.TeneoWebChat = {
     }
 
     if (twcProps.agentAvatarUrl) {
-      // TODO: error handling (once store thows error)
+
       store.commit('agentAvatarUrl', twcProps.agentAvatarUrl);
     }
 
     if (twcProps.botAvatarUrl) {
-      // TODO: error handling (once store thows error)
+
       store.commit('botAvatarUrl', twcProps.botAvatarUrl);
     }
 
     if (twcProps.userAvatarUrl) {
-      // TODO: error handling (once store thows error)
+
       store.commit('userAvatarUrl', twcProps.userAvatarUrl);
     }
 
     if (twcProps.minimizeIconUrl) {
-      // TODO: error handling (once store thows error)
+
       store.commit('minimizeIconUrl', twcProps.minimizeIconUrl);
     }
 
     if (twcProps.closeIconUrl) {
-      // TODO: error handling (once store thows error)
+
       store.commit('closeIconUrl', twcProps.closeIconUrl);
     }
 
     if (twcProps.launchIconUrl) {
-      // TODO: error handling (once store thows error)
+
       store.commit('initialLaunchIconUrl', twcProps.launchIconUrl);
     }
 
     if (twcProps.sendIconUrl) {
-      // TODO: error handling (once store thows error)
+
       store.commit('initialSendIconUrl', twcProps.sendIconUrl);
     }
 
     if (twcProps.uploadIconUrl) {
-      // TODO: error handling (once store thows error)
+
       store.commit('initialUploadIconUrl', twcProps.uploadIconUrl);
     }
 
@@ -90,8 +92,40 @@ window.TeneoWebChat = {
       store.commit('showUploadButton', true);
     }
 
+    if (twcProps.msCognitiveSubscriptionKey) {
+      store.commit('msCognitiveSubscriptionKey', twcProps.msCognitiveSubscriptionKey);
+    }
+
+    if (twcProps.msCognitiveRegion) {
+      store.commit('msCognitiveRegion', twcProps.msCognitiveRegion);
+    }
+
+
+
+    if (twcProps.asrIconUrl) {
+      store.commit('initialAsrIconUrl', twcProps.asrIconUrl);
+    }
+
+    if (twcProps.showAsrButton === true || twcProps.showAsrButton === "true") {
+      store.commit('showAsrButton', true);
+    }
+    if (twcProps.asrActive === true || twcProps.asrActive === "true") {
+      //Always set to false regardless - ASR on start is a silly proposal.
+      store.commit('asrActive', false);
+    }
+    if (twcProps.ttsIconUrl) {
+      store.commit('initialTtsIconUrl', twcProps.ttsIconUrl);
+    }
+
+    if (twcProps.showTtsButton === true || twcProps.showTtsButton === "true") {
+      store.commit('showTtsButton', true);
+    }
+    if (twcProps.ttsActive === true || twcProps.ttsActive === "true") {
+      store.commit('ttsActive', true);
+    }
+
     if (twcProps.locale) {
-      // TODO: error handling (once store thows error)
+
       store.commit('locale', twcProps.locale);
     }
 
@@ -107,23 +141,23 @@ window.TeneoWebChat = {
     }
 
     if (twcProps.locale) {
-      // TODO: error handling (once store thows error)
+
       store.commit('locale', twcProps.locale);
     }
 
     if (twcProps.autoRedirect) {
-      // TODO: error handling (once store thows error)
+
       store.commit('autoRedirect', twcProps.autoRedirect == "true");
     }
 
     if (twcProps.storage) {
-      // TODO: error handling (once store thows error)
+
       store.commit('storage', twcProps.storage);
     }
 
     // Check required properties
     if (!store.getters.teneoEngineUrl) {
-      // TODO: thow error if engine url is missing?
+      // TODO: throw error if engine url is missing?
       return;
     }
 
@@ -170,7 +204,7 @@ window.TeneoWebChat = {
 
       // Only continue if function name provided is valid
       if (!validFunctionNames.includes(function_name)) {
-        // TODO: thow error if invalid function_name was provided?
+        // TODO: throw error if invalid function_name was provided?
         return;
       }
 
@@ -296,7 +330,7 @@ return filteredMessageList;
          * TODO: check if message type is valid?
          */
         if (Object.keys(payload).length > 0 && payload.constructor === Object) {
-          EventBus.$emit(events.ADD_MESSAGE, payload);
+                 EventBus.$emit(events.ADD_MESSAGE, payload);
         }
         break;
 
@@ -316,8 +350,38 @@ return filteredMessageList;
 
       case apiConstants.API_CALL_SHOW_UPLOAD_BUTTON:
            store.commit('showUploadButton', true);
+        break;   
+        
+        case apiConstants.API_CALL_HIDE_ASR_BUTTON:
+          store.commit('showAsrButton', false);
         break;
 
+      case apiConstants.API_CALL_SHOW_ASR_BUTTON:
+           store.commit('showAsrButton', true);
+        break;
+        case apiConstants.API_CALL_ASR_ACTIVE:
+          EventBus.$emit(events.ASR_ACTIVE);
+           store.commit('asrActive', true);
+        break;
+      case apiConstants.API_CALL_ASR_INACTIVE:
+        EventBus.$emit(events.ASR_INACTIVE);
+        store.commit('asrActive', false);
+        break;
+      case apiConstants.API_CALL_HIDE_TTS_BUTTON:
+          store.commit('showTtsButton', false);
+        break;
+
+      case apiConstants.API_CALL_SHOW_TTS_BUTTON:
+           store.commit('showTtsButton', true);
+        break;
+      case apiConstants.API_CALL_TTS_ACTIVE:
+        EventBus.$emit(events.TTS_ACTIVE);
+        store.commit('ttsActive', true);
+        break;
+        case apiConstants.API_CALL_TTS_INACTIVE:
+          EventBus.$emit(events.TTS_INACTIVE);
+        store.commit('ttsActive', false);
+        break;
       case apiConstants.API_CALL_SET_CHAT_WINDOW_TITLE:
         // TODO: throw error if payload is invalid or if store throws error
         if (typeof payload === 'string') {
@@ -373,6 +437,28 @@ return filteredMessageList;
         store.commit('uploadIconUrl', store.getters.initialUploadIconUrl);
         break;
 
+      case apiConstants.API_CALL_RESET_ASR_ICON:
+        store.commit('asrIconUrl', store.getters.initialAsrIconUrl);
+        break;
+
+      case apiConstants.API_CALL_SET_ASR_ICON:
+        // TODO: throw error if payload is invalid or if store throws error
+        if (typeof payload === 'string') {
+          store.commit('asrIconUrl', payload);
+        }
+        break;
+
+      case apiConstants.API_CALL_RESET_TTS_ICON:
+        store.commit('ttsIconUrl', store.getters.initialTtsIconUrl);
+        break;
+
+      case apiConstants.API_CALL_SET_TTS_ICON:
+        // TODO: throw error if payload is invalid or if store throws error
+        if (typeof payload === 'string') {
+          store.commit('ttsIconUrl', payload);
+        }
+        break;
+
       case apiConstants.API_CALL_DISABLE_USERINPUT:
         EventBus.$emit(events.DISABLE_INPUT);
         break;
@@ -387,6 +473,22 @@ return filteredMessageList;
 
       case apiConstants.API_CALL_ENABLE_UPLOAD_BUTTON:
         EventBus.$emit(events.ENABLE_UPLOAD);
+        break;
+
+        case apiConstants.API_CALL_DISABLE_ASR_BUTTON:
+        EventBus.$emit(events.DISABLE_ASR);
+        break;
+
+      case apiConstants.API_CALL_ENABLE_ASR_BUTTON:
+        EventBus.$emit(events.ENABLE_ASR);
+        break;
+
+        case apiConstants.API_CALL_DISABLE_TTS_BUTTON:
+        EventBus.$emit(events.DISABLE_TTS);
+        break;
+
+      case apiConstants.API_CALL_ENABLE_TTS_BUTTON:
+        EventBus.$emit(events.ENABLE_TTS);
         break;
 
       case apiConstants.API_CALL_SET_ENGINE_URL:

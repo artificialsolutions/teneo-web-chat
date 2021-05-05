@@ -131,7 +131,7 @@ export default {
   methods: {
     // Encapsulating dependency methods makes Testing easier
     async _onMessageReceived(message) {
-      await this.$teneoApi._onMessageReceived(message);
+            await this.$teneoApi._onMessageReceived(message);
     },
     sendBaseMessage(text, parameters, isSilent) {
       this.$teneoApi.sendBaseMessage(text, parameters, isSilent);
@@ -284,6 +284,10 @@ export default {
   --spinner-color: var(--light-border-color);
   --sendicon-fg-color: var(--dark-fg-color);
   --uploadicon-fg-color: var(--dark-fg-color);
+  --asricon-fg-color: var(--dark-fg-color);
+  --ttsicon-fg-color: var(--dark-fg-color);
+  --asricon-active-color: var(--danger-color);
+  --ttsicon-active-color: var(--danger-color);
   --launch-button-bg-color: var(--primary-color);
   --launchicon-fg-color: var(--light-fg-color);
   --callout-fg-color: var(--user-input-fg-color);
@@ -328,10 +332,12 @@ export default {
   --carousel-ctrl-panel-fg-color: var(--light-fg-color);
   --carousel-ctrl-panel-active-color: var(--secondary-color);
   --carousel-ctrl-panel-disabled-color: var(--expired-color);
-  --primary-font: 'Helvetica Neue', Helvetica, Arial, sans-serif;
   --link-preview-background-color: var(--light-bg-color);
   --link-preview-text-color: var(--dark-fg-color);
   --link-preview-image-background-color: var(--dark-bg-color);
+
+  --primary-font: 'Helvetica Neue', Helvetica, Arial, sans-serif;
+
 }
 
 @supports (-webkit-touch-callout: none) {
