@@ -83,16 +83,16 @@ export default function teneoApiPlugin(teneoApiUrl) {
             if (requestPayload.handledState.handled === true) {
                 return
             }
-
+// TODO: throw errors on payload check failures, if message returned by extension is invalid or if message type is invalid
             // only continue if message details is object
             if (requestPayload.requestDetails.constructor !== Object) {
-                // TODO: throw error?
+                
                 return
             }
 
             // only continue if message details contains text key
             if (!("text" in requestPayload.requestDetails)) {
-                // TODO: throw error?
+                
                 return
             }
 
@@ -123,13 +123,13 @@ export default function teneoApiPlugin(teneoApiUrl) {
 
             // stop further processing if response is not an object
             if (Object.keys(responsePayload.responseDetails).length == 0 || responsePayload.responseDetails.constructor !== Object) {
-                // TODO: throw error?
+                
                 return
             }
 
             // stop further processing if response does not have status or proper keys in 'output' part of the response
             if (!"status" in response || response.status !== 0 || !"output" in response || !"text" in response.output || !"parameters" in response.output) {
-                // TODO: throw error?
+                
                 return
             }
 
@@ -165,8 +165,7 @@ export default function teneoApiPlugin(teneoApiUrl) {
                 EventBus.$emit(events.BOT_MESSAGE_RECEIVED, message.data);
             }
 
-            // TODO: throw error if payload is invalid?
-            // TODO: check if message type is valid?
+
             if (!message) {
                 return;
             }
@@ -180,7 +179,7 @@ export default function teneoApiPlugin(teneoApiUrl) {
             if (payload.message.type !== "typing") {
                 await handleExtension(API_ON_NEW_MESSAGE, payload);
             }
-            // TODO: throw error if message returned by extension is invalid?
+
 
             // abort if extension says so
             if (payload.handledState.handled === true) {

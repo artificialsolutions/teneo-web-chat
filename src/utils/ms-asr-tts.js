@@ -1,5 +1,5 @@
 import * as speechSDK from "microsoft-cognitiveservices-speech-sdk";
-
+import {debug} from "webpack";
 
 
 function getMSToken(region, key) {
@@ -27,31 +27,41 @@ function processAudioToText(authToken, region, locale) {
         const speechConfig = speechSDK.SpeechConfig.fromAuthorizationToken(authToken, region);
         speechConfig.speechRecognitionLanguage = locale;
         const audioConfig = speechSDK.AudioConfig.fromDefaultMicrophoneInput();
-        const recognizer = new speechSDK.SpeechRecognizer(speechConfig, audioConfig);
-        recognizer.recognizeOnceAsync(
+        window.twcRecognizer = new speechSDK.SpeechRecognizer(speechConfig, audioConfig);
+        window.twcRecognizer.recognizeOnceAsync(
             result => {
-            resolve(result.text);
-        },
-            error =>{
+                resolve(result.text);
+                delete window.twcRecognizer
+            },
+            error => {
                 reject(error);
+                delete window.twcRecognizer
             })
     })
 
 
 }
 
+function stopAsrRecording() {
+    window.twcRecognizer.stopContinuousRecognitionAsync()
+    delete window.twcRecognizer;
+}
+
 function processTextToAudio(authToken, region, locale, textToRead) {
     return new Promise((resolve, reject) => {
+
         const speechConfig = speechSDK.SpeechConfig.fromAuthorizationToken(authToken, region);
         speechConfig.speechRecognitionLanguage = locale;
-        const audioConfig = speechSDK.AudioConfig.fromDefaultSpeakerOutput();
+        window.twcAudioPlayer = new speechSDK.SpeakerAudioDestination();
+        const audioConfig = speechSDK.AudioConfig.fromSpeakerOutput(window.twcAudioPlayer);
         const synthesizer = new speechSDK.SpeechSynthesizer(speechConfig, audioConfig);
+
         synthesizer.speakTextAsync(textToRead,
-            result =>{
+            result => {
                 resolve(result.audioData);
                 synthesizer.close();
             },
-            error =>{
+            error => {
                 reject(error);
                 synthesizer.close();
             });
@@ -59,7 +69,7 @@ function processTextToAudio(authToken, region, locale, textToRead) {
     })
 }
 
-function generateText(messageData){
+function generateText(messageData) {
     let utteranceArray = [];
     let validKeys = ['type', 'alt', 'title', 'subtitle', 'text'];
     JSON.stringify(messageData, function (key, value) {
@@ -73,4 +83,4 @@ function generateText(messageData){
     return utteranceArray.join('.\n')
 }
 
-module.exports = {getMSToken, processTextToAudio, processAudioToText, generateText}
+module.exports = {getMSToken, processTextToAudio, processAudioToText, generateText, stopAsrRecording}
