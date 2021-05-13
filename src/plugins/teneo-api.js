@@ -160,7 +160,8 @@ export default function teneoApiPlugin(teneoApiUrl) {
             await this.sendBaseMessage(text, parameters, true);
         },
         async _onMessageReceived(message) {
-            if (message.author === PARTICIPANT_BOT) {
+            if (message.author === PARTICIPANT_BOT || message.type === 'system') {
+
 
                 EventBus.$emit(events.BOT_MESSAGE_RECEIVED, message.data);
             }

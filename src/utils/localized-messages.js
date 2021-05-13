@@ -69,7 +69,7 @@ export var translatedMessages = {
             input_area_upload_button_title: 'Upload File',
             input_area_asr_button_aria_label: "ASR",
             input_area_asr_button_title: "ASR",
-            first_use_asr_system_message: "Recording in process, it will stop automatically. Click on the mic icon again to cancel.",
+            first_use_asr_system_message: "Listening in process, it will stop automatically. Click on the mic icon again to cancel.",
             input_area_tts_button_aria_label: "TTS",
             input_area_tts_button_title: "TTS",
             message_typing_indicator: 'Typing...',

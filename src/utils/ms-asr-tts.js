@@ -1,5 +1,4 @@
 import * as speechSDK from "microsoft-cognitiveservices-speech-sdk";
-import {debug} from "webpack";
 
 
 function getMSToken(region, key) {
@@ -43,8 +42,18 @@ function processAudioToText(authToken, region, locale) {
 }
 
 function stopAsrRecording() {
-    window.twcRecognizer.stopContinuousRecognitionAsync()
-    delete window.twcRecognizer;
+    if(window.twcRecognizer) {
+        //window.twcRecognizer.stopContinuousRecognitionAsync()
+        window.twcRecognizer.dispose(true);
+        delete window.twcRecognizer;
+    }
+}
+
+function stopTTSAudio(){
+    if(window.twcAudioPlayer) {
+        window.twcAudioPlayer.pause();
+        delete window.twcAudioPlayer;
+    }
 }
 
 function processTextToAudio(authToken, region, locale, textToRead) {
@@ -83,4 +92,4 @@ function generateText(messageData) {
     return utteranceArray.join('.\n')
 }
 
-module.exports = {getMSToken, processTextToAudio, processAudioToText, generateText, stopAsrRecording}
+module.exports = {getMSToken, processTextToAudio, processAudioToText, generateText, stopAsrRecording, stopTTSAudio}

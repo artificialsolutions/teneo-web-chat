@@ -149,6 +149,9 @@
       </div>
     </form>
     <a v-if="isMobile()" id="twc-focus-fix" href="#1" aria-hidden="true"></a>
+    <RecordingStartedBeep ref="recordingStartedBeep"/>
+    <RecordingEndedBeep ref="recordingEndedBeep"/>
+    <RecordingCancelledBeep ref="recordingCancelledBeep"/>
   </div>
 </template>
 
@@ -159,7 +162,17 @@ import SendIcon from '../icons/send.vue';
 import UploadIcon from '../icons/upload.vue';
 import AsrIcon from '../icons/asr.vue';
 import TtsIcon from '../icons/tts.vue';
-import {getMSToken, processAudioToText, processTextToAudio, generateText, stopAsrRecording} from '../utils/ms-asr-tts'
+import RecordingStartedBeep from '../sounds/recordingStartedBeep.vue'
+import RecordingEndedBeep from '../sounds/recordingEndedBeep.vue'
+import RecordingCancelledBeep from '../sounds/recordingCancelledBeep.vue'
+import {
+  getMSToken,
+  processAudioToText,
+  processTextToAudio,
+  generateText,
+  stopAsrRecording,
+  stopTTSAudio
+} from '../utils/ms-asr-tts'
 import {PARTICIPANT_USER} from '../utils/constants.js';
 import {
   API_ON_ASR_BUTTON_CLICK,
@@ -184,6 +197,9 @@ export default {
     UploadIcon,
     AsrIcon,
     TtsIcon,
+    RecordingStartedBeep,
+    RecordingEndedBeep,
+    RecordingCancelledBeep
   },
   props: {
     onSubmit: {
@@ -220,18 +236,18 @@ export default {
     EventBus.$on(events.BOT_MESSAGE_RECEIVED, async (messageData) => {
       if (this.ttsActive) {
         let utteranceString = generateText(messageData);
-
+        let _this = this;
         this.msTokenCheck().then(() => {
-          processTextToAudio(store.getters.msCognitiveToken, store.getters.msCognitiveRegion, store.getters.locale, utteranceString).then(() => {
-            window.twcAudioPlayer.onAudioEnd(()=>{
-console.log("audio ended")
-            })
+          processTextToAudio(store.getters.msCognitiveToken, store.getters.msCognitiveRegion, store.getters.locale, utteranceString).then(function () {
+            window.twcAudioPlayer.onAudioEnd = function () {
+              if (_this.$refs.asrButton.dataset.used === "true") {
+                _this.asrButtonClicked(_this.$refs.asrButton)
+              }
+            }
           })
         })
-
-
       }
-    });
+    })
 
     EventBus.$on(events.DISABLE_UPLOAD, () => {
       if (this.showUploadButton) {
@@ -278,6 +294,7 @@ console.log("audio ended")
       if (this.showAsrButton && this.$refs.asrButton) {
         this.setAsrActive(false);
         stopAsrRecording();
+        this.$refs.recordingCancelledBeep.$el.play()
       }
     });
 
@@ -308,8 +325,7 @@ console.log("audio ended")
     EventBus.$on(events.TTS_INACTIVE, () => {
       if (this.showTtsButton && this.$refs.ttsButton) {
         this.setTtsActive(false);
-        window.twcAudioPlayer.pause();
-        delete window.twcAudioPlayer;
+        stopTTSAudio();
       }
     });
     EventBus.$on(events.DISABLE_INPUT, () => {
@@ -369,7 +385,7 @@ console.log("audio ended")
     },
 
     setAsrActive(onoff) {
-      //TODO => Add sounds for recording start, end and cancel
+
       this.asrActive = onoff;
     },
     setTtsActive(onoff) {
@@ -436,8 +452,10 @@ console.log("audio ended")
     },
     async asrButtonClicked(e) {
       //Send system message with instructions on first click, mark button as used so it won't repeat
+      let firstClick = false;
       if (e.dataset.used !== "true") {
         e.dataset.used = "true";
+        firstClick = true;
         EventBus.$emit(events.ADD_MESSAGE, {
           'type': 'system',
           'data': {
@@ -450,23 +468,41 @@ console.log("audio ended")
       if (!asrExtension) {
         if (this.asrActive && window.twcRecognizer) {
           this.setAsrActive(false);
+          this.$refs.recordingCancelledBeep.$el.play()
           stopAsrRecording();
         } else {
           this.setAsrActive(true);
-          this.msTokenCheck().then(() => {
-            processAudioToText(store.getters.msCognitiveToken, store.getters.msCognitiveRegion, store.getters.locale)
-                .then(async (processedText) => {
-                  if (typeof processedText === 'string' && this.asrActive) {
-                    this.$refs.userInput.value = processedText;
-                    await this._submitText();
-                  } else {
-                    console.log('ASR recognition failed or cancelled')
-                  }
-                  this.setAsrActive(false);
 
-                })
+          new Promise(resolve => {
 
+            if (firstClick) {
+              window.twcAudioPlayer.onAudioEnd = function () {
+                resolve();
+              }
+            }
+            else{
+              resolve()
+            }
+          }).then(()=>{
+            this.$refs.recordingStartedBeep.$el.play();
+            this.msTokenCheck().then(() => {
+              processAudioToText(store.getters.msCognitiveToken, store.getters.msCognitiveRegion, store.getters.locale)
+                  .then(async (processedText) => {
+                    if (typeof processedText === 'string' && this.asrActive) {
+                      this.$refs.userInput.value = processedText;
+                      this.$refs.recordingEndedBeep.$el.play();
+                      await this._submitText();
+                    } else {
+                      console.log('ASR recognition failed or cancelled')
+                    }
+                    this.setAsrActive(false);
+
+                  })
+
+            })
           })
+
+
         }
       }
     },
@@ -474,9 +510,8 @@ console.log("audio ended")
       let ttsExtension = await handleExtension(API_ON_TTS_BUTTON_CLICK, e);
       if (!ttsExtension) {
         this.setTtsActive(!this.ttsActive);
-        if(!this.ttsActive){
-          window.twcAudioPlayer.pause();
-          delete window.twcAudioPlayer;
+        if (!this.ttsActive && window.hasOwnProperty('twcAudioPlayer')) {
+          stopTTSAudio();
         }
       }
     },
