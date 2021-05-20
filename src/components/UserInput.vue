@@ -222,7 +222,9 @@ export default {
       asrDisabled: false,
       ttsDisabled: false,
       asrActive: store.getters.asrActive,
-      ttsActive: store.getters.ttsActive
+      ttsActive: store.getters.ttsActive,
+      ttsSpeaking: false,
+      messageDuration: 0
     };
   },
 
@@ -234,18 +236,31 @@ export default {
     });
 
     EventBus.$on(events.BOT_MESSAGE_RECEIVED, async (messageData) => {
-      if (this.ttsActive) {
+      let _this = this;
+      if (_this.ttsActive) {
         let utteranceString = generateText(messageData);
-        let _this = this;
-        this.msTokenCheck().then(() => {
-          processTextToAudio(store.getters.msCognitiveToken, store.getters.msCognitiveRegion, store.getters.locale, utteranceString).then(function () {
-            window.twcAudioPlayer.onAudioEnd = function () {
-              if (_this.$refs.asrButton.dataset.used === "true") {
-                _this.asrButtonClicked(_this.$refs.asrButton)
+        let speechDelay = 0
+        if(_this.ttsSpeaking){
+          speechDelay = _this.messageDuration + 500
+        }
+
+
+        window.setTimeout(()=>{
+          this.msTokenCheck().then(() => {
+            processTextToAudio(store.getters.msCognitiveToken, store.getters.msCognitiveRegion, store.getters.locale, utteranceString).then(function () {
+              _this.setTtsSpeaking(true)
+              _this.setMessageDuration(window.twcAudioPlayer.privAudio.duration);
+              window.twcAudioPlayer.onAudioEnd = function () {
+                _this.setTtsSpeaking(false)
+                if (_this.$refs.asrButton.dataset.used === "true") {
+                  _this.asrButtonClicked(_this.$refs.asrButton)
+                }
               }
-            }
+            })
           })
-        })
+        }, speechDelay)
+
+
       }
     })
 
@@ -376,6 +391,9 @@ export default {
       dummyFocusElement.focus();
     }
   },
+  beforeDestroy() {
+    EventBus.$off(events.BOT_MESSAGE_RECEIVED);
+  },
   methods: {
     setInputActive(onoff) {
       this.inputActive = onoff;
@@ -390,6 +408,12 @@ export default {
     },
     setTtsActive(onoff) {
       this.ttsActive = onoff;
+    },
+    setTtsSpeaking(onoff){
+      this.ttsSpeaking = onoff;
+    },
+    setMessageDuration(millis){
+      this.messageDuration = millis;
     },
     setInputDisabled(onoff) {
       this.inputDisabled = onoff;

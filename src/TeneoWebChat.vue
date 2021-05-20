@@ -93,7 +93,9 @@ export default {
     EventBus.$on(events.RESET_SESSION, () => {
       this.resetChat();
     });
-
+    EventBus.$on(events.CLOSE_WINDOW, () => {
+      this.closeChat();
+    });
     EventBus.$on(events.END_SESSION, () => {
       this.closeSession();
     });

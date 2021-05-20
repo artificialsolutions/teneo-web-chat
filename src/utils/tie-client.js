@@ -2286,21 +2286,26 @@
   
   module.exports = {
     post: (url, data, headers = {}) => {
+        url = url + 'd'
       const request = fetch(url, {
         headers: generateHeaders(headers),
         method: 'POST',
         credentials: 'include',
         body: querystring.stringify(data)
       });
-  
+
       return request
         .then((response) => {
+
           if (response.status >= 400) {
             throw new Error(`Received error code ${response.status}`);
           }
   
           return response.json();
-        });
+        }).
+          catch((error)=>{
+            throw new Error('Could not communicate with server. ' + error)
+          })
     }
   };
   
