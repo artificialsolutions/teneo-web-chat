@@ -2286,7 +2286,6 @@
   
   module.exports = {
     post: (url, data, headers = {}) => {
-        url = url + 'd'
       const request = fetch(url, {
         headers: generateHeaders(headers),
         method: 'POST',

@@ -18,6 +18,7 @@
             @click.prevent=""
             @click="asrButtonClicked($refs.asrButton)"
             data-used="false"
+            data-cancelled="false"
         >
           <img
               v-if="asrIconUrl"
@@ -240,19 +241,19 @@ export default {
       if (_this.ttsActive) {
         let utteranceString = generateText(messageData);
         let speechDelay = 0
-        if(_this.ttsSpeaking){
+        if (_this.ttsSpeaking) {
           speechDelay = _this.messageDuration + 500
         }
 
 
-        window.setTimeout(()=>{
+        window.setTimeout(() => {
           this.msTokenCheck().then(() => {
             processTextToAudio(store.getters.msCognitiveToken, store.getters.msCognitiveRegion, store.getters.locale, utteranceString).then(function () {
               _this.setTtsSpeaking(true)
               _this.setMessageDuration(window.twcAudioPlayer.privAudio.duration);
               window.twcAudioPlayer.onAudioEnd = function () {
                 _this.setTtsSpeaking(false)
-                if (_this.$refs.asrButton.dataset.used === "true") {
+                if (_this.$refs.asrButton.dataset.used === "true" && _this.$refs.asrButton.dataset.cancelled !== "true") {
                   _this.asrButtonClicked(_this.$refs.asrButton)
                 }
               }
@@ -409,10 +410,10 @@ export default {
     setTtsActive(onoff) {
       this.ttsActive = onoff;
     },
-    setTtsSpeaking(onoff){
+    setTtsSpeaking(onoff) {
       this.ttsSpeaking = onoff;
     },
-    setMessageDuration(millis){
+    setMessageDuration(millis) {
       this.messageDuration = millis;
     },
     setInputDisabled(onoff) {
@@ -492,6 +493,7 @@ export default {
       if (!asrExtension) {
         if (this.asrActive && window.twcRecognizer) {
           this.setAsrActive(false);
+          e.dataset.cancelled = "true";
           this.$refs.recordingCancelledBeep.$el.play()
           stopAsrRecording();
         } else {
@@ -500,14 +502,19 @@ export default {
           new Promise(resolve => {
 
             if (firstClick) {
-              window.twcAudioPlayer.onAudioEnd = function () {
-                resolve();
-              }
-            }
-            else{
+
+              setTimeout(()=>{
+                if(this.ttsActive) {
+                  window.twcAudioPlayer.onAudioEnd = function () {
+                    resolve();
+                  }
+                }
+              },100)
+
+            } else {
               resolve()
             }
-          }).then(()=>{
+          }).then(() => {
             this.$refs.recordingStartedBeep.$el.play();
             this.msTokenCheck().then(() => {
               processAudioToText(store.getters.msCognitiveToken, store.getters.msCognitiveRegion, store.getters.locale)
