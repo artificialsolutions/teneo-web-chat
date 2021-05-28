@@ -15,13 +15,16 @@ export var translatedMessages = {
             input_area_send_button_title: 'Send besked',
             input_area_upload_button_aria_label: 'Upload Fil',
             input_area_upload_button_title: 'Upload Fil',
-            input_area_asr_button_aria_label: "ASR",
-            input_area_asr_button_title: "ASR",
-            input_area_tts_button_aria_label: "TTS",
-            input_area_tts_button_title: "TTS",
+            input_area_asr_button_aria_label: "Automatisk Talegenkendelse (Tale til Tekst)",
+            input_area_asr_button_title: "Automatisk Talegenkendelse (Tale til Tekst)",
+            first_use_asr_system_message: "Optagelse er i gang og stopper automatisk. Klik på mikrofonen for at stoppe optagelsen manuelt.",
+            input_area_tts_button_aria_label: "Tekst til Tale",
+            input_area_tts_button_title: "Tekst til Tale",
             message_typing_indicator: 'Skriver...',
             preview_title_not_available: "Uden titel",
-            preview_description_not_available: "Ingen beskrivelse tilgængelig"
+            preview_description_not_available: "Ingen beskrivelse tilgængelig",
+            connection_error_retry_message: "There is a problem communicating with the server. Please wait.",
+            connection_error_final_message: "Could not establish connection to server. Please try again later."
         }
     },
     de: {
@@ -40,13 +43,16 @@ export var translatedMessages = {
             input_area_send_button_title: 'Text senden',
             input_area_upload_button_aria_label: 'Datei hochladen',
             input_area_upload_button_title: 'Datei hochladen',
-            input_area_asr_button_aria_label: "ASR",
+            input_area_asr_button_aria_label: "Spracherkennung",
             input_area_asr_button_title: "ASR",
-            input_area_tts_button_aria_label: "TTS",
+            first_use_asr_system_message: "Spracherkennung aktiviert, stoppt automatisch. Klicken Sie auf das Mikrofon-Symbol, um abzubrechen.",
+            input_area_tts_button_aria_label: "Text-To-Speech",
             input_area_tts_button_title: "TTS",
             message_typing_indicator: 'Schreibt...',
             preview_title_not_available: "Unbenannt",
-            preview_description_not_available: "Keine Beschreibung verfügbar"
+            preview_description_not_available: "Keine Beschreibung verfügbar",
+            connection_error_retry_message: "There is a problem communicating with the server. Please wait.",
+            connection_error_final_message: "Could not establish connection to server. Please try again later."
         }
     },
     en: {
@@ -65,13 +71,16 @@ export var translatedMessages = {
             input_area_send_button_title: 'Send message',
             input_area_upload_button_aria_label: 'Upload File',
             input_area_upload_button_title: 'Upload File',
-            input_area_asr_button_aria_label: "ASR",
+            input_area_asr_button_aria_label: "Automatic Speech Recognition",
             input_area_asr_button_title: "ASR",
-            input_area_tts_button_aria_label: "TTS",
+            first_use_asr_system_message: "Listening in process, it will stop automatically. Click on the mic icon again to cancel.",
+            input_area_tts_button_aria_label: "Text-to-Speech",
             input_area_tts_button_title: "TTS",
             message_typing_indicator: 'Typing...',
             preview_title_not_available: "Untitled",
-            preview_description_not_available: "No Description Available"
+            preview_description_not_available: "No Description Available",
+            connection_error_retry_message: "There is a problem communicating with the server. Please wait.",
+            connection_error_final_message: "Could not establish connection to server. Please try again later."
         }
     },
     'en-GB': {
@@ -90,13 +99,16 @@ export var translatedMessages = {
             input_area_send_button_title: 'Send message',
             input_area_upload_button_aria_label: 'Upload File',
             input_area_upload_button_title: 'Upload File',
-            input_area_asr_button_aria_label: "ASR",
+            input_area_asr_button_aria_label: "Automatic Speech Recognition",
             input_area_asr_button_title: "ASR",
-            input_area_tts_button_aria_label: "TTS",
+            first_use_asr_system_message: "Listening in process, it will stop automatically. Click on the mic icon again to cancel.",
+            input_area_tts_button_aria_label: "Text-to-Speech",
             input_area_tts_button_title: "TTS",
             message_typing_indicator: 'Typing...',
             preview_title_not_available: "Untitled",
-            preview_description_not_available: "No Description Available"
+            preview_description_not_available: "No Description Available",
+            connection_error_retry_message: "There is a problem communicating with the server. Please wait.",
+            connection_error_final_message: "Could not establish connection to server. Please try again later."
         }
     },
     es: {
@@ -115,13 +127,16 @@ export var translatedMessages = {
             input_area_send_button_title: 'Enviar mensaje',
             input_area_upload_button_aria_label: 'Subir Archivo',
             input_area_upload_button_title: 'Subir Archivo',
-            input_area_asr_button_aria_label: "ASR",
-            input_area_asr_button_title: "ASR",
-            input_area_tts_button_aria_label: "TTS",
-            input_area_tts_button_title: "TTS",
+            input_area_asr_button_aria_label: "Voz a Texto",
+            input_area_asr_button_title: "Reconocimiento Automático de Voz",
+            first_use_asr_system_message: "Recording in process, it will stop automatically. Click on the mic icon again to cancel.",
+            input_area_tts_button_aria_label: "Texto a Audio",
+            input_area_tts_button_title: "Lectura de Texto Automático",
             message_typing_indicator: 'Escribiendo...',
             preview_title_not_available: "Sin Título",
-            preview_description_not_available: "Descripción no disponible"
+            preview_description_not_available: "Descripción no disponible",
+            connection_error_retry_message: "There is a problem communicating with the server. Please wait.",
+            connection_error_final_message: "Could not establish connection to server. Please try again later."
         }
     },
     fr: {
@@ -142,11 +157,14 @@ export var translatedMessages = {
             input_area_upload_button_title: 'Télécharger un fichier',
             input_area_asr_button_aria_label: "ASR",
             input_area_asr_button_title: "ASR",
+            first_use_asr_system_message: "Recording in process, it will stop automatically. Click on the mic icon again to cancel.",
             input_area_tts_button_aria_label: "TTS",
             input_area_tts_button_title: "TTS",
             message_typing_indicator: 'En train d\'écrire...',
             preview_title_not_available: "Sans titre",
-            preview_description_not_available: "Aucune description disponible"
+            preview_description_not_available: "Aucune description disponible",
+            connection_error_retry_message: "There is a problem communicating with the server. Please wait.",
+            connection_error_final_message: "Could not establish connection to server. Please try again later."
         }
     },
     id: {
@@ -167,11 +185,14 @@ export var translatedMessages = {
             input_area_upload_button_title: 'Unggah data',
             input_area_asr_button_aria_label: "ASR",
             input_area_asr_button_title: "ASR",
+            first_use_asr_system_message: "Recording in process, it will stop automatically. Click on the mic icon again to cancel.",
             input_area_tts_button_aria_label: "TTS",
             input_area_tts_button_title: "TTS",
             message_typing_indicator: 'Mengetik...',
             preview_title_not_available: "Tanpa judul",
-            preview_description_not_available: "Deskripsi tidak tersedia"
+            preview_description_not_available: "Deskripsi tidak tersedia",
+            connection_error_retry_message: "There is a problem communicating with the server. Please wait.",
+            connection_error_final_message: "Could not establish connection to server. Please try again later."
         }
     },
     it: {
@@ -191,12 +212,15 @@ export var translatedMessages = {
             input_area_upload_button_aria_label: 'Carica il file',
             input_area_upload_button_title: 'Carica il file',
             input_area_asr_button_aria_label: "ASR",
-            input_area_asr_button_title: "ASR",
+            input_area_asr_button_title: "Ascolta",
+            first_use_asr_system_message: "Ascolto in corso, smetterá automaticamente. Fai clic sul microfono di nuovo per cancellare.",
             input_area_tts_button_aria_label: "TTS",
-            input_area_tts_button_title: "TTS",
+            input_area_tts_button_title: "Parla",
             message_typing_indicator: 'Scrivendo...',
             preview_title_not_available: "Senza Titolo",
-            preview_description_not_available: "Descrizione non disponibile"
+            preview_description_not_available: "Descrizione non disponibile",
+            connection_error_retry_message: "There is a problem communicating with the server. Please wait.",
+            connection_error_final_message: "Could not establish connection to server. Please try again later."
         }
     },
     ja: {
@@ -215,13 +239,16 @@ export var translatedMessages = {
             input_area_send_button_title: 'メッセージを送る',
             input_area_upload_button_aria_label: 'アップロード',
             input_area_upload_button_title: 'アップロード',
-            input_area_asr_button_aria_label: "ASR",
-            input_area_asr_button_title: "ASR",
-            input_area_tts_button_aria_label: "TTS",
-            input_area_tts_button_title: "TTS",
+            input_area_asr_button_aria_label: "ここを押すと音声認識が始まります。",
+            input_area_asr_button_title: "ここを押すと音声認識が始まります。",
+            first_use_asr_system_message: "音声を入力しています... 話が終わると音声入力が自動的に終わります。もしくはもう一度マイクのボタンを押すと音声入力も終わります。",
+            input_area_tts_button_aria_label: "ここを押すと文字を音声に変換します。",
+            input_area_tts_button_title: "ここを押すと文字を音声に変換します。",
             message_typing_indicator: '入力中...',
             preview_title_not_available: "タイトルなし",
-            preview_description_not_available: "説明なし"
+            preview_description_not_available: "説明なし",
+            connection_error_retry_message: "There is a problem communicating with the server. Please wait.",
+            connection_error_final_message: "Could not establish connection to server. Please try again later."
         }
     },
     ms: {
@@ -242,11 +269,14 @@ export var translatedMessages = {
             input_area_upload_button_title: 'Muat naik fail',
             input_area_asr_button_aria_label: "ASR",
             input_area_asr_button_title: "ASR",
+            first_use_asr_system_message: "Recording in process, it will stop automatically. Click on the mic icon again to cancel.",
             input_area_tts_button_aria_label: "TTS",
             input_area_tts_button_title: "TTS",
             message_typing_indicator: 'Menaip...',
             preview_title_not_available: "Tanpa tajuk",
-            preview_description_not_available: "Tidak ada keterangan"
+            preview_description_not_available: "Tidak ada keterangan",
+            connection_error_retry_message: "There is a problem communicating with the server. Please wait.",
+            connection_error_final_message: "Could not establish connection to server. Please try again later."
         }
     },
     nl: {
@@ -265,13 +295,16 @@ export var translatedMessages = {
             input_area_send_button_title: 'Verstuur bericht',
             input_area_upload_button_aria_label: 'Upload bestand',
             input_area_upload_button_title: 'Upload bestand',
-            input_area_asr_button_aria_label: "ASR",
-            input_area_asr_button_title: "ASR",
-            input_area_tts_button_aria_label: "TTS",
-            input_area_tts_button_title: "TTS",
+            input_area_asr_button_aria_label: "Automatische spraakherkenning",
+            input_area_asr_button_title: "Automatische spraakherkenning",
+            first_use_asr_system_message: "Nu spreken. Klik nogmaals op het microfoonsymbool om het proces te annuleren.",
+            input_area_tts_button_aria_label: "Berichten voorlezen",
+            input_area_tts_button_title: "Berichten voorlezen",
             message_typing_indicator: 'Aan het typen...',
             preview_title_not_available: "Geen titel",
-            preview_description_not_available: "Geen beschrijving beschikbaar"
+            preview_description_not_available: "Geen beschrijving beschikbaar",
+            connection_error_retry_message: "There is a problem communicating with the server. Please wait.",
+            connection_error_final_message: "Could not establish connection to server. Please try again later."
         }
     },
     pt: {
@@ -292,11 +325,14 @@ export var translatedMessages = {
             input_area_upload_button_title: 'Carregar ficheiro',
             input_area_asr_button_aria_label: "ASR",
             input_area_asr_button_title: "ASR",
+            first_use_asr_system_message: "Recording in process, it will stop automatically. Click on the mic icon again to cancel.",
             input_area_tts_button_aria_label: "TTS",
             input_area_tts_button_title: "TTS",
             message_typing_indicator: 'Escrevendo...',
             preview_title_not_available: "Sem título",
-            preview_description_not_available: "Descrição não disponível"
+            preview_description_not_available: "Descrição não disponível",
+            connection_error_retry_message: "There is a problem communicating with the server. Please wait.",
+            connection_error_final_message: "Could not establish connection to server. Please try again later."
         }
     },
     sv: {
@@ -317,11 +353,14 @@ export var translatedMessages = {
             input_area_upload_button_title: 'Ladda upp en fil',
             input_area_asr_button_aria_label: "ASR",
             input_area_asr_button_title: "ASR",
+            first_use_asr_system_message: "Recording in process, it will stop automatically. Click on the mic icon again to cancel.",
             input_area_tts_button_aria_label: "TTS",
             input_area_tts_button_title: "TTS",
             message_typing_indicator: 'Skriver...',
             preview_title_not_available: "Namnlös",
-            preview_description_not_available: "Beskrivning saknas"
+            preview_description_not_available: "Beskrivning saknas",
+            connection_error_retry_message: "There is a problem communicating with the server. Please wait.",
+            connection_error_final_message: "Could not establish connection to server. Please try again later."
         }
     },
     tr: {
@@ -342,11 +381,14 @@ export var translatedMessages = {
             input_area_upload_button_title: 'Dosya yükleme',
             input_area_asr_button_aria_label: "ASR",
             input_area_asr_button_title: "ASR",
+            first_use_asr_system_message: "Recording in process, it will stop automatically. Click on the mic icon again to cancel.",
             input_area_tts_button_aria_label: "TTS",
             input_area_tts_button_title: "TTS",
             message_typing_indicator: 'Yazıyor...',
             preview_title_not_available: "İsimsiz",
-            preview_description_not_available: "Açıklama Yok"
+            preview_description_not_available: "Açıklama Yok",
+            connection_error_retry_message: "There is a problem communicating with the server. Please wait.",
+            connection_error_final_message: "Could not establish connection to server. Please try again later."
         }
     },
     zh: {
@@ -365,13 +407,16 @@ export var translatedMessages = {
             input_area_send_button_title: '發送',
             input_area_upload_button_aria_label: '上传文件',
             input_area_upload_button_title: '上传文件',
-            input_area_asr_button_aria_label: "ASR",
-            input_area_asr_button_title: "ASR",
-            input_area_tts_button_aria_label: "TTS",
-            input_area_tts_button_title: "TTS",
+            input_area_asr_button_aria_label: "点此开启语音识别",
+            input_area_asr_button_title: "点此开启语音识别",
+            first_use_asr_system_message: "語音輸入中... 當您停止說話時語音輸入將自動停止。或者您也可以再次點選麥克風按鈕停止語音輸入",
+            input_area_tts_button_aria_label: "点此将文字转换为语音",
+            input_area_tts_button_title: "点此将文字转换为语音",
             message_typing_indicator: '正在輸入...',
             preview_title_not_available: "無標題",
-            preview_description_not_available: "無可用描述"
+            preview_description_not_available: "無可用描述",
+            connection_error_retry_message: "There is a problem communicating with the server. Please wait.",
+            connection_error_final_message: "Could not establish connection to server. Please try again later."
         }
     },
     'zh-CN': {
@@ -390,13 +435,16 @@ export var translatedMessages = {
             input_area_send_button_title: '发送',
             input_area_upload_button_aria_label: '上傳文件',
             input_area_upload_button_title: '上傳文件',
-            input_area_asr_button_aria_label: "ASR",
-            input_area_asr_button_title: "ASR",
-            input_area_tts_button_aria_label: "TTS",
-            input_area_tts_button_title: "TTS",
+            input_area_asr_button_aria_label: "點選此處開啟語音辨識",
+            input_area_asr_button_title: "點選此處開啟語音辨識",
+            first_use_asr_system_message: "語音輸入中... 當您停止說話時語音輸入將自動停止。或者您也可以再次點選麥克風按鈕停止語音輸入",
+            input_area_tts_button_aria_label: "點選此處將文字轉為語音",
+            input_area_tts_button_title: "點選此處將文字轉為語音",
             message_typing_indicator: '正在输入...',
             preview_title_not_available: "无标题",
-            preview_description_not_available: "没有可用的描述"
+            preview_description_not_available: "没有可用的描述",
+            connection_error_retry_message: "There is a problem communicating with the server. Please wait.",
+            connection_error_final_message: "Could not establish connection to server. Please try again later."
         }
-    },
-};
+    }
+}

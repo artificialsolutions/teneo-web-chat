@@ -4,7 +4,7 @@ import TIE from '../utils/tie-client.js'; // import tie client SDK like this to 
 
 import MessageListCache from '../utils/message-list-cache.js';
 import parseTeneoResponse from '../utils/parse-teneo-response.js';
-import {CHANNEL_PARAM, SESSION_ID_STORAGE_KEY} from '../utils/constants.js';
+import {CHANNEL_PARAM, FALLBACK_LOCALE, SESSION_ID_STORAGE_KEY} from '../utils/constants.js';
 import {API_ON_ENGINE_REQUEST, API_ON_ENGINE_RESPONSE, API_ON_NEW_MESSAGE} from '../utils/api-function-names.js';
 import {EventBus, events} from '../utils/event-bus.js';
 import handleExtension from '../utils/handle-extension.js';
@@ -12,11 +12,22 @@ import basePayload from '../utils/base-payload.js';
 import detectSafari from '../utils/detect-safari';
 import isValidUrl from '../utils/validate-url';
 import {PARTICIPANT_BOT} from "../utils/constants.js";
+import VueI18n from "vue-i18n";
+import {translatedMessages} from "../utils/localized-messages";
 
 export default function teneoApiPlugin(teneoApiUrl) {
 
+
+    Vue.use(VueI18n);
+    const i18n = new VueI18n({
+        locale: 'en',
+        fallbackLocale: FALLBACK_LOCALE,
+        messages: translatedMessages,
+        silentTranslationWarn: true
+    });
+
     const messageListCache = new MessageListCache();
-    const tmpVue = new Vue({data: {messageList: messageListCache.get()}});
+    const tmpVue = new Vue({data: {messageList: messageListCache.get()}, i18n});
     const isSafari = detectSafari();
     const sessionKey = SESSION_ID_STORAGE_KEY;
     let sessionId = null;
@@ -44,18 +55,18 @@ export default function teneoApiPlugin(teneoApiUrl) {
             messageListCache.update(newVal);
         },
 
-        async sendBaseMessage(text, parameters, isSilent) {
+        async sendBaseMessage(text, parameters, isSilent, retries = 0) {
 
             if (parameters.obfuscated)
                 console.log('INPUT_SUBMITTED obfuscated: ' + parameters.obfuscated)
             // set text and channel
-            var messageDetails = {
+            let messageDetails = {
                 'text': text,
                 'channel': CHANNEL_PARAM
             }
 
             // if available, add extra params to messageDetails
-            var extraParams = tmpVue.$store.getters.teneoEngineParams;
+            let extraParams = tmpVue.$store.getters.teneoEngineParams;
             if (Object.keys(extraParams).length > 0 && extraParams.constructor === Object) {
                 messageDetails = Object.assign(messageDetails, extraParams);
             }
@@ -68,9 +79,9 @@ export default function teneoApiPlugin(teneoApiUrl) {
             if (!isSilent) {
 
                 // construct user message object
-                var tmpMessage = {'author': 'user', 'type': 'text', 'data': {'text': text}}
+                let tmpMessage = {'author': 'user', 'type': 'text', 'data': {'text': text}}
 
-                // add user messsage to history
+                // add user message to history
                 await this._onMessageReceived(tmpMessage)
             }
 
@@ -83,16 +94,16 @@ export default function teneoApiPlugin(teneoApiUrl) {
             if (requestPayload.handledState.handled === true) {
                 return
             }
-
+// TODO: throw errors on payload check failures, if message returned by extension is invalid or if message type is invalid
             // only continue if message details is object
             if (requestPayload.requestDetails.constructor !== Object) {
-                // TODO: throw error?
+
                 return
             }
 
             // only continue if message details contains text key
             if (!("text" in requestPayload.requestDetails)) {
-                // TODO: throw error?
+
                 return
             }
 
@@ -105,51 +116,84 @@ export default function teneoApiPlugin(teneoApiUrl) {
             }
 
             // send the input to engine
-            var response = await teneoApi.sendInput(sessionId, requestPayload.requestDetails);
+            teneoApi.sendInput(sessionId, requestPayload.requestDetails).then(async (response)=>{
+                const responsePayload = basePayload();
+                responsePayload.responseDetails = response;
 
-            const responsePayload = basePayload();
-            responsePayload.responseDetails = response;
-
-            // check if there is an extension that want to intercept the response from engine
-            await handleExtension(API_ON_ENGINE_RESPONSE, responsePayload);
+                // check if there is an extension that want to intercept the response from engine
+                await handleExtension(API_ON_ENGINE_RESPONSE, responsePayload);
 
 
-            EventBus.$emit(events.ENGINE_REPLIED, response);
+                EventBus.$emit(events.ENGINE_REPLIED, response);
 
-            // abort if extension says so
-            if (responsePayload.handledState.handled === true) {
-                return
-            }
+                // abort if extension says so
+                if (responsePayload.handledState.handled === true) {
+                    return
+                }
 
-            // stop further processing if response is not an object
-            if (Object.keys(responsePayload.responseDetails).length == 0 || responsePayload.responseDetails.constructor !== Object) {
-                // TODO: throw error?
-                return
-            }
+                // stop further processing if response is not an object
+                if (Object.keys(responsePayload.responseDetails).length == 0 || responsePayload.responseDetails.constructor !== Object) {
 
-            // stop further processing if response does not have status or proper keys in 'output' part of the response
-            if (!"status" in response || response.status !== 0 || !"output" in response || !"text" in response.output || !"parameters" in response.output) {
-                // TODO: throw error?
-                return
-            }
+                    return
+                }
 
-            // if users have 'prevent cross-site tracking' enabled
-            // a reload of the page may lose the session
-            if (isSafari) {
-                tmpVue.$store.getters.storage.setItem(sessionKey, response.sessionId);
-            } else {
-                sessionId = response.sessionId;
-            }
+                // stop further processing if response does not have status or proper keys in 'output' part of the response
+                if (!"status" in response || response.status !== 0 || !"output" in response || !"text" in response.output || !"parameters" in response.output) {
 
-            // sessionId = response.sessionId;
+                    return
+                }
 
-            EventBus.$off(events.PUSH_BUBBLE);
-            EventBus.$on(events.PUSH_BUBBLE, async (msg) => {
-                await this._onMessageReceived(msg)
+                // if users have 'prevent cross-site tracking' enabled
+                // a reload of the page may lose the session
+                if (isSafari) {
+                    tmpVue.$store.getters.storage.setItem(sessionKey, response.sessionId);
+                } else {
+                    sessionId = response.sessionId;
+                }
 
-            });
+                // sessionId = response.sessionId;
 
-            await parseTeneoResponse(response);
+                EventBus.$off(events.PUSH_BUBBLE);
+                EventBus.$on(events.PUSH_BUBBLE, async (msg) => {
+                    await this._onMessageReceived(msg)
+
+                });
+
+                await parseTeneoResponse(response);
+            }).catch(
+                (error) => {
+                    EventBus.$emit(events.START_SPINNER);
+                        let retryMessage = tmpVue.$t('message.connection_error_retry_message');
+                        let finalMessage = tmpVue.$t('message.connection_error_final_message');
+                        retries++;
+                        if (retries < 3) {
+                            EventBus.$emit(events.ADD_MESSAGE, {
+                                'type': 'system',
+                                'data': {
+                                    'text': retryMessage
+                                }
+                            });
+                            console.log('Trying again ' + retries);
+                            setTimeout(() => {
+                                this.sendBaseMessage(text, parameters, true, retries)
+                            }, 7000)
+
+                        } else {
+                            console.log('Giving up ' + retries);
+                            EventBus.$emit(events.ADD_MESSAGE, {
+                                'type': 'system',
+                                'data': {
+                                    'text': finalMessage
+                                }
+                            });
+                            setTimeout(()=>{EventBus.$emit(events.CLOSE_WINDOW);},5000)
+
+                        }
+
+                    return false
+                }
+            );
+
 
         },
 
@@ -160,13 +204,11 @@ export default function teneoApiPlugin(teneoApiUrl) {
             await this.sendBaseMessage(text, parameters, true);
         },
         async _onMessageReceived(message) {
-            if (message.author === PARTICIPANT_BOT) {
-
+            if (message.author === PARTICIPANT_BOT || message.type === 'system') {
                 EventBus.$emit(events.BOT_MESSAGE_RECEIVED, message.data);
             }
 
-            // TODO: throw error if payload is invalid?
-            // TODO: check if message type is valid?
+
             if (!message) {
                 return;
             }
@@ -180,7 +222,7 @@ export default function teneoApiPlugin(teneoApiUrl) {
             if (payload.message.type !== "typing") {
                 await handleExtension(API_ON_NEW_MESSAGE, payload);
             }
-            // TODO: throw error if message returned by extension is invalid?
+
 
             // abort if extension says so
             if (payload.handledState.handled === true) {

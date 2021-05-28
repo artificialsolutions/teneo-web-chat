@@ -17,6 +17,8 @@
             :disabled="asrDisabled ? true : false"
             @click.prevent=""
             @click="asrButtonClicked($refs.asrButton)"
+            data-used="false"
+            data-cancelled="false"
         >
           <img
               v-if="asrIconUrl"
@@ -148,6 +150,9 @@
       </div>
     </form>
     <a v-if="isMobile()" id="twc-focus-fix" href="#1" aria-hidden="true"></a>
+    <RecordingStartedBeep ref="recordingStartedBeep"/>
+    <RecordingEndedBeep ref="recordingEndedBeep"/>
+    <RecordingCancelledBeep ref="recordingCancelledBeep"/>
   </div>
 </template>
 
@@ -158,7 +163,17 @@ import SendIcon from '../icons/send.vue';
 import UploadIcon from '../icons/upload.vue';
 import AsrIcon from '../icons/asr.vue';
 import TtsIcon from '../icons/tts.vue';
-import {getMSToken, processAudioToText, processTextToAudio, generateText} from '../utils/ms-asr-tts'
+import RecordingStartedBeep from '../sounds/recordingStartedBeep.vue'
+import RecordingEndedBeep from '../sounds/recordingEndedBeep.vue'
+import RecordingCancelledBeep from '../sounds/recordingCancelledBeep.vue'
+import {
+  getMSToken,
+  processAudioToText,
+  processTextToAudio,
+  generateText,
+  stopAsrRecording,
+  stopTTSAudio
+} from '../utils/ms-asr-tts'
 import {PARTICIPANT_USER} from '../utils/constants.js';
 import {
   API_ON_ASR_BUTTON_CLICK,
@@ -183,6 +198,9 @@ export default {
     UploadIcon,
     AsrIcon,
     TtsIcon,
+    RecordingStartedBeep,
+    RecordingEndedBeep,
+    RecordingCancelledBeep
   },
   props: {
     onSubmit: {
@@ -205,7 +223,9 @@ export default {
       asrDisabled: false,
       ttsDisabled: false,
       asrActive: store.getters.asrActive,
-      ttsActive: store.getters.ttsActive
+      ttsActive: store.getters.ttsActive,
+      ttsSpeaking: false,
+      messageDuration: 0
     };
   },
 
@@ -217,18 +237,33 @@ export default {
     });
 
     EventBus.$on(events.BOT_MESSAGE_RECEIVED, async (messageData) => {
-      if (this.ttsActive) {
+      let _this = this;
+      if (_this.ttsActive) {
         let utteranceString = generateText(messageData);
+        let speechDelay = 0
+        if (_this.ttsSpeaking) {
+          speechDelay = _this.messageDuration + 500
+        }
 
-        this.msTokenCheck().then(() => {
-          processTextToAudio(store.getters.msCognitiveToken, store.getters.msCognitiveRegion, store.getters.locale, utteranceString).then((audioResult) => {
-            console.log(audioResult);
+
+        window.setTimeout(() => {
+          this.msTokenCheck().then(() => {
+            processTextToAudio(store.getters.msCognitiveToken, store.getters.msCognitiveRegion, store.getters.locale, utteranceString).then(function () {
+              _this.setTtsSpeaking(true)
+              _this.setMessageDuration(window.twcAudioPlayer.privAudio.duration);
+              window.twcAudioPlayer.onAudioEnd = function () {
+                _this.setTtsSpeaking(false)
+                if (_this.$refs.asrButton.dataset.used === "true" && _this.$refs.asrButton.dataset.cancelled !== "true") {
+                  _this.asrButtonClicked(_this.$refs.asrButton)
+                }
+              }
+            })
           })
-        })
+        }, speechDelay)
 
 
       }
-    });
+    })
 
     EventBus.$on(events.DISABLE_UPLOAD, () => {
       if (this.showUploadButton) {
@@ -267,13 +302,15 @@ export default {
 
     EventBus.$on(events.ASR_ACTIVE, () => {
       if (this.showAsrButton && this.$refs.asrButton) {
-         this.asrButtonClicked(this.$refs.asrButton)
+        this.asrButtonClicked(this.$refs.asrButton)
       }
     });
 
     EventBus.$on(events.ASR_INACTIVE, () => {
       if (this.showAsrButton && this.$refs.asrButton) {
-          this.setAsrActive(false);
+        this.setAsrActive(false);
+        stopAsrRecording();
+        this.$refs.recordingCancelledBeep.$el.play()
       }
     });
 
@@ -297,13 +334,14 @@ export default {
     });
     EventBus.$on(events.TTS_ACTIVE, () => {
       if (this.showTtsButton && this.$refs.ttsButton) {
-          this.setTtsActive(true);
+        this.setTtsActive(true);
       }
     });
 
     EventBus.$on(events.TTS_INACTIVE, () => {
       if (this.showTtsButton && this.$refs.ttsButton) {
-          this.setTtsActive(false);
+        this.setTtsActive(false);
+        stopTTSAudio();
       }
     });
     EventBus.$on(events.DISABLE_INPUT, () => {
@@ -354,6 +392,9 @@ export default {
       dummyFocusElement.focus();
     }
   },
+  beforeDestroy() {
+    EventBus.$off(events.BOT_MESSAGE_RECEIVED);
+  },
   methods: {
     setInputActive(onoff) {
       this.inputActive = onoff;
@@ -363,10 +404,17 @@ export default {
     },
 
     setAsrActive(onoff) {
+
       this.asrActive = onoff;
     },
     setTtsActive(onoff) {
       this.ttsActive = onoff;
+    },
+    setTtsSpeaking(onoff) {
+      this.ttsSpeaking = onoff;
+    },
+    setMessageDuration(millis) {
+      this.messageDuration = millis;
     },
     setInputDisabled(onoff) {
       this.inputDisabled = onoff;
@@ -428,32 +476,74 @@ export default {
       })
     },
     async asrButtonClicked(e) {
-
+      //Send system message with instructions on first click, mark button as used so it won't repeat
+      let firstClick = false;
+      if (e.dataset.used !== "true") {
+        e.dataset.used = "true";
+        firstClick = true;
+        EventBus.$emit(events.ADD_MESSAGE, {
+          'type': 'system',
+          'data': {
+            'text': this.$t('message.first_use_asr_system_message')
+          }
+        });
+      }
       //Check if any extensions are set up to handle them. If not, use default functionality with Azure.
       let asrExtension = await handleExtension(API_ON_ASR_BUTTON_CLICK, e);
       if (!asrExtension) {
-        this.setAsrDisabled(true);
-        this.setAsrActive(true);
+        if (this.asrActive && window.twcRecognizer) {
+          this.setAsrActive(false);
+          e.dataset.cancelled = "true";
+          this.$refs.recordingCancelledBeep.$el.play()
+          stopAsrRecording();
+        } else {
+          this.setAsrActive(true);
 
-        this.msTokenCheck().then(() => {
-          processAudioToText(store.getters.msCognitiveToken, store.getters.msCognitiveRegion, store.getters.locale)
-              .then(async (processedText) => {
-                this.$refs.userInput.value = processedText;
-                await this._submitText();
-                this.setAsrActive(false);
-                this.setAsrDisabled(false);
+          new Promise(resolve => {
 
-              })
+            if (firstClick) {
 
-        })
+              setTimeout(()=>{
+                if(this.ttsActive) {
+                  window.twcAudioPlayer.onAudioEnd = function () {
+                    resolve();
+                  }
+                }
+              },100)
+
+            } else {
+              resolve()
+            }
+          }).then(() => {
+            this.$refs.recordingStartedBeep.$el.play();
+            this.msTokenCheck().then(() => {
+              processAudioToText(store.getters.msCognitiveToken, store.getters.msCognitiveRegion, store.getters.locale)
+                  .then(async (processedText) => {
+                    if (typeof processedText === 'string' && this.asrActive) {
+                      this.$refs.userInput.value = processedText;
+                      this.$refs.recordingEndedBeep.$el.play();
+                      await this._submitText();
+                    } else {
+                      console.log('ASR recognition failed or cancelled')
+                    }
+                    this.setAsrActive(false);
+
+                  })
+
+            })
+          })
 
 
+        }
       }
     },
     async ttsButtonClicked(e) {
       let ttsExtension = await handleExtension(API_ON_TTS_BUTTON_CLICK, e);
       if (!ttsExtension) {
         this.setTtsActive(!this.ttsActive);
+        if (!this.ttsActive && window.hasOwnProperty('twcAudioPlayer')) {
+          stopTTSAudio();
+        }
       }
     },
     async _submitText() {
@@ -674,7 +764,7 @@ We should not dim it twice, so we check: .twc-user-input:not(.twc-disabled)
   align-self: center;
 }
 
-.twc-user-input:not(.twc-disabled) .twc-user-input__button.twc-disabled .twc-user-input__asr-icon-wrapper.twc-active {
+.twc-user-input__asr-icon-wrapper.twc-active {
   fill: var(--asricon-active-color, darkred);
   stroke: var(--asricon-active-color, red);
   filter: grayscale(0);

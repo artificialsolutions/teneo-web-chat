@@ -46,6 +46,8 @@ export const store = new Vuex.Store({
         storage: window.sessionStorage,
         autoRedirect: true
     },
+
+    // TODO: Throw error if any of the urls are invalid
     mutations: {
         calloutVisibility(state, newVisibility) {
             state.calloutVisibility = newVisibility;
@@ -63,7 +65,7 @@ export const store = new Vuex.Store({
             }
         },
         teneoEngineUrl(state, newUrl) {
-            // TODO: Throw error if url is invalid
+            
             if (isValidUrl(newUrl)) {
                 state.teneoEngineUrl = newUrl;
             }
@@ -80,7 +82,7 @@ export const store = new Vuex.Store({
             }
         },
         titleIconUrl(state, newUrl) {
-            // TODO: Throw error if url is invalid
+  
             if (isValidUrl(newUrl) || newUrl == undefined) {
                 state.titleIconUrl = newUrl;
             }
@@ -97,31 +99,31 @@ export const store = new Vuex.Store({
             }
         },
         agentAvatarUrl(state, newUrl) {
-            // TODO: Throw error if url is invalid
+            
             if (isValidUrl(newUrl)) {
                 state.agentAvatarUrl = newUrl;
             }
         },
         botAvatarUrl(state, newUrl) {
-            // TODO: Throw error if url is invalid
+            
             if (isValidUrl(newUrl)) {
                 state.botAvatarUrl = newUrl;
             }
         },
         userAvatarUrl(state, newUrl) {
-            // TODO: Throw error if url is invalid
+            
             if (isValidUrl(newUrl)) {
                 state.userAvatarUrl = newUrl;
             }
         },
         minimizeIconUrl(state, newUrl) {
-            // TODO: Throw error if url is invalid
+            
             if (isValidUrl(newUrl)) {
                 state.minimizeIconUrl = newUrl;
             }
         },
         closeIconUrl(state, newUrl) {
-            // TODO: Throw error if url is invalid
+            
             if (isValidUrl(newUrl)) {
                 state.closeIconUrl = newUrl;
             }
@@ -133,7 +135,7 @@ export const store = new Vuex.Store({
             }
         },
         launchIconUrl(state, newUrl) {
-            // TODO: Throw error if url is invalid
+            
             if (isValidUrl(newUrl) || newUrl == undefined) {
                 state.launchIconUrl = newUrl;
             }
@@ -145,7 +147,7 @@ export const store = new Vuex.Store({
             }
         },
         sendIconUrl(state, newUrl) {
-            // TODO: Throw error if url is invalid
+            
             if (isValidUrl(newUrl) || newUrl == undefined) {
                 state.sendIconUrl = newUrl;
             }
@@ -157,7 +159,7 @@ export const store = new Vuex.Store({
             }
         },
         uploadIconUrl(state, newUrl) {
-            // TODO: Throw error if url is invalid
+            
             if (isValidUrl(newUrl) || newUrl === undefined) {
                 state.uploadIconUrl = newUrl;
             }
@@ -175,7 +177,7 @@ export const store = new Vuex.Store({
             }
         },
         asrIconUrl(state, newUrl) {
-            // TODO: Throw error if url is invalid
+            
             if (isValidUrl(newUrl) || newUrl === undefined) {
                 state.asrIconUrl = newUrl;
             }
@@ -197,7 +199,7 @@ export const store = new Vuex.Store({
             }
         },
         ttsIconUrl(state, newUrl) {
-            // TODO: Throw error if url is invalid
+            
             if (isValidUrl(newUrl) || newUrl === undefined) {
                 state.ttsIconUrl = newUrl;
             }
