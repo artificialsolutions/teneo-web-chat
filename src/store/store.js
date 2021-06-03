@@ -42,6 +42,7 @@ export const store = new Vuex.Store({
         msCognitiveRegion: '',
         msCognitiveToken: '',
         msCognitiveTokenTimeStamp: 0,
+        msVoice: '',
         locale: FALLBACK_LOCALE,
         storage: window.sessionStorage,
         autoRedirect: true
@@ -65,7 +66,7 @@ export const store = new Vuex.Store({
             }
         },
         teneoEngineUrl(state, newUrl) {
-            
+
             if (isValidUrl(newUrl)) {
                 state.teneoEngineUrl = newUrl;
             }
@@ -82,8 +83,7 @@ export const store = new Vuex.Store({
             }
         },
         titleIconUrl(state, newUrl) {
-  
-            if (isValidUrl(newUrl) || newUrl == undefined) {
+            if (isValidUrl(newUrl) || newUrl === undefined) {
                 state.titleIconUrl = newUrl;
             }
         },
@@ -99,31 +99,26 @@ export const store = new Vuex.Store({
             }
         },
         agentAvatarUrl(state, newUrl) {
-            
             if (isValidUrl(newUrl)) {
                 state.agentAvatarUrl = newUrl;
             }
         },
         botAvatarUrl(state, newUrl) {
-            
             if (isValidUrl(newUrl)) {
                 state.botAvatarUrl = newUrl;
             }
         },
         userAvatarUrl(state, newUrl) {
-            
             if (isValidUrl(newUrl)) {
                 state.userAvatarUrl = newUrl;
             }
         },
         minimizeIconUrl(state, newUrl) {
-            
             if (isValidUrl(newUrl)) {
                 state.minimizeIconUrl = newUrl;
             }
         },
         closeIconUrl(state, newUrl) {
-            
             if (isValidUrl(newUrl)) {
                 state.closeIconUrl = newUrl;
             }
@@ -135,7 +130,6 @@ export const store = new Vuex.Store({
             }
         },
         launchIconUrl(state, newUrl) {
-            
             if (isValidUrl(newUrl) || newUrl == undefined) {
                 state.launchIconUrl = newUrl;
             }
@@ -147,7 +141,6 @@ export const store = new Vuex.Store({
             }
         },
         sendIconUrl(state, newUrl) {
-            
             if (isValidUrl(newUrl) || newUrl == undefined) {
                 state.sendIconUrl = newUrl;
             }
@@ -159,7 +152,7 @@ export const store = new Vuex.Store({
             }
         },
         uploadIconUrl(state, newUrl) {
-            
+
             if (isValidUrl(newUrl) || newUrl === undefined) {
                 state.uploadIconUrl = newUrl;
             }
@@ -177,7 +170,7 @@ export const store = new Vuex.Store({
             }
         },
         asrIconUrl(state, newUrl) {
-            
+
             if (isValidUrl(newUrl) || newUrl === undefined) {
                 state.asrIconUrl = newUrl;
             }
@@ -199,7 +192,7 @@ export const store = new Vuex.Store({
             }
         },
         ttsIconUrl(state, newUrl) {
-            
+
             if (isValidUrl(newUrl) || newUrl === undefined) {
                 state.ttsIconUrl = newUrl;
             }
@@ -227,6 +220,11 @@ export const store = new Vuex.Store({
         msCognitiveToken(state, token) {
             state.msCognitiveTokenTimeStamp = Date.now();
             state.msCognitiveToken = token;
+        },
+        msVoice(state, voiceName) {
+            if (typeof voiceName === 'string') {
+                state.msVoice = voiceName;
+            }
         },
         autoRedirect(state, autoRedirectBool) {
             if (typeof autoRedirectBool === 'boolean') {
@@ -316,6 +314,9 @@ export const store = new Vuex.Store({
             return state.msCognitiveToken;
         }, msCognitiveTokenTimeStamp: (state) => {
             return state.msCognitiveTokenTimeStamp;
+        },
+        msVoice: (state) => {
+            return state.msVoice;
         },
         locale: (state) => state.locale,
         autoRedirect: (state) => state.autoRedirect,

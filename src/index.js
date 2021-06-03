@@ -100,7 +100,9 @@ window.TeneoWebChat = {
       store.commit('msCognitiveRegion', twcProps.msCognitiveRegion);
     }
 
-
+    if (twcProps.msVoice) {
+      store.commit('msVoice', twcProps.msVoice);
+    }
 
     if (twcProps.asrIconUrl) {
       store.commit('initialAsrIconUrl', twcProps.asrIconUrl);
@@ -128,6 +130,8 @@ window.TeneoWebChat = {
 
       store.commit('locale', twcProps.locale);
     }
+
+
 
     if (twcProps.customLocalizations) {
       // TODO: error handling
@@ -255,6 +259,9 @@ return filteredMessageList;
       case apiConstants.API_GET_LOCALE:
         return store.getters.localeObj;
 
+        case apiConstants.API_GET_MS_VOICE:
+        return store.getters.msVoice;
+
       default:
         break;
     }
@@ -276,6 +283,12 @@ return filteredMessageList;
         // TODO: throw error if payload is invalid or if store throws error
         store.commit('locale', payload);
         EventBus.$emit(events.SET_LOCALE, store.getters.locale);
+        break;
+
+        case apiConstants.API_SET_MS_VOICE:
+        // TODO: throw error if payload is invalid or if store throws error
+        store.commit('msVoice', payload);
+        EventBus.$emit(events.SET_MS_VOICE, store.getters.msVoice);
         break;
 
       case apiConstants.API_CALL_MAXIMIZE:

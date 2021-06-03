@@ -56,13 +56,12 @@ function stopTTSAudio(){
     }
 }
 
-function processTextToAudio(authToken, region, locale, textToRead) {
+function processTextToAudio(authToken, region, locale, textToRead, voice ) {
     return new Promise((resolve, reject) => {
         const speechConfig = speechSDK.SpeechConfig.fromAuthorizationToken(authToken, region);
         speechConfig.speechSynthesisLanguage = locale;
-        //TODO -> Remove this work-around that looks for a global variable and implement it as a configuration property and API entry.
-        if(window.hasOwnProperty('twcVoiceName')) {
-            speechConfig.speechSynthesisVoiceName = window.twcVoiceName;
+        if(voice) {
+            speechConfig.speechSynthesisVoiceName = voice;
         }
         window.twcAudioPlayer = new speechSDK.SpeakerAudioDestination();
         const audioConfig = speechSDK.AudioConfig.fromSpeakerOutput(window.twcAudioPlayer);

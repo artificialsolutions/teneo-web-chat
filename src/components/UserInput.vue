@@ -248,7 +248,7 @@ export default {
 
         window.setTimeout(() => {
           this.msTokenCheck().then(() => {
-            processTextToAudio(store.getters.msCognitiveToken, store.getters.msCognitiveRegion, store.getters.locale, utteranceString).then(function () {
+            processTextToAudio(store.getters.msCognitiveToken, store.getters.msCognitiveRegion, store.getters.locale, utteranceString, store.getters.msVoice).then(function () {
               _this.setTtsSpeaking(true)
               _this.setMessageDuration(window.twcAudioPlayer.privAudio.duration);
               window.twcAudioPlayer.onAudioEnd = function () {
@@ -476,21 +476,22 @@ export default {
       })
     },
     async asrButtonClicked(e) {
-      //Send system message with instructions on first click, mark button as used so it won't repeat
-      let firstClick = false;
-      if (e.dataset.used !== "true") {
-        e.dataset.used = "true";
-        firstClick = true;
-        EventBus.$emit(events.ADD_MESSAGE, {
-          'type': 'system',
-          'data': {
-            'text': this.$t('message.first_use_asr_system_message')
-          }
-        });
-      }
+
       //Check if any extensions are set up to handle them. If not, use default functionality with Azure.
       let asrExtension = await handleExtension(API_ON_ASR_BUTTON_CLICK, e);
-      if (!asrExtension) {
+      if (!asrExtension && window.isSecureContext) {
+        //Send system message with instructions on first click, mark button as used so it won't repeat
+        let firstClick = false;
+        if (e.dataset.used !== "true") {
+          e.dataset.used = "true";
+          firstClick = true;
+          EventBus.$emit(events.ADD_MESSAGE, {
+            'type': 'system',
+            'data': {
+              'text': this.$t('message.first_use_asr_system_message')
+            }
+          });
+        }
         if (this.asrActive && window.twcRecognizer) {
           this.setAsrActive(false);
           e.dataset.cancelled = "true";
@@ -503,13 +504,13 @@ export default {
 
             if (firstClick) {
 
-              setTimeout(()=>{
-                if(this.ttsActive) {
+              setTimeout(() => {
+                if (this.ttsActive && window.twcAudioPlayer) {
                   window.twcAudioPlayer.onAudioEnd = function () {
                     resolve();
                   }
                 }
-              },100)
+              }, 100)
 
             } else {
               resolve()
@@ -535,6 +536,14 @@ export default {
 
 
         }
+      } else {
+        if (!window.isSecureContext) {
+          console.log('Insecure Context, use of ASR requires an SSL-enabled location.');
+        }
+        if (window.location.protocol !== 'https:') {
+          console.log('Page is on HTTPS, but the certificate is not accepted. You may need to change certificates or force your browser to accept the context as secure.')
+        }
+        this.setAsrDisabled(true);
       }
     },
     async ttsButtonClicked(e) {
