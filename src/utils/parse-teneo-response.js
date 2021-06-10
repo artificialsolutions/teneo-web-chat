@@ -24,7 +24,7 @@ export default async function parseTeneoResponse(teneoResponse) {
             outputTextSegmentIndexes = JSON.parse(ouputTextSegmentsParam);
         }
     } catch (err) {
-        //console.log('Error: Unable to parse ouputTextSegmentsParam JSON string')
+        console.error('Error: Unable to parse outputTextSegmentsParam JSON string')
     }
 
     // handle 'attachments'
@@ -35,71 +35,51 @@ export default async function parseTeneoResponse(teneoResponse) {
             data = JSON.parse(messageParams);
         }
     } catch (err) {
-        //console.log('Error: Unable to parse JSON string')
+        console.error('Error: Unable to parse JSON string')
     }
+    if (outputTextSegmentIndexes && Array.isArray(outputTextSegmentIndexes) && text) {
 
-    if (outputTextSegmentIndexes && Array.isArray(outputTextSegmentIndexes)) {
+        // each segment (a list that contains a start and an end index) in the list is a bubble
+        for (let i = 0; i < outputTextSegmentIndexes.length; ++i) {
+            try {
+                // get the start and end index for this bubble
+                const bubbleStartIndex = outputTextSegmentIndexes[i][0];
+                const bubbleEndIndex = outputTextSegmentIndexes[i][1];
 
-        if (text) {
-            // each segment (a list that contains a start and an end index) in the list is a bubble
-            for (var i = 0; i < outputTextSegmentIndexes.length; ++i) {
-                try {
-                    // get the start and end index for this bubble
-                    const bubbleStartIndex = outputTextSegmentIndexes[i][0];
-                    const bubbleEndIndex = outputTextSegmentIndexes[i][1];
+                if (!isNaN(bubbleStartIndex) && !isNaN(bubbleEndIndex)) {
+                    // get the substring that needs to appear in a bubble
+                    const bubbleText = text.substring(bubbleStartIndex, bubbleEndIndex).trim();
 
-                    if (!isNaN(bubbleStartIndex) && !isNaN(bubbleEndIndex)) {
-                        // get the substring that needs to appear in a bubble
-                        const bubbleText = text.substring(bubbleStartIndex, bubbleEndIndex).trim();
-
-                        // add the bubble the list of messages, but only if it is not empty
-                        if (bubbleText) {
-                            messages.push({
-                                author: PARTICIPANT_BOT,
-                                type: 'text',
-                                data: {'text': bubbleText},
-                            });
-                        }
-
-                        // Emit event to update UI with new bubble, with a delay timer
-                        await Promise.all([
-                            EventBus.$emit(events.PUSH_BUBBLE, messages[messages.length - 1]),
-                            timeout(BUBBLE_DELAY),
-                        ]);
-
+                    // add the bubble the list of messages, but only if it is not empty
+                    if (bubbleText) {
+                        messages.push({
+                            author: PARTICIPANT_BOT,
+                            type: 'text',
+                            data: {'text': bubbleText}
+                        });
                     }
-                } catch (err) {
-                    if (process.env.NODE_ENV !== "production") {
-                        console.log('Error: unexpected breakpoints value')
-                    }
+
+
+                }
+            } catch (err) {
+                if (process.env.NODE_ENV !== "production") {
+                    console.error('Error: unexpected breakpoints value')
                 }
             }
         }
-    } else {
-        if (text) {
+
+    } else if (text) {
+        {
             messages.push({
                 author: PARTICIPANT_BOT,
                 type: 'text',
-                data: {text},
+                data: {text}
             });
 
-            //Use delay if multiple bubbles, or a bubble + attachment, is expected
-            if ((messages.length > 1) || ((messages.length === 1) && data)) {
-                await Promise.all([
-                    EventBus.$emit(events.PUSH_BUBBLE, messages[messages.length - 1]),
-                    timeout(BUBBLE_DELAY),
-                ]);
-            } else {
-                EventBus.$emit(events.PUSH_BUBBLE, messages[messages.length - 1])
-            }
 
-            //Signal engine reply if no more data is expected.
-            if (!data) {
-//Commented out since event is always emitted from teneo-api
-                 //EventBus.$emit(events.ENGINE_REPLIED);
-
-            }
         }
+    } else {
+        console.error('No text content received!');
     }
 
     if (data) {
@@ -108,8 +88,6 @@ export default async function parseTeneoResponse(teneoResponse) {
             type: data.type || defaultMessageType,
             data
         });
-        // Emit event that updates UI with new bubble, with a delay timer
-        EventBus.$emit(events.PUSH_BUBBLE, messages[messages.length - 1]);
     }
 
     if (link) {
@@ -123,10 +101,18 @@ export default async function parseTeneoResponse(teneoResponse) {
                 type: 'linkpreview',
                 data: parsedLink
             });
-            // Emit event that updates UI with new bubble, with a delay timer
-            EventBus.$emit(events.PUSH_BUBBLE, messages[messages.length - 1]);
+
         }
 
+    }
+
+    for (const message of messages) {
+        const index = messages.indexOf(message);
+        message.placeInQueue = index + 1;
+        message.queueLength = messages.length;
+        // Emit event to update UI with new bubble, with a delay timer
+
+        await timeout(index === 0 ? 0 : BUBBLE_DELAY).then(()=>{EventBus.$emit(events.PUSH_BUBBLE, message)})
     }
 
     return messages;

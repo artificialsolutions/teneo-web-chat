@@ -69,20 +69,19 @@ function processTextToAudio(authToken, region, locale, textToRead, voice ) {
 
         synthesizer.speakTextAsync(textToRead,
             result => {
-                resolve(result.audioData);
+                resolve(result);
                 synthesizer.close();
             },
             error => {
                 reject(error);
                 synthesizer.close();
             });
-
     })
 }
 
 function generateText(messageData) {
     let utteranceArray = [];
-    let validKeys = ['type', 'alt', 'title', 'subtitle', 'text'];
+    let validKeys = ['type', 'alt', 'title', 'subtitle', 'text', 'headers','body', 'footers'];
     JSON.stringify(messageData, function (key, value) {
         if (validKeys.includes(key)) {
             let cleanText = new DOMParser().parseFromString(value, 'text/html').body.textContent || "";

@@ -132,7 +132,7 @@ export default function teneoApiPlugin(teneoApiUrl) {
                 }
 
                 // stop further processing if response is not an object
-                if (Object.keys(responsePayload.responseDetails).length == 0 || responsePayload.responseDetails.constructor !== Object) {
+                if (Object.keys(responsePayload.responseDetails).length === 0 || responsePayload.responseDetails.constructor !== Object) {
 
                     return
                 }
@@ -205,7 +205,7 @@ export default function teneoApiPlugin(teneoApiUrl) {
         },
         async _onMessageReceived(message) {
             if (message.author === PARTICIPANT_BOT || message.type === 'system') {
-                EventBus.$emit(events.BOT_MESSAGE_RECEIVED, message.data);
+                EventBus.$emit(events.BOT_MESSAGE_RECEIVED, message);
             }
 
 

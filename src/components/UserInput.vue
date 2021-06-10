@@ -190,6 +190,7 @@ import detectMobile from '../utils/detect-mobile.js';
 import {mapState} from 'vuex';
 import {store} from "../store/store";
 
+
 Vue.use(vueDebounce);
 
 export default {
@@ -224,8 +225,7 @@ export default {
       ttsDisabled: false,
       asrActive: store.getters.asrActive,
       ttsActive: store.getters.ttsActive,
-      ttsSpeaking: false,
-      messageDuration: 0
+      ttsCumulativeText: ''
     };
   },
 
@@ -236,30 +236,26 @@ export default {
       }
     });
 
-    EventBus.$on(events.BOT_MESSAGE_RECEIVED, async (messageData) => {
+
+    EventBus.$on(events.BOT_MESSAGE_RECEIVED, async (message) => {
       let _this = this;
       if (_this.ttsActive) {
-        let utteranceString = generateText(messageData);
-        let speechDelay = 0
-        if (_this.ttsSpeaking) {
-          speechDelay = _this.messageDuration + 500
+        if (message.placeInQueue === 1) {
+          _this.ttsCumulativeText = '';
         }
-
-
-        window.setTimeout(() => {
+        _this.ttsCumulativeText += '\n' + generateText(message.data);
+        console.log(_this.ttsCumulativeText);
+        if (message.placeInQueue === message.queueLength) {
           this.msTokenCheck().then(() => {
-            processTextToAudio(store.getters.msCognitiveToken, store.getters.msCognitiveRegion, store.getters.locale, utteranceString, store.getters.msVoice).then(function () {
-              _this.setTtsSpeaking(true)
-              _this.setMessageDuration(window.twcAudioPlayer.privAudio.duration);
-              window.twcAudioPlayer.onAudioEnd = function () {
-                _this.setTtsSpeaking(false)
+            processTextToAudio(store.getters.msCognitiveToken, store.getters.msCognitiveRegion, store.getters.locale, _this.ttsCumulativeText, store.getters.msVoice).then(() => {
+              window.twcAudioPlayer.onAudioEnd = () => {
                 if (_this.$refs.asrButton.dataset.used === "true" && _this.$refs.asrButton.dataset.cancelled !== "true") {
                   _this.asrButtonClicked(_this.$refs.asrButton)
                 }
               }
             })
           })
-        }, speechDelay)
+        }
 
 
       }
@@ -410,12 +406,6 @@ export default {
     setTtsActive(onoff) {
       this.ttsActive = onoff;
     },
-    setTtsSpeaking(onoff) {
-      this.ttsSpeaking = onoff;
-    },
-    setMessageDuration(millis) {
-      this.messageDuration = millis;
-    },
     setInputDisabled(onoff) {
       this.inputDisabled = onoff;
     },
@@ -489,7 +479,9 @@ export default {
             'type': 'system',
             'data': {
               'text': this.$t('message.first_use_asr_system_message')
-            }
+            },
+            'placeInQueue':1,
+            'queueLength':1
           });
         }
         if (this.asrActive && window.twcRecognizer) {
