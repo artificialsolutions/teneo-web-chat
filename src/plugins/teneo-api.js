@@ -171,7 +171,9 @@ export default function teneoApiPlugin(teneoApiUrl) {
                                 'type': 'system',
                                 'data': {
                                     'text': retryMessage
-                                }
+                                },
+                                'placeInQueue':1,
+                                'queueLength':1
                             });
                             console.log('Trying again ' + retries);
                             setTimeout(() => {
@@ -184,7 +186,9 @@ export default function teneoApiPlugin(teneoApiUrl) {
                                 'type': 'system',
                                 'data': {
                                     'text': finalMessage
-                                }
+                                },
+                                'placeInQueue':1,
+                                'queueLength':1
                             });
                             setTimeout(()=>{EventBus.$emit(events.CLOSE_WINDOW);},5000)
 

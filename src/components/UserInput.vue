@@ -244,7 +244,6 @@ export default {
           _this.ttsCumulativeText = '';
         }
         _this.ttsCumulativeText += '\n' + generateText(message.data);
-        console.log(_this.ttsCumulativeText);
         if (message.placeInQueue === message.queueLength) {
           this.msTokenCheck().then(() => {
             processTextToAudio(store.getters.msCognitiveToken, store.getters.msCognitiveRegion, store.getters.locale, _this.ttsCumulativeText, store.getters.msVoice).then(() => {

@@ -14,7 +14,7 @@
 import registerMessageComponents from './utils/register-message-components.js';
 import ChatWindow from './components/ChatWindow.vue';
 import LaunchButton from './components/LaunchButton.vue';
-import { EventBus, events } from './utils/event-bus.js';
+import {EventBus, events} from './utils/event-bus.js';
 import handleExtension from './utils/handle-extension.js';
 import basePayload from './utils/base-payload.js';
 import {
@@ -39,8 +39,8 @@ registerMessageComponents();
 import detectIosSafari from './utils/detect-ios-safari';
 
 const bodyScrollLock = require('body-scroll-lock');
-const { disableBodyScroll } = bodyScrollLock;
-const { enableBodyScroll } = bodyScrollLock;
+const {disableBodyScroll} = bodyScrollLock;
+const {enableBodyScroll} = bodyScrollLock;
 const messageListId = '#twc-message-list';
 
 // Detect safari (not just iOS) so we can clear session id from storage in closeSession
@@ -133,7 +133,7 @@ export default {
   methods: {
     // Encapsulating dependency methods makes Testing easier
     async _onMessageReceived(message) {
-            await this.$teneoApi._onMessageReceived(message);
+      await this.$teneoApi._onMessageReceived(message);
     },
     sendBaseMessage(text, parameters, isSilent) {
       this.$teneoApi.sendBaseMessage(text, parameters, isSilent);
@@ -337,6 +337,18 @@ export default {
   --link-preview-background-color: var(--light-bg-color);
   --link-preview-text-color: var(--dark-fg-color);
   --link-preview-image-background-color: var(--dark-bg-color);
+  --table-border-color: var(--light-border-color);
+  --table-title-text-color: var(--dark-fg-color);
+  --table-title-background-color: var(--light-bg-color);
+  --table-header-text-color: var(--primary-color);
+  --table-header-background-color: var(--light-bg-color);
+  --table-body-odd-text-color: var(--dark-fg-color);
+  --table-body-odd-background-color: var(--light-bg-color);
+  --table-body-even-text-color: var(--dark-fg-color);
+  --table-body-even-background-color: var(--light-bg-color);
+  --table-footer-text-color: var(--secondary-color);
+  --table-footer-background-color: var(--light-bg-color);
+
 
   --primary-font: 'Helvetica Neue', Helvetica, Arial, sans-serif;
 
