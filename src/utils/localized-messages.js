@@ -23,8 +23,8 @@ export var translatedMessages = {
             message_typing_indicator: 'Skriver...',
             preview_title_not_available: "Uden titel",
             preview_description_not_available: "Ingen beskrivelse tilgængelig",
-            connection_error_retry_message: "There is a problem communicating with the server. Please wait.",
-            connection_error_final_message: "Could not establish connection to server. Please try again later."
+            connection_error_retry_message: "Der er problemer med forbindelsen til serveren. Vent venligst.",
+            connection_error_final_message: "Kunne ikke oprette forbindelse til serveren. Forsøg venligst igen senere."
         }
     },
     de: {
@@ -155,11 +155,11 @@ export var translatedMessages = {
             input_area_send_button_title: 'Envoyer message',
             input_area_upload_button_aria_label: 'Télécharger un fichier',
             input_area_upload_button_title: 'Télécharger un fichier',
-            input_area_asr_button_aria_label: "ASR",
-            input_area_asr_button_title: "ASR",
-            first_use_asr_system_message: "Recording in process, it will stop automatically. Click on the mic icon again to cancel.",
-            input_area_tts_button_aria_label: "TTS",
-            input_area_tts_button_title: "TTS",
+            input_area_asr_button_aria_label: "Transcription Instantanée de la Parole",
+            input_area_asr_button_title: "Transcription Instantanée de la Parole",
+            first_use_asr_system_message: "Ecoute en cours, arrêt automatique. Cliquer sur le micro pour stopper l’enregistrement.",
+            input_area_tts_button_aria_label: "Conversion Texte-Parole",
+            input_area_tts_button_title: "Conversion Texte-Parole",
             message_typing_indicator: 'En train d\'écrire...',
             preview_title_not_available: "Sans titre",
             preview_description_not_available: "Aucune description disponible",

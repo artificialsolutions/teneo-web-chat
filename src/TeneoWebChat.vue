@@ -348,6 +348,7 @@ export default {
   --table-body-even-background-color: var(--light-bg-color);
   --table-footer-text-color: var(--secondary-color);
   --table-footer-background-color: var(--light-bg-color);
+  --form-background-color: var(--light-bg-color);
 
 
   --primary-font: 'Helvetica Neue', Helvetica, Arial, sans-serif;
