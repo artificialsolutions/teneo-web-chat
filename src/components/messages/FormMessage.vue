@@ -71,7 +71,6 @@ export default {
     }
   },
   mounted() {
-    // this.isExpired();
     let associatedLabels = this.$el.querySelectorAll('.twc-form-associated-label');
 
 //Move all auto-generated labels one level up so that the precede the field rather than being contained in it.
@@ -80,6 +79,11 @@ export default {
     }
     EventBus.$emit(events.DISABLE_INPUT);
 
+
+    if(this.message.data.expired){
+      this.$el.removeAttribute('id')
+      this.$el.classList.add('twc-expired');
+    }
 
   },
   methods: {
@@ -177,8 +181,6 @@ export default {
     handleFormSubmit(e) {
       let formData = Object.fromEntries(new FormData(this.$el).entries());
       formData.success = true;
-      console.log(formData);
-      //TODO => Figure out how to keep values in a submitted form after refresh. THIS IS WHERE YOU WERE!!!!!
       this.$teneoApi.sendSilentMessage(JSON.stringify(formData));
       e.preventDefault();
       this.decommissionForm();
@@ -186,7 +188,6 @@ export default {
     },
     handleFormCancel(e) {
       this.$teneoApi.sendSilentMessage(JSON.stringify({success: false}));
-      console.log(e);
       this.decommissionForm();
     },
     // isExpired() {
@@ -218,12 +219,6 @@ export default {
         }
         let currentElement = elements[elementIndex];
         if (node.nodeName.toUpperCase() !== 'LABEL') {
-
-          console.log('node: ', node.nodeName);
-          console.log('element: ', elements[elementIndex].type, elements[elementIndex].hasOwnProperty('attributes') ? elements[elementIndex].attributes.type : '');
-
-
-
           if (currentElement) {
             currentElement.attributes = currentElement.attributes || {}
             currentElement.attributes.disabled = true;
@@ -259,6 +254,8 @@ export default {
 
       console.log(elements);
       this.message.data.elements = elements;
+
+      this.message.data.expired = true;
 
       this.$teneoApi.messageList[this.$teneoApi.messageList.length - 1] = this.message;
 
