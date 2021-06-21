@@ -72,7 +72,8 @@ export default {
   },
   mounted() {
     // this.isExpired();
-    let associatedLabels = document.querySelectorAll('.twc-form-associated-label:not(:disabled)');
+    let associatedLabels = this.$el.querySelectorAll('.twc-form-associated-label');
+
 //Move all auto-generated labels one level up so that the precede the field rather than being contained in it.
     for (let label of associatedLabels) {
       this.$el.insertBefore(label, label.parentNode);
@@ -208,7 +209,11 @@ export default {
 
       form.childNodes.forEach((node) => {
 
+        node.setAttribute('disabled', true);
+
+
         if (elements[elementIndex].type === 'label') {
+          elements[elementIndex].attributes = {disabled: true};
           elementIndex++;
         }
         let currentElement = elements[elementIndex];
@@ -216,7 +221,7 @@ export default {
 
           console.log('node: ', node.nodeName);
           console.log('element: ', elements[elementIndex].type, elements[elementIndex].hasOwnProperty('attributes') ? elements[elementIndex].attributes.type : '');
-          node.setAttribute('disabled', true);
+
 
 
           if (currentElement) {
