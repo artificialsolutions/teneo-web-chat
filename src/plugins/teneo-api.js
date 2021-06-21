@@ -242,6 +242,7 @@ export default function teneoApiPlugin(teneoApiUrl) {
             }
 
             // add message to list
+
             this.messageList = [...this.messageList, message];
         },
         async closeSession() {

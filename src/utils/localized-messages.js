@@ -323,16 +323,16 @@ export var translatedMessages = {
             input_area_send_button_title: 'Enviar mensagem',
             input_area_upload_button_aria_label: 'Carregar ficheiro',
             input_area_upload_button_title: 'Carregar ficheiro',
-            input_area_asr_button_aria_label: "ASR",
-            input_area_asr_button_title: "ASR",
-            first_use_asr_system_message: "Recording in process, it will stop automatically. Click on the mic icon again to cancel.",
-            input_area_tts_button_aria_label: "TTS",
-            input_area_tts_button_title: "TTS",
+            input_area_asr_button_aria_label: "Reconhecimento automático da fala",
+            input_area_asr_button_title: "Reconhecimento automático da fala",
+            first_use_asr_system_message: "Ouvindo em processo, parará automaticamente. Clique novamente no ícone do microfone para cancelar.",
+            input_area_tts_button_aria_label: "Texto para fala",
+            input_area_tts_button_title: "Texto para fala",
             message_typing_indicator: 'Escrevendo...',
             preview_title_not_available: "Sem título",
             preview_description_not_available: "Descrição não disponível",
-            connection_error_retry_message: "There is a problem communicating with the server. Please wait.",
-            connection_error_final_message: "Could not establish connection to server. Please try again later."
+            connection_error_retry_message: "Há um problema de comunicação com o servidor. Por favor, aguarde.",
+            connection_error_final_message: "Não foi possível estabelecer conexão com o servidor. Por favor, tente novamente mais tarde."
         }
     },
     sv: {
