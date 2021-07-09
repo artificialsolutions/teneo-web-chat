@@ -2197,8 +2197,9 @@
   
   function close(teneoEngineUrl, sessionId, cb) {
     const endSessionUrl = appendSessionId(`${formatEngineUrl(teneoEngineUrl)}endsession`, sessionId);
-    const headers = sessionId ? { 'Cookie': `JSESSIONID=${sessionId}` } : {};
-  
+    const headers = sessionId ? { 'Cookie': `JSESSIONID=${sessionId}`, 'teneoCookie': `JSESSIONID=${currentSessionId}` } : {};
+
+
     return http.post(endSessionUrl, requestBody(), headers)
       .then((response) => cb(null, response.body))
       .catch((error) => cb(error));
@@ -2209,7 +2210,7 @@
     const keys = Object.keys(inputData);
   
     if (!(typeof inputData === 'object' && keys.includes('text'))) {
-      throw new TypeError(`sendInput input data must be an object with atleast a 'text' property: ${JSON.stringify(inputData)}`);
+      throw new TypeError(`sendInput input data must be an object with at least a 'text' property: ${JSON.stringify(inputData)}`);
     }
   
     if (!keys.every((key) => validDataType(inputData[key]))) {
@@ -2220,7 +2221,7 @@
   function sendInput(teneoEngineUrl, currentSessionId, inputData, cb) {
     verifyInputData(inputData);
   
-    const headers = currentSessionId ? { 'Cookie': `JSESSIONID=${currentSessionId}` } : {};
+    let headers = currentSessionId ? { 'Cookie': `JSESSIONID=${currentSessionId}`, 'teneoCookie': `JSESSIONID=${currentSessionId}`  } : {};
     const parameters = getParameters(inputData);
     const body = requestBody(Object.assign({ userinput: inputData.text }, parameters));
     const url = appendSessionId(formatEngineUrl(teneoEngineUrl), currentSessionId);

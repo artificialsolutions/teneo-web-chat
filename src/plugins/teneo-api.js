@@ -28,7 +28,7 @@ export default function teneoApiPlugin(teneoApiUrl) {
 
     const messageListCache = new MessageListCache();
     const tmpVue = new Vue({data: {messageList: messageListCache.get()}, i18n});
-    const isSafari = detectSafari();
+    //const isSafari = detectSafari();
     const sessionKey = SESSION_ID_STORAGE_KEY;
     let sessionId = null;
 
@@ -111,9 +111,9 @@ export default function teneoApiPlugin(teneoApiUrl) {
 
             // get session from storage when safari is used
             // to prevent issues when 'prevent cross-site tracking' is enabled
-            if (isSafari) {
+           // if (isSafari) {
                 sessionId = tmpVue.$store.getters.storage.getItem(sessionKey);
-            }
+           // }
 
             // send the input to engine
             teneoApi.sendInput(sessionId, requestPayload.requestDetails).then(async (response)=>{
@@ -145,13 +145,15 @@ export default function teneoApiPlugin(teneoApiUrl) {
 
                 // if users have 'prevent cross-site tracking' enabled
                 // a reload of the page may lose the session
-                if (isSafari) {
+           //     if (isSafari) {
                     tmpVue.$store.getters.storage.setItem(sessionKey, response.sessionId);
-                } else {
-                    sessionId = response.sessionId;
-                }
+                debugger;
+                //    tmpVue.$store.getters.storage.setItem(lbKey, response.sessionId);
+                // } else {
+                //     sessionId = response.sessionId;
+                // }
 
-                // sessionId = response.sessionId;
+
 
                 EventBus.$off(events.PUSH_BUBBLE);
                 EventBus.$on(events.PUSH_BUBBLE, async (msg) => {
@@ -248,9 +250,9 @@ export default function teneoApiPlugin(teneoApiUrl) {
         async closeSession() {
             // get session from storage when safari is used
             // to prevent issues when 'prevent cross-site tracking' is enabled
-            if (isSafari) {
+        //    if (isSafari) {
                 sessionId = tmpVue.$store.getters.storage.getItem(sessionKey);
-            }
+          //  }
             TIE.close(teneoApiUrl, sessionId);
         },
         async clearHistory() {

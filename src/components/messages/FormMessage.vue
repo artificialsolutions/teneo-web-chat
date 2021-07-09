@@ -1,21 +1,25 @@
 <template>
   <form class="twc-form" v-on:submit="handleFormSubmit" id="twcActiveForm">
+    <!--@formatter:off-->
     <component v-for="(element, idx) in formElements"
                :key="idx"
                :is="elementTag(element.type)"
                v-bind="elementAttributes(element)"
                v-on="elementListeners(element)"
                :id="elementId(element, idx)"
-               :name="elementName(element, idx)">{{ element.text }}
-      <option
+               :name="elementName(element, idx)"
+    >{{elementText(element.text)}}<option
           v-if="element.type==='select'"
           v-for="(option) in element.options"
           v-bind="elementAttributes(option)"
-      >{{ option.text }}
-      </option>
-      <label v-if="element.hasOwnProperty('label')" :for="'twc-form-element-' + element.type + '-' + idx"
-             :class="labelClasses(element)">{{ labelText(element) }}</label>
+      >{{ option.text }}</option
+    ><label
+        v-if="element.hasOwnProperty('label')"
+        :for="elementId(element, idx)"
+        :class="labelClasses(element)"
+    >{{ labelText(element) }}</label>
     </component>
+    <!--@formatter:on-->
   </form>
 </template>
 <script>
@@ -36,7 +40,7 @@ export default {
         let hasSubmit = false;
         let hasCancel = false;
         let hasContent = message && message.data && message.data.elements && message.data.elements.length > 2
-        let legalTypes = ['control', 'title', 'subtitle', 'caption', 'input', 'textarea', 'select', 'label', 'output']
+        let legalTypes = ['control', 'title', 'subtitle', 'caption', 'input', 'textarea', 'select', 'label']
         let hasOnlyLegalTypes = false;
 
         message.data.elements.forEach((element) => {
@@ -46,6 +50,8 @@ export default {
             } else if (element.action === "cancel") {
               hasCancel = true;
             }
+          } else if (element.type === 'input' && !element.attributes.type) {
+            element.attributes.type = 'text'
           }
 
           if (legalTypes.includes(element.type)) {
@@ -80,7 +86,7 @@ export default {
     EventBus.$emit(events.DISABLE_INPUT);
 
 
-    if(this.message.data.expired){
+    if (this.message.data.expired) {
       this.$el.removeAttribute('id')
       this.$el.classList.add('twc-expired');
     }
@@ -102,15 +108,16 @@ export default {
       return text
     },
     elementId(element, idx) {
+      let currentId = 'twc-form-element-' + element.type + '_' + idx;
       if (element.hasOwnProperty('attributes')) {
         if (element.attributes.hasOwnProperty('id')) {
-          return element.attributes.id;
+          currentId = element.attributes.id;
         } else if (element.attributes.type) {
-          return 'twc-form-element-' + element.type + '_' + element.attributes.type + '_' + idx;
-        } else {
-          return 'twc-form-element-' + element.type + '_' + idx;
+          currentId = 'twc-form-element-' + element.type + '_' + element.attributes.type + '_' + idx;
         }
       }
+      return currentId
+
     },
     elementName(element, idx) {
       if (element.hasOwnProperty('attributes')) {
@@ -146,6 +153,7 @@ export default {
     elementAttributes(elementData) {
       let attributes = elementData.attributes || {}
       let type = elementData.type || 'option';
+
       attributes.class = 'twc-form-' + type;
       if (elementData.type === 'control') {
         attributes.class += ' twc-form-' + elementData.action;
@@ -170,6 +178,9 @@ export default {
         return {};
       }
     },
+    elementText(text) {
+      if (text) return text.trim()
+    },
     handleReturnSpaceKeys(event, reply, idx) {
       if (keyIsSpaceOrEnter(event)) {
         this.onSelect(reply, idx)
@@ -190,16 +201,9 @@ export default {
       this.$teneoApi.sendSilentMessage(JSON.stringify({success: false}));
       this.decommissionForm();
     },
-    // isExpired() {
-    //
-    //   const latestMessage = this.$teneoApi.messageList[this.$teneoApi.messageList.length - 1];
-    //
-    //   if (latestMessage && latestMessage !== this.message) {
-    //     this.decommissionForm()
-    //   }
-    // },
+
     decommissionForm() {
-      //TODO => Get form to lose id and gain expired class as well on reload
+
       EventBus.$emit(events.ENABLE_INPUT);
       let form = this.$el;
       form.removeAttribute('id')
@@ -272,44 +276,59 @@ export default {
   display: flex;
   flex-direction: column;
   flex-flow: wrap;
+  border-radius: 10px 10px 10px 0;
 }
 
-.twc-form * {
-  margin: 5px;
-}
 
 .twc-form-title {
   flex-basis: 100%;
   text-align: center;
+  color: var(--form-title-text-color);
+  margin: 5px;
 }
 
 .twc-form-subtitle {
   flex-basis: 100%;
   text-align: center;
+  color: var(--form-subtitle-text-color);
+  margin: 5px;
 }
 
 .twc-form-caption {
   flex-basis: 100%;
   text-align: center;
+  color: var(--form-caption-text-color);
+  margin-bottom: 5%;
+}
+
+.twc-form.twc-expired * {
+  opacity: 50%;
 }
 
 .twc-form-label {
   flex-basis: 100%;
-  text-align: left;
+  color: var(--form-label-text-color);
+  font-size: 0.9em;
+  font-family: var(--primary-font);
+  margin: 10px 5% 5px 5%;
 }
 
 .twc-form-label.twc-form-attached-label {
   flex-basis: auto;
+  line-height: 1.5;
 }
 
 .twc-form-textarea {
   flex-basis: 90%;
-  align-self: center;
+  margin: auto;
+  background: var(--form-input-background-color);
+  min-height: 2.5em;
 }
 
 .twc-form-select {
   flex-basis: 90%;
-  align-self: center;
+  margin: auto;
+  background: var(--form-input-background-color);
 }
 
 .twc-form-select.twc-form-option {
@@ -318,50 +337,77 @@ export default {
 
 .twc-form-control {
   flex: 1 1 auto;
+  border-radius: 5px;
+  padding: 5px;
+  margin: 5%;
 }
 
-.twc-form-control.twc-form-submit {
+.twc-form-control.twc-form-submit:not([disabled]) {
+  color: var(--form-submit-text-color);
+  background: var(--form-submit-background-color);
 }
 
-.twc-form-control.twc-form-cancel {
-
+.twc-form-control.twc-form-cancel:not([disabled]) {
+  color: var(--form-cancel-text-color);
+  background: var(--form-cancel-background-color);
 }
 
 /*Text field types*/
 .twc-form-input[type=text], .twc-form-input[type=email], .twc-form-input[type=number], .twc-form-input[type=password], .twc-form-input[type=search], .twc-form-input[type=tel], .twc-form-input[type=url] {
   flex-basis: 90%;
-  align-self: center;
+  margin-left: 5%;
+  margin-right: 5%;
+  background: var(--form-input-background-color);
 }
 
 /*Button Types*/
 .twc-form-input[type=reset], .twc-form-input[type=button], .twc-form-input[type=file], .twc-form-input[type=image], .twc-form-input[type=submit] {
-
+  border-radius: 5px;
+  padding: 5px;
+  flex: 1 1 auto;
+  margin: auto 5%;
 }
+
+.twc-form-input[type=reset]:not([disabled]) {
+  color: var(--form-reset-text-color);
+  background: var(--form-reset-background-color);
+}
+
 
 /*Datepicker types*/
 .twc-form-input[type=date], .twc-form-input[type=datetime-local], .twc-form-input[type=month], .twc-form-input[type=week], .twc-form-input[type=time] {
-
+  background: var(--form-input-background-color);
+  flex-basis: 90%;
+  margin: auto;
 }
 
 /*Checkbox type*/
 .twc-form-input[type=checkbox] {
-  align-self: center;
+  background: var(--form-input-background-color);
+  margin-left: -2%;
+  margin-top: 1.1em;
 }
 
 /*Radio type*/
 .twc-form-input[type=radio] {
-  align-self: center;
+  background: var(--form-input-background-color);
+  margin-left: -2%;
+  margin-top: 1em;
 }
 
 
 /*Color Picker type*/
 .twc-form-input[type=color] {
-
+  background: var(--form-input-background-color);
+  flex-basis: 90%;
+  margin: auto;
 }
 
 /*Range Type*/
 .twc-form-input[type=range] {
-
+  background: var(--form-input-background-color);
+  flex-basis: 90%;
+  margin: auto;
 }
 </style>
 

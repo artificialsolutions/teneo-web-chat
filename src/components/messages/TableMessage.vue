@@ -1,12 +1,11 @@
 <template>
-  <div class="twc-table-border">
-    <table>
+    <table class="twc-table twc-table-border">
       <caption class="twc-table-title" v-if="tableTitle">{{ tableTitle }}</caption>
       <thead v-if="tableHeaders">
-      <tr class="twc-header-row">
+      <tr class="twc-table-header-row">
         <th
             v-for="(header) in tableHeaders"
-            class="twc-header-cell"
+            class="twc-table-header-cell"
         >
           {{ header }}
         </th>
@@ -15,26 +14,25 @@
       <tbody v-if="tableBody">
       <tr
           v-for="(row) in tableBody"
-          class="twc-body-row"
+          class="twc-table-body-row"
       >
         <td
             v-for="(cell) in row"
-            class="twc-body-cell"
+            class="twc-table-body-cell"
         >{{ cell }}
         </td>
       </tr>
       </tbody>
       <tfoot v-if="tableFooters">
-      <tr class="twc-footer-row">
+      <tr class="twc-table-footer-row">
         <td
             v-for="(footer) in tableFooters"
-            class="twc-footer-cell"
+            class="twc-table-footer-cell"
         >{{ footer }}
         </td>
       </tr>
       </tfoot>
     </table>
-  </div>
 </template>
 
 <script>
@@ -96,7 +94,7 @@ export default {
 
 <style>
 .twc-table-border {
-  border: var(--table-border-color);
+  border: 2px solid var(--table-border-color);
 }
 .twc-table-title {
   color: var(--table-title-text-color);
@@ -107,26 +105,26 @@ export default {
 }
 
 
-.twc-header-cell {
+.twc-table-header-cell {
   color: var(--table-header-text-color);
   background: var(--table-header-background-color);
   padding: 2px;
 }
 
-.twc-body-row:nth-child(even) .twc-body-cell {
+.twc-table-body-row:nth-child(even) .twc-table-body-cell {
   color: var(--table-body-even-text-color);
   background: var(--table-body-even-background-color);
   padding: 2px;
 }
 
-.twc-body-row:nth-child(odd) .twc-body-cell {
+.twc-table-body-row:nth-child(odd) .twc-table-body-cell {
   color: var(--table-body-odd-text-color);
   background: var(--table-body-odd-background-color);
   padding: 2px;
 }
-.twc-footer-cell {
-  color: var(--table-title-text-color);
-  background: var(--table-title-background-color);
+.twc-table-footer-cell {
+  color: var(--table-footer-text-color);
+  background: var(--table-footer-background-color);
   padding: 2px;
 }
 </style>

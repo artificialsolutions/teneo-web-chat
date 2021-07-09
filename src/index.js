@@ -17,6 +17,7 @@ const validFunctionNames = Object.values(apiConstants);
 const messageList = new messageListCache();
 let isInitialised = false;
 
+
 window.TeneoWebChat = {
   initialize(element, twcProps) {
 

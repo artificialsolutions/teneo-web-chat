@@ -344,15 +344,24 @@ export default {
   --table-header-background-color: var(--light-bg-color);
   --table-body-odd-text-color: var(--dark-fg-color);
   --table-body-odd-background-color: var(--light-bg-color);
-  --table-body-even-text-color: var(--dark-fg-color);
-  --table-body-even-background-color: var(--light-bg-color);
-  --table-footer-text-color: var(--secondary-color);
+  --table-body-even-text-color: #000;
+  --table-body-even-background-color: #aaa;
+  --table-footer-text-color: var(--primary-color);
   --table-footer-background-color: var(--light-bg-color);
   --form-background-color: var(--light-bg-color);
-
+  --form-title-text-color: var(--dark-fg-color);
+  --form-subtitle-text-color: var(--dark-fg-color);
+  --form-caption-text-color: var(--info-color);
+  --form-label-text-color: var(--dark-fg-color);
+  --form-input-background-color: var(--user-input-bg-color);
+  --form-submit-text-color: var(--user-input-bg-color);
+  --form-submit-background-color: var(--success-color);
+  --form-cancel-text-color: var(--user-input-bg-color);
+  --form-cancel-background-color: var(--danger-color);
+  --form-reset-text-color: var(--dark-fg-color);
+  --form-reset-background-color: var(--warning-color);
 
   --primary-font: 'Helvetica Neue', Helvetica, Arial, sans-serif;
-
 }
 
 @supports (-webkit-touch-callout: none) {

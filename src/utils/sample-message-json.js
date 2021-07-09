@@ -10,7 +10,7 @@ export const textMessage = {
 
 export const audioMessage = {
     'type': 'audio',
-    'data': { 'audio_url': 'https://url.to/audio.mp3' },
+    'data': {'audio_url': 'https://url.to/audio.mp3'},
 };
 
 export const quickReplyMessageJSON = {
@@ -452,3 +452,255 @@ export const youtubevideoMessageJSON = {
         'video_url': 'https://www.youtube.com/embed/123456789'
     }
 };
+
+export const tableMessageJSON = {
+    'type': 'table',
+    data: {
+        'title': 'Table Title',
+        'headers': [
+            'Header1',
+            'Header2',
+            'Header3'
+        ],
+        'body': [
+            [
+                'Row1 Cell1',
+                'Row1 Cell2',
+                'Row1 Cell3'
+            ],
+            [
+                'Row2 Cell1',
+                'Row2 Cell2',
+                'Row2 Cell3',
+                'Row2 Cell4'
+            ],
+            [
+                'Row3 Cell1',
+                'Row3 Cell2'
+            ],
+            [
+                'Row4 Cell1',
+                'Row4 Cell2',
+                'Row4 Cell3'
+            ],
+            [
+                'Row5 Cell1',
+                'Row5 Cell2',
+                'Row5 Cell3'
+            ]
+        ],
+        'footers': [
+            'Footer1',
+            'Footer2'
+        ]
+    }
+}
+
+export const formMessageJSON = {
+    'type': 'form',
+    data: {
+        'elements': [
+            {
+                'type': 'title',
+                'text': 'Form Title'
+            },
+            {
+                'type': 'subtitle',
+                'text': 'Form Subtitle'
+            },
+            {
+                'type': 'label',
+                'text': 'This is an additional label to let people know * means required'
+            },
+            {
+                'type': 'input',
+                'attributes': {
+                    'required': true,
+                    'type': 'text'
+                },
+                'label': 'Text Input Required Example'
+            },
+            {
+                'type': 'input',
+                'attributes': {
+                    'type': 'text',
+                    'pattern': '[A-Za-z]{3}',
+                    'required': true,
+                    'title': 'Three Letters Only'
+                },
+                'label': 'Text Input Validation Pattern Example - 3 letters'
+            },
+            {
+                'type': 'label',
+                'text': 'These inputs are extra buttons that do nothing!'
+            },
+            {
+                'type': 'input',
+                'attributes': {
+                    'type': 'button',
+                    'value': 'Boink',
+                    'onclick': 'return "one"'
+                }
+            },
+            {
+                'type': 'input',
+                'attributes': {
+                    'type': 'button',
+                    'value': 'Doink',
+                    'onclick': 'return "two"'
+                }
+            },
+            {
+                'type': 'label',
+                'text': 'These inputs are radio buttons'
+            },
+            {
+                'type': 'input',
+                'attributes': {
+                    'type': 'radio',
+                    'value': '1',
+                    'name': 'radios'
+                },
+                'label': 'one'
+            },
+            {
+                'type': 'input',
+                'attributes': {
+                    'type': 'radio',
+                    'value': '2',
+                    'name': 'radios'
+                },
+                'label': 'two'
+            },
+            {
+                'type': 'input',
+                'attributes': {
+                    'type': 'radio',
+                    'value': '3',
+                    'name': 'radios'
+                },
+                'label': 'three'
+            },
+            {
+                'type': 'input',
+                'attributes': {
+                    'type': 'radio',
+                    'value': '4',
+                    'name': 'radios'
+                },
+                'label': 'four'
+            },
+            {
+                'type': 'label',
+                'text': 'These inputs are checkboxes'
+            },
+            {
+                'type': 'input',
+                'attributes': {
+                    'type': 'checkbox',
+                    'value': 'dog'
+                },
+                'label': 'dog'
+            },
+            {
+                'type': 'input',
+                'attributes': {
+                    'type': 'checkbox',
+                    'value': 'cat'
+                },
+                'label': 'cat'
+            },
+            {
+                'type': 'input',
+                'attributes': {
+                    'type': 'checkbox',
+                    'value': 'hamster'
+                },
+                'label': 'hamster'
+            },
+            {
+                'type': 'input',
+                'attributes': {
+                    'type': 'date'
+                },
+                'label': 'This input is a datepicker!'
+            },
+            {
+                'type': 'input',
+                'attributes': {
+                    'type': 'time'
+                },
+                'label': 'This input is a timepicker!'
+            },
+            {
+                'type': 'input',
+                'attributes': {
+                    'type': 'datetime-local'
+                },
+                'label': 'This input is a datetimepicker!'
+            },
+            {
+                'type': 'input',
+                'attributes': {
+                    'type': 'color'
+                },
+                'label': 'This input is a colorpicker!'
+            },
+            {
+                'type': 'input',
+                'attributes': {
+                    'type': 'range'
+                },
+                'label': 'This input is a range!'
+            },
+            {
+                'type': 'input',
+                'attributes': {
+                    'type': 'reset',
+                    'text': 'reset'
+                },
+                'label': 'This input is a reset!'
+            },
+            {
+                'type': 'textarea',
+                'text': 'Prepopulated text in textarea.',
+                'label': 'Text Area Example'
+            },
+            {
+                'type': 'select',
+                'label': 'Example Select',
+                'options': [
+                    {
+                        'text': 'select one below',
+                        'attributes': {
+                            'disabled': true
+                        }
+                    },
+                    {
+                        'text': '1'
+                    },
+                    {
+                        'text': '2'
+                    },
+                    {
+                        'text': '3'
+                    }
+                ]
+            },
+            {
+                'type': 'control',
+                'text': 'Cancel',
+                'action': 'cancel'
+            },
+            {
+                'type': 'control',
+                'text': 'OK',
+                'action': 'submit'
+            },
+            {
+                'type': 'caption',
+                'text': 'form caption'
+            }
+        ]
+    }
+}

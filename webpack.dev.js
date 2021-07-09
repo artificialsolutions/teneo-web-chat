@@ -6,7 +6,7 @@ const baseConfig = require('./webpack.base.js');
 require('dotenv')
     .config();
 const dotenv = require('dotenv')
-    .config({ path: `${__dirname}/.env` });
+    .config({path: `${__dirname}/.env`});
 
 
 let devServerOptions = {
@@ -17,10 +17,17 @@ let devServerOptions = {
 
 if (dotenv.parsed.ALLOW_LAN_ON_DEV === "true") {
 // Host set to 0.0.0.0 with a public IP to allow for connections over LAN.
-
+    process.on('warning', (warning) => {
+        console.log(warning.stack);
+    });
+    process.on('error', (error) => {
+        console.log(error.stack);
+    });
     const os = require('os');
     const networkInterfaces = os.networkInterfaces();
     devServerOptions.host = '0.0.0.0';
+    devServerOptions.public = '0.0.0.0:9000';
+    devServerOptions.disableHostCheck = true;
     Object.keys(networkInterfaces)
         .forEach(function (interfaceName) {
             networkInterfaces[interfaceName].forEach(function (networkInterface) {

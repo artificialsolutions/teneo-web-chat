@@ -1,4 +1,5 @@
-import { shallowMount, mount } from '@vue/test-utils';
+import {shallowMount, mount} from '@vue/test-utils';
+import '@testing-library/jest-dom'
 
 import TextMessage from '@/components/messages/TextMessage.vue'
 import AudioMessage from '@/components/messages/AudioMessage.vue'
@@ -16,15 +17,16 @@ import VimeovideoMessage from '@/components/messages/VimeovideoMessage.vue'
 import YoutubevideoMessage from '@/components/messages/YoutubevideoMessage.vue'
 import LinkButtonsMessage from '@/components/messages/LinkButtonsMessage.vue'
 import LinkPreviewMessage from '@/components/messages/LinkPreviewMessage.vue'
+import TableMessage from '@/components/messages/TableMessage.vue'
+import FormMessage from '@/components/messages/FormMessage.vue'
 
-import * as sampleJSON  from "../../src/utils/sample-message-json";
-
+import * as sampleJSON from "../../src/utils/sample-message-json";
 
 
 describe('Test Message Components', () => {
 
     test('Assert TextMessage JSON', () => {
-        const wrapper = mount(TextMessage,{
+        const wrapper = mount(TextMessage, {
             propsData: {
                 message: sampleJSON.textMessage
             }
@@ -56,7 +58,7 @@ describe('Test Message Components', () => {
     })
 
 
-    test('Assert CardMessage JSON', () =>{
+    test('Assert CardMessage JSON', () => {
 
         const wrapper = mount(CardMessage, {
             propsData: {
@@ -105,13 +107,13 @@ describe('Test Message Components', () => {
     })
 
 
-    test('Assert ClickablelistMessage JSON', () =>{
+    test('Assert ClickablelistMessage JSON', () => {
         const wrapper = mount(ClickablelistMessage, {
             propsData: {
-                message : sampleJSON.clickableListMessageJSON
+                message: sampleJSON.clickableListMessageJSON
             },
             computed: {
-                isExpired: () => jest.fn().mockImplementation( () => {
+                isExpired: () => jest.fn().mockImplementation(() => {
                     return false;
                 }),
             }
@@ -120,7 +122,7 @@ describe('Test Message Components', () => {
     })
 
 
-    test('Assert LinkButtonsMessage JSON', () =>{
+    test('Assert LinkButtonsMessage JSON', () => {
         const wrapper = mount(LinkButtonsMessage, {
             propsData: {
                 message: sampleJSON.linkButtonsMessageJSON
@@ -129,7 +131,7 @@ describe('Test Message Components', () => {
         expect(wrapper.html()).toContain("<a role=\"link\" href=\"https://developers.artificial-solutions.com/\" target=\"_blank\" rel=\"noopener\" class=\"twc-linkbutton\">Link 3</a>")
     })
 
-    test('Assert LinkPreviewMessage JSON', () =>{
+    test('Assert LinkPreviewMessage JSON', () => {
         const wrapper = mount(LinkPreviewMessage, {
             propsData: {
                 message: sampleJSON.linkPreviewMessageJSON
@@ -143,17 +145,291 @@ describe('Test Message Components', () => {
         expect(wrapper.html()).toContain('twc-link-preview-domain');
     })
 
+    test('Assert TableMessage JSON', () => {
+        const wrapper = mount(TableMessage, {
+            propsData: {
+                message: sampleJSON.tableMessageJSON
+            }
+        })
+        expect(wrapper.element).toHaveClass('twc-table');
+        expect(wrapper.html()).toContain('twc-table-header-row');
+        expect(wrapper.html()).toContain('twc-table-header-cell');
+        expect(wrapper.html()).toContain('twc-table-body-row');
+        expect(wrapper.html()).toContain('twc-table-body-cell');
+        expect(wrapper.html()).toContain('twc-table-footer-row');
+        expect(wrapper.html()).toContain('twc-table-footer-cell');
+    })
 
-    test('Assert ComboMessage JSON loads with nested components', () =>{ ///check number of rendered items
+    test('Assert FormMessage JSON', () => {
+        const wrapper = mount(FormMessage, {
+            propsData: {
+                message: sampleJSON.formMessageJSON
+            }
+        })
+
+        const mockCallbacks = {
+            'one': jest.fn(),
+            'two': jest.fn()
+        };
+
+        let jsonEntries = sampleJSON.formMessageJSON.data.elements
+        let formElement = wrapper.element
+        let formChildren = formElement.children
+        expect(formElement).toHaveClass('twc-form');
+        //Check title and subtitle positioning
+        expect(formChildren[0]).toHaveClass('twc-form-title');
+        expect(formChildren[1]).toHaveClass('twc-form-subtitle');
+        //Unassociated labels
+        let unassociatedLabel1 = formChildren[2];
+        expect(unassociatedLabel1).toHaveClass('twc-form-label');
+        expect(unassociatedLabel1).not.toHaveClass('twc-form-associated-label');
+        let unassociatedLabel2 = formChildren[7];
+        expect(unassociatedLabel2).toHaveClass('twc-form-label');
+        expect(unassociatedLabel2).not.toHaveClass('twc-form-associated-label');
+        //Required text
+        let requiredInputLabel = formChildren[3];
+        let requiredInput = formChildren[4];
+
+        //Make sure label is assigned to element
+        expect(requiredInputLabel).toBe(requiredInput.labels[0]);
+        expect(requiredInputLabel).toHaveClass('twc-form-label');
+        expect(requiredInputLabel).toHaveClass('twc-form-associated-label');
+        expect(requiredInput).toBeRequired();
+        expect(requiredInput).toHaveAttribute('type', 'text');
+        expect(requiredInput).toHaveClass('twc-form-input');
+
+        //Validated text
+        let validatedInputLabel = formChildren[5];
+        let validatedInput = formChildren[6];
+        expect(validatedInputLabel).toBe(validatedInput.labels[0]);
+        expect(validatedInputLabel).toHaveClass('twc-form-label');
+        expect(validatedInputLabel).toHaveClass('twc-form-associated-label');
+        expect(validatedInput).toBeRequired();
+        expect(validatedInput).toHaveAttribute('type', 'text');
+        expect(validatedInput).toHaveClass('twc-form-input');
+        //Check if validation attributes have been added
+        expect(validatedInput).toHaveAttribute('pattern');
+        expect(validatedInput).toHaveAttribute('title');
+
+        let dummyBtn1 = formChildren[8];
+        let dummyBtn2 = formChildren[9];
+
+        expect(dummyBtn1).toHaveAttribute('type', 'button');
+        expect(dummyBtn2).toHaveAttribute('type', 'button');
+        expect(dummyBtn1).toHaveClass('twc-form-input');
+        expect(dummyBtn2).toHaveClass('twc-form-input');
+
+        dummyBtn1.onclick = mockCallbacks[dummyBtn1.onclick()]
+        dummyBtn1.click();
+        expect(mockCallbacks.one).toHaveBeenCalled();
+        dummyBtn2.onclick = mockCallbacks[dummyBtn2.onclick()]
+        dummyBtn2.click();
+        expect(mockCallbacks.two).toHaveBeenCalled();
+
+
+        //Check radio inputs
+        let radioInputsLabel = formChildren[10];
+        let radioInputLabel1 = formChildren[11];
+        let radioInput1 = formChildren[12];
+        let radioInputLabel2 = formChildren[13];
+        let radioInput2 = formChildren[14];
+        let radioInputLabel3 = formChildren[15];
+        let radioInput3 = formChildren[16];
+        let radioInputLabel4 = formChildren[17];
+        let radioInput4 = formChildren[18];
+
+        expect(radioInputsLabel).toHaveClass('twc-form-label');
+        expect(radioInputsLabel).not.toHaveClass('twc-form-associated-label');
+
+        expect(radioInputLabel1).toBe(radioInput1.labels[0]);
+        expect(radioInput1).toHaveAttribute('name', 'radios');
+        expect(radioInput1).toHaveAttribute('type', 'radio');
+        expect(radioInput1).toHaveClass('twc-form-input');
+
+        expect(radioInputLabel2).toBe(radioInput2.labels[0]);
+        expect(radioInput2).toHaveAttribute('name', 'radios');
+        expect(radioInput2).toHaveAttribute('type', 'radio');
+        expect(radioInput2).toHaveClass('twc-form-input');
+
+        expect(radioInputLabel3).toBe(radioInput3.labels[0]);
+        expect(radioInput3).toHaveAttribute('name', 'radios');
+        expect(radioInput3).toHaveAttribute('type', 'radio');
+        expect(radioInput3).toHaveClass('twc-form-input');
+
+        expect(radioInputLabel4).toBe(radioInput4.labels[0]);
+        expect(radioInput4).toHaveAttribute('name', 'radios');
+        expect(radioInput4).toHaveAttribute('type', 'radio');
+        expect(radioInput4).toHaveClass('twc-form-input');
+
+        //Check if all radios with the same name toggle the selection
+        expect(radioInput1).not.toBeChecked();
+        radioInput1.click();
+        expect(radioInput1).toBeChecked();
+        radioInput2.click();
+        expect(radioInput2).toBeChecked();
+        expect(radioInput1).not.toBeChecked();
+
+        //Checkboxes
+        let checkboxInputsLabel = formChildren[19];
+        let checkboxInputLabel1 = formChildren[20];
+        let checkboxInput1 = formChildren[21];
+        let checkboxInputLabel2 = formChildren[22];
+        let checkboxInput2 = formChildren[23];
+        let checkboxInputLabel3 = formChildren[24];
+        let checkboxInput3 = formChildren[25];
+
+        expect(checkboxInputsLabel).toHaveClass('twc-form-label');
+        expect(checkboxInputsLabel).not.toHaveClass('twc-form-associated-label');
+
+        expect(checkboxInputLabel1).toBe(checkboxInput1.labels[0]);
+        expect(checkboxInput1).toHaveAttribute('type', 'checkbox');
+        expect(checkboxInput1).toHaveClass('twc-form-input');
+
+        expect(checkboxInputLabel2).toBe(checkboxInput2.labels[0]);
+        expect(checkboxInput2).toHaveAttribute('type', 'checkbox');
+        expect(checkboxInput2).toHaveClass('twc-form-input');
+
+        expect(checkboxInputLabel3).toBe(checkboxInput3.labels[0]);
+        expect(checkboxInput3).toHaveAttribute('type', 'checkbox');
+        expect(checkboxInput3).toHaveClass('twc-form-input');
+
+        expect(checkboxInput1).not.toBeChecked();
+        checkboxInput1.click();
+        expect(checkboxInput1).toBeChecked();
+
+        expect(checkboxInput2).not.toBeChecked();
+        checkboxInput2.click();
+        expect(checkboxInput2).toBeChecked();
+
+        expect(checkboxInput3).not.toBeChecked();
+        checkboxInput3.click();
+        expect(checkboxInput3).toBeChecked();
+
+        //Date, time, datetime, color and range pickers
+        let datePickerLabel = formChildren[26]
+        let datePickerField = formChildren[27]
+        let timePickerLabel = formChildren[28]
+        let timePickerField = formChildren[29]
+        let datetimePickerLabel = formChildren[30]
+        let datetimePickerField = formChildren[31]
+        let colorPickerLabel = formChildren[32]
+        let colorPickerField = formChildren[33]
+        let rangePickerLabel = formChildren[34]
+        let rangePickerField = formChildren[35]
+
+        expect(datePickerLabel).toHaveClass('twc-form-label');
+        expect(datePickerLabel).toHaveClass('twc-form-associated-label');
+        expect(datePickerLabel).toBe(datePickerField.labels[0]);
+        expect(datePickerField).toHaveAttribute('type', 'date');
+        expect(datePickerField).toHaveClass('twc-form-input');
+
+        expect(timePickerLabel).toHaveClass('twc-form-label');
+        expect(timePickerLabel).toHaveClass('twc-form-associated-label');
+        expect(timePickerLabel).toBe(timePickerField.labels[0]);
+        expect(timePickerField).toHaveAttribute('type', 'time');
+        expect(timePickerField).toHaveClass('twc-form-input');
+
+        expect(datetimePickerLabel).toHaveClass('twc-form-label');
+        expect(datetimePickerLabel).toHaveClass('twc-form-associated-label');
+        expect(datetimePickerLabel).toBe(datetimePickerField.labels[0]);
+        expect(datetimePickerField).toHaveAttribute('type', 'datetime-local');
+        expect(datetimePickerField).toHaveClass('twc-form-input');
+
+        expect(colorPickerLabel).toHaveClass('twc-form-label');
+        expect(colorPickerLabel).toHaveClass('twc-form-associated-label');
+        expect(colorPickerLabel).toBe(colorPickerField.labels[0]);
+        expect(colorPickerField).toHaveAttribute('type', 'color');
+        expect(colorPickerField).toHaveClass('twc-form-input');
+
+        expect(rangePickerLabel).toHaveClass('twc-form-label');
+        expect(rangePickerLabel).toHaveClass('twc-form-associated-label');
+        expect(rangePickerLabel).toBe(rangePickerField.labels[0]);
+        expect(rangePickerField).toHaveAttribute('type', 'range');
+        expect(rangePickerField).toHaveClass('twc-form-input');
+
+        //test reset
+        let resetBtnLabel = formChildren[36]
+        let resetBtn = formChildren[37]
+
+        expect(resetBtnLabel).toHaveClass('twc-form-label');
+        expect(resetBtnLabel).toHaveClass('twc-form-associated-label');
+        expect(resetBtnLabel).toBe(resetBtn.labels[0]);
+
+        requiredInput.value = 'test';
+        validatedInput.value = 'abc';
+        expect(requiredInput).toHaveValue('test')
+        expect(validatedInput).toHaveValue('abc')
+        expect(checkboxInput1).toBeChecked()
+        expect(checkboxInput2).toBeChecked()
+        expect(checkboxInput3).toBeChecked()
+        expect(radioInput2).toBeChecked()
+
+        resetBtn.click();
+        //timeout is necessary so that the reset has time to clear the form
+        setTimeout(() => {
+            expect(requiredInput).not.toHaveValue('test')
+            expect(validatedInput).not.toHaveValue('abc')
+            expect(checkboxInput1).not.toBeChecked()
+            expect(checkboxInput2).not.toBeChecked()
+            expect(checkboxInput3).not.toBeChecked()
+            expect(radioInput2).not.toBeChecked()
+        }, 1)
+
+        //Test Text Area
+
+        let textAreaLabel = formChildren[38]
+        let textAreaField = formChildren[39]
+        let textAreaEntryText = jsonEntries.filter(entry => entry.type === 'textarea')[0].text
+        expect(textAreaLabel).toHaveClass('twc-form-label');
+        expect(textAreaLabel).toHaveClass('twc-form-associated-label');
+        expect(textAreaLabel).toBe(textAreaField.labels[0]);
+
+        expect(textAreaField).toContainHTML('textarea');
+        expect(textAreaField).toHaveValue(textAreaEntryText);
+        expect(textAreaField).toHaveClass('twc-form-textarea');
+
+
+        //Test Select option
+        let selectLabel = formChildren[40]
+        let selectField = formChildren[41]
+        let selectEntry = jsonEntries.filter(entry => entry.type === 'select')[0]
+
+
+        expect(selectLabel).toHaveClass('twc-form-label');
+        expect(selectLabel).toHaveClass('twc-form-associated-label');
+        expect(selectLabel).toBe(selectField.labels[0]);
+
+        expect(selectField).toContainHTML('select')
+        expect(selectField).toHaveClass('twc-form-select');
+
+        expect(selectField.childElementCount).toEqual(selectEntry.options.length)
+
+        for(let i =0; i < selectField.childElementCount; i++){
+            expect(selectField.children[i].value).toEqual(selectEntry.options[i].text)
+        }
+
+        //Test Cancel btn
+
+        //Test OK Btn
+
+
+    })
+
+    test('Assert FormMessage Expires', () => {
+
+    })
+
+
+    test('Assert ComboMessage JSON loads with nested components', () => { ///check number of rendered items
         const wrapper = mount(ComboMessage, {
             propsData: {
-                message : sampleJSON.comboMessageJSON
+                message: sampleJSON.comboMessageJSON
             },
             computed: {
-                isExpired: jest.fn().mockImplementation( () => {
+                isExpired: jest.fn().mockImplementation(() => {
                     return false;
-                  }),
-                replySent: jest.fn().mockImplementation( () => {
+                }),
+                replySent: jest.fn().mockImplementation(() => {
                     return false;
                 }),
             }
@@ -174,16 +450,16 @@ describe('Test Message Components', () => {
     })
 
 
-    test('Assert CarouselMessage JSON loads with nested components', () =>{ ///check number of rendered items
+    test('Assert CarouselMessage JSON loads with nested components', () => { ///check number of rendered items
         const wrapper = mount(CarouselMessage, {
             propsData: {
-                message : sampleJSON.carouselMessageJSON
+                message: sampleJSON.carouselMessageJSON
             },
             computed: {
-                isExpired: jest.fn().mockImplementation( () => {
+                isExpired: jest.fn().mockImplementation(() => {
                     return false;
                 }),
-                replySent: jest.fn().mockImplementation( () => {
+                replySent: jest.fn().mockImplementation(() => {
                     return false;
                 }),
             }
@@ -211,67 +487,67 @@ describe('Test Message Components', () => {
     })
 
 
-    test('Assert FilevideoMessage JSON', () =>{
+    test('Assert FilevideoMessage JSON', () => {
         const wrapper = mount(FilevideoMessage, {
             propsData: {
                 message: sampleJSON.filevideoMessageJSON
             },
             computed: {
-                videoUrl: jest.fn().mockImplementation( () => {
+                videoUrl: jest.fn().mockImplementation(() => {
                     return sampleJSON.filevideoMessageJSON.data.video_url + '#t=0.1';
-                  }),
+                }),
             }
         })
         expect(wrapper.html()).toContain('twc-file-video')
     })
 
 
-    test('Assert ImageMessage JSON', () =>{
+    test('Assert ImageMessage JSON', () => {
         const wrapper = mount(ImageMessage, {
             propsData: {
                 message: sampleJSON.imageMessageJSON
             },
             computed: {
-                imageUrl: jest.fn().mockImplementation( () => {
+                imageUrl: jest.fn().mockImplementation(() => {
                     return sampleJSON.imageMessageJSON.data.image_url;
-                  }),
+                }),
             }
         })
         expect(wrapper.html()).toContain('twc-image-message')
     })
 
 
-    test('Assert ModalMessage JSON', () =>{
+    test('Assert ModalMessage JSON', () => {
         const wrapper = mount(ModalMessage, {
             propsData: {
                 message: sampleJSON.modalMessageJSON
             },
             computed: {
-                imageUrl: jest.fn().mockImplementation( () => {
+                imageUrl: jest.fn().mockImplementation(() => {
                     return sampleJSON.modalMessageJSON.data.image_url;
-                  }),
+                }),
             }
         })
         expect(wrapper.html()).toContain('twc-modal')
     })
 
 
-    test('Assert QuickreplyMessage JSON', () =>{
+    test('Assert QuickreplyMessage JSON', () => {
         const wrapper = mount(QuickreplyMessage, {
             propsData: {
                 message: sampleJSON.quickReplyMessageJSON
             },
             computed: {
-                replySent: () => jest.fn().mockImplementation( () => {
+                replySent: () => jest.fn().mockImplementation(() => {
                     return false;
                 }),
-                isExpired: () => jest.fn().mockImplementation( () => {
+                isExpired: () => jest.fn().mockImplementation(() => {
                     return false;
                 }),
 
             }
         })
-        const onSelectMock = jest.fn().mockImplementation( () => {
+        const onSelectMock = jest.fn().mockImplementation(() => {
             return false;
         })
         wrapper.vm.onSelect = onSelectMock;
@@ -279,14 +555,14 @@ describe('Test Message Components', () => {
     })
 
 
-    test('Assert SystemMessage JSON', () =>{
+    test('Assert SystemMessage JSON', () => {
         const wrapper = mount(SystemMessage, {
             propsData: {
                 message: sampleJSON.systemMessageJSON
             },
             computed: {
-                sanitizedHtmlText: jest.fn().mockImplementation( () => {
-                    return sampleJSON.systemMessageJSON.data.text ;
+                sanitizedHtmlText: jest.fn().mockImplementation(() => {
+                    return sampleJSON.systemMessageJSON.data.text;
                 }),
             }
         })
@@ -294,14 +570,14 @@ describe('Test Message Components', () => {
     })
 
 
-    test('Assert VimeovideoMessage JSON', () =>{
+    test('Assert VimeovideoMessage JSON', () => {
         const wrapper = mount(VimeovideoMessage, {
             propsData: {
                 message: sampleJSON.vimeovideoMessageJSON
             },
             computed: {
-                videoUrl: jest.fn().mockImplementation( () => {
-                    return sampleJSON.vimeovideoMessageJSON.data.video_url ;
+                videoUrl: jest.fn().mockImplementation(() => {
+                    return sampleJSON.vimeovideoMessageJSON.data.video_url;
                 }),
             }
         })
@@ -309,14 +585,14 @@ describe('Test Message Components', () => {
     })
 
 
-    test('Assert YoutubevideoMessage JSON', () =>{
+    test('Assert YoutubevideoMessage JSON', () => {
         const wrapper = mount(YoutubevideoMessage, {
             propsData: {
                 message: sampleJSON.youtubevideoMessageJSON
             },
             computed: {
-                videoUrl: jest.fn().mockImplementation( () => {
-                    return sampleJSON.youtubevideoMessageJSON.data.video_url ;
+                videoUrl: jest.fn().mockImplementation(() => {
+                    return sampleJSON.youtubevideoMessageJSON.data.video_url;
                 }),
             }
         })
