@@ -132,7 +132,7 @@ window.TeneoWebChat = {
       store.commit('locale', twcProps.locale);
     }
 
-
+//Empty property
 
     if (twcProps.customLocalizations) {
       // TODO: error handling
@@ -520,7 +520,8 @@ return filteredMessageList;
   },
   version() {
     return API_VERSION;
-  }
+  },
+  tmp: {}
 };
 //Directive to v-visible to use visibility="hidden" instead of v-show to display="none"
 Vue.directive('visible', (el, binding) => {

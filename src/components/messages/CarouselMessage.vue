@@ -47,7 +47,7 @@
                   role="button"
                   :tabindex="replySent || isExpired ? -1 : 0"
                   :class="{ 'twc-selected': replySent && selected === idx +'cql' }"
-                  @click="onSelect(reply, idx +'cql')"
+                  @click="isExpired ? console.log(e.target + 'clicked') : onSelect(reply, idx + 'cql')"
                   @keydown="handleReturnSpaceKeys($event, reply, idx +'cql')"
               >{{ reply.title }}
               </li>
@@ -147,8 +147,7 @@ export default {
     return {
       activeSlide: 0,
       isFirstSlide: true,
-      isLastSlide: false,
-      touchstartX: 0
+      isLastSlide: false
     };
   },
   methods: {
@@ -209,11 +208,13 @@ export default {
       for (let card of this.$refs.cards) {
         maxCardHeight = card.clientHeight > maxCardHeight ? card.clientHeight : maxCardHeight;
         card.addEventListener('touchstart', function (evt) {
-          this.touchstartX = evt.changedTouches[0].screenX;
+          window.twc_touchstartX = evt.changedTouches[0].screenX;
+          console.log('Swipe from:' + window.twc_touchstartX )
 
         });
         card.addEventListener('touchend', function (evt) {
-          (this.touchstartX < evt.changedTouches[0].screenX) ? this.slideBack() : this.slideForward();
+          console.log('Swipe to:' + window.twc_touchstartX);
+          (window.twc_touchstartX < evt.changedTouches[0].screenX) ? this.slideBack() : this.slideForward();
         }.bind(this));
       }
       ;

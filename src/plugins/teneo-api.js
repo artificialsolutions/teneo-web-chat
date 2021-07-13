@@ -9,7 +9,7 @@ import {API_ON_ENGINE_REQUEST, API_ON_ENGINE_RESPONSE, API_ON_NEW_MESSAGE} from 
 import {EventBus, events} from '../utils/event-bus.js';
 import handleExtension from '../utils/handle-extension.js';
 import basePayload from '../utils/base-payload.js';
-import detectSafari from '../utils/detect-safari';
+//import detectSafari from '../utils/detect-safari';
 import isValidUrl from '../utils/validate-url';
 import {PARTICIPANT_BOT} from "../utils/constants.js";
 import VueI18n from "vue-i18n";
@@ -116,6 +116,7 @@ export default function teneoApiPlugin(teneoApiUrl) {
            // }
 
             // send the input to engine
+
             teneoApi.sendInput(sessionId, requestPayload.requestDetails).then(async (response)=>{
                 const responsePayload = basePayload();
                 responsePayload.responseDetails = response;
@@ -146,8 +147,9 @@ export default function teneoApiPlugin(teneoApiUrl) {
                 // if users have 'prevent cross-site tracking' enabled
                 // a reload of the page may lose the session
            //     if (isSafari) {
+                console.log("Session ID before set @ Teneo API -> " + sessionId)
                     tmpVue.$store.getters.storage.setItem(sessionKey, response.sessionId);
-                debugger;
+                console.log("Session ID after set @ Teneo API -> " + response.sessionId)
                 //    tmpVue.$store.getters.storage.setItem(lbKey, response.sessionId);
                 // } else {
                 //     sessionId = response.sessionId;
@@ -254,6 +256,8 @@ export default function teneoApiPlugin(teneoApiUrl) {
                 sessionId = tmpVue.$store.getters.storage.getItem(sessionKey);
           //  }
             TIE.close(teneoApiUrl, sessionId);
+
+            tmpVue.$store.getters.storage.setItem(sessionKey, "");
         },
         async clearHistory() {
             this.messageList = []
