@@ -26,15 +26,20 @@ function processAudioToText(authToken, region, locale) {
         const speechConfig = speechSDK.SpeechConfig.fromAuthorizationToken(authToken, region);
         speechConfig.speechRecognitionLanguage = locale;
         const audioConfig = speechSDK.AudioConfig.fromDefaultMicrophoneInput();
-        window.twcRecognizer = new speechSDK.SpeechRecognizer(speechConfig, audioConfig);
-        window.twcRecognizer.recognizeOnceAsync(
+        window.TeneoWebChat.tmp.twcRecognizer = new speechSDK.SpeechRecognizer(speechConfig, audioConfig);
+        window.TeneoWebChat.tmp.twcRecognizer.recognizeOnceAsync(
             result => {
-                resolve(result.text);
-                delete window.twcRecognizer
+                if (result.text && !result.errorDetails) {
+                    resolve(result.text);
+                } else {
+                    reject(result.errorDetails);
+
+                }
+                delete window.TeneoWebChat.tmp.twcRecognizer
             },
             error => {
                 reject(error);
-                delete window.twcRecognizer
+                delete window.TeneoWebChat.tmp.twcRecognizer
             })
     })
 
@@ -42,34 +47,39 @@ function processAudioToText(authToken, region, locale) {
 }
 
 function stopAsrRecording() {
-    if(window.twcRecognizer) {
-        //window.twcRecognizer.stopContinuousRecognitionAsync()
-        window.twcRecognizer.dispose(true);
-        delete window.twcRecognizer;
+    if (window.TeneoWebChat.tmp.twcRecognizer) {
+        //window.TeneoWebChat.tmp.twcRecognizer.stopContinuousRecognitionAsync()
+        window.TeneoWebChat.tmp.twcRecognizer.dispose(true);
+        delete window.TeneoWebChat.tmp.twcRecognizer;
     }
 }
 
-function stopTTSAudio(){
-    if(window.twcAudioPlayer) {
-        window.twcAudioPlayer.pause();
-        delete window.twcAudioPlayer;
+function stopTTSAudio() {
+    if (window.TeneoWebChat.tmp.twcAudioPlayer) {
+        window.TeneoWebChat.tmp.twcAudioPlayer.pause();
+        delete window.TeneoWebChat.tmp.twcAudioPlayer;
     }
 }
 
-function processTextToAudio(authToken, region, locale, textToRead, voice ) {
+function processTextToAudio(authToken, region, locale, textToRead, voice) {
     return new Promise((resolve, reject) => {
         const speechConfig = speechSDK.SpeechConfig.fromAuthorizationToken(authToken, region);
         speechConfig.speechSynthesisLanguage = locale;
-        if(voice) {
+        if (voice) {
             speechConfig.speechSynthesisVoiceName = voice;
         }
-        window.twcAudioPlayer = new speechSDK.SpeakerAudioDestination();
-        const audioConfig = speechSDK.AudioConfig.fromSpeakerOutput(window.twcAudioPlayer);
+        window.TeneoWebChat.tmp.twcAudioPlayer = new speechSDK.SpeakerAudioDestination();
+        const audioConfig = speechSDK.AudioConfig.fromSpeakerOutput(window.TeneoWebChat.tmp.twcAudioPlayer);
         const synthesizer = new speechSDK.SpeechSynthesizer(speechConfig, audioConfig);
 
         synthesizer.speakTextAsync(textToRead,
             result => {
+            if(result.audioData && !result.errorDetails) {
                 resolve(result);
+            }
+            else{
+                reject(result.errorDetails)
+            }
                 synthesizer.close();
             },
             error => {

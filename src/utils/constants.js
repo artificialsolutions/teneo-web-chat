@@ -6,7 +6,7 @@ export const DEFAULT_TITLE = 'Teneo Web Chat';
 export const CHANNEL_PARAM = 'teneo-webchat';
 export const BUBBLE_DELAY = 600;
 export const SESSION_ID_STORAGE_KEY = 'teneo-web-chat-session-id';
-export const FALLBACK_LOCALE = 'en';
+export const FALLBACK_LOCALE = 'en-US';
 
 // api version
 export const API_VERSION = "3.6.2";

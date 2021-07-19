@@ -208,21 +208,22 @@ export default {
       for (let card of this.$refs.cards) {
         maxCardHeight = card.clientHeight > maxCardHeight ? card.clientHeight : maxCardHeight;
         card.addEventListener('touchstart', function (evt) {
-          window.twc_touchstartX = evt.changedTouches[0].screenX;
-          console.log('Swipe from:' + window.twc_touchstartX )
+
+          window.TeneoWebChat.tmp.touchstartX = evt.changedTouches[0].screenX;
+          console.log('Swipe from:' + window.TeneoWebChat.tmp.touchstartX )
 
         });
         card.addEventListener('touchend', function (evt) {
-          console.log('Swipe to:' + window.twc_touchstartX);
-          (window.twc_touchstartX < evt.changedTouches[0].screenX) ? this.slideBack() : this.slideForward();
+          console.log('Swipe to:' + window.TeneoWebChat.tmp.touchstartX);
+          (window.TeneoWebChat.tmp.touchstartX < evt.changedTouches[0].screenX) ? this.slideBack() : this.slideForward();
         }.bind(this));
       }
-      ;
+
       for (let card of this.$refs.cards) {
         let spacer = card.getElementsByClassName('twc-card-spacer')[0];
         spacer.style.height = maxCardHeight - card.clientHeight + 'px';
       }
-      ;
+
 
     }
   },

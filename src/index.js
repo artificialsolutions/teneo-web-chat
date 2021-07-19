@@ -531,6 +531,6 @@ Vue.directive('visible', (el, binding) => {
 
 
 
-if ((process.env.NODE_ENV === 'undefined') || (process.env.NODE_ENV !== 'test')) {
-  Object.freeze(window.TeneoWebChat);
-}
+// if ((process.env.NODE_ENV === 'undefined') || (process.env.NODE_ENV !== 'test')) {
+//   Object.freeze(window.TeneoWebChat);
+// }

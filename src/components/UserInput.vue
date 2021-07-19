@@ -12,7 +12,7 @@
             :aria-label="$t('message.input_area_asr_button_aria_label')"
             :title="$t('message.input_area_asr_button_title')"
             class="twc-user-input__asr-icon-wrapper"
-            :class="{ 'twc-active': asrActive}"
+            :class="{ 'twc-active': asrActive,  'twc-broken-service-icon': asrBroken}"
             :aria-disabled="asrDisabled"
             :disabled="asrDisabled ? true : false"
             @click.prevent=""
@@ -44,7 +44,7 @@
             :aria-label="$t('message.input_area_tts_button_aria_label')"
             :title="$t('message.input_area_tts_button_title')"
             class="twc-user-input__tts-icon-wrapper"
-            :class="{ 'twc-active': ttsActive}"
+            :class="{ 'twc-active': ttsActive, 'twc-broken-service-icon': ttsBroken}"
             :aria-disabled="ttsDisabled"
             :disabled="ttsDisabled ? true : false"
             @click.prevent=""
@@ -223,6 +223,8 @@ export default {
       uploadDisabled: false,
       asrDisabled: false,
       ttsDisabled: false,
+      asrBroken: false,
+      ttsBroken: false,
       asrActive: store.getters.asrActive,
       ttsActive: store.getters.ttsActive,
       ttsCumulativeText: ''
@@ -247,12 +249,20 @@ export default {
         if (message.placeInQueue === message.queueLength) {
           this.msTokenCheck().then(() => {
             processTextToAudio(store.getters.msCognitiveToken, store.getters.msCognitiveRegion, store.getters.locale, _this.ttsCumulativeText, store.getters.msVoice).then(() => {
-              window.twcAudioPlayer.onAudioEnd = () => {
+              window.TeneoWebChat.tmp.twcAudioPlayer.onAudioEnd = () => {
                 if (_this.$refs.asrButton.dataset.used === "true" && _this.$refs.asrButton.dataset.cancelled !== "true") {
                   _this.asrButtonClicked(_this.$refs.asrButton)
                 }
               }
+            }).catch((e)=>{
+              console.error('Error converting text to audio. ' + e.toString())
+              this.setTtsDisabled(true);
+              this.setTtsBroken(true);
             })
+          }).catch((e)=>{
+            console.error('Error getting authentication token for TTS. ' + e.toString())
+            this.setTtsDisabled(true);
+            this.setTtsBroken(true);
           })
         }
 
@@ -402,6 +412,7 @@ export default {
 
       this.asrActive = onoff;
     },
+
     setTtsActive(onoff) {
       this.ttsActive = onoff;
     },
@@ -410,10 +421,18 @@ export default {
     },
     setUploadDisabled(onoff) {
       this.uploadDisabled = onoff;
-    }, setAsrDisabled(onoff) {
+    },
+    setAsrDisabled(onoff) {
       this.asrDisabled = onoff;
-    }, setTtsDisabled(onoff) {
+    },
+    setTtsDisabled(onoff) {
       this.ttsDisabled = onoff;
+    },
+    setAsrBroken(onoff) {
+      this.asrBroken = onoff;
+    },
+    setTtsBroken(onoff) {
+      this.ttsBroken = onoff;
     },
     handleReturnKey(event) {
       if (event.keyCode === 13 && !event.shiftKey) {
@@ -479,11 +498,11 @@ export default {
             'data': {
               'text': this.$t('message.first_use_asr_system_message')
             },
-            'placeInQueue':1,
-            'queueLength':1
+            'placeInQueue': 1,
+            'queueLength': 1
           });
         }
-        if (this.asrActive && window.twcRecognizer) {
+        if (this.asrActive && window.TeneoWebChat.tmp.twcRecognizer) {
           this.setAsrActive(false);
           e.dataset.cancelled = "true";
           this.$refs.recordingCancelledBeep.$el.play()
@@ -496,15 +515,17 @@ export default {
             if (firstClick) {
 
               setTimeout(() => {
-                if (this.ttsActive && window.twcAudioPlayer) {
-                  window.twcAudioPlayer.onAudioEnd = function () {
+                if (this.ttsActive && window.TeneoWebChat.tmp.twcAudioPlayer) {
+                  window.TeneoWebChat.tmp.twcAudioPlayer.onAudioEnd = function () {
                     resolve();
                   }
+                } else {
+                  resolve();
                 }
               }, 100)
 
             } else {
-              resolve()
+              resolve();
             }
           }).then(() => {
             this.$refs.recordingStartedBeep.$el.play();
@@ -516,12 +537,19 @@ export default {
                       this.$refs.recordingEndedBeep.$el.play();
                       await this._submitText();
                     } else {
-                      console.log('ASR recognition failed or cancelled')
+                      console.warn('ASR recognition failed or cancelled')
                     }
                     this.setAsrActive(false);
-
                   })
-
+                  .catch(e => {
+                    console.error('Error processing audio to text. ' + e.toString())
+                    this.setAsrDisabled(true);
+                    this.setAsrBroken(true);
+                  })
+            }).catch(e => {
+              console.error('Error getting authentication token for ASR. ' + e.toString())
+              this.setAsrDisabled(true);
+              this.setAsrBroken(true);
             })
           })
 
@@ -541,7 +569,7 @@ export default {
       let ttsExtension = await handleExtension(API_ON_TTS_BUTTON_CLICK, e);
       if (!ttsExtension) {
         this.setTtsActive(!this.ttsActive);
-        if (!this.ttsActive && window.hasOwnProperty('twcAudioPlayer')) {
+        if (!this.ttsActive && window.TeneoWebChat.tmp.hasOwnProperty('twcAudioPlayer')) {
           stopTTSAudio();
         }
       }
@@ -749,6 +777,17 @@ We should not dim it twice, so we check: .twc-user-input:not(.twc-disabled)
 .twc-user-input__asr-icon-wrapper {
   color: var(--asricon-fg-color, #263238);
 }
+
+.twc-broken-service-icon::before {
+  position: absolute;
+  top: 25%;
+  left: 0;
+  content: '🚫';
+  opacity: 0.4;
+  font-size: 1.5em;
+  line-height: 100%;
+}
+
 
 .twc-user-input__tts-icon-wrapper {
   color: var(--ttsicon-fg-color, #263238);

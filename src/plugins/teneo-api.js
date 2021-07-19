@@ -147,9 +147,9 @@ export default function teneoApiPlugin(teneoApiUrl) {
                 // if users have 'prevent cross-site tracking' enabled
                 // a reload of the page may lose the session
            //     if (isSafari) {
-                console.log("Session ID before set @ Teneo API -> " + sessionId)
+
                     tmpVue.$store.getters.storage.setItem(sessionKey, response.sessionId);
-                console.log("Session ID after set @ Teneo API -> " + response.sessionId)
+
                 //    tmpVue.$store.getters.storage.setItem(lbKey, response.sessionId);
                 // } else {
                 //     sessionId = response.sessionId;
