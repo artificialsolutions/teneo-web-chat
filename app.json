@@ -14,6 +14,14 @@
         "LOCALE": {
             "description": "Optional language code. Used for things like the placeholder text in the input box. Defaults to 'en' if left blank.",
             "required":false
+        },
+        "MS_COGNITIVE_SUBSCRIPTION_KEY": {
+          "description": "Subscription key to Microsoft Cognitive services to power ASR and TTS",
+          "required": false
+        },
+        "MS_COGNITIVE_REGION": {
+          "description": "Microsoft Cognitive serivces region",
+          "required": false
         }
     }
 }
