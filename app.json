@@ -22,6 +22,14 @@
         "MS_COGNITIVE_REGION": {
           "description": "Microsoft Cognitive serivces region",
           "required": false
+        },
+        "SHOW_TTS_BUTTON": {
+          "description": "Show TTS button",
+          "required": false
+        },
+        "SHOW_ASR_BUTTON": {
+          "description": "Show ASR button",
+          "required": false
         }
     }
 }
