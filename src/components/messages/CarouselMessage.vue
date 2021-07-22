@@ -216,8 +216,6 @@ export default {
         let spacer = card.getElementsByClassName('twc-card-spacer')[0];
         spacer.style.height = maxCardHeight - card.clientHeight + 'px';
       }
-
-
     }
 
   },
@@ -231,16 +229,19 @@ export default {
     }.bind(this));
 
     if (this.isExpired) {
-//TODO => Unlink all listeners from expired elements. THIS IS WHERE YOU WERE!!!
-      // let carouselElement = this.$el;
-      // let parentElement = carouselElement.parent;
-      // let cloneCarouselElement = carouselElement.cloneNode(true);
-      // cloneCarouselElement.classList.add('twc-expired');
-      // parentElement.insertBefore(cloneCarouselElement, carouselElement);
-      // parentElement.remove(carouselElement);
-      // this.destroy()
+// Unlink all listeners from expired elements.
+      let carouselElement = this.$el;
+      let parentElement = carouselElement.parent;
+      let cloneCarouselElement = carouselElement.cloneNode(true);
+      this.$destroy(true);
+
+      cloneCarouselElement.classList.add('twc-expired');
+      parentElement.insertBefore(cloneCarouselElement, carouselElement);
+      parentElement.remove(carouselElement);
+
     }
-  }
+  },
+
 };
 
 </script>

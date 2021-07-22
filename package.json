@@ -9,7 +9,7 @@
     "start:dev": "webpack-dev-server --https --config webpack.dev.js",
     "test:unit": "vue-cli-service test:unit",
     "test:only": "vue-cli-service test:unit -f ./tests/unit/teneoWebChatComponentsTest.spec.js -t 'Assert FormMessage JSON'",
-    "heroku-postbuild": "webpack -p --config ./webpack.prod.js --progress"
+    "heroku-postbuild": "NODE_ENV=production webpack -p --config ./webpack.prod.js --progress"
   },
   "repository": {
     "type": "git",
