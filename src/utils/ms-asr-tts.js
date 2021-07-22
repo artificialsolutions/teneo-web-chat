@@ -23,6 +23,9 @@ function getMSToken(region, key) {
 
 function processAudioToText(authToken, region, locale) {
     return new Promise((resolve, reject) => {
+        if(locale.indexOf('_') > 0){
+            locale.replaceAll('_', '-');
+        }
         const speechConfig = speechSDK.SpeechConfig.fromAuthorizationToken(authToken, region);
         speechConfig.speechRecognitionLanguage = locale;
         const audioConfig = speechSDK.AudioConfig.fromDefaultMicrophoneInput();
@@ -63,6 +66,9 @@ function stopTTSAudio() {
 
 function processTextToAudio(authToken, region, locale, textToRead, voice) {
     return new Promise((resolve, reject) => {
+        if(locale.indexOf('_') > 0){
+            locale.replaceAll('_', '-');
+        }
         const speechConfig = speechSDK.SpeechConfig.fromAuthorizationToken(authToken, region);
         speechConfig.speechSynthesisLanguage = locale;
         if (voice) {

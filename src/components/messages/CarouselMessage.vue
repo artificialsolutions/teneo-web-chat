@@ -159,7 +159,7 @@ export default {
       this.isFirstSlide = this.activeSlide === 0;
       this.isLastSlide = this.activeSlide === this.message.data.carousel_items.length - 1;
 
-      let slides = document.getElementsByClassName('twc-carousel-list-item');
+      let slides = this.$el.getElementsByClassName('twc-carousel-list-item');
       for (let slide of slides) {
         slide.style.transform = 'translateX(' + ((this.activeSlide * -100) + 4) + '%)';
       }
@@ -227,19 +227,6 @@ export default {
     this.$el.addEventListener('touchend', function (evt) {
       (window.TeneoWebChat.tmp.touchstartX < evt.changedTouches[0].screenX) ? this.slideBack() : this.slideForward();
     }.bind(this));
-
-    if (this.isExpired) {
-// Unlink all listeners from expired elements.
-      let carouselElement = this.$el;
-      let parentElement = carouselElement.parent;
-      let cloneCarouselElement = carouselElement.cloneNode(true);
-      this.$destroy(true);
-
-      cloneCarouselElement.classList.add('twc-expired');
-      parentElement.insertBefore(cloneCarouselElement, carouselElement);
-      parentElement.remove(carouselElement);
-
-    }
   },
 
 };

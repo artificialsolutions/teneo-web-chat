@@ -12,7 +12,8 @@
 </head>
 
 <body>
-<button onclick="TeneoWebChat.call('reset')">Reset Chat</button><br>
+<button onclick="TeneoWebChat.call('reset')">Reset Chat</button>
+<br>
 
 <script src="teneo-web-chat.js"></script> <!-- needed for Heroku -->
 <!--<% if(process.env.NODE_ENV === 'development') { %>-->
@@ -21,6 +22,7 @@
 <!--<% } %>-->
 <div id="teneo-web-chat"></div>
 <script>
+
 
     window.onload = function () {
         if (window.TeneoWebChat && typeof window.TeneoWebChat.initialize === 'function') {
@@ -42,7 +44,7 @@
                 'showUploadButton': '<%= process.env.SHOW_UPLOAD_BUTTON %>',
                 'asrIconUrl': '<%= process.env.ASR_ICON_URL %>',
                 'showAsrButton': '<%= process.env.SHOW_ASR_BUTTON %>',
-                'asrActive': '<%= process.env.ASR_ACTIVE%>',
+                'asrActive': '<%= process.env.ASR_ACTIVE %>',
                 'ttsIconUrl': '<%= process.env.TTS_ICON_URL %>',
                 'showTtsButton': '<%= process.env.SHOW_TTS_BUTTON %>',
                 'ttsActive': '<%= process.env.TTS_ACTIVE %>',
@@ -50,16 +52,28 @@
                 'msCognitiveRegion': '<%= process.env.MS_COGNITIVE_REGION %>',
                 'msVoice': '<%= process.env.MS_VOICE %>',
                 'locale': '<%= process.env.LOCALE %>',
-                'autoRedirect': '<%= process.env.AUTO_OUTPUT_LINK_REDIRECT%>'
+                'autoRedirect': '<%= process.env.AUTO_OUTPUT_LINK_REDIRECT %>'
             };
-<!--            <% if(process.env.NODE_ENV === 'development') { %>-->
-<!--            common_extensions.init();-->
-<!--            <% } %>-->
+            <% if(process.env.NODE_ENV === 'development') { %>
+            //Keep last input on up arrow for rapid testing
+            TeneoWebChat.on('input_submitted', (payload) => {
+                window.sessionStorage.setItem('lastSentPhrase', payload.text);
+            })
+            document.addEventListener('keydown', function(e){
+                if(e.code === 'ArrowUp') {
+                    let inputField = document.getElementById('twc-user-input-field');
+                    inputField.value = window.sessionStorage.getItem('lastSentPhrase')
+                }
+            });
+
+
+            <% } %>
+
+
             window.TeneoWebChat.initialize(element, teneoProps);
 
         }
     };
-
 
 
 </script>
