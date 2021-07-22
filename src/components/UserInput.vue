@@ -227,7 +227,8 @@ export default {
       ttsBroken: false,
       asrActive: store.getters.asrActive,
       ttsActive: store.getters.ttsActive,
-      ttsCumulativeText: ''
+      ttsCumulativeText: '',
+      isCancellation: false
     };
   },
 
@@ -434,6 +435,9 @@ export default {
     setTtsBroken(onoff) {
       this.ttsBroken = onoff;
     },
+    setIsCancellation(onoff){
+      this.isCancellation = onoff;
+    },
     handleReturnKey(event) {
       if (event.keyCode === 13 && !event.shiftKey) {
         this._submitText(event);
@@ -502,9 +506,11 @@ export default {
             'queueLength': 1
           });
         }
+
         if (this.asrActive && window.TeneoWebChat.tmp.twcRecognizer) {
           this.setAsrActive(false);
           e.dataset.cancelled = "true";
+          this.setIsCancellation(true);
           this.$refs.recordingCancelledBeep.$el.play()
           stopAsrRecording();
         } else {
@@ -537,17 +543,24 @@ export default {
                       this.$refs.recordingEndedBeep.$el.play();
                       await this._submitText();
                     } else {
-                      console.warn('ASR recognition failed or cancelled')
+                      console.warn('ASR recognition failed.')
                     }
                     this.setAsrActive(false);
                   })
-                  .catch(e => {
-                    console.error('Error processing audio to text. ' + e.toString())
+                  .catch(() => {
+                    if(!this.isCancellation){
+                      console.warn('Error processing audio to text. ')
+                      this.setAsrBroken(true);
+                    }
+                    else{
+                      this.setIsCancellation(false);
+                    }
+
                     this.setAsrDisabled(true);
-                    this.setAsrBroken(true);
+
                   })
-            }).catch(e => {
-              console.error('Error getting authentication token for ASR. ' + e.toString())
+            }).catch((e) => {
+              console.error('Error getting authentication token for ASR. ' + e)
               this.setAsrDisabled(true);
               this.setAsrBroken(true);
             })

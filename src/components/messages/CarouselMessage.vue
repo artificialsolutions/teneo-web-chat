@@ -1,9 +1,10 @@
 <template>
-  <div class="twc-carousel">
+  <div class="twc-carousel" :class="{ 'twc-expired': replySent || isExpired}">
     <div class="twc-carousel-ctrl">
       <button class="twc-carousel-bck twc-carousel-ctrl-arrows"
               @click="slideBack()"
               v-bind:disabled="this.isFirstSlide"
+              ref="backBtn"
       >&#171;
       </button>
       <span class="twc-carousel-ctrl-dots-container">
@@ -11,12 +12,14 @@
               v-for="(btnIndex) in carouselItemCount"
               @click="skipToSlide(btnIndex)"
               v-bind:class="{'twc-carousel-ctrl-dots-active': isActiveSlide(btnIndex-1)}"
+              :ref="'skipTo' + btnIndex"
       >
       </button>
       </span>
       <button class="twc-carousel-fwd twc-carousel-ctrl-arrows"
               @click="slideForward()"
               v-bind:disabled="this.isLastSlide"
+              :ref="'fwdBtn'"
       >&#187;
       </button>
     </div>
@@ -96,9 +99,9 @@
 </template>
 <script>
 
-import { PARTICIPANT_BOT } from '../../utils/constants.js';
+import {PARTICIPANT_BOT} from '../../utils/constants.js';
 import handleButtonClick from '../../utils/handle-button-click.js';
-import { EventBus, events } from '../../utils/event-bus.js';
+import {EventBus, events} from '../../utils/event-bus.js';
 import handleLinkButtonClick from '../../utils/handle-linkbutton-click.js';
 import keyIsSpaceOrEnter from '../../utils/is-space-or-enter.js';
 import sanitizeHtml from '../../utils/sanitize-html.js';
@@ -137,7 +140,7 @@ export default {
       return this.message.selected;
     },
     isExpired() {
-      const { messageList } = this.$teneoApi;
+      const {messageList} = this.$teneoApi;
       const latestMessage = messageList[messageList.length - 1];
 
       return latestMessage && latestMessage !== this.message;
@@ -207,16 +210,6 @@ export default {
       let maxCardHeight = 0;
       for (let card of this.$refs.cards) {
         maxCardHeight = card.clientHeight > maxCardHeight ? card.clientHeight : maxCardHeight;
-        card.addEventListener('touchstart', function (evt) {
-
-          window.TeneoWebChat.tmp.touchstartX = evt.changedTouches[0].screenX;
-          console.log('Swipe from:' + window.TeneoWebChat.tmp.touchstartX )
-
-        });
-        card.addEventListener('touchend', function (evt) {
-          console.log('Swipe to:' + window.TeneoWebChat.tmp.touchstartX);
-          (window.TeneoWebChat.tmp.touchstartX < evt.changedTouches[0].screenX) ? this.slideBack() : this.slideForward();
-        }.bind(this));
       }
 
       for (let card of this.$refs.cards) {
@@ -226,9 +219,27 @@ export default {
 
 
     }
+
   },
   mounted() {
     this.additionalCardProcessing();
+    this.$el.addEventListener('touchstart', function (evt) {
+      window.TeneoWebChat.tmp.touchstartX = evt.changedTouches[0].screenX;
+    });
+    this.$el.addEventListener('touchend', function (evt) {
+      (window.TeneoWebChat.tmp.touchstartX < evt.changedTouches[0].screenX) ? this.slideBack() : this.slideForward();
+    }.bind(this));
+
+    if (this.isExpired) {
+//TODO => Unlink all listeners from expired elements. THIS IS WHERE YOU WERE!!!
+      // let carouselElement = this.$el;
+      // let parentElement = carouselElement.parent;
+      // let cloneCarouselElement = carouselElement.cloneNode(true);
+      // cloneCarouselElement.classList.add('twc-expired');
+      // parentElement.insertBefore(cloneCarouselElement, carouselElement);
+      // parentElement.remove(carouselElement);
+      // this.destroy()
+    }
   }
 };
 

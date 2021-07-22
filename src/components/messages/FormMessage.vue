@@ -155,7 +155,7 @@ export default {
       let type = elementData.type || 'option';
 
       attributes.class = 'twc-form-' + type;
-      if (elementData.type === 'control') {
+      if (type === 'control') {
         attributes.class += ' twc-form-' + elementData.action;
         if (elementData.action === 'submit') {
           attributes.type = 'submit';
@@ -164,6 +164,9 @@ export default {
         } else {
           console.error('Unrecognized action');
         }
+      }
+      else if(type === 'input' && attributes.type === 'reset'){
+        attributes.class += ' twc-form-' + 'reset';
       }
       return attributes
     },

@@ -173,22 +173,63 @@ describe('Test Message Components', () => {
         };
 
         let jsonEntries = sampleJSON.formMessageJSON.data.elements
+        //Form elements
         let formElement = wrapper.element
         let formChildren = formElement.children
+        let formTitle = formChildren[0];
+        let formSubtitle = formChildren[1];
+        let unassociatedLabel1 = formChildren[2];
+        let unassociatedLabel2 = formChildren[7];
+        let requiredInputLabel = formChildren[3];
+        let requiredInput = formChildren[4];
+        let validatedInputLabel = formChildren[5];
+        let validatedInput = formChildren[6];
+        let dummyBtn1 = formChildren[8];
+        let dummyBtn2 = formChildren[9];
+        let radioInputsLabel = formChildren[10];
+        let radioInputLabel1 = formChildren[11];
+        let radioInput1 = formChildren[12];
+        let radioInputLabel2 = formChildren[13];
+        let radioInput2 = formChildren[14];
+        let radioInputLabel3 = formChildren[15];
+        let radioInput3 = formChildren[16];
+        let radioInputLabel4 = formChildren[17];
+        let radioInput4 = formChildren[18];
+        let checkboxInputsLabel = formChildren[19];
+        let checkboxInputLabel1 = formChildren[20];
+        let checkboxInput1 = formChildren[21];
+        let checkboxInputLabel2 = formChildren[22];
+        let checkboxInput2 = formChildren[23];
+        let checkboxInputLabel3 = formChildren[24];
+        let checkboxInput3 = formChildren[25];
+        let datePickerLabel = formChildren[26];
+        let datePickerField = formChildren[27];
+        let timePickerLabel = formChildren[28];
+        let timePickerField = formChildren[29];
+        let datetimePickerLabel = formChildren[30];
+        let datetimePickerField = formChildren[31];
+        let colorPickerLabel = formChildren[32];
+        let colorPickerField = formChildren[33];
+        let rangePickerLabel = formChildren[34];
+        let rangePickerField = formChildren[35];
+        let resetBtnLabel = formChildren[36];
+        let resetBtn = formChildren[37];
+        let textAreaLabel = formChildren[38];
+        let textAreaField = formChildren[39];
+        let selectLabel = formChildren[40];
+        let selectField = formChildren[41];
+
+
         expect(formElement).toHaveClass('twc-form');
         //Check title and subtitle positioning
-        expect(formChildren[0]).toHaveClass('twc-form-title');
-        expect(formChildren[1]).toHaveClass('twc-form-subtitle');
+        expect(formTitle).toHaveClass('twc-form-title');
+        expect(formSubtitle).toHaveClass('twc-form-subtitle');
         //Unassociated labels
-        let unassociatedLabel1 = formChildren[2];
         expect(unassociatedLabel1).toHaveClass('twc-form-label');
         expect(unassociatedLabel1).not.toHaveClass('twc-form-associated-label');
-        let unassociatedLabel2 = formChildren[7];
         expect(unassociatedLabel2).toHaveClass('twc-form-label');
         expect(unassociatedLabel2).not.toHaveClass('twc-form-associated-label');
         //Required text
-        let requiredInputLabel = formChildren[3];
-        let requiredInput = formChildren[4];
 
         //Make sure label is assigned to element
         expect(requiredInputLabel).toBe(requiredInput.labels[0]);
@@ -199,8 +240,6 @@ describe('Test Message Components', () => {
         expect(requiredInput).toHaveClass('twc-form-input');
 
         //Validated text
-        let validatedInputLabel = formChildren[5];
-        let validatedInput = formChildren[6];
         expect(validatedInputLabel).toBe(validatedInput.labels[0]);
         expect(validatedInputLabel).toHaveClass('twc-form-label');
         expect(validatedInputLabel).toHaveClass('twc-form-associated-label');
@@ -211,8 +250,6 @@ describe('Test Message Components', () => {
         expect(validatedInput).toHaveAttribute('pattern');
         expect(validatedInput).toHaveAttribute('title');
 
-        let dummyBtn1 = formChildren[8];
-        let dummyBtn2 = formChildren[9];
 
         expect(dummyBtn1).toHaveAttribute('type', 'button');
         expect(dummyBtn2).toHaveAttribute('type', 'button');
@@ -228,15 +265,6 @@ describe('Test Message Components', () => {
 
 
         //Check radio inputs
-        let radioInputsLabel = formChildren[10];
-        let radioInputLabel1 = formChildren[11];
-        let radioInput1 = formChildren[12];
-        let radioInputLabel2 = formChildren[13];
-        let radioInput2 = formChildren[14];
-        let radioInputLabel3 = formChildren[15];
-        let radioInput3 = formChildren[16];
-        let radioInputLabel4 = formChildren[17];
-        let radioInput4 = formChildren[18];
 
         expect(radioInputsLabel).toHaveClass('twc-form-label');
         expect(radioInputsLabel).not.toHaveClass('twc-form-associated-label');
@@ -270,13 +298,6 @@ describe('Test Message Components', () => {
         expect(radioInput1).not.toBeChecked();
 
         //Checkboxes
-        let checkboxInputsLabel = formChildren[19];
-        let checkboxInputLabel1 = formChildren[20];
-        let checkboxInput1 = formChildren[21];
-        let checkboxInputLabel2 = formChildren[22];
-        let checkboxInput2 = formChildren[23];
-        let checkboxInputLabel3 = formChildren[24];
-        let checkboxInput3 = formChildren[25];
 
         expect(checkboxInputsLabel).toHaveClass('twc-form-label');
         expect(checkboxInputsLabel).not.toHaveClass('twc-form-associated-label');
@@ -306,16 +327,6 @@ describe('Test Message Components', () => {
         expect(checkboxInput3).toBeChecked();
 
         //Date, time, datetime, color and range pickers
-        let datePickerLabel = formChildren[26]
-        let datePickerField = formChildren[27]
-        let timePickerLabel = formChildren[28]
-        let timePickerField = formChildren[29]
-        let datetimePickerLabel = formChildren[30]
-        let datetimePickerField = formChildren[31]
-        let colorPickerLabel = formChildren[32]
-        let colorPickerField = formChildren[33]
-        let rangePickerLabel = formChildren[34]
-        let rangePickerField = formChildren[35]
 
         expect(datePickerLabel).toHaveClass('twc-form-label');
         expect(datePickerLabel).toHaveClass('twc-form-associated-label');
@@ -348,8 +359,6 @@ describe('Test Message Components', () => {
         expect(rangePickerField).toHaveClass('twc-form-input');
 
         //test reset
-        let resetBtnLabel = formChildren[36]
-        let resetBtn = formChildren[37]
 
         expect(resetBtnLabel).toHaveClass('twc-form-label');
         expect(resetBtnLabel).toHaveClass('twc-form-associated-label');
@@ -364,8 +373,8 @@ describe('Test Message Components', () => {
         expect(checkboxInput3).toBeChecked()
         expect(radioInput2).toBeChecked()
 
+
         resetBtn.click();
-        //timeout is necessary so that the reset has time to clear the form
         setTimeout(() => {
             expect(requiredInput).not.toHaveValue('test')
             expect(validatedInput).not.toHaveValue('abc')
@@ -373,12 +382,12 @@ describe('Test Message Components', () => {
             expect(checkboxInput2).not.toBeChecked()
             expect(checkboxInput3).not.toBeChecked()
             expect(radioInput2).not.toBeChecked()
-        }, 1)
+
+        }, 30)
+
 
         //Test Text Area
 
-        let textAreaLabel = formChildren[38]
-        let textAreaField = formChildren[39]
         let textAreaEntryText = jsonEntries.filter(entry => entry.type === 'textarea')[0].text
         expect(textAreaLabel).toHaveClass('twc-form-label');
         expect(textAreaLabel).toHaveClass('twc-form-associated-label');
@@ -390,8 +399,6 @@ describe('Test Message Components', () => {
 
 
         //Test Select option
-        let selectLabel = formChildren[40]
-        let selectField = formChildren[41]
         let selectEntry = jsonEntries.filter(entry => entry.type === 'select')[0]
 
 
@@ -404,7 +411,7 @@ describe('Test Message Components', () => {
 
         expect(selectField.childElementCount).toEqual(selectEntry.options.length)
 
-        for(let i =0; i < selectField.childElementCount; i++){
+        for (let i = 0; i < selectField.childElementCount; i++) {
             expect(selectField.children[i].value).toEqual(selectEntry.options[i].text)
         }
 
@@ -475,16 +482,56 @@ describe('Test Message Components', () => {
         //Check there are three cards in the example
         expect(wrapper.findAll('.twc-carousel-list-item')).toHaveLength(3)
 
-        //Check sliding functions
-        expect(wrapper.vm.$data.activeSlide).toBe(0);
-        wrapper.vm.slideForward()
-        expect(wrapper.vm.$data.activeSlide).toBe(1);
-        wrapper.vm.slideBack()
-        expect(wrapper.vm.$data.activeSlide).toBe(0);
-        wrapper.vm.skipToSlide(3)
-        expect(wrapper.vm.$data.activeSlide).toBe(2);
 
     })
+
+    test('Assert carousel controls functionality', async () => {
+        const fwdFunc = jest.spyOn(CarouselMessage.methods, "slideForward")
+        const backFunc = jest.spyOn(CarouselMessage.methods, "slideBack")
+        const skipToFunc = jest.spyOn(CarouselMessage.methods, "skipToSlide")
+        const wrapper = mount(CarouselMessage, {
+            propsData: {
+                message: sampleJSON.carouselMessageJSON
+            },
+            computed: {
+                isExpired: jest.fn().mockImplementation(() => {
+                    return false;
+                }),
+                replySent: jest.fn().mockImplementation(() => {
+                    return false;
+                }),
+            }
+        })
+
+
+        window.TeneoWebChat = {tmp:{touchstartX: ''}};
+
+        //Test sliding functions, buttons and gestures
+        expect(wrapper.vm.$data.activeSlide).toBe(0);
+        await wrapper.findComponent({ref: 'fwdBtn'}).trigger('click')
+        wrapper.trigger('touchstart', {changedTouches: [{screenX: 200}]})
+        wrapper.trigger('touchend', {changedTouches: [{screenX: 100}]})
+        expect(fwdFunc).toHaveBeenCalledTimes(2);
+        expect(wrapper.vm.$data.activeSlide).toBe(2);
+        await wrapper.findComponent({ref: 'backBtn'}).trigger('click')
+        wrapper.trigger('touchstart', {changedTouches: [{screenX: 100}]})
+        wrapper.trigger('touchend', {changedTouches: [{screenX: 200}]})
+        expect(backFunc).toHaveBeenCalledTimes(2);
+        expect(wrapper.vm.$data.activeSlide).toBe(0);
+        await wrapper.findComponent({ref: 'skipTo3'}).trigger('click')
+        expect(skipToFunc).toHaveBeenCalledWith(3);
+        expect(wrapper.vm.$data.activeSlide).toBe(2);
+        await wrapper.findComponent({ref: 'skipTo2'}).trigger('click')
+        expect(skipToFunc).toHaveBeenCalledWith(2);
+        expect(wrapper.vm.$data.activeSlide).toBe(1);
+        await wrapper.findComponent({ref: 'skipTo1'}).trigger('click')
+        expect(skipToFunc).toHaveBeenCalledWith(1);
+        expect(wrapper.vm.$data.activeSlide).toBe(0);
+        delete window.TeneoWebChat;
+
+    })
+
+    test('Assert Carousel ')
 
 
     test('Assert FilevideoMessage JSON', () => {
