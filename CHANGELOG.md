@@ -1,3 +1,10 @@
+# v3.6.1
+## 09-06-2021
+* Automatic ASR disabled after the first time it has been canceled
+* Detects when connection to backend server fails with error handler added
+* TTS now reads system messages
+* ASR and TTS can now be canceled
+
 # v3.6.0
 ## 05-05-2021
 * Fix reset title icon issue
