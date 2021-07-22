@@ -222,10 +222,10 @@ export default {
   mounted() {
     this.additionalCardProcessing();
     this.$el.addEventListener('touchstart', function (evt) {
-      window.TeneoWebChat.tmp.touchstartX = evt.changedTouches[0].screenX;
+      window.twcTmp.touchstartX = evt.changedTouches[0].screenX;
     });
     this.$el.addEventListener('touchend', function (evt) {
-      (window.TeneoWebChat.tmp.touchstartX < evt.changedTouches[0].screenX) ? this.slideBack() : this.slideForward();
+      (window.twcTmp.touchstartX < evt.changedTouches[0].screenX) ? this.slideBack() : this.slideForward();
     }.bind(this));
   },
 

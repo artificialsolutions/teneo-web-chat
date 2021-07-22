@@ -250,7 +250,7 @@ export default {
         if (message.placeInQueue === message.queueLength) {
           this.msTokenCheck().then(() => {
             processTextToAudio(store.getters.msCognitiveToken, store.getters.msCognitiveRegion, store.getters.locale, _this.ttsCumulativeText, store.getters.msVoice).then(() => {
-              window.TeneoWebChat.tmp.twcAudioPlayer.onAudioEnd = () => {
+              window.twcTmp.twcAudioPlayer.onAudioEnd = () => {
                 if (_this.$refs.asrButton.dataset.used === "true" && _this.$refs.asrButton.dataset.cancelled !== "true") {
                   _this.asrButtonClicked(_this.$refs.asrButton)
                 }
@@ -507,7 +507,7 @@ export default {
           });
         }
 
-        if (this.asrActive && window.TeneoWebChat.tmp.twcRecognizer) {
+        if (this.asrActive && window.twcTmp.twcRecognizer) {
           this.setAsrActive(false);
           e.dataset.cancelled = "true";
           this.setIsCancellation(true);
@@ -521,8 +521,8 @@ export default {
             if (firstClick) {
 
               setTimeout(() => {
-                if (this.ttsActive && window.TeneoWebChat.tmp.twcAudioPlayer) {
-                  window.TeneoWebChat.tmp.twcAudioPlayer.onAudioEnd = function () {
+                if (this.ttsActive && window.twcTmp.twcAudioPlayer) {
+                  window.twcTmp.twcAudioPlayer.onAudioEnd = function () {
                     resolve();
                   }
                 } else {
@@ -582,7 +582,7 @@ export default {
       let ttsExtension = await handleExtension(API_ON_TTS_BUTTON_CLICK, e);
       if (!ttsExtension) {
         this.setTtsActive(!this.ttsActive);
-        if (!this.ttsActive && window.TeneoWebChat.tmp.hasOwnProperty('twcAudioPlayer')) {
+        if (!this.ttsActive && window.twcTmp.hasOwnProperty('twcAudioPlayer')) {
           stopTTSAudio();
         }
       }

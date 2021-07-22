@@ -17,7 +17,7 @@ const validFunctionNames = Object.values(apiConstants);
 const messageList = new messageListCache();
 let isInitialised = false;
 
-
+window.twcTmp = {}
 window.TeneoWebChat = {
   initialize(element, twcProps) {
 
@@ -520,8 +520,7 @@ return filteredMessageList;
   },
   version() {
     return API_VERSION;
-  },
-  tmp: {}
+  }
 };
 //Directive to v-visible to use visibility="hidden" instead of v-show to display="none"
 Vue.directive('visible', (el, binding) => {
@@ -531,6 +530,6 @@ Vue.directive('visible', (el, binding) => {
 
 
 
-// if ((process.env.NODE_ENV === 'undefined') || (process.env.NODE_ENV !== 'test')) {
-//   Object.freeze(window.TeneoWebChat);
-// }
+if ((process.env.NODE_ENV === 'undefined') || (process.env.NODE_ENV !== 'test')) {
+  Object.freeze(window.TeneoWebChat);
+}

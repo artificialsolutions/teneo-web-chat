@@ -531,8 +531,6 @@ describe('Test Message Components', () => {
 
     })
 
-    test('Assert Carousel items expire properly', ()=>{})
-
 
     test('Assert FilevideoMessage JSON', () => {
         const wrapper = mount(FilevideoMessage, {
