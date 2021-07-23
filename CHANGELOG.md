@@ -6,7 +6,6 @@
 * Added message type for forms
 * Fixed carousel swiping issue
 * Sets ASR/TTS buttons to broken if error is encountered
-* Added custom header to Teneo CORS request
 
 # v3.6.1
 ## 09-06-2021
