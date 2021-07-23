@@ -9,7 +9,7 @@ import {API_ON_ENGINE_REQUEST, API_ON_ENGINE_RESPONSE, API_ON_NEW_MESSAGE} from 
 import {EventBus, events} from '../utils/event-bus.js';
 import handleExtension from '../utils/handle-extension.js';
 import basePayload from '../utils/base-payload.js';
-import detectSafari from '../utils/detect-safari';
+//import detectSafari from '../utils/detect-safari';
 import isValidUrl from '../utils/validate-url';
 import {PARTICIPANT_BOT} from "../utils/constants.js";
 import VueI18n from "vue-i18n";
@@ -28,7 +28,7 @@ export default function teneoApiPlugin(teneoApiUrl) {
 
     const messageListCache = new MessageListCache();
     const tmpVue = new Vue({data: {messageList: messageListCache.get()}, i18n});
-    const isSafari = detectSafari();
+    //const isSafari = detectSafari();
     const sessionKey = SESSION_ID_STORAGE_KEY;
     let sessionId = null;
 
@@ -111,11 +111,12 @@ export default function teneoApiPlugin(teneoApiUrl) {
 
             // get session from storage when safari is used
             // to prevent issues when 'prevent cross-site tracking' is enabled
-            if (isSafari) {
+           // if (isSafari) {
                 sessionId = tmpVue.$store.getters.storage.getItem(sessionKey);
-            }
+           // }
 
             // send the input to engine
+
             teneoApi.sendInput(sessionId, requestPayload.requestDetails).then(async (response)=>{
                 const responsePayload = basePayload();
                 responsePayload.responseDetails = response;
@@ -132,7 +133,7 @@ export default function teneoApiPlugin(teneoApiUrl) {
                 }
 
                 // stop further processing if response is not an object
-                if (Object.keys(responsePayload.responseDetails).length == 0 || responsePayload.responseDetails.constructor !== Object) {
+                if (Object.keys(responsePayload.responseDetails).length === 0 || responsePayload.responseDetails.constructor !== Object) {
 
                     return
                 }
@@ -145,13 +146,16 @@ export default function teneoApiPlugin(teneoApiUrl) {
 
                 // if users have 'prevent cross-site tracking' enabled
                 // a reload of the page may lose the session
-                if (isSafari) {
-                    tmpVue.$store.getters.storage.setItem(sessionKey, response.sessionId);
-                } else {
-                    sessionId = response.sessionId;
-                }
+           //     if (isSafari) {
 
-                // sessionId = response.sessionId;
+                    tmpVue.$store.getters.storage.setItem(sessionKey, response.sessionId);
+
+                //    tmpVue.$store.getters.storage.setItem(lbKey, response.sessionId);
+                // } else {
+                //     sessionId = response.sessionId;
+                // }
+
+
 
                 EventBus.$off(events.PUSH_BUBBLE);
                 EventBus.$on(events.PUSH_BUBBLE, async (msg) => {
@@ -171,7 +175,9 @@ export default function teneoApiPlugin(teneoApiUrl) {
                                 'type': 'system',
                                 'data': {
                                     'text': retryMessage
-                                }
+                                },
+                                'placeInQueue':1,
+                                'queueLength':1
                             });
                             console.log('Trying again ' + retries);
                             setTimeout(() => {
@@ -184,7 +190,9 @@ export default function teneoApiPlugin(teneoApiUrl) {
                                 'type': 'system',
                                 'data': {
                                     'text': finalMessage
-                                }
+                                },
+                                'placeInQueue':1,
+                                'queueLength':1
                             });
                             setTimeout(()=>{EventBus.$emit(events.CLOSE_WINDOW);},5000)
 
@@ -205,7 +213,7 @@ export default function teneoApiPlugin(teneoApiUrl) {
         },
         async _onMessageReceived(message) {
             if (message.author === PARTICIPANT_BOT || message.type === 'system') {
-                EventBus.$emit(events.BOT_MESSAGE_RECEIVED, message.data);
+                EventBus.$emit(events.BOT_MESSAGE_RECEIVED, message);
             }
 
 
@@ -238,15 +246,18 @@ export default function teneoApiPlugin(teneoApiUrl) {
             }
 
             // add message to list
+
             this.messageList = [...this.messageList, message];
         },
         async closeSession() {
             // get session from storage when safari is used
             // to prevent issues when 'prevent cross-site tracking' is enabled
-            if (isSafari) {
+        //    if (isSafari) {
                 sessionId = tmpVue.$store.getters.storage.getItem(sessionKey);
-            }
+          //  }
             TIE.close(teneoApiUrl, sessionId);
+
+            tmpVue.$store.getters.storage.setItem(sessionKey, "");
         },
         async clearHistory() {
             this.messageList = []

@@ -23,18 +23,26 @@ function getMSToken(region, key) {
 
 function processAudioToText(authToken, region, locale) {
     return new Promise((resolve, reject) => {
+        if(locale.indexOf('_') > 0){
+            locale.replaceAll('_', '-');
+        }
         const speechConfig = speechSDK.SpeechConfig.fromAuthorizationToken(authToken, region);
         speechConfig.speechRecognitionLanguage = locale;
         const audioConfig = speechSDK.AudioConfig.fromDefaultMicrophoneInput();
-        window.twcRecognizer = new speechSDK.SpeechRecognizer(speechConfig, audioConfig);
-        window.twcRecognizer.recognizeOnceAsync(
+        window.twcTmp.twcRecognizer = new speechSDK.SpeechRecognizer(speechConfig, audioConfig);
+        window.twcTmp.twcRecognizer.recognizeOnceAsync(
             result => {
-                resolve(result.text);
-                delete window.twcRecognizer
+                if (result.text && !result.errorDetails) {
+                    resolve(result.text);
+                } else {
+                    reject(result.errorDetails);
+
+                }
+                delete window.twcTmp.twcRecognizer
             },
             error => {
                 reject(error);
-                delete window.twcRecognizer
+                delete window.twcTmp.twcRecognizer
             })
     })
 
@@ -42,47 +50,54 @@ function processAudioToText(authToken, region, locale) {
 }
 
 function stopAsrRecording() {
-    if(window.twcRecognizer) {
-        //window.twcRecognizer.stopContinuousRecognitionAsync()
-        window.twcRecognizer.dispose(true);
-        delete window.twcRecognizer;
+    if (window.twcTmp.twcRecognizer) {
+        //window.twcTmp.twcRecognizer.stopContinuousRecognitionAsync()
+        window.twcTmp.twcRecognizer.dispose(true);
+        delete window.twcTmp.twcRecognizer;
     }
 }
 
-function stopTTSAudio(){
-    if(window.twcAudioPlayer) {
-        window.twcAudioPlayer.pause();
-        delete window.twcAudioPlayer;
+function stopTTSAudio() {
+    if (window.twcTmp.twcAudioPlayer) {
+        window.twcTmp.twcAudioPlayer.pause();
+        delete window.twcTmp.twcAudioPlayer;
     }
 }
 
-function processTextToAudio(authToken, region, locale, textToRead) {
+function processTextToAudio(authToken, region, locale, textToRead, voice) {
     return new Promise((resolve, reject) => {
+        if(locale.indexOf('_') > 0){
+            locale.replaceAll('_', '-');
+        }
         const speechConfig = speechSDK.SpeechConfig.fromAuthorizationToken(authToken, region);
         speechConfig.speechSynthesisLanguage = locale;
-        //TODO -> Remove this work-around that looks for a global variable and implement it as a configuration property and API entry.
-        if(window.hasOwnProperty('twcVoiceName')) {
-            speechConfig.speechSynthesisVoiceName = window.twcVoiceName;
+        if (voice) {
+            speechConfig.speechSynthesisVoiceName = voice;
         }
-        window.twcAudioPlayer = new speechSDK.SpeakerAudioDestination();
-        const audioConfig = speechSDK.AudioConfig.fromSpeakerOutput(window.twcAudioPlayer);
+        window.twcTmp.twcAudioPlayer = new speechSDK.SpeakerAudioDestination();
+        const audioConfig = speechSDK.AudioConfig.fromSpeakerOutput(window.twcTmp.twcAudioPlayer);
         const synthesizer = new speechSDK.SpeechSynthesizer(speechConfig, audioConfig);
 
         synthesizer.speakTextAsync(textToRead,
             result => {
-                resolve(result.audioData);
+            if(result.audioData && !result.errorDetails) {
+                resolve(result);
+            }
+            else{
+                reject(result.errorDetails)
+            }
                 synthesizer.close();
             },
             error => {
                 reject(error);
                 synthesizer.close();
             });
-
     })
 }
 
 function generateText(messageData) {
     let utteranceArray = [];
+    // These include the Table elements, uncomment to have table fields read out -> let validKeys = ['type', 'alt', 'title', 'subtitle', 'text', 'headers','body', 'footers'];
     let validKeys = ['type', 'alt', 'title', 'subtitle', 'text'];
     JSON.stringify(messageData, function (key, value) {
         if (validKeys.includes(key)) {

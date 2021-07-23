@@ -1,9 +1,10 @@
 <template>
-  <div class="twc-carousel">
+  <div class="twc-carousel" :class="{ 'twc-expired': replySent || isExpired}">
     <div class="twc-carousel-ctrl">
       <button class="twc-carousel-bck twc-carousel-ctrl-arrows"
               @click="slideBack()"
               v-bind:disabled="this.isFirstSlide"
+              ref="backBtn"
       >&#171;
       </button>
       <span class="twc-carousel-ctrl-dots-container">
@@ -11,12 +12,14 @@
               v-for="(btnIndex) in carouselItemCount"
               @click="skipToSlide(btnIndex)"
               v-bind:class="{'twc-carousel-ctrl-dots-active': isActiveSlide(btnIndex-1)}"
+              :ref="'skipTo' + btnIndex"
       >
       </button>
       </span>
       <button class="twc-carousel-fwd twc-carousel-ctrl-arrows"
               @click="slideForward()"
               v-bind:disabled="this.isLastSlide"
+              :ref="'fwdBtn'"
       >&#187;
       </button>
     </div>
@@ -47,7 +50,7 @@
                   role="button"
                   :tabindex="replySent || isExpired ? -1 : 0"
                   :class="{ 'twc-selected': replySent && selected === idx +'cql' }"
-                  @click="onSelect(reply, idx +'cql')"
+                  @click="isExpired ? console.log(e.target + 'clicked') : onSelect(reply, idx + 'cql')"
                   @keydown="handleReturnSpaceKeys($event, reply, idx +'cql')"
               >{{ reply.title }}
               </li>
@@ -96,9 +99,9 @@
 </template>
 <script>
 
-import { PARTICIPANT_BOT } from '../../utils/constants.js';
+import {PARTICIPANT_BOT} from '../../utils/constants.js';
 import handleButtonClick from '../../utils/handle-button-click.js';
-import { EventBus, events } from '../../utils/event-bus.js';
+import {EventBus, events} from '../../utils/event-bus.js';
 import handleLinkButtonClick from '../../utils/handle-linkbutton-click.js';
 import keyIsSpaceOrEnter from '../../utils/is-space-or-enter.js';
 import sanitizeHtml from '../../utils/sanitize-html.js';
@@ -137,7 +140,7 @@ export default {
       return this.message.selected;
     },
     isExpired() {
-      const { messageList } = this.$teneoApi;
+      const {messageList} = this.$teneoApi;
       const latestMessage = messageList[messageList.length - 1];
 
       return latestMessage && latestMessage !== this.message;
@@ -147,8 +150,7 @@ export default {
     return {
       activeSlide: 0,
       isFirstSlide: true,
-      isLastSlide: false,
-      touchstartX: 0
+      isLastSlide: false
     };
   },
   methods: {
@@ -157,7 +159,7 @@ export default {
       this.isFirstSlide = this.activeSlide === 0;
       this.isLastSlide = this.activeSlide === this.message.data.carousel_items.length - 1;
 
-      let slides = document.getElementsByClassName('twc-carousel-list-item');
+      let slides = this.$el.getElementsByClassName('twc-carousel-list-item');
       for (let slide of slides) {
         slide.style.transform = 'translateX(' + ((this.activeSlide * -100) + 4) + '%)';
       }
@@ -208,26 +210,25 @@ export default {
       let maxCardHeight = 0;
       for (let card of this.$refs.cards) {
         maxCardHeight = card.clientHeight > maxCardHeight ? card.clientHeight : maxCardHeight;
-        card.addEventListener('touchstart', function (evt) {
-          this.touchstartX = evt.changedTouches[0].screenX;
-
-        });
-        card.addEventListener('touchend', function (evt) {
-          (this.touchstartX < evt.changedTouches[0].screenX) ? this.slideBack() : this.slideForward();
-        }.bind(this));
       }
-      ;
+
       for (let card of this.$refs.cards) {
         let spacer = card.getElementsByClassName('twc-card-spacer')[0];
         spacer.style.height = maxCardHeight - card.clientHeight + 'px';
       }
-      ;
-
     }
+
   },
   mounted() {
     this.additionalCardProcessing();
-  }
+    this.$el.addEventListener('touchstart', function (evt) {
+      window.twcTmp.touchstartX = evt.changedTouches[0].screenX;
+    });
+    this.$el.addEventListener('touchend', function (evt) {
+      (window.twcTmp.touchstartX < evt.changedTouches[0].screenX) ? this.slideBack() : this.slideForward();
+    }.bind(this));
+  },
+
 };
 
 </script>

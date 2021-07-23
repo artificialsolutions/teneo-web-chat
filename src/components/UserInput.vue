@@ -12,7 +12,7 @@
             :aria-label="$t('message.input_area_asr_button_aria_label')"
             :title="$t('message.input_area_asr_button_title')"
             class="twc-user-input__asr-icon-wrapper"
-            :class="{ 'twc-active': asrActive}"
+            :class="{ 'twc-active': asrActive,  'twc-broken-service-icon': asrBroken}"
             :aria-disabled="asrDisabled"
             :disabled="asrDisabled ? true : false"
             @click.prevent=""
@@ -44,7 +44,7 @@
             :aria-label="$t('message.input_area_tts_button_aria_label')"
             :title="$t('message.input_area_tts_button_title')"
             class="twc-user-input__tts-icon-wrapper"
-            :class="{ 'twc-active': ttsActive}"
+            :class="{ 'twc-active': ttsActive, 'twc-broken-service-icon': ttsBroken}"
             :aria-disabled="ttsDisabled"
             :disabled="ttsDisabled ? true : false"
             @click.prevent=""
@@ -190,6 +190,7 @@ import detectMobile from '../utils/detect-mobile.js';
 import {mapState} from 'vuex';
 import {store} from "../store/store";
 
+
 Vue.use(vueDebounce);
 
 export default {
@@ -222,10 +223,12 @@ export default {
       uploadDisabled: false,
       asrDisabled: false,
       ttsDisabled: false,
+      asrBroken: false,
+      ttsBroken: false,
       asrActive: store.getters.asrActive,
       ttsActive: store.getters.ttsActive,
-      ttsSpeaking: false,
-      messageDuration: 0
+      ttsCumulativeText: '',
+      isCancellation: false
     };
   },
 
@@ -236,30 +239,33 @@ export default {
       }
     });
 
-    EventBus.$on(events.BOT_MESSAGE_RECEIVED, async (messageData) => {
+
+    EventBus.$on(events.BOT_MESSAGE_RECEIVED, async (message) => {
       let _this = this;
       if (_this.ttsActive) {
-        let utteranceString = generateText(messageData);
-        let speechDelay = 0
-        if (_this.ttsSpeaking) {
-          speechDelay = _this.messageDuration + 500
+        if (message.placeInQueue === 1) {
+          _this.ttsCumulativeText = '';
         }
-
-
-        window.setTimeout(() => {
+        _this.ttsCumulativeText += '\n' + generateText(message.data);
+        if (message.placeInQueue === message.queueLength) {
           this.msTokenCheck().then(() => {
-            processTextToAudio(store.getters.msCognitiveToken, store.getters.msCognitiveRegion, store.getters.locale, utteranceString).then(function () {
-              _this.setTtsSpeaking(true)
-              _this.setMessageDuration(window.twcAudioPlayer.privAudio.duration);
-              window.twcAudioPlayer.onAudioEnd = function () {
-                _this.setTtsSpeaking(false)
+            processTextToAudio(store.getters.msCognitiveToken, store.getters.msCognitiveRegion, store.getters.locale, _this.ttsCumulativeText, store.getters.msVoice).then(() => {
+              window.twcTmp.twcAudioPlayer.onAudioEnd = () => {
                 if (_this.$refs.asrButton.dataset.used === "true" && _this.$refs.asrButton.dataset.cancelled !== "true") {
                   _this.asrButtonClicked(_this.$refs.asrButton)
                 }
               }
+            }).catch((e)=>{
+              console.error('Error converting text to audio. ' + e.toString())
+              this.setTtsDisabled(true);
+              this.setTtsBroken(true);
             })
+          }).catch((e)=>{
+            console.error('Error getting authentication token for TTS. ' + e.toString())
+            this.setTtsDisabled(true);
+            this.setTtsBroken(true);
           })
-        }, speechDelay)
+        }
 
 
       }
@@ -407,24 +413,30 @@ export default {
 
       this.asrActive = onoff;
     },
+
     setTtsActive(onoff) {
       this.ttsActive = onoff;
-    },
-    setTtsSpeaking(onoff) {
-      this.ttsSpeaking = onoff;
-    },
-    setMessageDuration(millis) {
-      this.messageDuration = millis;
     },
     setInputDisabled(onoff) {
       this.inputDisabled = onoff;
     },
     setUploadDisabled(onoff) {
       this.uploadDisabled = onoff;
-    }, setAsrDisabled(onoff) {
+    },
+    setAsrDisabled(onoff) {
       this.asrDisabled = onoff;
-    }, setTtsDisabled(onoff) {
+    },
+    setTtsDisabled(onoff) {
       this.ttsDisabled = onoff;
+    },
+    setAsrBroken(onoff) {
+      this.asrBroken = onoff;
+    },
+    setTtsBroken(onoff) {
+      this.ttsBroken = onoff;
+    },
+    setIsCancellation(onoff){
+      this.isCancellation = onoff;
     },
     handleReturnKey(event) {
       if (event.keyCode === 13 && !event.shiftKey) {
@@ -476,24 +488,29 @@ export default {
       })
     },
     async asrButtonClicked(e) {
-      //Send system message with instructions on first click, mark button as used so it won't repeat
-      let firstClick = false;
-      if (e.dataset.used !== "true") {
-        e.dataset.used = "true";
-        firstClick = true;
-        EventBus.$emit(events.ADD_MESSAGE, {
-          'type': 'system',
-          'data': {
-            'text': this.$t('message.first_use_asr_system_message')
-          }
-        });
-      }
+
       //Check if any extensions are set up to handle them. If not, use default functionality with Azure.
       let asrExtension = await handleExtension(API_ON_ASR_BUTTON_CLICK, e);
-      if (!asrExtension) {
-        if (this.asrActive && window.twcRecognizer) {
+      if (!asrExtension && window.isSecureContext) {
+        //Send system message with instructions on first click, mark button as used so it won't repeat
+        let firstClick = false;
+        if (e.dataset.used !== "true") {
+          e.dataset.used = "true";
+          firstClick = true;
+          EventBus.$emit(events.ADD_MESSAGE, {
+            'type': 'system',
+            'data': {
+              'text': this.$t('message.first_use_asr_system_message')
+            },
+            'placeInQueue': 1,
+            'queueLength': 1
+          });
+        }
+
+        if (this.asrActive && window.twcTmp.twcRecognizer) {
           this.setAsrActive(false);
           e.dataset.cancelled = "true";
+          this.setIsCancellation(true);
           this.$refs.recordingCancelledBeep.$el.play()
           stopAsrRecording();
         } else {
@@ -503,16 +520,18 @@ export default {
 
             if (firstClick) {
 
-              setTimeout(()=>{
-                if(this.ttsActive) {
-                  window.twcAudioPlayer.onAudioEnd = function () {
+              setTimeout(() => {
+                if (this.ttsActive && window.twcTmp.twcAudioPlayer) {
+                  window.twcTmp.twcAudioPlayer.onAudioEnd = function () {
                     resolve();
                   }
+                } else {
+                  resolve();
                 }
-              },100)
+              }, 100)
 
             } else {
-              resolve()
+              resolve();
             }
           }).then(() => {
             this.$refs.recordingStartedBeep.$el.play();
@@ -524,24 +543,46 @@ export default {
                       this.$refs.recordingEndedBeep.$el.play();
                       await this._submitText();
                     } else {
-                      console.log('ASR recognition failed or cancelled')
+                      console.warn('ASR recognition failed.')
                     }
                     this.setAsrActive(false);
+                  })
+                  .catch(() => {
+                    if(!this.isCancellation){
+                      console.warn('Error processing audio to text. ')
+                      this.setAsrBroken(true);
+                    }
+                    else{
+                      this.setIsCancellation(false);
+                    }
+
+                    this.setAsrDisabled(true);
 
                   })
-
+            }).catch((e) => {
+              console.error('Error getting authentication token for ASR. ' + e)
+              this.setAsrDisabled(true);
+              this.setAsrBroken(true);
             })
           })
 
 
         }
+      } else {
+        if (!window.isSecureContext) {
+          console.log('Insecure Context, use of ASR requires an SSL-enabled location.');
+        }
+        if (window.location.protocol !== 'https:') {
+          console.log('Page is on HTTPS, but the certificate is not accepted. You may need to change certificates or force your browser to accept the context as secure.')
+        }
+        this.setAsrDisabled(true);
       }
     },
     async ttsButtonClicked(e) {
       let ttsExtension = await handleExtension(API_ON_TTS_BUTTON_CLICK, e);
       if (!ttsExtension) {
         this.setTtsActive(!this.ttsActive);
-        if (!this.ttsActive && window.hasOwnProperty('twcAudioPlayer')) {
+        if (!this.ttsActive && window.twcTmp.hasOwnProperty('twcAudioPlayer')) {
           stopTTSAudio();
         }
       }
@@ -749,6 +790,17 @@ We should not dim it twice, so we check: .twc-user-input:not(.twc-disabled)
 .twc-user-input__asr-icon-wrapper {
   color: var(--asricon-fg-color, #263238);
 }
+
+.twc-broken-service-icon::before {
+  position: absolute;
+  top: 25%;
+  left: 0;
+  content: '🚫';
+  opacity: 0.4;
+  font-size: 1.5em;
+  line-height: 100%;
+}
+
 
 .twc-user-input__tts-icon-wrapper {
   color: var(--ttsicon-fg-color, #263238);

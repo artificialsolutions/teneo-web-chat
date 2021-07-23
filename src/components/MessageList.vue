@@ -43,7 +43,8 @@ export default {
       if (latestMessage && typeof latestMessage.scrollIntoView === 'function') {
         latestMessage.scrollIntoView({
           behavior: 'smooth',
-          block: 'end',
+          block: 'start',
+          inline: 'nearest'
         });
       } else if (this.$refs.scrollList) {
         this.$refs.scrollList.scrollTop = this.$refs.scrollList.scrollHeight;
@@ -54,9 +55,9 @@ export default {
 
       if (latestMessage && typeof latestMessage.scrollIntoView === 'function') {
         latestMessage.scrollIntoView({
-          behavior: 'auto',
+          behavior: 'smooth',
           inline: "nearest",
-          block: 'end',
+          block: 'start',
         });
       } else if (this.$refs.scrollList) {
         this.$refs.scrollList.scrollTop = this.$refs.scrollList.scrollHeight;
@@ -76,6 +77,10 @@ export default {
   overflow-y: auto;
   background-size: 100%;
   padding: 20px 0px;
+}
+
+.twc-message-list:last-child{
+  scroll-margin-top: 100px;
 }
 </style>
 
