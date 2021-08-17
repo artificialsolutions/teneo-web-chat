@@ -149,10 +149,9 @@ window.TeneoWebChat = {
 
       store.commit('locale', twcProps.locale);
     }
-
-    if (twcProps.autoRedirect) {
-
-      store.commit('autoRedirect', twcProps.autoRedirect == "true");
+   //Default is true to autoredirect, false or 'false' will flip it
+    if (twcProps.hasOwnProperty('autoRedirect') && twcProps.autoRedirect !== "" && !JSON.parse(twcProps.autoRedirect)) {
+      store.commit('autoRedirect', false);
     }
 
     if (twcProps.storage) {
