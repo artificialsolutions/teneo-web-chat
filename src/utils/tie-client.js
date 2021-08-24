@@ -2265,9 +2265,13 @@
             function close(teneoEngineUrl, sessionId, cb) {
                 const endSessionUrl = appendSessionId(`${formatEngineUrl(teneoEngineUrl)}endsession`, sessionId);
                 const headers = {};
-
                 return http.post(endSessionUrl, requestBody(), headers)
-                    .then((response) => cb(null, response.body))
+                    .then((response) => {
+                        cb(null, response.body);
+                        //TODO => Delete removeItem line after SaaS fix implemented
+                        window.sessionStorage.removeItem('X-Teneo-Session');
+                        window.sessionStorage.removeItem('X-Gateway-Session');
+                    })
                     .catch((error) => cb(error));
             }
 
@@ -2287,13 +2291,22 @@
             function sendInput(teneoEngineUrl, currentSessionId, inputData, cb) {
                 verifyInputData(inputData);
 
+
                 const headers = {};
                 const parameters = getParameters(inputData);
                 const body = requestBody(Object.assign({userinput: inputData.text}, parameters));
                 const url = appendSessionId(formatEngineUrl(teneoEngineUrl), currentSessionId);
 
+
                 return http.post(url, body, headers)
-                    .then((response) => cb(null, response))
+                    .then((response, body, headers) => {
+                        //TODO => Remove Gateway session references when SaaS solution is implemented.
+                        let gatewaySession = window.sessionStorage.getItem('X-Gateway-Session')
+                        if(gatewaySession) {
+                            window.sessionStorage.setItem('X-Teneo-Session', `JSESSIONID=${response.sessionId}; ${gatewaySession}`);
+                        }
+                        cb(null, response);
+                    })
                     .catch((error) => cb(error));
             }
 
@@ -2347,6 +2360,12 @@
                 const headers = new Headers();
                 headers.append('Accept', 'application/json;charset=UTF-8');
                 headers.append('Content-Type', 'application/x-www-form-urlencoded;charset=UTF-8');
+                // TODO => Delete X-Teneo-Session header after permanent SaaS solution is implemented
+                const xSessionHeader = window.sessionStorage.getItem('X-Teneo-Session');
+                if (xSessionHeader) {
+                    headers.append('X-Teneo-Session', xSessionHeader)
+                }
+
                 Object.keys(additionalHeaders).forEach((key) => {
                     headers.append(key, additionalHeaders[key]);
                 });
@@ -2362,17 +2381,33 @@
                         body: querystring.stringify(data)
                     });
 
-                    return request
-                        .then((response) => {
+                    return request.then((response) => {
+
+
+                            let it = response.headers.entries();
+                            let result = it.next();
+                            while (!result.done) {
+                                let key = result.value[0];
+                                let value = result.value[1];
+                                console.log(key)
+                                //TODO => Remove these special headers when permanent solution for SaaS is found.
+                                if (key === 'x-gateway-session') {
+                                    window.sessionStorage.setItem('X-Gateway-Session', `${value.split(';')[0]}`);
+                                    break;
+                                }
+
+                                result = it.next();
+                            }
 
                             if (response.status >= 400) {
                                 throw new Error(`Received error code ${response.status}`);
                             }
 
-                            return response.json();
-                        }).catch((error) => {
-                            throw new Error('Could not communicate with server. ' + error)
-                        })
+                       return response.json();
+
+                    }).catch((error) => {
+                        throw new Error('Could not communicate with server. ' + error)
+                    })
                 }
             };
 
