@@ -53,7 +53,7 @@
     "jsdom": "^16.3.0",
     "jsdom-global": "^3.0.2",
     "node-sass": "^6.0.1",
-    "postcss": "^8.0.8",
+    "postcss": "^8.3.6",
     "postcss-cli": "^8.0.0",
     "postcss-loader": "^4.0.2",
     "postcss-nested": "^5.0.0",

@@ -1,3 +1,19 @@
+# v3.6.2
+## 22-07-2021
+* Implemented voice selection in store and API. Better warnings and disabling ASR in insecure contexts.
+* Fixed issues with auto ASR and multiple bubbles
+* Added message type for table
+* Added message type for forms
+* Fixed carousel swiping issue
+* Sets ASR/TTS buttons to broken if error is encountered
+
+# v3.6.1
+## 09-06-2021
+* Automatic ASR disabled after the first time it has been canceled
+* Detects when connection to backend server fails with error handler added
+* TTS now reads system messages
+* ASR and TTS can now be canceled
+
 # v3.6.0
 ## 05-05-2021
 * Fix reset title icon issue
