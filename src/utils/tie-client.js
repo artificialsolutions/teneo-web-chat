@@ -2317,7 +2317,6 @@ module.exports = {
         while (!result.done) {
           let key = result.value[0];
           let value = result.value[1];
-          console.log(key);
           //TODO => Remove these special headers when permanent solution for SaaS is found.
           if (key === 'x-gateway-session') {
             window.sessionStorage.setItem('X-Gateway-Session', `${value.split(';')[0]}`);

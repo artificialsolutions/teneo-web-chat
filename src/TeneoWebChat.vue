@@ -189,7 +189,7 @@ export default {
       }
     },
     async minimize() {
-      if (this.$store.getters.visibility == API_STATE_MAXIMIZED) {
+      if (this.$store.getters.visibility === API_STATE_MAXIMIZED) {
         this.$store.commit('visibility', API_STATE_MINIMIZED);
         this.isChatOpen = false;
         this.isChatMinimized = true;
@@ -204,7 +204,7 @@ export default {
       }
     },
     async maximize() {
-      if (this.$store.getters.visibility == API_STATE_MINIMIZED) {
+      if (this.$store.getters.visibility === API_STATE_MINIMIZED) {
         this.$store.commit('visibility', API_STATE_MAXIMIZED);
         this.isChatOpen = true;
         this.isChatMinimized = false;
