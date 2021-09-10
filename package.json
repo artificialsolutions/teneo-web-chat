@@ -1,6 +1,6 @@
 {
   "name": "teneo-web-chat",
-  "version": "3.6.2",
+  "version": "3.7.1",
   "description": "Teneo Web Chat widget that can be embedded in websites.",
   "scripts": {
     "analyze": "NODE_ENV=production webpack --config webpack.prod.js --profile --json > stats-prod.json && webpack-bundle-analyzer stats-prod.json dist/",
@@ -8,7 +8,7 @@
     "start": "node server.js",
     "start:dev": "webpack-dev-server --https --config webpack.dev.js",
     "test:unit": "vue-cli-service test:unit",
-    "test:only": "vue-cli-service test:unit -f ./tests/unit/teneoWebChatComponentsTest.spec.js -t 'Assert FormMessage JSON'",
+    "test:only": "vue-cli-service test:unit -f teneoWebChatComponentsTest -t 'Assert FormMessage JSON'",
     "heroku-postbuild": "NODE_ENV=production webpack -p --config ./webpack.prod.js --progress"
   },
   "repository": {
@@ -43,10 +43,12 @@
     "body-scroll-lock": "^3.1.5",
     "core-js": "^3.6.5",
     "css-loader": "^4.3.0",
+    "es6-promise": "^4.2.8",
     "eslint": "6.8.0",
     "eslint-plugin-vue": "^6.2.2",
     "file-loader": "^6.1.0",
     "html-webpack-plugin": "^5.3.2",
+    "isomorphic-fetch": "^3.0.0",
     "jest": "^24.9.0",
     "jsdom": "^16.3.0",
     "jsdom-global": "^3.0.2",

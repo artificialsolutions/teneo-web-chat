@@ -22,6 +22,12 @@ import FormMessage from '@/components/messages/FormMessage.vue'
 
 import * as sampleJSON from "../../src/utils/sample-message-json";
 
+const mockTeneoApi = {
+    sendBaseMessage: jest.fn(),
+    sendMessage: jest.fn(),
+    sendSilentMessage: jest.fn(),
+    messageList: []
+};
 
 describe('Test Message Components', () => {
 
@@ -160,14 +166,17 @@ describe('Test Message Components', () => {
         expect(wrapper.html()).toContain('twc-table-footer-cell');
     })
 
-    test('Assert FormMessage JSON', () => {
+    test('Assert FormMessage JSON', async () => {
+
+
         const wrapper = mount(FormMessage, {
             propsData: {
                 message: sampleJSON.formMessageJSON
-            }
+            },
+            attachTo: document.body
         })
 
-        const mockCallbacks = {
+        const mockUserCallbacks = {
             'one': jest.fn(),
             'two': jest.fn()
         };
@@ -179,11 +188,11 @@ describe('Test Message Components', () => {
         let formTitle = formChildren[0];
         let formSubtitle = formChildren[1];
         let unassociatedLabel1 = formChildren[2];
-        let unassociatedLabel2 = formChildren[7];
         let requiredInputLabel = formChildren[3];
-        let requiredInput = formChildren[4];
+        let requiredInput = wrapper.findAll('.twc-form-input[required]').at(0);//formChildren[4];
         let validatedInputLabel = formChildren[5];
-        let validatedInput = formChildren[6];
+        let validatedInput = wrapper.findAll('.twc-form-input[required]').at(1);//formChildren[6];
+        let unassociatedLabel2 = formChildren[7];
         let dummyBtn1 = formChildren[8];
         let dummyBtn2 = formChildren[9];
         let radioInputsLabel = formChildren[10];
@@ -213,12 +222,14 @@ describe('Test Message Components', () => {
         let rangePickerLabel = formChildren[34];
         let rangePickerField = formChildren[35];
         let resetBtnLabel = formChildren[36];
-        let resetBtn = formChildren[37];
+        let resetBtn = wrapper.find('.twc-form-reset')//formChildren[37];
         let textAreaLabel = formChildren[38];
         let textAreaField = formChildren[39];
         let selectLabel = formChildren[40];
         let selectField = formChildren[41];
+        let formCaption = formChildren[44];
 
+        //TODO => Test whether user input is disabled and if caption is correctly set
 
         expect(formElement).toHaveClass('twc-form');
         //Check title and subtitle positioning
@@ -232,23 +243,23 @@ describe('Test Message Components', () => {
         //Required text
 
         //Make sure label is assigned to element
-        expect(requiredInputLabel).toBe(requiredInput.labels[0]);
+        expect(requiredInputLabel).toBe(requiredInput.element.labels[0]);
         expect(requiredInputLabel).toHaveClass('twc-form-label');
         expect(requiredInputLabel).toHaveClass('twc-form-associated-label');
-        expect(requiredInput).toBeRequired();
-        expect(requiredInput).toHaveAttribute('type', 'text');
-        expect(requiredInput).toHaveClass('twc-form-input');
+        expect(requiredInput.element).toBeRequired();
+        expect(requiredInput.element).toHaveAttribute('type', 'text');
+        expect(requiredInput.element).toHaveClass('twc-form-input');
 
         //Validated text
-        expect(validatedInputLabel).toBe(validatedInput.labels[0]);
+        expect(validatedInputLabel).toBe(validatedInput.element.labels[0]);
         expect(validatedInputLabel).toHaveClass('twc-form-label');
         expect(validatedInputLabel).toHaveClass('twc-form-associated-label');
-        expect(validatedInput).toBeRequired();
-        expect(validatedInput).toHaveAttribute('type', 'text');
-        expect(validatedInput).toHaveClass('twc-form-input');
+        expect(validatedInput.element).toBeRequired();
+        expect(validatedInput.element).toHaveAttribute('type', 'text');
+        expect(validatedInput.element).toHaveClass('twc-form-input');
         //Check if validation attributes have been added
-        expect(validatedInput).toHaveAttribute('pattern');
-        expect(validatedInput).toHaveAttribute('title');
+        expect(validatedInput.element).toHaveAttribute('pattern');
+        expect(validatedInput.element).toHaveAttribute('title');
 
 
         expect(dummyBtn1).toHaveAttribute('type', 'button');
@@ -256,12 +267,12 @@ describe('Test Message Components', () => {
         expect(dummyBtn1).toHaveClass('twc-form-input');
         expect(dummyBtn2).toHaveClass('twc-form-input');
 
-        dummyBtn1.onclick = mockCallbacks[dummyBtn1.onclick()]
+        dummyBtn1.onclick = mockUserCallbacks[dummyBtn1.onclick()]
         dummyBtn1.click();
-        expect(mockCallbacks.one).toHaveBeenCalled();
-        dummyBtn2.onclick = mockCallbacks[dummyBtn2.onclick()]
+        expect(mockUserCallbacks.one).toHaveBeenCalled();
+        dummyBtn2.onclick = mockUserCallbacks[dummyBtn2.onclick()]
         dummyBtn2.click();
-        expect(mockCallbacks.two).toHaveBeenCalled();
+        expect(mockUserCallbacks.two).toHaveBeenCalled();
 
 
         //Check radio inputs
@@ -362,28 +373,26 @@ describe('Test Message Components', () => {
 
         expect(resetBtnLabel).toHaveClass('twc-form-label');
         expect(resetBtnLabel).toHaveClass('twc-form-associated-label');
-        expect(resetBtnLabel).toBe(resetBtn.labels[0]);
+        expect(resetBtnLabel).toBe(resetBtn.element.labels[0]);
 
-        requiredInput.value = 'test';
-        validatedInput.value = 'abc';
-        expect(requiredInput).toHaveValue('test')
-        expect(validatedInput).toHaveValue('abc')
+        requiredInput.setValue('test');
+        validatedInput.setValue('abc');
+        expect(requiredInput.element).toHaveValue('test')
+        expect(validatedInput.element).toHaveValue('abc')
         expect(checkboxInput1).toBeChecked()
         expect(checkboxInput2).toBeChecked()
         expect(checkboxInput3).toBeChecked()
         expect(radioInput2).toBeChecked()
 
 
-        resetBtn.click();
-        setTimeout(() => {
-            expect(requiredInput).not.toHaveValue('test')
-            expect(validatedInput).not.toHaveValue('abc')
-            expect(checkboxInput1).not.toBeChecked()
-            expect(checkboxInput2).not.toBeChecked()
-            expect(checkboxInput3).not.toBeChecked()
-            expect(radioInput2).not.toBeChecked()
+        await resetBtn.trigger('click');
 
-        }, 30)
+        expect(requiredInput.element).not.toHaveValue('test')
+        expect(validatedInput.element).not.toHaveValue('abc')
+        expect(checkboxInput1).not.toBeChecked()
+        expect(checkboxInput2).not.toBeChecked()
+        expect(checkboxInput3).not.toBeChecked()
+        expect(radioInput2).not.toBeChecked()
 
 
         //Test Text Area
@@ -415,15 +424,67 @@ describe('Test Message Components', () => {
             expect(selectField.children[i].value).toEqual(selectEntry.options[i].text)
         }
 
+
+    })
+
+    test('Assert FormMessage Cancels and Expires', async () => {
+        const handleFormCancel = jest.spyOn(FormMessage.methods, "handleFormCancel");
+        const decommissionForm = jest.spyOn(FormMessage.methods, "decommissionForm");
+
+
+        const wrapper = mount(FormMessage, {
+            propsData: {
+                message: sampleJSON.formMessageJSON
+            },
+            mocks: {
+                $teneoApi: mockTeneoApi
+            },
+            attachTo: document.body
+        })
+
+        const $destroy = jest.spyOn(wrapper.vm, "$destroy");
+
+        let cancelBtn = wrapper.find('.twc-form-cancel')
         //Test Cancel btn
 
-        //Test OK Btn
+        cancelBtn.trigger('click');
+        expect(handleFormCancel).toHaveBeenCalled();
+        expect(mockTeneoApi.sendSilentMessage).toHaveBeenCalledWith('{\"success\":false}')
+        mockTeneoApi.sendSilentMessage.mockClear();
+
+        await wrapper.vm.$nextTick();
+        expect(decommissionForm).toHaveBeenCalled();
+        expect(wrapper.element.attributes.getNamedItem('disabled')).toBeTruthy();
+        expect($destroy).toHaveBeenCalled();
 
 
     })
 
-    test('Assert FormMessage Expires', () => {
+    test('Assert FormMessage Submits', async () => {
+        const handleFormSubmit = jest.spyOn(FormMessage.methods, "handleFormSubmit");
 
+        const wrapper = mount(FormMessage, {
+            propsData: {
+                message: sampleJSON.formMessageJSON
+            },
+            mocks: {
+                $teneoApi: mockTeneoApi
+            },
+            attachTo: document.body
+        })
+
+        let requiredInput = wrapper.findAll('.twc-form-input[required]').at(0);
+        let validatedInput = wrapper.findAll('.twc-form-input[required]').at(1);
+
+        //Add values to required fields and click
+        requiredInput.setValue('test');
+        validatedInput.setValue('abc');
+        //Triggering event rather than clicking due to JSDOM bug https://github.com/jsdom/jsdom/issues/2898
+        await wrapper.trigger('submit');
+        await wrapper.vm.$nextTick();
+        expect(handleFormSubmit).toHaveBeenCalled();
+        expect(mockTeneoApi.sendSilentMessage).toHaveBeenCalledWith('{\"success\":true}');
+        mockTeneoApi.sendSilentMessage.mockClear();
     })
 
 
@@ -504,7 +565,7 @@ describe('Test Message Components', () => {
         })
 
 
-        window.TeneoWebChat = {tmp:{touchstartX: ''}};
+        window.twcTmp = {touchstartX: ''};
 
         //Test sliding functions, buttons and gestures
         expect(wrapper.vm.$data.activeSlide).toBe(0);
@@ -527,7 +588,7 @@ describe('Test Message Components', () => {
         await wrapper.findComponent({ref: 'skipTo1'}).trigger('click')
         expect(skipToFunc).toHaveBeenCalledWith(1);
         expect(wrapper.vm.$data.activeSlide).toBe(0);
-        delete window.TeneoWebChat;
+        delete window.twcTmp;
 
     })
 

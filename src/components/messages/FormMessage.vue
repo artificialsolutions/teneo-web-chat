@@ -164,8 +164,7 @@ export default {
         } else {
           console.error('Unrecognized action');
         }
-      }
-      else if(type === 'input' && attributes.type === 'reset'){
+      } else if (type === 'input' && attributes.type === 'reset') {
         attributes.class += ' twc-form-' + 'reset';
       }
       return attributes
@@ -209,7 +208,7 @@ export default {
 
       EventBus.$emit(events.ENABLE_INPUT);
       let form = this.$el;
-      form.removeAttribute('id')
+      form.removeAttribute('id');
       form.classList.add('twc-expired');
 
       let elements = this.message.data.elements;
@@ -218,7 +217,7 @@ export default {
       form.childNodes.forEach((node) => {
 
         node.setAttribute('disabled', true);
-
+        node.removeAttribute('id');
 
         if (elements[elementIndex].type === 'label') {
           elements[elementIndex].attributes = {disabled: true};
@@ -259,7 +258,8 @@ export default {
         }
       })
 
-      console.log(elements);
+      form.setAttribute('disabled', true);
+
       this.message.data.elements = elements;
 
       this.message.data.expired = true;
