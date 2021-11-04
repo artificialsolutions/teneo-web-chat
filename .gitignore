@@ -1,13 +1,6 @@
 node_modules/
-dist/
-
 stats-prod.json
-
 .vscode/
-
-!dist/index.html
-env.env
 .env
 /.idea/
-.idea/
-
+/dist/
