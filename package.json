@@ -23,7 +23,6 @@
     "ejs": "^3.1.5",
     "express": "^4.17.1",
     "install": "^0.13.0",
-    "microsoft-cognitiveservices-speech-sdk": "^1.17.0",
     "npm": "^7.11.2",
     "vue": "^2.6.12"
   },
@@ -52,6 +51,7 @@
     "jest": "^24.9.0",
     "jsdom": "^16.3.0",
     "jsdom-global": "^3.0.2",
+    "microsoft-cognitiveservices-speech-sdk": "^1.17.0",
     "node-sass": "^6.0.1",
     "postcss": "^8.3.6",
     "postcss-cli": "^8.0.0",
@@ -67,7 +67,7 @@
     "vue-template-compiler": "^2.6.12",
     "vuex": "^3.5.1",
     "webpack": "^5.40.0",
-    "webpack-bundle-analyzer": "^3.9.0",
+    "webpack-bundle-analyzer": "^4.5.0",
     "webpack-cli": "^3.3.12",
     "webpack-dev-server": "^3.11.2",
     "webpack-merge": "^4.2.2"

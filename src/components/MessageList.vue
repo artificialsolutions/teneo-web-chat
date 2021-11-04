@@ -38,7 +38,7 @@ export default {
   },
   methods: {
     _scrollDown() {
-      const latestMessage = document.querySelector('.message:last-child');
+      const latestMessage = document.querySelector('.twc-message:last-child');
 
       if (latestMessage && typeof latestMessage.scrollIntoView === 'function') {
         latestMessage.scrollIntoView({
@@ -51,7 +51,8 @@ export default {
       }
     },
     _scrollDownInstantly() {
-      const latestMessage = document.querySelector('.message:last-child');
+
+      const latestMessage = document.querySelector('.twc-message:last-child');
 
       if (latestMessage && typeof latestMessage.scrollIntoView === 'function') {
         latestMessage.scrollIntoView({

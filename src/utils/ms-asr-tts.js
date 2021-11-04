@@ -1,4 +1,11 @@
-import * as speechSDK from "microsoft-cognitiveservices-speech-sdk";
+
+import {
+    AudioConfig,
+    SpeakerAudioDestination,
+    SpeechConfig,
+    SpeechRecognizer,
+    SpeechSynthesizer
+} from "microsoft-cognitiveservices-speech-sdk";
 
 
 function getMSToken(region, key) {
@@ -26,10 +33,10 @@ function processAudioToText(authToken, region, locale) {
         if(locale.indexOf('_') > 0){
             locale.replaceAll('_', '-');
         }
-        const speechConfig = speechSDK.SpeechConfig.fromAuthorizationToken(authToken, region);
+        const speechConfig = SpeechConfig.fromAuthorizationToken(authToken, region);
         speechConfig.speechRecognitionLanguage = locale;
-        const audioConfig = speechSDK.AudioConfig.fromDefaultMicrophoneInput();
-        window.twcTmp.twcRecognizer = new speechSDK.SpeechRecognizer(speechConfig, audioConfig);
+        const audioConfig = AudioConfig.fromDefaultMicrophoneInput();
+        window.twcTmp.twcRecognizer = new SpeechRecognizer(speechConfig, audioConfig);
         window.twcTmp.twcRecognizer.recognizeOnceAsync(
             result => {
                 if (result.text && !result.errorDetails) {
@@ -69,14 +76,14 @@ function processTextToAudio(authToken, region, locale, textToRead, voice) {
         if(locale.indexOf('_') > 0){
             locale.replaceAll('_', '-');
         }
-        const speechConfig = speechSDK.SpeechConfig.fromAuthorizationToken(authToken, region);
+        const speechConfig = SpeechConfig.fromAuthorizationToken(authToken, region);
         speechConfig.speechSynthesisLanguage = locale;
         if (voice) {
             speechConfig.speechSynthesisVoiceName = voice;
         }
-        window.twcTmp.twcAudioPlayer = new speechSDK.SpeakerAudioDestination();
-        const audioConfig = speechSDK.AudioConfig.fromSpeakerOutput(window.twcTmp.twcAudioPlayer);
-        const synthesizer = new speechSDK.SpeechSynthesizer(speechConfig, audioConfig);
+        window.twcTmp.twcAudioPlayer = new SpeakerAudioDestination();
+        const audioConfig = AudioConfig.fromSpeakerOutput(window.twcTmp.twcAudioPlayer);
+        const synthesizer = new SpeechSynthesizer(speechConfig, audioConfig);
 
         synthesizer.speakTextAsync(textToRead,
             result => {
