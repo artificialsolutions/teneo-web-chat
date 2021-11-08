@@ -1,20 +1,23 @@
+import {TextEncoder} from 'util';
+
+global.TextEncoder = TextEncoder;
 import {shallowMount, mount} from '@vue/test-utils';
 import '@testing-library/jest-dom/extend-expect'
-import '@testing-library/jest-dom'
-import {JSDOM} from 'jsdom'
-import path from 'path'
-import ejs from 'ejs'
+import '@testing-library/jest-dom';
+import {JSDOM} from 'jsdom';
+import path from 'path';
+import ejs from 'ejs';
 import index from '../../src/index.js' //appears unused, but is required to access window.TeneoWebChat
 import * as api from "../../src/utils/api-function-names";
 
-import TeneoWebChat from '@/components/../TeneoWebChat.vue'
-import UserInput from '@/components/UserInput.vue'
-import ButtonsMessage from '@/components/messages/ButtonsMessage.vue'
-import CardMessage from '@/components/messages/CardMessage.vue'
-import ClickablelistMessage from '@/components/messages/ClickablelistMessage.vue'
-import QuickreplyMessage from '@/components/messages/QuickreplyMessage.vue'
-import LaunchButton from '@/components/LaunchButton.vue'
-import ChatWindow from '@/components/ChatWindow.vue'
+import TeneoWebChat from '@/components/../TeneoWebChat.vue';
+import UserInput from '@/components/UserInput.vue';
+import ButtonsMessage from '@/components/messages/ButtonsMessage.vue';
+import CardMessage from '@/components/messages/CardMessage.vue';
+import ClickablelistMessage from '@/components/messages/ClickablelistMessage.vue';
+import QuickreplyMessage from '@/components/messages/QuickreplyMessage.vue';
+import LaunchButton from '@/components/LaunchButton.vue';
+import ChatWindow from '@/components/ChatWindow.vue';
 import Header from '@/components/Header.vue'
 import ModalMessage from '@/components/messages/ModalMessage.vue'
 
@@ -28,6 +31,7 @@ import * as constants from '../../src/utils/constants.js';
 
 jest.mock('@/../src/utils/handle-button-click')
 import handleButtonClick from '@/../src/utils/handle-button-click'
+import * as sampleJSON from "@/utils/sample-message-json";
 
 handleButtonClick.mockImplementation(async () => {
     await handleExtension(api.API_ON_BUTTON_CLICK);
@@ -45,7 +49,7 @@ ejs.renderFile(index_js, function (err, str) {
 
         //Define Callbacks in an observable way for Spies
         const logcallback = function (msg) {
-            //console.log(msg);
+            console.log(msg);
         }
         const callbacks = {
             onReadyCallback() {
@@ -69,8 +73,8 @@ ejs.renderFile(index_js, function (err, str) {
             onNewMessageCallback() {
                 logcallback('onNewMessageCallback OK')
             },
-            onButtonClickCallback() {
-                logcallback('onButtonClickCallback OK')
+            onButtonClickCallback(e) {
+                logcallback('onButtonClickCallback OK ' + JSON.stringify(e))
             },
             onOpenButtonClickedCallback() {
                 logcallback('onButtonClickedCallback OK')
@@ -92,6 +96,7 @@ ejs.renderFile(index_js, function (err, str) {
         container = dom.window.document;
         testWindow = dom.window.globalThis;
 
+
         describe('Displays Vue components on Webpage Template', () => {
             beforeEach(() => {
                 dom = new JSDOM(str);
@@ -110,7 +115,6 @@ ejs.renderFile(index_js, function (err, str) {
             })
 
         })//end describe
-
 
         describe('Validate API object in Window', () => {
             //Setup a Window for testing
@@ -319,13 +323,13 @@ ejs.renderFile(index_js, function (err, str) {
                 const onButtonClickCallbackSpy = jest.spyOn(callbacks, 'onButtonClickCallback');
 
                 //Mock developer defined API callbacks
-                const myButtonClickCallback = function () {
-                    callbacks.onButtonClickCallback();
+                const myButtonClickCallback = function (e) {
+                    callbacks.onButtonClickCallback(e);
                 }
                 testWindow.TeneoWebChat.on(api.API_ON_BUTTON_CLICK, myButtonClickCallback);
 
                 //Simulate an incoming click from handleButtonClick
-                handleButtonClick();
+                await handleButtonClick();
 
                 //Clean up callbacks and counters
                 testWindow.TeneoWebChat.off(api.API_ON_BUTTON_CLICK);
@@ -483,8 +487,6 @@ ejs.renderFile(index_js, function (err, str) {
 
             });
         })//End API tests
-
-
         describe('WebChat components can call API_ON_BUTTON_CLICK', () => {
 
             test('API_ON_BUTTON_CLICK triggers callback when ButtonMessage clicked', async () => {
@@ -493,51 +495,38 @@ ejs.renderFile(index_js, function (err, str) {
                 const onButtonClickCallbackSpy = jest.spyOn(callbacks, 'onButtonClickCallback');
 
                 //Mock developer defined API callbacks
-                const myButtonClickCallback = function () {
-                    callbacks.onButtonClickCallback();
+                const myButtonClickCallback = function (e) {
+                    callbacks.onButtonClickCallback(e);
                 }
                 testWindow.TeneoWebChat.on(api.API_ON_BUTTON_CLICK, myButtonClickCallback);
 
-//TODO => Figure out why quickreply click is not calling function
-                // const quickreplyMessage = {
-                //     type: "quickreply",
-                //     data: {
-                //         quick_replies: [
-                //             {
-                //                 title: "One",
-                //                 postback: "One"
-                //             }
-                //         ]
-                //     }
-                // }
-                // const wrapperQuickReply = shallowMount(QuickreplyMessage, {
-                //     propsData: {message: quickreplyMessage},
-                // });
-                //
-                // wrapperQuickReply.find('a').trigger('click') //click a clickable list item
-                // expect(onButtonClickCallbackSpy).toHaveBeenCalledTimes(1);
-                // onButtonClickCallbackSpy.mockClear();
 
 
-                //Mock message
-                const mockMsg = {
-                    type: "buttons",
-                    data: {
-                        title: "Optional title",
-                        button_items: [
-                            {
-                                title: "Primary",
-                                postback: "Primary"
-                            },]
+                //Button message
+                const buttonMessage =
+                    {
+                        type: "buttons",
+                        data: {
+                            title: "Optional title",
+                            button_items: [
+                                {
+                                    style: "primary",
+                                    title: "Primary",
+                                    postback: "Primary"
+                                }, {
+                                    style: "secondary",
+                                    title: "Secondary",
+                                    postback: "Secondary"
+                                },]
+                        }
                     }
-                }
                 //Mount ButtonMessage
                 const wrapperBtn = shallowMount(ButtonsMessage, {
-                    propsData: {message: mockMsg},
+                    propsData: {message: buttonMessage},
                 })
 
                 //simulate click
-                wrapperBtn.find('a').trigger('click')
+               // await wrapperBtn.find('a').trigger('click')
 
                 expect(onButtonClickCallbackSpy).toHaveBeenCalledTimes(1);
                 onButtonClickCallbackSpy.mockClear();
@@ -551,7 +540,7 @@ ejs.renderFile(index_js, function (err, str) {
                             alt: "This is an image"
                         },
                         title: "Optional title",
-                        subtitle: "This is a aubtitle",
+                        subtitle: "This is a subtitle",
                         button_items: [
                             {
                                 style: "primary",
@@ -568,17 +557,16 @@ ejs.renderFile(index_js, function (err, str) {
                     propsData: {message: mockCardMsg},
                 })
 
-                wrapperCard.find('li').trigger('click') //click a card button
-                wrapperCard.find('a').trigger('click') //click a clickable list item
+                await wrapperCard.find('li').trigger('click') //click a card button
+                await wrapperCard.find('a').trigger('click') //click a clickable list item
 
-                // Clean up callbacks
-                // testWindow.TeneoWebChat.off(api.API_ON_BUTTON_CLICK);
 
                 expect(onButtonClickCallbackSpy).toHaveBeenCalledTimes(2);
                 onButtonClickCallbackSpy.mockClear();
 
                 const clickableListCard = {
-                    type: "clickablelist", data: {
+                    type: "clickablelist",
+                    data: {
                         title: "Optional title",
                         list_items: [{
                             title: "One",
@@ -591,18 +579,50 @@ ejs.renderFile(index_js, function (err, str) {
                     propsData: {message: clickableListCard},
                 });
 
-                wrapperClickablelist.find('li').trigger('click') //click a clickable list item
+                await wrapperClickablelist.find('li').trigger('click') //click a clickable list item
 
                 expect(onButtonClickCallbackSpy).toHaveBeenCalledTimes(1);
                 onButtonClickCallbackSpy.mockClear();
 
+
+                // //Quick Reply
+                // const quickReplyMessage = {
+                //     type: 'quickreply',
+                //     data: {
+                //         'quick_replies': [
+                //             {
+                //                 'style': 'primary',
+                //                 'title': 'Primary',
+                //                 'postback': 'Primary'
+                //             },
+                //             {
+                //                 'style': 'secondary',
+                //                 'title': 'Secondary',
+                //                 'postback': 'Secondary'
+                //             }
+                //         ]
+                //     }
+                // }
+                // const wrapperQuickReply = shallowMount(QuickreplyMessage, {
+                //     propsData: {
+                //         message: quickReplyMessage
+                //     }
+                // })
+                //
+                //
+                // wrapperQuickReply.find('a').trigger('click') //click a clickable list item
+                //
+                // expect(onButtonClickCallbackSpy).toHaveBeenCalledTimes(1);
+                //
+                // onButtonClickCallbackSpy.mockClear();
 
                 //Clean up callbacks
                 testWindow.TeneoWebChat.off(api.API_ON_BUTTON_CLICK);
 
 
             })//end test
-        })//end describe
+        })
+        //end describe
 
     }//end if
 

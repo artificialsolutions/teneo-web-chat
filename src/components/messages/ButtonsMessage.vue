@@ -1,16 +1,24 @@
 <template>
   <div class="twc-buttons" :class="{ 'twc-expired': replySent || isExpired}">
     <h5 class="twc-buttons-title" v-if="buttonsTitle">{{ buttonsTitle }}</h5>
-      <a
+    <a
         role="button"
         :tabindex="replySent || isExpired ? -1 : 0"
         v-for="(button, idx) in buttonitems"
         :key="idx"
         class="twc-btn"
-        :class="{ 'twc-selected': replySent && selected === idx, 'twc-primary': button.style == 'primary', 'twc-secondary': button.style == 'secondary', 'twc-success': button.style == 'success', 'twc-danger': button.style == 'danger', 'twc-warning': button.style == 'warning', 'twc-info': button.style == 'info'}"
+        :class="{
+          'twc-selected': replySent && selected === idx,
+          'twc-primary': button.style === 'primary',
+          'twc-secondary': button.style === 'secondary',
+          'twc-success': button.style === 'success',
+          'twc-danger': button.style === 'danger',
+          'twc-warning': button.style === 'warning',
+          'twc-info': button.style === 'info'
+        }"
         @click="onSelect(button, idx)"
         @keydown="handleReturnSpaceKeys($event, button, idx)"
-      >{{ button.title }}</a>
+    >{{ button.title }}</a>
   </div>
 </template>
 
@@ -27,11 +35,11 @@ export default {
       required: true,
       validator: (message) => {
         return (
-          message &&
-          message.type === 'buttons' &&
-          message.data &&
-          message.data.button_items &&
-          message.data.button_items.length > 0
+            message &&
+            message.type === 'buttons' &&
+            message.data &&
+            message.data.button_items &&
+            message.data.button_items.length > 0
         );
       },
     },
@@ -52,7 +60,7 @@ export default {
       return this.message.selected;
     },
     isExpired() {
-      const { messageList } = this.$teneoApi;
+      const {messageList} = this.$teneoApi;
       const latestMessage = messageList[messageList.length - 1];
 
       return latestMessage && latestMessage !== this.message;
@@ -108,7 +116,7 @@ export default {
 }
 
 .twc-btn:active {
-  outline:none;
+  outline: none;
 }
 
 .twc-expired .twc-btn {
