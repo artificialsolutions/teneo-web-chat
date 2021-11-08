@@ -1,3 +1,8 @@
+# v3.7.2
+## 08-11-2021
+* Updated TIE-API to work with SaaS Platform
+* Fixed bug with .messages
+
 # v3.6.2
 ## 22-07-2021
 * Implemented voice selection in store and API. Better warnings and disabling ASR in insecure contexts.
