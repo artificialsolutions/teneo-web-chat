@@ -1,6 +1,6 @@
 const webpack = require('webpack');
 const path = require('path');
-const merge = require('webpack-merge');
+const {merge} = require('webpack-merge');
 const HtmlWebpackPlugin = require('html-webpack-plugin');
 const baseConfig = require('./webpack.base.js');
 require('dotenv')
@@ -10,7 +10,7 @@ const dotenv = require('dotenv')
 
 
 let devServerOptions = {
-    contentBase: path.join(__dirname, 'dist'),
+    static: path.join(__dirname, 'dist'),
     compress: true,
     port: 9000
 };
@@ -26,8 +26,7 @@ if (dotenv.parsed.ALLOW_LAN_ON_DEV === "true") {
     const os = require('os');
     const networkInterfaces = os.networkInterfaces();
     devServerOptions.host = '0.0.0.0';
-    devServerOptions.public = '0.0.0.0:9000';
-    devServerOptions.disableHostCheck = true;
+    devServerOptions.port = 9000;
     Object.keys(networkInterfaces)
         .forEach(function (interfaceName) {
             networkInterfaces[interfaceName].forEach(function (networkInterface) {
@@ -36,8 +35,8 @@ if (dotenv.parsed.ALLOW_LAN_ON_DEV === "true") {
                     return;
                 }
                 if (networkInterface.address.startsWith('192.168')) {
-                    devServerOptions.public = networkInterface.address;
-                    console.log('Server on LAN at address: ' + devServerOptions.public);
+                    devServerOptions.host = networkInterface.address;
+                    console.log('Server on LAN at address: ' + devServerOptions.host);
                 }
             });
         });

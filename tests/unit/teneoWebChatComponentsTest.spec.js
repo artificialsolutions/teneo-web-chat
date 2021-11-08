@@ -1,3 +1,6 @@
+import { TextEncoder, TextDecoder } from 'util';
+global.TextEncoder = TextEncoder;
+global.TextDecoder = TextDecoder;
 import {shallowMount, mount} from '@vue/test-utils';
 import '@testing-library/jest-dom'
 

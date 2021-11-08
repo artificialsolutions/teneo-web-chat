@@ -1,7 +1,8 @@
 import { shallowMount, mount } from '@vue/test-utils';
+
 import '@testing-library/jest-dom/extend-expect'
 import '@testing-library/jest-dom'
-import { JSDOM } from 'jsdom'
+import {JSDOM} from 'jsdom'
 import path from 'path'
 import ejs from 'ejs'
 import index from '../../src/index.js' //appears unused, but is required to access window.TeneoWebChat
