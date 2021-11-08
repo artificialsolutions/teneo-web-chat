@@ -1,5 +1,10 @@
 # v3.7.2
 ## 08-11-2021
+* Updated Dependencies
+* Fixed bug with .messages
+
+# v3.7.1
+## 15-09-2021
 * Updated TIE-API to work with SaaS Platform
 * Fixed bug with .messages
 
