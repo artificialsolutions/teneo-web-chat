@@ -17,7 +17,7 @@
 
 <script src="teneo-web-chat.js"></script> <!-- needed for Heroku -->
 <!--<% if(process.env.NODE_ENV === 'development') { %>-->
-<!--    <script src="common_extensions.js"></script>-->
+
 
 <!--<% } %>-->
 <div id="teneo-web-chat"></div>
@@ -52,6 +52,7 @@
                 'msCognitiveRegion': '<%= process.env.MS_COGNITIVE_REGION %>',
                 'msVoice': '<%= process.env.MS_VOICE %>',
                 'locale': '<%= process.env.LOCALE %>',
+                'teneoEngineParams': {"lob":"bob"},
                 'autoRedirect': '<%= process.env.AUTO_OUTPUT_LINK_REDIRECT %>'
             };
             <% if(process.env.NODE_ENV === 'development') { %>
@@ -65,6 +66,8 @@
                     inputField.value = window.sessionStorage.getItem('lastSentPhrase')
                 }
             });
+
+
 
 
             <% } %>

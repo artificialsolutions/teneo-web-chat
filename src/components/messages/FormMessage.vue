@@ -40,31 +40,61 @@ export default {
         let hasSubmit = false;
         let hasCancel = false;
         let hasContent = message && message.data && message.data.elements && message.data.elements.length > 2
-        let legalTypes = ['control', 'title', 'subtitle', 'caption', 'input', 'textarea', 'select', 'label']
-        let hasOnlyLegalTypes = false;
-
-        message.data.elements.forEach((element) => {
+        let legalElementTypes = ['control', 'title', 'subtitle', 'caption', 'input', 'textarea', 'select', 'label']
+        let legalInputTypes = [
+          "button",
+          "checkbox",
+          "color",
+          "date",
+          "datetime-local",
+          "email",
+          "hidden",
+          "image",
+          "month",
+          "number",
+          "password",
+          "radio",
+          "range",
+          "reset",
+          "search",
+          "tel",
+          "text",
+          "time",
+          "url",
+          "week",
+          "datetime"
+        ]
+        let hasOnlyLegalElementTypes = false;
+        let elements = JSON.parse(JSON.stringify(message.data.elements))
+        for (let i = 0; i < elements.length; i++) {
+          let element = elements[i]
+          if (legalElementTypes.includes(element.type)) {
+            hasOnlyLegalElementTypes = true;
+          } else {
+            console.error('Unknown form element type');
+          }
           if (element.type === "control") {
             if (element.action === "submit") {
               hasSubmit = true;
             } else if (element.action === "cancel") {
               hasCancel = true;
             }
-          } else if (element.type === 'input' && !element.attributes.type) {
-            element.attributes.type = 'text'
+          } else if (element.type === 'input') {
+            if (!element.attributes.type) {
+              element.attributes.type = 'text'
+            } else if (!legalInputTypes.includes(element.attributes.type)) {
+              message.data.elements.splice(i, 1)
+              console.error('Illegal input type: ' + element.attributes.type);
+            }
           }
 
-          if (legalTypes.includes(element.type)) {
-            hasOnlyLegalTypes = true;
-          } else {
-            console.error('Unknown form element type');
-          }
-        })
+
+        }
 
         return (
             message.type === 'form' &&
             hasContent &&
-            hasOnlyLegalTypes &&
+            hasOnlyLegalElementTypes &&
             hasCancel &&
             hasSubmit
         );
