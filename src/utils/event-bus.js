@@ -38,6 +38,7 @@ export const events = {
     USER_INPUT_FOCUS_CHANGED: 'user_input_focus_changed',
     SCROLL_CHAT_DOWN: 'scroll_chat_down',
     SET_ENGINE_URL: 'set-engine-url',
+    SET_ENGINE_PARAMS: 'set-engine-params',
     SET_LOCALE: 'set_locale',
     SET_MS_VOICE: 'set_ms_voice',
     SHOW_CALLOUT: 'show_callout',

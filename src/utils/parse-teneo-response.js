@@ -1,4 +1,10 @@
-import {PARTICIPANT_BOT, TENEO_PARAM_KEY, TENEO_OUTPUTTEXTSEGMENTS_PARAM, BUBBLE_DELAY} from './constants.js';
+import {
+    PARTICIPANT_BOT,
+    TENEO_PARAM_KEY,
+    TENEO_OUTPUTTEXTSEGMENTS_PARAM,
+    BUBBLE_DELAY,
+    TENEO_TEMPLATE_INDEX
+} from './constants.js';
 import {EventBus, events} from '../utils/event-bus';
 import {store} from '../store/store';
 
@@ -6,13 +12,14 @@ import {store} from '../store/store';
 const defaultMessageType = 'text';
 
 export default async function parseTeneoResponse(teneoResponse) {
+
+
     let timeout = function (ms) {
         return new Promise(resolve => setTimeout(resolve, ms));
     }
 
     const {parameters, text, link} = teneoResponse.output;
     const messages = [];
-
     // get ouputTextSegments parameter for speech bubbles
     // it is a list with start and end indexes that looks like this
     // [[0, 39], [40, 67], [68, 96], [97, 97]]
@@ -37,6 +44,8 @@ export default async function parseTeneoResponse(teneoResponse) {
     } catch (err) {
         console.error('Error: Unable to parse JSON string')
     }
+
+
     if (outputTextSegmentIndexes && Array.isArray(outputTextSegmentIndexes) && text) {
 
         // each segment (a list that contains a start and an end index) in the list is a bubble
@@ -106,14 +115,26 @@ export default async function parseTeneoResponse(teneoResponse) {
 
     }
 
+
+
     for (const message of messages) {
         const index = messages.indexOf(message);
         message.placeInQueue = index + 1;
         message.queueLength = messages.length;
         // Emit event to update UI with new bubble, with a delay timer
 
-        await timeout(index === 0 ? 0 : BUBBLE_DELAY).then(()=>{EventBus.$emit(events.PUSH_BUBBLE, message)})
+        await timeout(index === 0 ? 0 : BUBBLE_DELAY).then(() => {
+            EventBus.$emit(events.PUSH_BUBBLE, message)
+        })
     }
 
-    return messages;
+    if (parameters.hasOwnProperty('twcAutoReply')) {
+        return JSON.parse(parameters.twcAutoReply)
+
+    }
+    else{
+        return false
+    }
+
+
 }

@@ -200,7 +200,6 @@ export const linkButtonsMessageJSON = {
 
 
 export const comboMessageJSON = {
-    'author': 'bot',
     'type': 'combo',
     data: {
         'type': 'combo',

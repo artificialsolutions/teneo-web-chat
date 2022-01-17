@@ -1,6 +1,6 @@
 <template>
   <div class="twc-message" :class="messageSourceClass">
-      <component :is="messageType" :message="message" />
+    <component :is="messageType" :message="message"/>
   </div>
 </template>
 

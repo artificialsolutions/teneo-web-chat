@@ -42,6 +42,7 @@ export const API_CALL_SET_ENGINE_URL = 'set_engine_url';
 export const API_CALL_ENABLE_USERINPUT = 'enable_user_input';
 export const API_CALL_DISABLE_USERINPUT = 'disable_user_input';
 export const API_SET_LOCALE = 'set_locale';
+export const API_SET_ENGINE_PARAMS = 'set_engine_params';
 export const API_SET_MS_VOICE = 'set_ms_voice'
 
 // Add dedicated add typing indicator method
@@ -54,7 +55,9 @@ export const API_GET_CHAT_HISTORY = 'chat_history';
 export const API_GET_ENGINE_URL = 'engine_url';
 export const API_GET_STORAGE = 'storage';
 export const API_GET_LOCALE = 'locale';
-export const API_GET_MS_VOICE = 'ms_voice'
+export const API_GET_ENGINE_PARAMS = 'engine_params';
+export const API_GET_MS_VOICE = 'ms_voice';
+
 
 // Api callbacks
 export const API_ON_READY = 'ready';

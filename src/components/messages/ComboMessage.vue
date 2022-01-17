@@ -173,6 +173,45 @@
             </div>
           </div>
       </div>
+
+      <div class="twc-combo-message" v-if="message.type==='table'">
+        <div class="twc-table-message">
+          <table class="twc-table twc-table-border">
+            <caption class="twc-table-title" v-if="message.data.title">{{ message.data.title }}</caption>
+            <thead v-if="message.data.headers">
+            <tr class="twc-table-header-row">
+              <th
+                  v-for="(header) in message.data.headers"
+                  class="twc-table-header-cell"
+              >
+                {{ header }}
+              </th>
+            </tr>
+            </thead>
+            <tbody v-if="message.data.body">
+            <tr
+                v-for="(row) in message.data.body"
+                class="twc-table-body-row"
+            >
+              <td
+                  v-for="(cell) in row"
+                  class="twc-table-body-cell"
+              >{{ cell }}
+              </td>
+            </tr>
+            </tbody>
+            <tfoot v-if="message.data.footers">
+            <tr class="twc-table-footer-row">
+              <td
+                  v-for="(footer) in message.data.footers"
+                  class="twc-table-footer-cell"
+              >{{ footer }}
+              </td>
+            </tr>
+            </tfoot>
+          </table>
+        </div>
+      </div>
     </li>
   </ul>
 </template>

@@ -163,7 +163,13 @@ export default function teneoApiPlugin(teneoApiUrl) {
 
                 });
 
-                await parseTeneoResponse(response);
+               let autoReply = await parseTeneoResponse(response);
+               if(autoReply){
+                   setTimeout(() => {
+                       this.sendSilentMessage(autoReply.message, {});
+                   }, autoReply.delay)
+               }
+
             }).catch(
                 (error) => {
                     EventBus.$emit(events.START_SPINNER);

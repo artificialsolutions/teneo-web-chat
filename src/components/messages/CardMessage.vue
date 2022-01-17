@@ -175,7 +175,7 @@ export default {
 .twc-card-img img {
   object-fit: cover;
   width: 100%;
-  height: 180px;
+  height: auto;
   border-top-left-radius: calc(0.25rem - 1px);
   border-top-right-radius: calc(0.25rem - 1px);
 }
