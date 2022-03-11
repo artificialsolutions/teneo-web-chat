@@ -685,7 +685,7 @@ export default {
   opacity: 0.4;
 }
 
-/* 
+/*
 When the upload, asr or tts buttons are disabled and then the input box is disabled as well
 We should not dim it twice, so we check: .twc-user-input:not(.twc-disabled)
 */

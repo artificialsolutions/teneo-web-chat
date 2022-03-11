@@ -14,11 +14,15 @@
           'twc-success': button.style === 'success',
           'twc-danger': button.style === 'danger',
           'twc-warning': button.style === 'warning',
-          'twc-info': button.style === 'info'
+          'twc-info': button.style === 'info',
+          'twc-star': button.style === 'star'
         }"
         @click="onSelect(button, idx)"
         @keydown="handleReturnSpaceKeys($event, button, idx)"
-    >{{ button.title }}</a>
+    >
+      <span>{{ button.title }}</span>
+      <StarIcon v-if="button.style=='star'" class="twc-star-icon"/>
+    </a>
   </div>
 </template>
 
@@ -26,6 +30,7 @@
 
 import handleButtonClick from '../../utils/handle-button-click.js';
 import keyIsSpaceOrEnter from '../../utils/is-space-or-enter.js';
+import StarIcon from '../../icons/x.vue';
 
 export default {
   name: 'ButtonsMessage',
@@ -43,6 +48,9 @@ export default {
         );
       },
     },
+  },
+  components: {
+    StarIcon
   },
   computed: {
     buttonsTitle() {

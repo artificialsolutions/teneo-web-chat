@@ -49,7 +49,7 @@
       </div>
 
       <div class="twc-combo-message" v-if="message.type==='image'">
-        <div class="twc-image-message">
+        <div class="twc-image-message" @click="zoomIn(message.image_url)">
           <img :src="message.image_url" :alt="message.alt" @load="scrollChatUp"/>
         </div>
       </div>
@@ -72,7 +72,7 @@
           </video>
         </div>
       </div>
-      
+
       <div class="twc-combo-message" v-if="message.type==='vimeovideo'">
         <div class="twc-vimeo-video">
           <iframe :src="message.video_url" frameborder="0" allowfullscreen allowtransparency allow></iframe>
@@ -277,6 +277,9 @@ export default {
     },
     videoUrl(url) {
       return url + '#t=0.1';
+    },
+    zoomIn(imageUrl) {
+      EventBus.$emit(events.ZOOM_IMAGE, imageUrl);
     },
     scrollChatUp() {
       EventBus.$emit(events.SCROLL_CHAT_DOWN);

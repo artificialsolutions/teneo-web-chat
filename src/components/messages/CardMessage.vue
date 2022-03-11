@@ -131,7 +131,7 @@ export default {
     },
     sanitizedHtmlText() {
       return sanitizeHtml(this.message.data.text);
-    },
+    }
   },
   methods: {
     async onLinkbuttonClick(linkbutton, event) {
@@ -146,8 +146,8 @@ export default {
       if (keyIsSpaceOrEnter(event)) {
         this.onSelect(button, idx)
       }
-    },
-  },
+    }
+  }
 };
 </script>
 
