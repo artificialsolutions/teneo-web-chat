@@ -1,3 +1,12 @@
+# v3.7.4
+## 08-11-2021
+* Enlarge images upon clicks in combo messages
+* Fixed a bug in the extensions framework preventing the assignment of multiple listeners to an event.
+
+# v3.7.3
+## 08-11-2021
+* Bug fixes
+
 # v3.7.2
 ## 08-11-2021
 * Updated Dependencies
@@ -200,7 +209,7 @@ The new Teneo Web Chat Javascript API allows you to trigger Teneo Web Chat event
     * Buttons
     * Cards
     * Clickable lists
-    * Image 
+    * Image
     * Quick replies
     * Videos (YouTube, Vimep, mp4)
     * Combo (combine multiple of the above in a single response)

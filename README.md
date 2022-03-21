@@ -33,18 +33,17 @@ Add the following code before the closing `</body>` tag to _each page_ where you
 <div id="teneo-web-chat"></div>
 <script src="/path/to/teneo-web-chat.js"></script>
 <script>
-  window.onload = function () {
-    if (
-      window.TeneoWebChat &&
-        typeof window.TeneoWebChat.initialize === 'function'
-    ) {
-      var element = document.getElementById('teneo-web-chat');
-      const teneoProps = {
-        'teneoEngineUrl': 'https://some.teneo/engine-instance/',
-      }
-      window.TeneoWebChat.initialize(element,teneoProps);
+/* <![CDATA[ */
+
+window.addEventListener('load', () => {
+    const element = document.getElementById('teneo-web-chat');
+    const teneoProps = {
+        teneoEngineUrl: 'https://some.teneo/engine-instance/',
     }
-  }
+    window.TeneoWebChat.initialize(element,teneoProps);
+});
+
+/* ]]> */
 </script>
 <!-- Teneo Web Chat end -->
 ```
