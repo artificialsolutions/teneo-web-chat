@@ -1,4 +1,4 @@
-import Vue from "vue";
+import Vue from 'vue';
 
 const tmpVue = new Vue();
 
@@ -7,7 +7,7 @@ export default async function handleExtension(method_name, payload) {
   if (Array.isArray(extensionCallbacks) && extensionCallbacks.length) {
     for (let i = 0; i < extensionCallbacks.length; ++i) {
       try {
-        if (typeof extensionCallbacks[i] === "function") {
+        if (typeof extensionCallbacks[i] === 'function') {
           await extensionCallbacks[i](payload);
         }
       } catch (err) {
