@@ -278,7 +278,6 @@ export default {
               case 'select':
               case 'textarea':
                 currentElement.attributes.value = node.value;
-                break;
             }
           }
           elementIndex++;
