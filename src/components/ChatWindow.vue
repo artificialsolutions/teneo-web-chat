@@ -105,7 +105,7 @@ export default {
       },
       chatWindowStyles() {
         if (this.isIosSafari) {
-          return this.chatWindowBaseStyle.concat((this.keyboardUp ? ' ios-keyboard-shown' : ' ios-keyboard-hidden'));
+          return this.chatWindowBaseStyle.concat((this.keyboardUp ? ' twc-ios-keyboard-shown' : ' twc-ios-keyboard-hidden'));
          }
 
            return this.chatWindowBaseStyle;
@@ -151,11 +151,12 @@ export default {
   }
 }
 
-.ios-keyboard-shown {
+.twc-ios-keyboard-shown {
   transition: 0.3s ease-in-out !important;
   height: calc(66% - 60px);
+  top: 0px;
 }
-.ios-keyboard-hidden {
+.twc-ios-keyboard-hidden {
   transition: 0.2s ease-in-out !important;
   height: 100%;
 }
