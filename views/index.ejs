@@ -1,30 +1,58 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-    <meta charset="UTF-8"/>
-    <title>Teneo Web Chat</title>
-    <meta name="viewport" content="width=device-width, height=device-height, initial-scale=1.0 user-scalable=no">
-    <style>
-        body {
-            background: #E5F5FE;
-        }
-    </style>
-</head>
+<meta charset="UTF-8"/>
+<title>Teneo Web Chat</title>
+<meta name="viewport" content="width=device-width, height=device-height, initial-scale=1.0 user-scalable=no">
+<style>
 
-<body>
-<button onclick="TeneoWebChat.call('reset')">Reset Chat</button>
-<br>
+body {
+    background: #E5F5FE;
+}
+.centerimage {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    width: 400px;
+    height: 300px;
+    margin-top: -150px;
+    margin-left: -200px;
+    z-index: -10;
+}
+.btn {
+    margin-bottom: 5px;
+}
+@media (max-width: 500px) {
+    .centerimage {
+        opacity: 0.3;
+        transition-property: opacity;
+        transition-duration: 0.2s;
+        transition-timing-function: linear;
+    }
+}
+
+
+div.scroll {
+    width: 600px;
+    overflow-x: hidden;
+    text-align: justify;
+}
+
+</style>
 
 <script src="teneo-web-chat.js"></script> <!-- needed for Heroku -->
 <!--<% if(process.env.NODE_ENV === 'development') { %>-->
 
 
 <!--<% } %>-->
-<div id="teneo-web-chat"></div>
+
 <script>
 /* <![CDATA[ */
 
+
+
 window.addEventListener('load', () => {
+
     const element = document.getElementById('teneo-web-chat');
     const teneoProps = {
         'teneoEngineUrl': '<%= process.env.TENEO_ENGINE_URL %>',
@@ -54,22 +82,66 @@ window.addEventListener('load', () => {
     };
     <% if(process.env.NODE_ENV === 'development') { %>
     //Keep last input on up arrow for rapid testing
+    /*
     TeneoWebChat.on('input_submitted', (payload) => {
         window.sessionStorage.setItem('lastSentPhrase', payload.text);
-    })
+    });
     document.addEventListener('keydown', function(e){
         if(e.code === 'ArrowUp') {
             let inputField = document.getElementById('twc-user-input-field');
             inputField.value = window.sessionStorage.getItem('lastSentPhrase')
         }
     });
+    */
     <% } %>
     window.TeneoWebChat.initialize(element, teneoProps);
 });
 
 /* ]]> */
 </script>
+</head>
 
+<body>
+<button onclick="TeneoWebChat.call('reset')">Reset Chat</button>
 
+<!--
+
+<br/>
+<h3>Messages</h3>
+<button class="btn" onclick="TeneoWebChat.call('add_message',textMessageAgent)">Message from agent</button><br>
+
+<h3>Messages with avatar</h3>
+<button class="btn" onclick="TeneoWebChat.call('add_message',textMessageUserAvatar)">Message from user</button><br>
+<button class="btn" onclick="TeneoWebChat.call('add_message',textMessageBotAvatar)">Message from bot</button><br>
+<button class="btn" onclick="TeneoWebChat.call('add_message',textMessageAgentAvatar)">Message from agent</button><br>
+
+<h3>Messages with avatar and dateline</h3>
+<button class="btn" onclick="TeneoWebChat.call('add_message',textMessageUserAvatarDateline)">Message from user</button><br>
+<button class="btn" onclick="TeneoWebChat.call('add_message',textMessageBotAvatarDateline)">Message from bot</button><br>
+<button class="btn" onclick="TeneoWebChat.call('add_message',textMessageAgentAvatarDateline)">Message from agent</button><br>
+
+<h3>Typing indicators</h3>
+<button class="btn" onclick="TeneoWebChat.call('show_typing_indicator',typingIndicatorAgent)">Show agent typing indicator</button><br>
+<button class="btn" onclick="TeneoWebChat.call('show_typing_indicator',typingIndicatorBot)">Show bot typing indicator</button><br>
+<button class="btn" onclick="TeneoWebChat.call('show_typing_indicator',typingIndicatorUser)">Show user typing indicator</button><br>
+
+<button class="btn" onclick="TeneoWebChat.call('hide_typing_indicator',{'author': 'agent'})">Hide agent typing indicator</button><br>
+<button class="btn" onclick="TeneoWebChat.call('hide_typing_indicator',{'author': 'bot'})">Hide bot typing indicator</button><br>
+<button class="btn" onclick="TeneoWebChat.call('hide_typing_indicator',{'author': 'user'})">Hide user typing indicator</button><br>
+
+<h3>Other</h3>
+<button class="btn" onclick="TeneoWebChat.call('disable_user_input')">Disable user input</button><br>
+<button class="btn" onclick="TeneoWebChat.call('enable_user_input')">Enable user input</button><br>
+<button class="btn" onclick="TeneoWebChat.call('maximize')">Maximize</button><br>
+<button class="btn" onclick="TeneoWebChat.on('visibility_changed', function(){console.log('Bad button')})">Bad button!</button>
+
+-->
+
+<div class="scroll">
+    This is a Dummy Paragraph to test vertical and horizontal scrolling. Lorem ipsum dolor sit amet, consectetur adipiscing elit. Kokruous maximus et blandit diam. Orci varius natoque penatibus et magnis dis parturient montes, nascetur ridiculus mus. Mauris non ex eget augue lobortis iaculis id a mauris. Sed auctor est quis lectus fringilla pharetra. Mauris efficitur nulla at augue porttitor laoreet. Duis pharetra lectus et fermentum commodo. Sed ullamcorper ante lectus, sit amet facilisis erat auctor quis. Mauris varius pharetra velit, in varius leo consequat sed. Aenean porta lorem non neque feugiat, nec ultrices est commodo. Ut vulputate quis neque sed tincidunt. Suspendisse in ligula accumsan, pharetra libero id, dignissim felis. Morbi scelerisque lacus sed ipsum faucibus suscipit. Vestibulum vitae efficitur nunc. Etiam ornare, risus nec dictum condimentum, ipsum tellus condimentum neque, vitae tempus velit tortor et magna. Vivamus egestas porta lacinia. Aenean interdum, dui ut maximus varius, massa ligula efficitur ex, eget cursus dui diam eget est.
+    Nam quis felis quis ipsum vulputate lobortis vel laoreet mauris. Sed vel nisi quam. Enean id vestibulum lacus, ac faucibus velit. Donec blandit eros dui, ac imperdiet leo convallis vel. Integer molestie purus in placerat varius. Morbi porta porta varius. Nam odio quam, porttitor quis scelerisque nec, sollicitudin a orci. Interdum et malesuada fames ac ante ipsum primis in faucibus.
+</div>
+
+<div id="teneo-web-chat"></div>
 </body>
 </html>

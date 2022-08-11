@@ -55,13 +55,16 @@ export default {
     this.isIosSafari = detectIosSafari();
     if (this.isIosSafari === true) {
       EventBus.$on(events.USER_INPUT_FOCUS_CHANGED, (onoff) => {
-        if (!(this.lastScrollY === window.scrollY)) {
-          this.keyboardUp = onoff;
-        } else {
-            this.keyboardUp = true; // Reactive variable, will update style
-        }
-        this.lastScrollY = window.scrollY;
-      });
+        //TODO setTimeout
+        //setTimeout(() => {
+          if (!(this.lastScrollY === window.scrollY)) {
+            this.keyboardUp = onoff;
+          } else {
+              this.keyboardUp = true; // Reactive variable, will update style
+          }
+          this.lastScrollY = window.scrollY;
+        //}, 1000);
+      })
     }
   },
   mounted() {
@@ -153,12 +156,17 @@ export default {
 
 .twc-ios-keyboard-shown {
   transition: 0.3s ease-in-out !important;
-  height: calc(66% - 60px);
-  /* top: 0px; */
+  height: calc(66% - 62px) !important;
+  border: 5px solid green;
+  top: calc(34% + 63px) !important;
+  position: fixed !important;
 }
 .twc-ios-keyboard-hidden {
   transition: 0.2s ease-in-out !important;
-  height: 100%;
+  height: 100% !important;
+  border: 5px solid red;
+  top: 0px !important;
+  position: fixed !important;
 }
 
 .twc-spinner {
