@@ -166,6 +166,9 @@ import TtsIcon from '../icons/tts.vue';
 import RecordingStartedBeep from '../sounds/recordingStartedBeep.vue'
 import RecordingEndedBeep from '../sounds/recordingEndedBeep.vue'
 import RecordingCancelledBeep from '../sounds/recordingCancelledBeep.vue'
+import sanitizeHtml from '../utils/sanitize-html.js';
+import DOMPurify from 'isomorphic-dompurify';
+
 import {
   getMSToken,
   processAudioToText,
@@ -189,7 +192,6 @@ import basePayload from '../utils/base-payload.js';
 import detectMobile from '../utils/detect-mobile.js';
 import {mapState} from 'vuex';
 import {store} from "../store/store";
-
 
 Vue.use(vueDebounce);
 
@@ -589,10 +591,10 @@ export default {
     },
     async _submitText() {
       // Create payload object
-      const payload = basePayload();
+      const payload = basePayload() ;
 
       // Add user input to base payload
-      payload.text = this.$refs.userInput.value;
+      payload.text = DOMPurify.sanitize(this.$refs.userInput.value);
 
       // Clear input field
       this.$refs.userInput.value = '';
