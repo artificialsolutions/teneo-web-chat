@@ -8,6 +8,7 @@
       <div class="twc-bounce3" aria-hidden="true"></div>
     </div>
     <UserInput :on-submit="sendMessage" />
+    <UploadPreviewPanel />
 
     <div v-if="isImageZoomed" href="#" class="twc-lightbox" @click="zoomOut">
       <span class="twc-lightbox-image-wrapper" @click="zoomOut">
@@ -24,12 +25,16 @@ import Vue from 'vue';
 import Header from './Header.vue';
 import MessageList from './MessageList.vue';
 import UserInput from './UserInput.vue';
+import UploadPreviewPanel from './UploadPreviewPanel.vue';
 import { EventBus, events } from '../utils/event-bus.js';
 import { API_CALL_SEND_INPUT } from '../utils/constants';
 import detectIosSafari from '../utils/detect-ios-safari';
 
 export default {
-  components: { Header, MessageList, UserInput },
+  components: {
+    UploadPreviewPanel, 
+    Header, MessageList, UserInput 
+  },
   props: {
     onClose: {
       type: Function,

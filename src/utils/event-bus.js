@@ -43,7 +43,11 @@ export const events = {
     SET_MS_VOICE: 'set_ms_voice',
     SHOW_CALLOUT: 'show_callout',
     HIDE_CALLOUT: 'hide_calllout',
-    ZOOM_IMAGE: 'zoom_image'
+    ZOOM_IMAGE: 'zoom_image',
+
+    // TODO ALPE
+    HIDE_UPLOAD_PANEL: 'hide_upload_panel',
+    SHOW_UPLOAD_PANEL: 'show_upload_panel'
 };
 
 export const EventBus = new Vue();

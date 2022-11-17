@@ -152,7 +152,6 @@ export const store = new Vuex.Store({
             }
         },
         uploadIconUrl(state, newUrl) {
-
             if (isValidUrl(newUrl) || newUrl === undefined) {
                 state.uploadIconUrl = newUrl;
             }
@@ -329,6 +328,6 @@ export const store = new Vuex.Store({
         engineUrlObj: (state) => {
             return {'engineUrl': state.teneoEngineUrl};
         },
-        storage: (state) => state.storage,
+        storage: (state) => state.storage
     }
 });
