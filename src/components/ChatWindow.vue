@@ -157,14 +157,12 @@ export default {
 .twc-ios-keyboard-shown {
   transition: 0.3s ease-in-out !important;
   height: calc(66% - 62px) !important;
-  border: 5px solid green;
   top: calc(34% + 63px) !important;
   position: fixed !important;
 }
 .twc-ios-keyboard-hidden {
   transition: 0.2s ease-in-out !important;
   height: 100% !important;
-  border: 5px solid red;
   top: 0px !important;
   position: fixed !important;
 }
