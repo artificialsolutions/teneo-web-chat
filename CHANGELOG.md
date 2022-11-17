@@ -1,3 +1,7 @@
+# v3.7.5
+## 17-11-2022
+* Fixed bug SDSA-225.
+* Sanitize user input on chat.
 # v3.7.4
 ## 08-11-2021
 * Enlarge images upon clicks in combo messages
