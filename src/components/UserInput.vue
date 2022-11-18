@@ -594,7 +594,7 @@ export default {
       const payload = basePayload() ;
 
       // Add user input to base payload
-      payload.text = DOMPurify.sanitize(this.$refs.userInput.value);
+      payload.text = DOMPurify.sanitize(this.$refs.userInput.value,{ USE_PROFILES: { html: true }} );
 
       // Clear input field
       this.$refs.userInput.value = '';
