@@ -23,11 +23,11 @@ export default {
     messageText() {
       if (this.message.author === "user") {
         const s= this.message.data.text
-        if(s) this.message.data.text=s.replaceAll('&', '&amp;').replaceAll('<', '&lt;').replaceAll('>', '&gt;');
+        return s.replaceAll('&', '&amp;').replaceAll('<', '&lt;').replaceAll('>', '&gt;');
+      } else {
+        return this.message.data.text;
       }
-
-      return this.message.data.text;
-    },
+ },
     messageSourceClass() {
       if (this.message.author === "bot") {
         return "twc-bot"
