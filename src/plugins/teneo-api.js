@@ -14,6 +14,7 @@ import isValidUrl from '../utils/validate-url';
 import {PARTICIPANT_BOT} from "../utils/constants.js";
 import VueI18n from "vue-i18n";
 import {translatedMessages} from "../utils/localized-messages";
+import DOMPurify from 'isomorphic-dompurify';
 
 export default function teneoApiPlugin(teneoApiUrl) {
 
@@ -79,7 +80,7 @@ export default function teneoApiPlugin(teneoApiUrl) {
             if (!isSilent) {
 
                 // construct user message object
-                let tmpMessage = {'author': 'user', 'type': 'text', 'data': {'text': text}}
+                let tmpMessage = {'author': 'user', 'type': 'text', 'data': {'text': DOMPurify.sanitize(text)}}
 
                 // add user message to history
                 await this._onMessageReceived(tmpMessage)
@@ -253,7 +254,7 @@ export default function teneoApiPlugin(teneoApiUrl) {
 
             // add message to list
 
-            this.messageList = [...this.messageList, message];
+            this.messageList = [...this.messageList, message ];
         },
         async closeSession() {
             // get session from storage when safari is used

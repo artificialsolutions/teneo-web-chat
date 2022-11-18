@@ -6,7 +6,7 @@
 
 <script>
 import messageComponentName from '../utils/message-component-name.js';
-
+import DOMPurify from 'isomorphic-dompurify';
 export default {
   props: {
     message: {
@@ -21,12 +21,7 @@ export default {
       }
     },
     messageText() {
-      if (this.message.author === "user") {
-        const s= this.message.data.text
-        return s.replaceAll('&', '&amp;').replaceAll('<', '&lt;').replaceAll('>', '&gt;');
-      } else {
         return this.message.data.text;
-      }
  },
     messageSourceClass() {
       if (this.message.author === "bot") {
