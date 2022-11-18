@@ -21,6 +21,11 @@ export default {
       }
     },
     messageText() {
+      if (this.message.author === "user") {
+        const s= this.message.data.text
+        if(s) this.message.data.text=s.replaceAll('&', '&amp;').replaceAll('<', '&lt;').replaceAll('>', '&gt;');
+      }
+
       return this.message.data.text;
     },
     messageSourceClass() {

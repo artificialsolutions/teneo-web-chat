@@ -593,7 +593,7 @@ export default {
       const payload = basePayload() ;
 
       // Add user input to base payload
-      payload.text = DOMPurify.sanitize(this.$refs.userInput.value);
+      payload.text = this.$refs.userInput.value;
 
       // Clear input field
       this.$refs.userInput.value = '';
