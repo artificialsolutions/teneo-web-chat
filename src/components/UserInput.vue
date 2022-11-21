@@ -166,7 +166,6 @@ import TtsIcon from '../icons/tts.vue';
 import RecordingStartedBeep from '../sounds/recordingStartedBeep.vue'
 import RecordingEndedBeep from '../sounds/recordingEndedBeep.vue'
 import RecordingCancelledBeep from '../sounds/recordingCancelledBeep.vue'
-import sanitizeHtml from '../utils/sanitize-html.js';
 import DOMPurify from 'isomorphic-dompurify';
 
 import {
@@ -594,7 +593,7 @@ export default {
       const payload = basePayload() ;
 
       // Add user input to base payload
-      payload.text = this.$refs.userInput.value;
+      payload.text = DOMPurify.sanitize(this.$refs.userInput.value);
 
       // Clear input field
       this.$refs.userInput.value = '';
