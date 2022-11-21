@@ -166,7 +166,6 @@ import TtsIcon from '../icons/tts.vue';
 import RecordingStartedBeep from '../sounds/recordingStartedBeep.vue'
 import RecordingEndedBeep from '../sounds/recordingEndedBeep.vue'
 import RecordingCancelledBeep from '../sounds/recordingCancelledBeep.vue'
-import sanitizeHtml from '../utils/sanitize-html.js';
 import DOMPurify from 'isomorphic-dompurify';
 
 import {

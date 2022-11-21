@@ -270,18 +270,14 @@ export default {
                   case 'datetime-local':
                   case 'color':
                   case 'range':
-                  case 'textarea':
-                    currentElement.attributes.value = node.value;
-                    break;
                   case 'checkbox':
                   case 'radio':
-                    currentElement.attributes.checked = node.checked
-                    break;
-
+                    currentElement.attributes.checked = node.checked;
                 }
                 break;
               case 'select':
-                break;
+              case 'textarea':
+                currentElement.attributes.value = node.value;
             }
           }
           elementIndex++;
