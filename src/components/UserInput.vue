@@ -615,7 +615,9 @@ export default {
       }
 
       if (payload.text && payload.text.trim().length > 0) {
-        const {text} = payload;
+        let text = {};
+
+        text = DOMPurify.sanitize(payload.text);
 
         let parameters = {};
 
