@@ -3,7 +3,8 @@
 <head>
 <meta charset="UTF-8"/>
 <title>Teneo Web Chat</title>
-<meta name="viewport" content="width=device-width, height=device-height, initial-scale=1.0 user-scalable=no">
+<meta name="viewport" content="width=device-width, height=device-height, initial-scale=1.0 user-scalable=no" />
+<link rel="icon" type="image/png" href="data:image/png;base64,iVBORw0KGgo=" />
 <style>
 
 body {
@@ -40,65 +41,8 @@ div.scroll {
 
 </style>
 
-<script src="teneo-web-chat.js"></script> <!-- needed for Heroku -->
-<!--<% if(process.env.NODE_ENV === 'development') { %>-->
+<!-- script src="teneo-web-chat.js"></script -->
 
-
-<!--<% } %>-->
-
-<script>
-/* <![CDATA[ */
-
-
-
-window.addEventListener('load', () => {
-
-    const element = document.getElementById('teneo-web-chat');
-    const teneoProps = {
-        'teneoEngineUrl': '<%= process.env.TENEO_ENGINE_URL %>',
-        'title': '<%= process.env.HEADER_TITLE %>',
-        'titleIconUrl': '<%= process.env.HEADER_ICON_URL %>',
-        'showCloseButton': '<%= process.env.SHOW_CLOSE_BUTTON %>',
-        'agentAvatarUrl': '<%= process.env.AGENT_AVATAR_URL %>',
-        'botAvatarUrl': '<%= process.env.BOT_AVATAR_URL %>',
-        'userAvatarUrl': '<%= process.env.USER_AVATAR_URL %>',
-        'minimizeIconUrl': '<%= process.env.MINIMIZE_ICON_URL %>',
-        'closeIconUrl': '<%= process.env.CLOSE_ICON_URL %>',
-        'launchIconUrl': '<%= process.env.LAUNCH_ICON_URL %>',
-        'sendIconUrl': '<%= process.env.SEND_ICON_URL %>',
-        'uploadIconUrl': '<%= process.env.UPLOAD_ICON_URL %>',
-        'showUploadButton': '<%= process.env.SHOW_UPLOAD_BUTTON %>',
-        'asrIconUrl': '<%= process.env.ASR_ICON_URL %>',
-        'showAsrButton': '<%= process.env.SHOW_ASR_BUTTON %>',
-        'asrActive': '<%= process.env.ASR_ACTIVE %>',
-        'ttsIconUrl': '<%= process.env.TTS_ICON_URL %>',
-        'showTtsButton': '<%= process.env.SHOW_TTS_BUTTON %>',
-        'ttsActive': '<%= process.env.TTS_ACTIVE %>',
-        'msCognitiveSubscriptionKey': '<%= process.env.MS_COGNITIVE_SUBSCRIPTION_KEY %>',
-        'msCognitiveRegion': '<%= process.env.MS_COGNITIVE_REGION %>',
-        'msVoice': '<%= process.env.MS_VOICE %>',
-        'locale': '<%= process.env.LOCALE %>',
-        'autoRedirect': '<%= process.env.AUTO_OUTPUT_LINK_REDIRECT %>'
-    };
-    <% if(process.env.NODE_ENV === 'development') { %>
-    //Keep last input on up arrow for rapid testing
-    /*
-    TeneoWebChat.on('input_submitted', (payload) => {
-        window.sessionStorage.setItem('lastSentPhrase', payload.text);
-    });
-    document.addEventListener('keydown', function(e){
-        if(e.code === 'ArrowUp') {
-            let inputField = document.getElementById('twc-user-input-field');
-            inputField.value = window.sessionStorage.getItem('lastSentPhrase')
-        }
-    });
-    */
-    <% } %>
-    window.TeneoWebChat.initialize(element, teneoProps);
-});
-
-/* ]]> */
-</script>
 </head>
 
 <body>
@@ -143,5 +87,186 @@ window.addEventListener('load', () => {
 </div>
 
 <div id="teneo-web-chat"></div>
+
+
+<script>
+/* <![CDATA[ */
+window.addEventListener('load', () => {
+
+
+
+TeneoWebChat.on('ready', () => {
+    const x = TeneoWebChat.get('storage').getItem('twc_last_state');
+    if (x) {
+        switch (x) {
+            case 'maximized':
+            TeneoWebChat.call('maximize');
+                break;
+            case 'minimized':
+            TeneoWebChat.call('minimize');
+                break;
+            default:
+                logger.warn('TeneoWebChat', 'unknown stored twc_last_state value', x);
+        }
+    }
+});
+
+TeneoWebChat.on('visibility_changed', payload => TeneoWebChat.get('storage').setItem('twc_last_state', payload.visibility));
+
+TeneoWebChat.on('reset', () => TeneoWebChat.get('storage').removeItem('twc_last_state'));
+
+// ============================================================
+
+TeneoWebChat.on('upload_button_clicked', () => TeneoWebChat.call('show_upload_panel'));
+
+/*
+TeneoWebChat.call('show_upload_panel');
+TeneoWebChat.call('hide_upload_panel');
+*/
+
+// ============================================================
+
+(() => {
+
+
+
+// TODO Re-implement the fileUpload object for your file upload service!
+// It should have public methods start(item) to start the asynchronous
+// file upload and calcelAll() to cancel all the initiated but not yet finished
+// files uploads.
+const fileUpload = {
+
+    itemIdToUploadProcessId: null,
+
+    start(item) {
+        // TODO Implement your file upload here insted of this file upload simulation:
+        // call resolve() when the file upload succeeds and reject() if it fails!
+        if (this.itemIdToUploadProcessId == null) this.itemIdToUploadProcessId = {};
+        return new Promise((resolve, reject) => {
+            this.itemIdToUploadProcessId[item.id] = setTimeout(() => {
+                const bFileUploadSuccessful = Math.random() > 0.5;
+                if (bFileUploadSuccessful) resolve();
+                else reject(new Error('Simulated file upload failed'));
+            }, Math.random() * 20000);
+        });
+    },
+
+    cancelAll() {
+        // TODO Implement here the cancellation of all the started
+        // but not finished file upload processes 
+        if (this.itemIdToUploadProcessId == null) return;
+        Object.values(this.itemIdToUploadProcessId).forEach(processId => clearTimeout(processId));
+        this.itemIdToUploadProcessId = null;
+    }
+};
+
+
+
+
+var itemIdToUploadFileName;
+
+
+const clearFileUploads = () => {
+    fileUpload.cancelAll();
+    itemIdToUploadFileName = null;
+    TeneoWebChat.get('storage').removeItem('twc_idToUploadFileName');
+},
+
+
+outputBotText = sText => TeneoWebChat.call('add_message', {
+    type: 'text',
+    author: 'bot',
+    data: { text: sText }
+});
+
+
+TeneoWebChat.on('ready', () => {
+    const x = TeneoWebChat.get('storage').getItem('twc_idToUploadFileName');
+    if (x) {
+        TeneoWebChat.get('storage').removeItem('twc_idToUploadFileName');
+        setTimeout(() => {
+            try {
+                Object.entries(JSON.parse(x)).forEach(e => {
+                    outputBotText('The upload of the file ' + e[1] + ' with ID ' + e[0] + ' was interruped by page reload');
+                });
+            } catch(err) {
+                console.warn('Error processing twc_idToUploadFileName [ ' + x + ' ]', err);
+            }
+        });
+    }
+});
+
+
+TeneoWebChat.on('upload_panel_submit', payload => {
+    console.log('upload_panel_submit', payload);
+    if (itemIdToUploadFileName == null) itemIdToUploadFileName = {};
+    payload.items.forEach(item => {
+        itemIdToUploadFileName[item.id] = item.file.name;
+    });
+    TeneoWebChat.get('storage').setItem('twc_idToUploadFileName', JSON.stringify(itemIdToUploadFileName));
+
+    payload.items.forEach(item => {
+        outputBotText('Uploading ' + item.file.name);
+        fileUpload.start(item).then(() => {
+            outputBotText('File ' + item.file.name + ' with ID ' + item.id + ' has been uploaded successfully');
+        }, error => {
+            outputBotText('File ' + item.file.name + ' with ID ' + item.id + ' failed to be uploaded because of the error ' + error);
+        }).finally(() => {
+            delete itemIdToUploadFileName[item.id];
+            TeneoWebChat.get('storage').setItem('twc_idToUploadFileName', JSON.stringify(itemIdToUploadFileName));
+        });
+    });
+});
+
+
+TeneoWebChat.on('upload_panel_cancel', payload => {
+    console.log('upload_panel_cancel', payload);
+    outputBotText('You have canceled on ' + payload.itemsCount + ' files');
+});
+
+
+TeneoWebChat.on('reset', clearFileUploads);
+
+
+})();
+
+// ============================================================
+
+const element = document.getElementById('teneo-web-chat');
+const teneoProps = {
+    'teneoEngineUrl': '<%= process.env.TENEO_ENGINE_URL %>',
+    'title': '<%= process.env.HEADER_TITLE %>',
+    'titleIconUrl': '<%= process.env.HEADER_ICON_URL %>',
+    'showCloseButton': '<%= process.env.SHOW_CLOSE_BUTTON %>',
+    'agentAvatarUrl': '<%= process.env.AGENT_AVATAR_URL %>',
+    'botAvatarUrl': '<%= process.env.BOT_AVATAR_URL %>',
+    'userAvatarUrl': '<%= process.env.USER_AVATAR_URL %>',
+    'minimizeIconUrl': '<%= process.env.MINIMIZE_ICON_URL %>',
+    'closeIconUrl': '<%= process.env.CLOSE_ICON_URL %>',
+    'launchIconUrl': '<%= process.env.LAUNCH_ICON_URL %>',
+    'sendIconUrl': '<%= process.env.SEND_ICON_URL %>',
+    'uploadIconUrl': '<%= process.env.UPLOAD_ICON_URL %>',
+    'showUploadButton': '<%= process.env.SHOW_UPLOAD_BUTTON %>',
+    'asrIconUrl': '<%= process.env.ASR_ICON_URL %>',
+    'showAsrButton': '<%= process.env.SHOW_ASR_BUTTON %>',
+    'asrActive': '<%= process.env.ASR_ACTIVE %>',
+    'ttsIconUrl': '<%= process.env.TTS_ICON_URL %>',
+    'showTtsButton': '<%= process.env.SHOW_TTS_BUTTON %>',
+    'ttsActive': '<%= process.env.TTS_ACTIVE %>',
+    'msCognitiveSubscriptionKey': '<%= process.env.MS_COGNITIVE_SUBSCRIPTION_KEY %>',
+    'msCognitiveRegion': '<%= process.env.MS_COGNITIVE_REGION %>',
+    'msVoice': '<%= process.env.MS_VOICE %>',
+    'locale': '<%= process.env.LOCALE %>',
+    'autoRedirect': '<%= process.env.AUTO_OUTPUT_LINK_REDIRECT %>'
+};
+
+window.TeneoWebChat.initialize(element, teneoProps);
+
+
+});
+/* ]]> */
+</script>
+    
+
 </body>
 </html>
