@@ -31,7 +31,6 @@
           :key="idx"
           class="twc-btn"
           :class="{ 'twc-selected': replySent && selected === idx, 'twc-primary': button.style == 'primary', 'twc-secondary': button.style == 'secondary', 'twc-success': button.style == 'success', 'twc-danger': button.style == 'danger', 'twc-warning': button.style == 'warning', 'twc-info': button.style == 'info'}"
-          :disabled="buttonitems.class('twc-expired')"
           @click="onSelect(button, idx)"
           @keydown="handleReturnSpaceKeys($event, button, idx, 'button')"
         >{{ button.title }}</a>
@@ -138,7 +137,7 @@ export default {
       await handleLinkButtonClick(linkbutton, event)
     },
     async onSelect(reply, idx) {
-      if (!this.replySent && this.isExpired !== 0) {
+      if (!this.replySent && !this.isExpired) {
         await handleButtonClick(reply, idx, this.$teneoApi)
       }
     },
