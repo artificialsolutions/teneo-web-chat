@@ -1,55 +1,247 @@
 <template>
-  <div v-if="idToItem != null" class="twc-upload-preview-panel">
-    <div class="twc-upload-items">
-      <div class="twc-upload-item" v-for="(item, id) in idToItem" :key="id">
-        <svg
-          xmlns="http://www.w3.org/2000/svg"
-          width="16"
-          height="16"
-          viewBox="0 0 16 16"
-          fill="none"
-          stroke="currentColor"
-          stroke-width="1"
-          stroke-linecap="round"
-          stroke-linejoin="round"
-          class="twc-upload-item-close"
-          @click.stop.prevent="clickRemoveItem(item)"
+  <div v-if="idToItem != null" 
+    class="twc-upload-preview-panel"
+    contenteditable="true"
+    style="caret-color:transparent"
+    onbeforeinput="return false"
+
+    @dragenter="onDragEnter"
+    @dragleave="onDragLeave"
+    @dragover.prevent="onDragOver"
+    @drop.prevent="addFilesFromDrop"
+    @paste.prevent="addFilesFromPaste"
+  >
+    <div class = "twc-files-space">
+      <div class="twc-upload-items">
+
+        <div class="twc-upload-item" 
+          v-for="(item, id) in idToItem" 
+          :key="id"
+          :title = item.file.name
         >
-          <line x1="14" y1="1" x2="1" y2="14"></line>
-          <line x1="1" y1="1" x2="14" y2="14"></line>
-        </svg>
-        <br/>
-        <canvas :id="('twc-upload-item-canvas' + id)" class="twc-upload-item-canvas"></canvas>
+          <svg
+            xmlns="http://www.w3.org/2000/svg"
+            width="12"
+            height="12"
+            viewBox="0 0 10 10"
+            fill="none"
+            stroke="currentColor"
+            stroke-width="2"
+            stroke-linecap="round"
+            stroke-linejoin="round"
+            class="twc-upload-item-close"
+            @click.stop.prevent="clickRemoveItem(item)"
+          >
+            <line x1="10" y1="1" x2="1" y2="10"></line>
+            <line x1="1" y1="1" x2="10" y2="10"></line>
+          </svg>
+          
+          <canvas :id="('twc-upload-item-canvas' + id)" class="twc-upload-item-canvas"></canvas>
+          <div class = "twc-file-name">{{item.file.name}}</div>
+         
+        </div>
       </div>
+
+      <input type="file" ref="fileInputElement" multiple="multiple" @click.stop="e=>{e.currentTarget.value=null}" @change="addFiles" style="opacity:0"/>
+      
     </div>
+
     <textarea v-if="comment != null" :disabled="processing" v-model="comment" class="twc-upload-comment"></textarea>
-    <div class="twc-upload-buttonss">
-      <button type="button" @click.stop.prevent="clickOpenFileInput" :disabled="processing">Add files</button>
+    
+    <div class="twc-upload-buttons">
+      <button type="button" @click.stop.prevent="clickOpenFileInput" :disabled="processing">&#10010;</button>
       <button type="button" @click.stop.prevent="clickClearAll" :disabled="processing || !itemsCount">Clear all</button>
       <button type="button" @click.stop.prevent="clickSubmit" :disabled="processing || !itemsCount">Submit</button>
       <button type="button" @click.stop.prevent="clickCancel" :disabled="processing">Cancel</button>
     </div>
-    <input type="file" ref="fileInputElement" multiple="multiple" @click.stop="e=>{e.currentTarget.value=null}" @change="addFiles" style="opacity:0"/>
+    
   </div>
 </template>
 
 
+
+
+
 <style scoped>
 
+/* Parent: hall panel */
+.twc-upload-preview-panel {
+  box-sizing: border-box;
+  height: auto;
+  border: none;
+  background-color: var(--user-input-bg-color, #f4f7f9);
+  padding: 10px;
+  position: relative;
+}
+
+[contenteditable] {
+  outline: 0px solid transparent;
+}
+
+.twc-upload-preview-panel-drag {
+  background-color: var(--user-input-fg-color, #565867);
+  opacity: 60%;
+}
+
+.twc-files-space {
+  height: 5rem;
+  display: flex;
+  position: relative;
+}
+/* Uploaded items visualizer */
+.twc-upload-items {
+  height: 85px;
+  position: absolute;
+  top: 0;
+  z-index: 2;
+  display: flex;
+  width: 100%;
+  flex-direction: row;
+  overflow-x: auto;
+  padding: 5px;
+}
+
+/* Input zone: if you click on it, the file selector will appear automatically. 
+This may used to implement the drag and drop?*/
+input[type = "file"] {
+  position: absolute;
+  top: 0;
+  z-index: 1;
+  height: 5rem;
+  width: 100%;
+}
+
+input[type = "file"]:hover {
+  cursor: pointer;
+}
+
 .twc-upload-item {
-  display: inline-block;
-  border: thin solid black;
-  margin: 2px;
-  padding: 2px;
+  background-color: white;
+  border-radius: 10px;
+  width: 3.5rem;
+  min-height: 3.5rem;
+  font-size: 3rem;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-content: center;
+  align-items: center;
+  border: none;
+  margin: 5px;
+  margin-bottom: 0;
+  padding: 5px;
   text-align: right;
+  position: relative;
+}
+
+/* items to visualize the uploaded files */
+.twc-file-icon {
+  stroke: gray;
+  margin-bottom: 2px;
+}
+
+.twc-file-name {
+  font-size: 0.6rem;
+  text-overflow: ellipsis;
+  overflow: hidden;
+  width: 3rem;
+  white-space: nowrap;
+  position: absolute;
+  bottom: 1%;
 }
 
 .twc-upload-item-canvas {
   display: inline-block;
 }
 
-</style>
+.twc-upload-item-close {
+  position: absolute;
+  top: -8%;
+  right: -8%;
+  border-radius: 50%;
+  border: none;
+  background-color: red;
+  stroke: white;
+  padding: 4px;
+  box-shadow: 0px 4px 6px 0px rgba(201, 201, 201, 0.8);
+}
 
+.twc-upload-item-close:hover{
+  cursor: pointer;
+}
+
+/* Buttons to handle the attachment feature */
+.twc-upload-buttons {
+  margin-top: 10px;
+  padding: 5px;
+  height: auto;
+  padding: 5px;
+  display: flex;
+  align-content: center;
+  flex-direction: row;
+  justify-content: flex-end;
+  position: relative;
+}
+
+button {
+  border: none;
+  cursor: pointer;
+  font-weight: 400;
+  text-align: center;
+  vertical-align: middle;
+  -webkit-user-select: none;
+  -moz-user-select: none;
+  -ms-user-select: none;
+  user-select: none;
+  font-size: 0.7em;
+  line-height: 1;
+  border-radius: 50px;
+  display: inline-block;
+  margin: 5px;
+  text-decoration: none;
+  transition: all 0.5s;
+  box-shadow: 0 2px 4px 0 rgba(85, 87, 85, 0.5);
+}
+
+button:nth-child(1){
+  color: var(--success-color, #28a745);
+  background-color: var(--light-fg-color, #ffffff);
+  border: 1px solid  var(--success-color, #28a745);
+  padding: 0.275rem 0.275rem;
+  align-self: flex-start;
+  position: absolute;
+  left: 3%;
+  text-align: center;
+  justify-content: center;
+}
+
+button:nth-child(2){
+  color: var(--danger-color, #dc3545);
+  background-color: var(--light-fg-color, #ffffff); 
+  border: 1px solid  var(--danger-color, #dc3545);
+  padding: 0.275rem 0.65rem;
+  min-width: 62px;
+  position: absolute;
+  left: 10%;
+}
+
+button:nth-child(3){
+  color: var(--light-fg-color, #ffffff);
+  background-color: var(--success-color, #28a745);
+  padding: 0.275rem 0.65rem;
+  min-width: 62px;
+}
+
+button:nth-child(4){
+  color: var(--light-fg-color, #ffffff);
+  background-color: var(--danger-color, #dc3545);
+  padding: 0.275rem 0.65rem;
+  min-width: 62px;
+}
+
+
+
+</style>
 
 <script>
 /* <![CDATA[ */
@@ -58,6 +250,9 @@ import { EventBus, events } from '../utils/event-bus.js';
 import { API_ON_UPLOAD_PANEL_SUBMIT, API_ON_UPLOAD_PANEL_CANCEL } from '../utils/api-function-names.js';
 import basePayload from '../utils/base-payload.js';
 import handleExtension from '../utils/handle-extension.js';
+
+
+var idToExtraData = null;
 
 
 const bDebug = true, sName = 'UploadPreviewPanel',
@@ -144,7 +339,7 @@ export default {
       for (var id in this.idToItem) {
         if (this.idToItem.hasOwnProperty(id)) {
           const canvas = document.getElementById('twc-upload-item-canvas' + id);
-          if (canvas) this.initCanvas(canvas, this.idToItem[id])
+          if (canvas) this.initCanvas(canvas, this.idToItem[id]);
           else console.warn(sName, 'Missing canvas for id', id);
         }
       }
@@ -161,6 +356,48 @@ export default {
 
   methods: {
 
+    onDragOver(evt) {
+      if (bDebug) console.log(sName, 'onDragOver(), processing:', this.processing);
+      if (this.processing) return;
+      evt.currentTarget.classList.add("twc-upload-preview-panel-drag");
+    },
+
+
+    onDragEnter(evt) {
+      if (bDebug) console.log(sName, 'onDragEnter(), processing:', this.processing);
+      if (this.processing) return;
+      evt.currentTarget.classList.add("twc-upload-preview-panel-drag");
+    },
+
+
+    onDragLeave(evt) {
+      if (bDebug) console.log(sName, 'onDragLeave(), processing:', this.processing);
+      evt.currentTarget.classList.remove("twc-upload-preview-panel-drag");
+    },
+
+
+    addFilesFromDrop(evt) {
+      if (bDebug) console.log(sName, 'addFilesFromDrop(), processing:', this.processing);
+      evt.currentTarget.classList.remove("twc-upload-preview-panel-drag");
+      if (this.processing) return;
+      this.addFiles(evt.dataTransfer.files);
+    },
+
+
+    addFilesFromPaste(evt) {
+      if (bDebug) console.log(sName, 'addFilesFromPaste(), processing:', this.processing);
+      if (this.processing) return;
+      this.addDataTransferItemsAsFiles(evt.clipboardData.items);
+    },
+
+
+    addFilesFromInput(evt) {
+      if (bDebug) console.log(sName, 'addFilesFromInput(), processing:', this.processing);
+      if (this.processing) return;
+      this.addFiles(evt.currentTarget.files);
+    },
+
+
     clickOpenFileInput() {
       if (bDebug) console.log(sName, 'clickOpenFileInput(), processing:', this.processing);
       if (this.processing) return;
@@ -168,27 +405,48 @@ export default {
     },
 
 
-    addFiles(evt) {
-      if (bDebug) console.log(sName, 'addFiles()');
-      const files = evt.currentTarget.files;
-      if (bDebug) console.log(sName, 'addFiles(), files chosen:', files.length);
-      for (var file, id, i = 0; i < files.length; i++) {
-        file = files[i];
-        id = newId();
-        if (!this.idToItem.hasOwnProperty(id)) this.itemsCount++;
-        this.idToItem[id] = {
-          id: id,
-          file: file,
-          bImageMime: isImageFile(file)
-        };
-        if (bDebug) console.log(sName, 'addFiles(), adding file [' + file.name + '] of type [' + file.type + '] and size [' + file.size + '] with id [' + id + ']');
+    addFile(file) {
+      const id = newId();
+      if (!this.idToItem.hasOwnProperty(id)) this.itemsCount++;
+      this.idToItem[id] = {
+        id: id,
+        file: file,
+        bImageMime: isImageFile(file)
+      };
+      if (bDebug) console.log(sName, 'addFile(), adding file [' + file.name + '] of type [' + file.type + '] and size [' + file.size + '] with id [' + id + ']');
+    },
+
+
+    addFiles(files) {
+      if (files) {
+        if (bDebug) console.log(sName, 'addFiles(), files chosen:', files.length);
+        for (var file of files) {
+          this.addFile(file);
+        }
+      } else {
+        if (bDebug) console.log(sName, 'addFiles(), files chosen: NO');
       }
       if (bDebug) console.log(sName, 'addFiles(), end, itemsCount [' + this.itemsCount + '], idToItem:', getPrintableDebugObject(this.idToItem));
     },
 
 
+    addDataTransferItemsAsFiles(dataTransferItems) {
+      if (dataTransferItems) {
+        if (bDebug) console.log(sName, 'addAsFiles(), dataTransferItems chosen:', dataTransferItems ? dataTransferItems.length : null);
+        for (var dti of dataTransferItems) {
+          if (dti.kind === 'file') this.addFile(dti.getAsFile());
+          else if (bDebug) console.log(sName, 'addAsFiles(), skipping dataTransferItem.kind:', dti.kind);
+        }
+      } else {
+        if (bDebug) console.log(sName, 'addAsFiles(), dataTransferItems chosen: NO');
+      }
+      if (bDebug) console.log(sName, 'addAsFiles(), end, itemsCount [' + this.itemsCount + '], idToItem:', getPrintableDebugObject(this.idToItem));
+    },
+
+
     open(payload) {
       if (bDebug) console.log(sName, 'open(), payload:', payload);
+      idToExtraData = {};
       this.idToItem = {};
       this.itemsCount = 0;
       this.processing = false;
@@ -235,6 +493,7 @@ export default {
 
     close() {
       if (bDebug) console.log(sName, 'close()');
+      idToExtraData = null;
       this.idToItem = null;
       this.itemsCount = 0;
       this.comment = null;
@@ -245,6 +504,7 @@ export default {
     clickClearAll() {
       if (bDebug) console.log(sName, 'clickClearAll(), processing:', this.processing);
       if (this.processing) return;
+      if (idToExtraData != null) idToExtraData = {};
       if (this.idToItem != null) this.idToItem = {};
       this.itemsCount = 0;
       if (this.comment != null) this.comment = '';
@@ -320,6 +580,11 @@ export default {
 
     insertImage(canvasElement, item) {
       if (bDebug) console.log(sName, 'insertImage()');
+      var extraData = idToExtraData[item.id];
+      if (extraData) {
+        canvasElement.width = extraData.width;
+        canvasElement.height = extraData.height;
+      }
       var blobURL = window.URL.createObjectURL(item.file);
       const img = new window.Image();
 
@@ -328,30 +593,37 @@ export default {
         window.URL.revokeObjectURL(blobURL);
         blobURL = null;
         if (Number.isFinite(img.width) && img.width > 0 && Number.isFinite(img.height) && img.height > 0) {
-          let w = MAX_IMG_PREVIEW_WIDTH / img.width, h = MAX_IMG_PREVIEW_HEIGHT / img.height, x;
-          if (w < h) {
-            // w is the reference, width > height
-            h = w * img.height;
-            w *= img.width;
-            // here, w === MAX_IMG_PREVIEW_WIDTH
-            x = w / 4;
-            if (h < x) h = x;
-          } else {
-            // h is the reference, height > width
-            w = h * img.width;
-            h *= img.height;
-            // here, h === MAX_IMG_PREVIEW_HEIGHT
-            x = h / 4;
-            if (w < x) w = x;
+          let x;
+          if (extraData == null) {
+            let w = MAX_IMG_PREVIEW_WIDTH / img.width, h = MAX_IMG_PREVIEW_HEIGHT / img.height;
+            if (w < h) {
+              // w is the reference, width > height
+              h = w * img.height;
+              w *= img.width;
+              // here, w === MAX_IMG_PREVIEW_WIDTH
+              x = w / 4;
+              if (h < x) h = x;
+            } else {
+              // h is the reference, height > width
+              w = h * img.width;
+              h *= img.height;
+              // here, h === MAX_IMG_PREVIEW_HEIGHT
+              x = h / 4;
+              if (w < x) w = x;
+            }
+            canvasElement.width = w;
+            canvasElement.height = h;
+            idToExtraData[item.id] = extraData = {
+              width: w,
+              height: h
+            };
           }
-          canvasElement.width = w;
-          canvasElement.height = h;
 
           x = canvasElement.getContext("2d");
           if (x != null) {
-            if (bDebug) console.log(sName, 'insertImage(), img.onload, drawImage, w==' + w + ', h==' + h);
+            if (bDebug) console.log(sName, 'insertImage(), img.onload, drawImage, extraData:', extraData);
             try {
-              x.drawImage(img, 0, 0, w, h);
+              x.drawImage(img, 0, 0, extraData.width, extraData.height);
             } catch (err) {
               console.warn(sName, 'insertImage(), failure drawing image [' + item.file.name + '] in preload preview canvas', err);
               this.insertTextCaption(canvasElement, item);
@@ -389,6 +661,7 @@ export default {
 
     removeItem(item) {
       if (bDebug) console.log(sName, 'removeItem()');
+      delete idToExtraData[item.id];
       if (this.idToItem.hasOwnProperty(item.id)) {
         delete this.idToItem[item.id];
         this.itemsCount--;
