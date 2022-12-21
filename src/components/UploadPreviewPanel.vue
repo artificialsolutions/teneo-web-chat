@@ -42,7 +42,7 @@
         </div>
       </div>
 
-      <input type="file" ref="fileInputElement" multiple="multiple" @click.stop="e=>{e.currentTarget.value=null}" @change="addFiles" style="opacity:0"/>
+      <input type="file" ref="fileInputElement" multiple="multiple" @click.stop="e=>{e.currentTarget.value=null}" @change="addFilesFromInput" style="opacity:0"/>
       
     </div>
 
@@ -156,7 +156,7 @@ input[type = "file"]:hover {
 
 .twc-upload-item-close {
   position: absolute;
-  z-index: 4;
+  z-index: 50;
   top: -8%;
   right: -8%;
   border-radius: 50%;
