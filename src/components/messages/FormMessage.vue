@@ -1,24 +1,26 @@
 <template>
-  <form class="twc-form" v-on:submit="handleFormSubmit" id="twcActiveForm">
+  <form class="twc-form" v-on:submit.prevent="handleFormSubmit" id="twcActiveForm">
     <!--@formatter:off-->
+    
     <component v-for="(element, idx) in formElements"
-               :key="idx"
-               :is="elementTag(element.type)"
-               v-bind="elementAttributes(element)"
-               v-on="elementListeners(element)"
-               :id="elementId(element, idx)"
-               :name="elementName(element, idx)"
-    >{{elementText(element.text)}}<option
-          v-if="element.type==='select'"
-          v-for="(option) in element.options"
+            :key="idx"
+            :is="elementTag(element.type)"
+            v-bind="elementAttributes(element)"
+            v-on="elementListeners(element)"
+            :id="elementId(element, idx)"
+            :name="elementName(element, idx)"
+    >{{elementText(element.text)}}<template v-if="element.type==='select'"><option
+          v-for="(option, key) in element.options"
           v-bind="elementAttributes(option)"
+          :key="key"
       >{{ option.text }}</option
-    ><label
+    ></template><label
         v-if="element.hasOwnProperty('label')"
         :for="elementId(element, idx)"
         :class="labelClasses(element)"
     >{{ labelText(element) }}</label>
     </component>
+    
     <!--@formatter:on-->
   </form>
 </template>
@@ -300,34 +302,61 @@ export default {
 </script>
 
 <style>
-.twc-form {
-  background: var(--form-background-color);
-  display: flex;
-  flex-direction: column;
-  flex-flow: wrap;
-  border-radius: 10px 10px 10px 0;
+
+.teneo-web-chat {
+  --form-background-color: white;
+  --form-title-text-color:var(--primary-color);
+  --form-subtitle-text-color:rgba(50,62,72,0.9);
+  --form-caption-text-color: rgba(50,62,72,0.9);
+  --form-label-text-color:rgba(50,62,72,0.9);
+  --form-input-background-color:white;
+
+  --form-border-color: #919191;
+  
+  --form-submit-text-color:white;
+  --form-submit-background-color:var(--primary-color);
+
+  --form-cancel-text-color:white;
+  --form-cancel-background-color:rgb(255, 76, 91);
+  --form-reset-text-color: white;
+  --form-reset-background-color:var(--secondary-color);
 }
 
 
+.twc-form {
+  background: var(--form-background-color);
+  box-shadow:0 2px 5px 0 rgba(0,0,0,0.16),0 2px 10px 0 rgba(0,0,0,0.12);
+  display: flex;
+  justify-content: center;
+  flex-flow: row wrap;
+  border-radius: 10px 10px 10px 0;
+  padding: 0.5cm;
+  position: relative;
+}
+
 .twc-form-title {
-  flex-basis: 100%;
-  text-align: center;
+  flex-basis:100%;
+  text-align: left;
   color: var(--form-title-text-color);
-  margin: 5px;
+  margin: 0;
+  margin-bottom: 1rem;
 }
 
 .twc-form-subtitle {
   flex-basis: 100%;
-  text-align: center;
+  text-align: left;
   color: var(--form-subtitle-text-color);
-  margin: 5px;
+  margin-top: 0.5rem;
+  margin-bottom: 0.5rem;
+  padding-left: 0.7rem;
 }
 
 .twc-form-caption {
   flex-basis: 100%;
-  text-align: center;
+  text-align: right;
   color: var(--form-caption-text-color);
-  margin-bottom: 5%;
+  margin-bottom: 0%;
+  margin-top: 5%;
 }
 
 .twc-form.twc-expired * {
@@ -339,7 +368,7 @@ export default {
   color: var(--form-label-text-color);
   font-size: 0.9em;
   font-family: var(--primary-font);
-  margin: 10px 5% 5px 5%;
+  margin: 0.7rem;
 }
 
 .twc-form-label.twc-form-attached-label {
@@ -348,96 +377,373 @@ export default {
 }
 
 .twc-form-textarea {
-  flex-basis: 90%;
-  margin: auto;
+  width: 90%;
+  margin-bottom: 1rem;
   background: var(--form-input-background-color);
-  min-height: 2.5em;
+  min-height: 5em;
+  overflow: auto;
+  resize: vertical;
+  border: 2px solid #d1d1d1;
+  border-radius: 5px;
+  text-decoration: none;
+  color: var(--expired-color);
+  font-family: var(--primary-font);
 }
+
+.twc-form-textarea:focus {
+  outline: 0; 
+  border: 2px solid rgb(47, 40, 110,0.5);
+  color: black;
+}
+
 
 .twc-form-select {
+  appearance: none;
+  -webkit-appearance: none;
+  -moz-appearance: none;
+  background-color: transparent;
+  margin-bottom: 1rem;
+  font-family: inherit;
+  font-size: 0.9rem;
+  cursor: inherit;
+  line-height: inherit;
+  z-index: 1;
+  outline: none;
   flex-basis: 90%;
-  margin: auto;
-  background: var(--form-input-background-color);
+  border: 2px solid #d1d1d1;
+  border-radius: 5px;
+  padding: 2px;
 }
 
-.twc-form-select.twc-form-option {
 
+.twc-form-select .twc-form-option {
+  border-radius: 5px;
+  padding-left: 2px;
 }
 
+/**Check with Alex */
+select option:checked,
+select option:focus,
+select option:active {
+    background: var(--primary-color);
+    accent-color: var(--primary-color);
+    color: white;
+}
+
+/**?? */
 .twc-form-control {
   flex: 1 1 auto;
   border-radius: 5px;
   padding: 5px;
-  margin: 5%;
+  margin: 10%;
 }
 
 .twc-form-control.twc-form-submit:not([disabled]) {
-  color: var(--form-submit-text-color);
-  background: var(--form-submit-background-color);
+  border: none;
+  background: var(--form-submit-background-color, #4e8cff);
+  border: 1px solid var(--form-sumbit-background-color, #4e8cff);
+  color: var(--button-fg-color, #ffffff);
+  cursor: pointer;
+  font-weight: 400;
+  text-align: center;
+  font-weight: bold;
+  vertical-align: middle;
+  -webkit-user-select: none;
+  -moz-user-select: none;
+  -ms-user-select: none;
+  user-select: none;
+  padding: 0.1rem;
+  font-size: 0.9em;
+  line-height: 1.5;
+  border-radius: 50px;
+  min-width: 62px;
+  width: 60%;
+  display: inline-block;
+  margin: 3px;
+  margin-top:15px;
+  text-decoration: none;
+  transition: all 0.2s;
+  box-shadow: 0 1px 2px 0 rgba(85, 87, 85, 0.7);
 }
+
+.twc-form-control.twc-form-submit:not([disabled]):hover {
+  background-color: var(--primary-color-dark);
+  color: white;
+}
+
+
 
 .twc-form-control.twc-form-cancel:not([disabled]) {
-  color: var(--form-cancel-text-color);
-  background: var(--form-cancel-background-color);
+  border: none;
+  background: var(--form-cancel-background-color, #4e8cff);
+  border: 1px solid var(--form-cancel-background-color, #4e8cff);
+  color: var(--button-fg-color, #ffffff);
+  cursor: pointer;
+  font-weight: 400;
+  text-align: center;
+  vertical-align: middle;
+  -webkit-user-select: none;
+  -moz-user-select: none;
+  -ms-user-select: none;
+  user-select: none;
+  padding: 0.1rem;
+  font-size: 0.9em;
+  line-height: 1.5;
+  border-radius: 50px;
+  min-width: 62px;
+  width: 30%;
+  display: inline-block;
+  margin: 3px;
+  margin-top:15px;
+  text-decoration: none;
+  transition: all 0.2s;
+  box-shadow: 0 1px 2px 0 rgba(85, 87, 85, 0.7);
 }
 
+.twc-form-control.twc-form-cancel:not([disabled]):hover {
+  background-color: var(--danger-color-dark);
+  color: white;
+  font-weight: bold;
+}
+
+.twc-form-input {
+  border:none;
+  margin-bottom: 10%;
+  background: var(--form-input-background-color);
+  border: 2px solid #d1d1d1;
+  border-radius: 5px;
+  width:90%;
+  padding-inline-start: 0px;
+  height: 2rem;
+  font-family: var(--primary-font);
+}
+
+.twc-form-input:focus {
+  outline: 0; 
+  border: 2px solid rgb(47, 40, 110,0.8);
+}
 /*Text field types*/
 .twc-form-input[type=text], .twc-form-input[type=email], .twc-form-input[type=number], .twc-form-input[type=password], .twc-form-input[type=search], .twc-form-input[type=tel], .twc-form-input[type=url] {
   flex-basis: 90%;
-  margin-left: 5%;
-  margin-right: 5%;
   background: var(--form-input-background-color);
+  border: 2px solid #d1d1d1;
+  height: 2rem;
+  border-radius: 5px;
+   margin-bottom: 10%;
+}
+
+.twc-form-input[type=text]:focus, .twc-form-input[type=email]:focus, .twc-form-input[type=number]:focus, .twc-form-input[type=password]:focus, .twc-form-input[type=search]:focus, .twc-form-input[type=tel]:focus, .twc-form-input[type=url]:focus {
+  border: 2px solid rgb(47, 40, 110,0.8);
 }
 
 /*Button Types*/
-.twc-form-input[type=reset], .twc-form-input[type=button], .twc-form-input[type=file], .twc-form-input[type=image], .twc-form-input[type=submit] {
+.twc-form-input[type=reset], .twc-form-input[type=file], .twc-form-input[type=image], .twc-form-input[type=submit] {
   border-radius: 5px;
   padding: 5px;
-  flex: 1 1 auto;
-  margin: auto 5%;
+  /**Comment: flex: 1 1 auto;*/ 
+  margin: auto 0;
+  margin-bottom: 10%;
+  flex-basis: 90%;
+}
+
+.twc-form-input[type=button] {
+  border: none;
+  background: var(--button-bg-color, #4e8cff);
+  border: 1px solid var(--button-bg-color, #4e8cff);
+  color: var(--button-fg-color, #ffffff);
+  cursor: pointer;
+  font-weight: 400;
+  text-align: center;
+  vertical-align: middle;
+  -webkit-user-select: none;
+  -moz-user-select: none;
+  -ms-user-select: none;
+  user-select: none;
+  padding: 0.1rem;
+  font-size: 0.9em;
+  line-height: 1.5;
+  border-radius: 50px;
+  min-width: 62px;
+  width: 45%;
+  display: inline-block;
+  margin: 3px;
+   margin-bottom: 10%;
+  text-decoration: none;
+  transition: all 0.2s;
+  box-shadow: 0 2px 3px 0 rgba(85, 87, 85, 0.7);
+}
+
+.twc-form-input[type=button]:active {
+  outline: none;
+  box-shadow: 0 1px 2px 0 rgba(85, 87, 85, 0.7);
+  transform: translateY(1px);
+}
+
+.twc-form-input[type=button]:hover {
+  color: white;
+  background: var(--primary-color-dark);
+  box-shadow: 0 1px 2px 0 rgba(85, 87, 85, 0.7);
 }
 
 .twc-form-input[type=reset]:not([disabled]) {
-  color: var(--form-reset-text-color);
-  background: var(--form-reset-background-color);
+  border: none;
+  background: var(--form-reset-background-color, #4e8cff);
+  color: var(--button-fg-color, #ffffff);
+  cursor: pointer;
+  font-weight: 400;
+  text-align: center;
+  vertical-align: middle;
+  user-select: none;
+  padding: 0.1rem;
+  font-size: 0.9em;
+  line-height: 1.5;
+  border-radius: 50px;
+  width: 90%;
+  text-decoration: none;
+  transition: all 0.2s;
+  box-shadow: 0 2px 3px 0 rgba(85, 87, 85, 0.7);
+   margin-bottom: 10%;
 }
 
+.twc-form-input[type=reset]:hover {
+  color: white;
+  background: var(--secondary-color-dark);
+  box-shadow: 0 1px 2px 0 rgba(85, 87, 85, 0.7);
+}
+
+.twc-form-input[type=reset]:active {
+  transform: translateY(1px);
+}
 
 /*Datepicker types*/
 .twc-form-input[type=date], .twc-form-input[type=datetime-local], .twc-form-input[type=month], .twc-form-input[type=week], .twc-form-input[type=time] {
   background: var(--form-input-background-color);
+  color:var(--form-subtitle-text-color);
+  display: flex;
+  align-items: center;
+  justify-content: center;
   flex-basis: 90%;
-  margin: auto;
+  margin-left: 0px;
+  font-family: 'Helvetica Neue', Helvetica, Arial, sans-serif;
+}
+
+.twc-form-input[type=datetime-local] {
+  display: flex;
+  align-items: center;
+}
+
+.twc-form-input::-webkit-calendar-picker-indicator:hover {
+  cursor: pointer;
+}
+
+.twc-form-input::-webkit-datetime-edit-text {
+  font-family: var(--primary-font);
+  color: var(--primary-color);
 }
 
 /*Checkbox type*/
 .twc-form-input[type=checkbox] {
   background: var(--form-input-background-color);
   margin-left: -2%;
-  margin-top: 1.1em;
+  margin-top: 0.6em;
+  width: 1.2rem;
+  accent-color: var(--primary-color);
 }
 
 /*Radio type*/
 .twc-form-input[type=radio] {
   background: var(--form-input-background-color);
   margin-left: -2%;
-  margin-top: 1em;
+  margin-top: 0.5em;
+  width: 1.2rem;
+  accent-color: var(--primary-color);
 }
-
 
 /*Color Picker type*/
 .twc-form-input[type=color] {
-  background: var(--form-input-background-color);
-  flex-basis: 90%;
-  margin: auto;
+  -webkit-appearance: none;
+  -moz-appearance: none;
+  appearance: none;
+  border: none;
+  display: inline-flex;
+  justify-content: center;
+}
+
+.twc-form-input[type=color]:hover {
+  cursor:pointer;
+}
+
+input[type="color"]::-webkit-color-swatch-wrapper {
+  background-color: grey; /* For browsers that do not support gradients */
+  background: conic-gradient(
+        rgba(255, 0, 0, 1) 0%,
+        rgba(255, 154, 0, 1) 10%,
+        rgba(208, 222, 33, 1) 20%,
+        rgba(79, 220, 74, 1) 30%,
+        rgba(63, 218, 216, 1) 40%,
+        rgba(47, 201, 226, 1) 50%,
+        rgba(28, 127, 238, 1) 60%,
+        rgba(95, 21, 242, 1) 70%,
+        rgba(186, 12, 248, 1) 80%,
+        rgba(251, 7, 217, 1) 90%,
+        rgba(255, 0, 0, 1) 100%
+    );
+
+  border-radius: 50%;
+  height: 30px;
+  width: 30px;
+	padding: 0;
+} 
+
+.twc-form-input[type=color]::-webkit-color-swatch  {
+  border-radius: 50%;
+  margin: 20%;
+  border: 1px solid white;
 }
 
 /*Range Type*/
+
+/**The webkit configurations will only work on chrome, safari and opera */
 .twc-form-input[type=range] {
   background: var(--form-input-background-color);
   flex-basis: 90%;
-  margin: auto;
+  margin-top: 10px;
+  margin-bottom:10px;
+  /**Webkit appearance: in this part the handlebar is not affected by the style*/
+  border-radius: 8px;
+  height: 5px;
+  border: 1px solid #bdc3c7;
+  accent-color: var(--primary-color);
 }
+
+
+/**
+
+Configurations to handle in firefox 
+
+input[type=range]::-moz-range-track {
+  border-radius: 8px;
+  height: 5px;
+  border: 1px solid #bdc3c7;
+  background-color: var(--form-input-background-color);
+}
+
+input[type=range]::-moz-range-thumb {
+  background: var(--primary-color);
+  border: 1px solid var(--primary-color);
+  width: 15px;
+  height: 15px;
+  border-radius: 10px;
+  cursor: pointer;
+}
+
+
+input[type="range"]::-moz-range-progress {
+  background-color: var(--primary-color); 
+}
+**/
+
+
 </style>
 
 

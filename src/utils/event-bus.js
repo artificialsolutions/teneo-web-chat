@@ -44,7 +44,14 @@ export const events = {
     SHOW_CALLOUT: 'show_callout',
     HIDE_CALLOUT: 'hide_calllout',
     ZOOM_IMAGE: 'zoom_image',
-    STOP_ASR_TTS: 'stop_asr_tts'
+    STOP_ASR_TTS: 'stop_asr_tts',
+
+    // TODO ALPE
+    HIDE_UPLOAD_PANEL: 'hide_upload_panel',
+    SHOW_UPLOAD_PANEL: 'show_upload_panel',
+    SET_UPLOAD_STATE: 'set_upload_state',
+    UPLOAD_PANEL_CLOSED: 'upload_panel_closed',
+    UPLOAD_PANEL_OPENED: 'upload_panel_opened'
 };
 
 export const EventBus = new Vue();

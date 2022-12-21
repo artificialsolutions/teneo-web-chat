@@ -96,39 +96,46 @@ export default {
   max-width: 90%;
   text-decoration: none;
   color: var(--dark-fg-color);
-  background: var(--light-bg-color);
+  background: transparent;
   border-radius: 10px;
+  border: 3px solid transparent;
+  box-shadow: 0 2px 5px 0 rgba(0,0,0,0.16),0 2px 10px 0 rgba(0,0,0,0.12);
+
 }
 
 .twc-link-preview-left-column {
-  background: var(--dark-bg-color);
-  /* padding: 5%; */
+  background: transparent;
   display: flex;
   width: 25%;
   height: 100%;
   float: left;
   margin: 0;
   border-top-left-radius: 10px;
+  border-bottom-left-radius: 10px;
 }
 .twc-link-preview-right-column {
-display:flex;
+  display:flex;
   flex-direction: column;
   margin: 0;
-  float:left;
+  background-color: white;
+  border-top-right-radius: 10px;
+  border-bottom-right-radius: 10px;
+  float: left;
   width: 75%;
 }
 
 .twc-link-preview-img {
-  object-fit: contain;
+  object-fit: cover;
   max-width: 90%;
-  margin: 0 auto;
+  margin: 5px auto;
+  border-radius: 5px;
 }
 
 .twc-link-preview-title {
+  text-align: left;
   font-size: medium;
   font-weight: bold;
   overflow-wrap: anywhere;
-  text-align: center;
   margin: 10px;
 }
 

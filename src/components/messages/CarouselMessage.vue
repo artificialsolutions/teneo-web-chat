@@ -29,8 +29,7 @@
           class="twc-carousel-list-item"
           :key="idx + 'Slide'"
           v-bind:data-slide="idx"
-          ref="cards"
-      >
+          ref="cards">
 
         <div class="twc-card" v-if="message.type==='card'">
           <div class="twc-card-img" v-if="message.image">
@@ -41,6 +40,7 @@
             <h6 class="twc-card-subtitle" v-if="message.subtitle">{{ message.subtitle }}</h6>
             <p class="twc-card-text" v-if="message.text" v-html="sanitizedHtmlText(message.text)"></p>
           </div>
+          <div class="twc-card-spacer"></div>
           <div class="twc-clickablelist" :class="{ 'twc-expired': replySent || isExpired}" v-if="message.list_items">
             <ul class="twc-clickablelist-message" :class="{ 'twc-replied': replySent}">
               <li
@@ -90,7 +90,7 @@
                 :key="idx"
             >{{ link.title }}</a>
           </div>
-          <div class="twc-card-spacer"></div>
+          
         </div>
       </li>
     </ul>
@@ -214,7 +214,7 @@ export default {
 
       for (let card of this.$refs.cards) {
         let spacer = card.getElementsByClassName('twc-card-spacer')[0];
-        spacer.style.height = maxCardHeight - card.clientHeight + 'px';
+        spacer.style.height = (maxCardHeight - card.clientHeight) + 'px';
       }
     }
 
@@ -234,41 +234,110 @@ export default {
 </script>
 
 <style>
-
-
-.twc-carousel-list {
-  justify-content: center;
-  list-style: none;
-  padding: 0;
-  margin-block-start: 0.5rem;
-  margin-block-end: 0.5em;
-  margin-inline-start: 0;
-  margin-inline-end: 0;
-  width: 100%;
-  white-space: nowrap;
-  overflow: hidden;
-}
-
-.twc-carousel-list-item {
-  overflow: hidden;
-  transition: all 1s ease;
-  display: inline-block;
-  width: 90%;
-  vertical-align: top;
-  padding: 1%;
-}
-
 .twc-carousel {
-  background: lightgray;
-  height: max-content;
+  background: none;
+  height: auto;
   display: flex;
   flex-direction: column;
   max-width: 100%;
   border-radius: 5px;
+  position: relative;
 }
 
+.twc-carousel-list {
+  overflow: hidden;
+  box-sizing: border-box;
+  width: 100%;
+  height: 100%;
+  justify-content: center;
+  list-style: none;
+  padding: 0;
+  margin: 0;
+  white-space: nowrap;
+  position: relative;
+}
+
+
+.twc-carousel-list-item {
+  display: inline-block;
+  position: relative;
+  overflow: hidden;
+  width: 95%;
+  height: 100%;
+  vertical-align: top;
+  margin:0%;
+  transition: all 1s ease;
+}
+
+
+/** Content of the carrousel */
 .twc-carousel .twc-card {
-  margin: 0 auto;
+  margin: 10px;
+  margin-bottom: 5px;
+  border-radius: 10px;
+  box-shadow: 1px 2px 2px 1px rgba(0,0,0,0.16);
+  /**Show the  */
+  border: 1px solid var(--light-border-color, #c9c9c9);
+  width: 95%;
+  height: 95%;
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  position: relative;
+}
+
+.twc-carousel .twc-card .twc-card-body {
+  width: 88%;
+  height: auto;
+}
+
+.twc-carousel .twc-card .twc-clickablelist {
+  display: flex;
+  justify-content: center;
+  width: 100%;
+  height: 30%;
+  overflow: auto;
+  box-shadow: none;
+  margin-right: 0px;
+  margin-bottom: 5%;
+  position: relative;
+  border-radius: 10px;
+}
+
+.twc-carousel .twc-card .twc-clickablelist-message {
+  width: 80%;
+  height: 70%;
+}
+
+.twc-carousel .twc-card .twc-clickablelist-message__item {
+  width: 100%;
+  height: auto;
+  border-radius: 5px;
+  background-color: var(--primary-color, #2f286e);
+  border: none;
+  color: var(--light-fg-color, #ffffff);
+  margin: 0;
+  margin: 2px;
+  padding: 0;
+  padding-top: 3px;
+  padding-bottom: 3px;
+  text-align: center;
+  outline: none;
+  font-size: 0.9rem;
+}
+
+.twc-carousel-list .twc-clickablelist-message .twc-clickablelist-message__item:hover {
+  height: auto ;
+  background-color: var(--primary-color-dark, #160d27); /**Comment on this */
+  border: none;
+  border-radius: 5px;
+  margin: 2px;
+  padding: 0;
+  padding-top: 3px;
+  padding-bottom: 3px;
+  color: var(--light-fg-color, #ffffff);
+  font-size: 0.9rem;
+  outline:none;
 }
 
 .twc-buttons {
@@ -282,43 +351,82 @@ export default {
 }
 
 .twc-linkbuttons {
+  align-items:center;
+  justify-content: flex-end;
   width: 100%;
   margin: -3px;
   margin-right: 37px;
   text-align: center;
+  position: absolute;
+  bottom: 0%;
 }
 
 .twc-card .twc-linkbuttons {
+  position: absolute;
   width: auto;
   margin: 0;
+  margin-bottom: 5%;
+  bottom: 0%;
+  align-self: center;
 }
+/** end of the content */
 
-.twc-carousel-bck {
-  float: left;
-}
 
-.twc-carousel-fwd {
-  float: right;
-}
 
 .twc-carousel-ctrl {
   display: flex;
-  background: var(--carousel-ctrl-panel-bg-color, #4e8cff);
+  /**background: var(--carousel-ctrl-panel-bg-color, #4e8cff);**/
+  align-items: center;
+  background:none;
   padding: 0.5rem 0;
   border-radius: 5px 5px 0 0;
 }
 
 .twc-carousel-ctrl-arrows {
-  background: none;
+  display: flex;
+  align-items: center;
+  background-color: var(--carousel-arrows-bg-color, #74728f);
+  border-radius: 60%;
+  width: 40px;
+  height: 40px;
+  opacity: 0.8;
   border: none;
   font-size: xx-large;
+  font-weight: bold;
   outline: none;
   color: var(--carousel-ctrl-panel-fg-color, #ffffff);
   flex: 1;
+  transition: all 1s ease;
+  padding-left: 10px;
+  padding-bottom: 5px;
+}
+
+.twc-carousel-bck {
+  position: absolute;
+  left: -2%;
+  top: 50%;
+  z-index: 9;
+}
+
+.twc-carousel-fwd {
+  position: absolute;
+  right: -2%;
+  top: 50%;
+  z-index: 9;
+}
+
+.twc-carousel-ctrl-arrows:hover {
+  opacity:0.9;
+  cursor:pointer;
+}
+
+.twc-carousel-ctrl-arrows:active {
+  opacity:1;
+  cursor:pointer;
 }
 
 .twc-carousel-ctrl-arrows:disabled {
-  color: var(--carousel-ctrl-panel-disabled-color, #a9a9a9);
+  opacity: 0;
 }
 
 .twc-carousel-ctrl-dots-container {
@@ -326,15 +434,20 @@ export default {
   flex: 3;
   justify-content: space-evenly;
   align-items: center;
+  position:absolute;
+  top: 94%;
+  left: 39%;
+  opacity: 0.8;
+  z-index: 9;
 }
 
 .twc-carousel-ctrl-dots {
-  border-radius: 0.5rem;
-  margin: 0 5px;
-  width: 1rem;
-  height: 1rem;
+  border-radius: 0.7rem;
+  margin: 0 7px;
+  width: 0.7rem;
+  height: 0.7rem;
   outline: none;
-  background: var(--carousel-ctrl-panel-fg-color, #ffffff);
+  background: var(--primary-color, #2f286e);
   border: none;
 }
 
@@ -343,7 +456,27 @@ export default {
 }
 
 .twc-carousel-ctrl-dots-active {
-  background: var(--carousel-ctrl-panel-active-color, #6c757d);
+  background: var(----carousel-ctrl-dots-bg-color, #808080);
+}
+
+.twc-carousel .twc-card .twc-card-body::-webkit-scrollbar {
+  width: 3px;
+}
+
+/* Track */
+.twc-carousel .twc-card .twc-card-body::-webkit-scrollbar-track {
+  background: var(--light-fg-color, #ffffff); 
+  border-radius: 10px;
+  margin-top: 2px;
+  margin-bottom: 2px;
+  box-shadow: none;
+}
+ 
+/* Handle */
+.twc-carousel .twc-card .twc-card-body::-webkit-scrollbar-thumb {
+  background-color: var(--light-bg-color, #eceff1);
+  border-radius: 10px;
+  box-shadow: none;
 }
 
 </style>
