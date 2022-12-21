@@ -156,6 +156,7 @@ input[type = "file"]:hover {
 
 .twc-upload-item-close {
   position: absolute;
+  z-index: 4;
   top: -8%;
   right: -8%;
   border-radius: 50%;
