@@ -328,7 +328,7 @@ export default {
   --agent-typing-indicator-bg-color: var(--agent-message-bg-color);
   --user-typing-indicator-fg-color: var(--user-message-fg-color);
   --user-typing-indicator-bg-color: var(--user-message-bg-color);
-
+  
 
   /** Messages colors */
 
@@ -371,6 +371,8 @@ export default {
   --carousel-ctrl-panel-fg-color: var(--light-fg-color);
   --carousel-ctrl-panel-active-color: var(--secondary-color);
   --carousel-ctrl-panel-disabled-color: var(--expired-color);
+  --carousel-arrows-bg-color: #74728f;
+  --carousel-ctrl-dots-bg-color: #808080;
 
   /**Link preview */
   --link-preview-background-color: var(--light-bg-color);
