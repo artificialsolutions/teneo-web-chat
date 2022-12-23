@@ -34,7 +34,7 @@
               class="twc-user-input__asr-icon"
               aria-hidden="true"
           />
-        </button>
+        </button>ss
       </div>
       <div v-if="showTtsButton" class="twc-user-input__button" :class="{ 'twc-disabled': ttsDisabled }">
         <button
