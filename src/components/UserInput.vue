@@ -650,7 +650,7 @@ export default {
 
 <style scoped>
 .twc-user-input {
-  min-height: 55px;
+  min-height: 56px;
   margin: 0px;
   position: relative;
   bottom: 0;
@@ -707,18 +707,19 @@ We should not dim it twice, so we check: .twc-user-input:not(.twc-disabled)
   padding: 12px;
   font-size: 0.95em;
   font-weight: 400;
-  line-height: 1.4;
+  line-height: 1.6;
   white-space: pre-wrap;
   word-wrap: break-word;
   color: var(--user-input-fg-color, #565867);
   background-color: transparent;
   -webkit-font-smoothing: antialiased;
   max-height: 200px;
-  min-height: 44px;
+  min-height: 56px;
   overflow: scroll;
   bottom: 0;
-  overflow-x: hidden;
   overflow-y: auto;
+  overflow-x: hidden;
+  -webkit-overflow-scrolling: touch;
   font-family: inherit;
 }
 
@@ -835,6 +836,25 @@ We should not dim it twice, so we check: .twc-user-input:not(.twc-disabled)
 .twc-user-input__button.twc-disabled,
 .twc-user-input__button.twc-disabled button {
   cursor: default;
+}
+
+.twc-user-input__text::-webkit-scrollbar {
+  width: 3px;
+}
+
+/* Track */
+.twc-user-input__text::-webkit-scrollbar-track {
+  background: none; 
+  border-radius: 10px;
+  margin-top: 2px;
+  margin-bottom: 2px;
+  box-shadow: none;
+}
+ 
+/* Handle */
+.twc-user-input__text::-webkit-scrollbar-thumb {
+  background: rgb(196, 196, 196); 
+  border-radius: 10px;
 }
 
 /* Increase tap target on mobile */

@@ -69,20 +69,28 @@ export default {
 <style>
 .twc-quickreply-message {
   width: 100%;
-  margin-right: 40px;
-  display: inline-block;
-  text-align: center;
+  margin-right: 0px;
+  margin-left: 40px;
+  display: flex;
+  flex-direction: column;
+  align-items: flex-end;
 }
 
 .twc-quickreply-message__item {
   border: 1px solid var(--quickreply-border-color, #4e8cff);
   border-radius: 16px;
-  padding: 8px 14px 8px 14px;
+  border-top-right-radius: 0px;
+  border-bottom-right-radius: 0px;
+  padding: 12.4px 18px;
   color: var(--quickreply-fg-color, #4e8cff);
   cursor: pointer;
-  font-size: 0.8em;
+  font-weight: 300;
+  font-size: 0.9em;
+  line-height: 1.4;
   display: inline-block;
-  margin: 3px;
+  margin-bottom: 3px;
+  transition: all 0.5s ease-in-out;
+  box-shadow: 0 4px 8px 0 rgba(85, 87, 85, 0.2);
 }
 
 .twc-quickreply-message__item:active {
@@ -93,29 +101,38 @@ export default {
   outline: none;
 }
 
-.twc-quickreply-message__item.twc-selected,
-.twc-quickreply-message:not(.twc-expired) .twc-quickreply-message__item:hover {
-  background: var(--quickreply-bg-color, #ffffff);
-  color: var(--quickreply-fg-color, #4e8cff);
+.twc-quickreply-message__item:first-child {
+  border-top-right-radius: 10px;
+}
+
+.twc-quickreply-message__item:last-child {
+  border-bottom-right-radius: 10px;
 }
 
 .twc-quickreply-message__item.twc-selected,
 .twc-quickreply-message:not(.twc-expired) .twc-quickreply-message__item:hover {
   background: var(--quickreply-fg-color, #4e8cff);
   color: var(--quickreply-bg-color, #ffffff);
+  width: 70%;
 }
 
 .twc-quickreply-message.twc-expired .twc-quickreply-message__item:not(.twc-selected) {
-  cursor: default;
-  color: var(--quickreply-expired-color, #a9a9a9);
-  border-color: var(--quickreply-expired-color, #a9a9a9);
+  display: none;
 }
 
 .twc-quickreply-message.twc-expired .twc-quickreply-message__item.twc-selected {
   cursor: default;
-  background: var(--quickreply-expired-color, #a9a9a9);
-  color: var(--quickreply-bg-color, #ffffff);
-  border-color: var(--quickreply-expired-color, #a9a9a9);
+  background: var(--primary-color #a9a9a9);
+  color: var(--white, #ffffff);
+  box-shadow: 0 2px 4px 0 rgba(85, 87, 85, 0.3);
+  border-radius: 10px;
+  border-bottom-right-radius: 0px;
+  border: none;
+  padding: 0.8em 18px;
+  font-weight: 300;
+  font-size: 0.9em;
+  line-height: 1.4;
+  width:auto;
 }
 
 .twc-quickreply-message__item.twc-secondary {

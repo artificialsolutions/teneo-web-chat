@@ -103,7 +103,7 @@ export default {
   bottom: 25px;
   border-radius: 50%;
   border: none;
-  box-shadow: none;
+  box-shadow: 0 2px 5px 0 rgba(0,0,0,0.16),0 2px 10px 0 rgba(0,0,0,0.12);
   transition: box-shadow 0.2s ease-in-out;
   cursor: pointer;
   display: flex;
@@ -127,6 +127,8 @@ export default {
 
 .twc-launch-button:hover {
   box-shadow: 0 0px 27px 1.5px rgba(0, 0, 0, 0.2) !important;
+  width: 65px;
+  height: 65px;
 }
 
 .twc-launch-button:hover .twc-launch-button__open-icon, .twc-launch-button:focus .twc-launch-button__open-icon {

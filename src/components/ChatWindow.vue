@@ -125,6 +125,9 @@ export default {
 };
 </script>
 
+
+<!--Changes: resize and overflow added to be resizable by the user
+We need to change the corner from it's resizable-->
 <style scoped>
 .twc-chat-window {
   font-family: var(--primary-font, 'Helvetica Neue', Helvetica, Arial, sans-serif);
@@ -137,7 +140,7 @@ export default {
   bottom: 25px;
   box-sizing: border-box;
   box-shadow: 0 2px 10px 0 rgba(0, 0, 0, 0.15);
-  background: var(--chat-window-bg-color, #ffffff);
+  background: white;
   display: flex;
   flex-direction: column;
   justify-content: space-between;
@@ -148,6 +151,7 @@ export default {
   animation: twc-fade-in 0.3s cubic-bezier(0.390, 0.575, 0.565, 1.000) both;
   z-index: 2699; /* Sit on top, but right below modal messages */
 }
+
 
 @media (max-width: 450px) {
   .twc-chat-window {
@@ -162,15 +166,12 @@ export default {
 
 .twc-ios-keyboard-shown {
   transition: 0.3s ease-in-out !important;
-  height: calc(66% - 62px) !important;
-  top: calc(34% + 63px) !important;
-  position: fixed !important;
+  height: calc(66% - 60px);
+  /* top: 0px; */
 }
 .twc-ios-keyboard-hidden {
   transition: 0.2s ease-in-out !important;
-  height: 100% !important;
-  top: 0px !important;
-  position: fixed !important;
+  height: 100%;
 }
 
 .twc-spinner {
