@@ -83,18 +83,50 @@
   height: 5rem;
   display: flex;
   position: relative;
+  justify-content: center;
 }
+
 /* Uploaded items visualizer */
 .twc-upload-items {
-  height: 85px;
+  -webkit-overflow-scrolling: touch; /** Makes it possible to scroll in mobile */
+  width: 90%;
+  height: 90px;
   position: absolute;
   top: 0;
   z-index: 2;
   display: flex;
-  width: 100%;
   flex-direction: row;
   overflow-x: auto;
+  overflow-y: hidden;
   padding: 5px;
+}
+
+/* width */
+.twc-upload-items::-webkit-scrollbar {
+  height: 5px;
+  margin: 2px;
+}
+
+/* Track */
+.twc-upload-items::-webkit-scrollbar-track {
+  background: var(--user-input-bg-color); 
+  border-radius: 10px;
+  margin-top: 2px;
+  margin-bottom: 2px;
+  box-shadow: none;
+}
+ 
+/* Handle */
+.twc-upload-items::-webkit-scrollbar-thumb {
+  background: grey; 
+  border-radius: 10px;
+  box-shadow: none;
+  width: 2px;
+}
+
+/* Handle on hover */
+.twc-upload-items::-webkit-scrollbar-thumb:hover {
+  background: var(--primary-color); 
 }
 
 /* Input zone: if you click on it, the file selector will appear automatically. 
@@ -115,7 +147,7 @@ input[type = "file"]:hover {
   background-color: white;
   border: 1px solid var(--light-border-color, #c9c9c9);
   border-radius: 10px;
-  width: 3.5rem;
+  min-width: 3.5rem;
   min-height: 3.5rem;
   font-size: 3rem;
   display: flex;
@@ -140,7 +172,7 @@ input[type = "file"]:hover {
   font-size: 0.6rem;
   text-overflow: ellipsis;
   overflow: hidden;
-  width: 3rem;
+  width: 80%;
   white-space: nowrap;
   position: absolute;
   bottom: 1%;
@@ -169,7 +201,7 @@ input[type = "file"]:hover {
 
 /* Buttons to handle the attachment feature */
 .twc-upload-buttons {
-  margin-top: 10px;
+  margin-top: 20px;
   padding: 5px;
   height: auto;
   padding: 5px;
