@@ -1,6 +1,7 @@
 <template>
   <div class="twc-clickablelist" :class="{ 'twc-expired': replySent || isExpired }">
-    <h5 class="twc-clickablelist-title" v-if="clickablelistTitle">{{ clickablelistTitle }}</h5>
+    <h5 class="twc-clickablelist-title">Message types</h5>
+    <!--<h5 class="twc-clickablelist-title" v-if="clickablelistTitle">{{ clickablelistTitle }}</h5>-->
     <ul class="twc-clickablelist-message" :class="{ replied: replySent}">
       <li
         :tabindex="replySent || isExpired ? -1 : 0"
@@ -11,7 +12,7 @@
         :class="{ 'twc-selected': replySent && selected === idx }"
         @click="onSelect(reply, idx)"
         @keydown="handleReturnSpaceKeys($event, reply, idx)"
-      >{{ reply.title }}</li>
+      ><span>{{ reply.title }}</span></li>
     </ul>
   </div>
 </template>

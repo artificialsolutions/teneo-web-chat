@@ -58,10 +58,6 @@
   </div>
 </template>
 
-
-
-
-
 <style scoped>
 
 /* Parent: hall panel */
@@ -117,6 +113,7 @@ input[type = "file"]:hover {
 
 .twc-upload-item {
   background-color: white;
+  border: 1px solid var(--light-border-color, #c9c9c9);
   border-radius: 10px;
   width: 3.5rem;
   min-height: 3.5rem;
@@ -126,7 +123,6 @@ input[type = "file"]:hover {
   justify-content: center;
   align-content: center;
   align-items: center;
-  border: none;
   margin: 5px;
   margin-bottom: 0;
   padding: 5px;
@@ -194,7 +190,7 @@ button {
   -moz-user-select: none;
   -ms-user-select: none;
   user-select: none;
-  font-size: 0.7em;
+  font-size: 0.9em;
   line-height: 1;
   border-radius: 50px;
   display: inline-block;
@@ -210,8 +206,7 @@ button:nth-child(1){
   border: 1px solid  var(--success-color, #28a745);
   padding: 0.275rem 0.275rem;
   align-self: flex-start;
-  position: absolute;
-  left: 3%;
+  
   text-align: center;
   justify-content: center;
 }
@@ -222,8 +217,7 @@ button:nth-child(2){
   border: 1px solid  var(--danger-color, #dc3545);
   padding: 0.275rem 0.65rem;
   min-width: 62px;
-  position: absolute;
-  left: 10%;
+  
 }
 
 button:nth-child(3){
@@ -311,9 +305,19 @@ getPrintableDebugObject = obj => {
     Object.entries(obj).forEach(e => {m[e[0]] = getPrintableDebugObject(e[1]);});
   }
   return m;
+},
+
+getFileExtension = file => {
+  var filename = file.name;
+  
+  console.log(filename);
+  if (!filename || ( filename = filename.trim()).length === 0) return '#';
+  else {
+    const extension = filename.split('.').pop();
+    return extension;
+  }
+  
 };
-
-
 
 export default {
 
@@ -558,19 +562,53 @@ export default {
       this.removeItem(item);
     },
 
-
+    /** This function can use getPreuploadCaption() to print the first letter of the file content or display a label with the file extension using getfileExtension() */
     insertTextCaption(canvasElement, item) {
       if (bDebug) console.log(sName, 'insertTextCaption()');
       canvasElement.width = MAX_IMG_PREVIEW_WIDTH;
       canvasElement.height = MAX_IMG_PREVIEW_HEIGHT;
       const ctx = canvasElement.getContext("2d");
       if (ctx) {
+    
+        /*const captionText = getPreuploadCaption(item.file);*/
+
+        const captionText = getFileExtension(item.file);
+        if (bDebug) console.log(sName, 'insertTextCaption(), fillText, captionText:', captionText);
+
+        /** Tag color depending on file extension */
+        var color = "";
+        switch (captionText) {
+          case "pdf":
+            color = "red";
+            break;
+          case "docx":
+          case "doc":
+            color = "blue";
+            break
+          case "csv":
+          case "xls":
+          case "xlsb":
+          case "xlsx":
+            color = "green";
+            break;
+          default:
+            color = "grey";
+            break;
+        }
+        /** Caption Tag */
+        ctx.fillStyle = color;
+        ctx.beginPath();
+        ctx.roundRect(0, 5, 30, 20, 10);
+        ctx.fill();
+
+        /** Tag content */
         ctx.textAlign = 'center';
         ctx.textBaseline = 'middle';
-        ctx.font = 'bold ' + ((MAX_IMG_PREVIEW_HEIGHT < MAX_IMG_PREVIEW_WIDTH ? MAX_IMG_PREVIEW_HEIGHT : MAX_IMG_PREVIEW_WIDTH) - 2) + 'px sans-serif';
-        const captionText = getPreuploadCaption(item.file);
-        if (bDebug) console.log(sName, 'insertTextCaption(), fillText, captionText:', captionText);
-        ctx.fillText(captionText, MAX_IMG_PREVIEW_WIDTH/2, MAX_IMG_PREVIEW_HEIGHT/2, MAX_IMG_PREVIEW_WIDTH-2);
+        ctx.font = '0.25em sans-serif';
+        /*ctx.font = 'bold ' + ((MAX_IMG_PREVIEW_HEIGHT < MAX_IMG_PREVIEW_WIDTH ? MAX_IMG_PREVIEW_HEIGHT : MAX_IMG_PREVIEW_WIDTH) - 2) + 'px sans-serif';*/
+        ctx.fillStyle = "white";
+        ctx.fillText(captionText, MAX_IMG_PREVIEW_WIDTH/2, MAX_IMG_PREVIEW_HEIGHT/2, 25);
+
       } else {
         alert('No context for text in preload preview canvas');
         console.error(sName, 'insertTextCaption(), no context for text in preload preview canvas');

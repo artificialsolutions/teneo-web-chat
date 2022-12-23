@@ -108,6 +108,7 @@ export default {
   padding-left: 12px;
   padding-right: 12px;
   background-color: var(--primary-color-dark);
+  color: var(--light-fg-color);
 }
 
 .twc-linkbuttons h5 {

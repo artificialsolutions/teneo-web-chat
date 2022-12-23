@@ -296,7 +296,7 @@ export default {
   --expired-color: #a9a9a9;
   --expired-bg-color: #f0f0f0;
 
-  --text-link-color: #f4f7f9;
+  --text-link-color: var(--primary-color);
 
   --user-input-bg-color: #f4f7f9;
   --user-input-fg-color: #565867;
@@ -344,7 +344,7 @@ export default {
   /**links */
   --link-button-fg-color: var(--text-link-color);
   --link-button-bg-color: var(--light-fg-color);
-  --link-button-border-color: var(--light-border-color);
+  --link-button-border-color: var(--primary-color);
 
   /**Clickablelist */
   --clickablelist-title-color: var(--dark-fg-color);
