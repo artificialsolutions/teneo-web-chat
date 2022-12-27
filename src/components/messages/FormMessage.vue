@@ -1,23 +1,30 @@
 <template>
-  <form class="twc-form" v-on:submit="handleFormSubmit" id="twcActiveForm">
+  <form id="twcActiveForm" class="twc-form" @submit="handleFormSubmit">
     <!--@formatter:off-->
-    <component v-for="(element, idx) in formElements"
-               :key="idx"
-               :is="elementTag(element.type)"
-               v-bind="elementAttributes(element)"
-               v-on="elementListeners(element)"
-               :id="elementId(element, idx)"
-               :name="elementName(element, idx)"
-    >{{elementText(element.text)}}<option
+    <component
+      v-bind="elementAttributes(element)"
+      :is="elementTag(element.type)"
+      v-for="(element, idx) in formElements"
+      :id="elementId(element, idx)"
+
+      :key="idx"
+      :name="elementName(element, idx)"
+      v-on="elementListeners(element)"
+    >
+      {{ elementText(element.text) }}
+      <template v-for="(option) in element.options">
+        <option
           v-if="element.type==='select'"
-          v-for="(option) in element.options"
           v-bind="elementAttributes(option)"
-      >{{ option.text }}</option
-    ><label
+        >
+          {{ option.text }}
+        </option>
+      </template>
+      <label
         v-if="element.hasOwnProperty('label')"
         :for="elementId(element, idx)"
         :class="labelClasses(element)"
-    >{{ labelText(element) }}</label>
+      >{{ labelText(element) }}</label>
     </component>
     <!--@formatter:on-->
   </form>
@@ -25,7 +32,7 @@
 <script>
 
 
-import {EventBus, events} from '../../utils/event-bus.js';
+import { EventBus, events } from '../../utils/event-bus.js';
 import keyIsSpaceOrEnter from '../../utils/is-space-or-enter.js';
 import sanitizeHtml from '../../utils/sanitize-html.js';
 
@@ -39,52 +46,54 @@ export default {
       validator: (message) => {
         let hasSubmit = false;
         let hasCancel = false;
-        let hasContent = message && message.data && message.data.elements && message.data.elements.length > 2
-        let legalElementTypes = ['control', 'title', 'subtitle', 'caption', 'input', 'textarea', 'select', 'label']
-        let legalInputTypes = [
-          "button",
-          "checkbox",
-          "color",
-          "date",
-          "datetime-local",
-          "email",
-          "hidden",
-          "image",
-          "month",
-          "number",
-          "password",
-          "radio",
-          "range",
-          "reset",
-          "search",
-          "tel",
-          "text",
-          "time",
-          "url",
-          "week",
-          "datetime"
-        ]
+        const hasContent = message && message.data && message.data.elements && message.data.elements.length > 2;
+        const legalElementTypes = ['control', 'title', 'subtitle', 'caption', 'input', 'textarea', 'select', 'label'];
+        const legalInputTypes = [
+          'button',
+          'checkbox',
+          'color',
+          'date',
+          'datetime-local',
+          'email',
+          'hidden',
+          'image',
+          'month',
+          'number',
+          'password',
+          'radio',
+          'range',
+          'reset',
+          'search',
+          'tel',
+          'text',
+          'time',
+          'url',
+          'week',
+          'datetime'
+        ];
         let hasOnlyLegalElementTypes = false;
-        let elements = JSON.parse(JSON.stringify(message.data.elements))
+        const elements = JSON.parse(JSON.stringify(message.data.elements));
+
         for (let i = 0; i < elements.length; i++) {
-          let element = elements[i]
+          const element = elements[i];
+
           if (legalElementTypes.includes(element.type)) {
             hasOnlyLegalElementTypes = true;
           } else {
             console.error('Unknown form element type');
           }
-          if (element.type === "control") {
-            if (element.action === "submit") {
+          if (element.type === 'control') {
+            if (element.action === 'submit') {
               hasSubmit = true;
-            } else if (element.action === "cancel") {
+            } else if (element.action === 'cancel') {
               hasCancel = true;
             }
           } else if (element.type === 'input') {
             if (!element.attributes.type) {
-              element.attributes.type = 'text'
+              element.attributes.type = 'text';
             } else if (!legalInputTypes.includes(element.attributes.type)) {
-              message.data.elements.splice(i, 1)
-              console.error('Illegal input type: ' + element.attributes.type);
+              message.data.elements.splice(i, 1);
+              console.error(`Illegal input type: ${element.attributes.type}`);
             }
           }
 
@@ -107,46 +116,52 @@ export default {
     }
   },
   mounted() {
-    let associatedLabels = this.$el.querySelectorAll('.twc-form-associated-label');
+    const associatedLabels = this.$el.querySelectorAll('.twc-form-associated-label');
 
-//Move all auto-generated labels one level up so that the precede the field rather than being contained in it.
-    for (let label of associatedLabels) {
+// Move all auto-generated labels one level up so that the precede the field rather than being contained in it.
+    for (const label of associatedLabels) {
       this.$el.insertBefore(label, label.parentNode);
     }
     EventBus.$emit(events.DISABLE_INPUT);
 
 
     if (this.message.data.expired) {
-      this.$el.removeAttribute('id')
+      this.$el.removeAttribute('id');
       this.$el.classList.add('twc-expired');
     }
 
   },
   methods: {
     labelClasses(element) {
-      let classes = 'twc-form-label twc-form-associated-label'
+      let classes = 'twc-form-label twc-form-associated-label';
+
       if (element.hasOwnProperty('attributes') && (element.attributes.type === 'radio' || element.attributes.type === 'checkbox')) {
-        classes += ' twc-form-attached-label'
+        classes += ' twc-form-attached-label';
       }
-      return classes;
+
+return classes;
     },
     labelText(element) {
       let text = element.label;
+
       if (element.hasOwnProperty('attributes') && element.attributes.required) {
-        text += '*'
+        text += '*';
       }
-      return text
+
+return text;
     },
     elementId(element, idx) {
-      let currentId = 'twc-form-element-' + element.type + '_' + idx;
+      let currentId = `twc-form-element-${element.type}_${idx}`;
+
       if (element.hasOwnProperty('attributes')) {
         if (element.attributes.hasOwnProperty('id')) {
           currentId = element.attributes.id;
         } else if (element.attributes.type) {
-          currentId = 'twc-form-element-' + element.type + '_' + element.attributes.type + '_' + idx;
+          currentId = `twc-form-element-${element.type}_${element.attributes.type}_${idx}`;
         }
       }
-      return currentId
+
+return currentId;
 
     },
     elementName(element, idx) {
@@ -154,75 +169,83 @@ export default {
         if (element.attributes.hasOwnProperty('name')) {
           return element.attributes.name;
         } else if (element.attributes.hasOwnProperty('type')) {
-          return element.type + '_' + element.attributes.type + '_' + idx;
-        } else {
-          return element.type + '_' + idx;
+          return `${element.type}_${element.attributes.type}_${idx}`;
         }
+
+return `${element.type}_${idx}`;
+
       }
     },
     elementTag(elementType) {
       let tag = '';
+
       switch (elementType) {
         case 'title':
-          tag = 'h2'
+          tag = 'h2';
           break;
         case 'subtitle':
-          tag = 'h3'
+          tag = 'h3';
           break;
         case 'control':
-          tag = 'button'
+          tag = 'button';
           break;
         case 'caption':
-          tag = 'small'
+          tag = 'small';
           break;
         default:
-          tag = elementType
+          tag = elementType;
       }
-      return tag;
+
+return tag;
     },
     elementAttributes(elementData) {
-      let attributes = elementData.attributes || {}
-      let type = elementData.type || 'option';
+      const attributes = elementData.attributes || {};
+      const type = elementData.type || 'option';
 
-      attributes.class = 'twc-form-' + type;
+      attributes.class = `twc-form-${type}`;
       if (type === 'control') {
-        attributes.class += ' twc-form-' + elementData.action;
+        attributes.class += ` twc-form-${elementData.action}`;
         if (elementData.action === 'submit') {
           attributes.type = 'submit';
         } else if ('cancel') {
-          attributes.type = 'button'
+          attributes.type = 'button';
         } else {
           console.error('Unrecognized action');
         }
       } else if (type === 'input' && attributes.type === 'reset') {
         attributes.class += ' twc-form-' + 'reset';
       }
-      return attributes
+
+return attributes;
     },
     elementListeners(element) {
       if (element.type === 'control' && element.action === 'cancel') {
         return {
           'click': () => {
-            this.handleFormCancel(element)
+            this.handleFormCancel(element);
           }
-        }
-      } else {
-        return {};
+        };
       }
+
+return {};
+
     },
     elementText(text) {
-      if (text) return text.trim()
+      if (text) {
+ return text.trim();
+}
     },
     handleReturnSpaceKeys(event, reply, idx) {
       if (keyIsSpaceOrEnter(event)) {
-        this.onSelect(reply, idx)
+        this.onSelect(reply, idx);
       }
     },
     sanitizedHtmlText(text) {
       return sanitizeHtml(text);
     },
     handleFormSubmit(e) {
-      let formData = Object.fromEntries(new FormData(this.$el).entries());
+      const formData = Object.fromEntries(new FormData(this.$el).entries());
+
       formData.success = true;
       this.$teneoApi.sendSilentMessage(JSON.stringify(formData));
       e.preventDefault();
@@ -230,18 +253,19 @@ export default {
 
     },
     handleFormCancel(e) {
-      this.$teneoApi.sendSilentMessage(JSON.stringify({success: false}));
+      this.$teneoApi.sendSilentMessage(JSON.stringify({ success: false }));
       this.decommissionForm();
     },
 
     decommissionForm() {
 
       EventBus.$emit(events.ENABLE_INPUT);
-      let form = this.$el;
+      const form = this.$el;
+
       form.removeAttribute('id');
       form.classList.add('twc-expired');
 
-      let elements = this.message.data.elements;
+      const { elements } = this.message.data;
       let elementIndex = 0;
 
       form.childNodes.forEach((node) => {
@@ -250,13 +274,14 @@ export default {
         node.removeAttribute('id');
 
         if (elements[elementIndex].type === 'label') {
-          elements[elementIndex].attributes = {disabled: true};
+          elements[elementIndex].attributes = { disabled: true };
           elementIndex++;
         }
-        let currentElement = elements[elementIndex];
+        const currentElement = elements[elementIndex];
+
         if (node.nodeName.toUpperCase() !== 'LABEL') {
           if (currentElement) {
-            currentElement.attributes = currentElement.attributes || {}
+            currentElement.attributes = currentElement.attributes || {};
             currentElement.attributes.disabled = true;
             currentElement.attributes.id = 'twc-form-expired-element';
 
@@ -282,7 +307,7 @@ export default {
           }
           elementIndex++;
         }
-      })
+      });
 
       form.setAttribute('disabled', true);
 
