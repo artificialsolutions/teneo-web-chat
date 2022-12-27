@@ -1,55 +1,68 @@
-const VueLoaderPlugin = require('vue-loader/lib/plugin');
+const { VueLoaderPlugin } = require('vue-loader');
 
 module.exports = {
+
+    // ...
+    resolve: {
+      alias: {
+        vue: '@vue/compat'
+      }
+    },
     module: {
-        rules: [
-            {
-                test: /\.vue$/,
-                loader: 'vue-loader',
-                options: {
-                    preserveWhitespace: false
+      rules: [
+        {
+          test: /\.vue$/,
+          loader: 'vue-loader',
+          options: {
+            compilerOptions: {
+              compatConfig: {
+                preserveWhitespace: false,
+                MODE: 2
+              }
+            }
+          }
+        },
+        {
+            test: /\.js$/,
+            loader: 'babel-loader',
+            exclude: /node_modules/,
+            options: {
+                'presets': [
+                    [
+                        '@babel/preset-env',
+                        {
+                            'corejs': 3,
+                            'useBuiltIns': 'usage',
+                            'debug': false
+                        }
+                    ]
+                ],
+                plugins: ['@babel/plugin-transform-modules-commonjs'],
+            }
+        },
+        {
+            test: /\.css$/,
+            use: [
+                {
+                    loader: 'style-loader',
+                },
+                {
+                    loader: 'css-loader',
+                },
+                {
+                    loader: 'postcss-loader'
                 }
-            },
-            {
-                test: /\.js$/,
-                loader: 'babel-loader',
-                exclude: /node_modules/,
-                options: {
-                    'presets': [
-                        [
-                            '@babel/preset-env',
-                            {
-                                'corejs': 3,
-                                'useBuiltIns': 'usage',
-                                'debug': false
-                            }
-                        ]
-                    ],
-                    plugins: ['@babel/plugin-transform-modules-commonjs'],
-                }
-            },
-            {
-                test: /\.css$/,
-                use: [
-                    {
-                        loader: 'style-loader',
-                    },
-                    {
-                        loader: 'css-loader',
-                    },
-                    {
-                        loader: 'postcss-loader'
-                    }
-                ]
-            },
-            {
-                test: /\.(png|svg)$/,
-                loader: 'file-loader',
-            },
-        ],
+            ]
+        },
+        {
+            test: /\.(png|svg)$/,
+            loader: 'file-loader',
+        },
+      ]
     },
     plugins: [new VueLoaderPlugin()],
     watchOptions: {
         ignored: /node_modules/
     }
-};
+  };
+  
