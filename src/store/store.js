@@ -1,12 +1,8 @@
-import Vue from 'vue';
-import Vuex from 'vuex';
-import {DEFAULT_TITLE, FALLBACK_LOCALE} from '../utils/constants.js';
+import { createStore } from 'vuex'
+import { DEFAULT_TITLE, FALLBACK_LOCALE } from '../utils/constants.js';
 import isValidUrl from '../utils/validate-url';
-import {getMSToken} from '../utils/ms-asr-tts'
 
-Vue.use(Vuex);
-
-export const store = new Vuex.Store({
+export const store = createStore({
     state: {
         calloutVisibility: false,
         calloutText: 'Teneo Web Chat',
@@ -302,13 +298,15 @@ export const store = new Vuex.Store({
             if (state.msCognitiveSubscriptionKey) {
                 return state.msCognitiveSubscriptionKey;
             }
-            return false;
+
+return false;
         },
         msCognitiveRegion: (state) => {
             if (state.msCognitiveRegion) {
                 return state.msCognitiveRegion;
             }
-            return false;
+
+return false;
         },
         msCognitiveToken: (state) => {
             return state.msCognitiveToken;
@@ -321,13 +319,13 @@ export const store = new Vuex.Store({
         locale: (state) => state.locale,
         autoRedirect: (state) => state.autoRedirect,
         localeObj: (state) => {
-            return {'locale': state.locale};
+            return { 'locale': state.locale };
         },
         state: (state) => {
-            return {'visibility': state.visibility};
+            return { 'visibility': state.visibility };
         },
         engineUrlObj: (state) => {
-            return {'engineUrl': state.teneoEngineUrl};
+            return { 'engineUrl': state.teneoEngineUrl };
         },
         storage: (state) => state.storage,
     }

@@ -1,6 +1,6 @@
-import Vue from 'vue';
-
+import Vue, { createApp } from 'vue';
 import TeneoWebChat from './TeneoWebChat.vue';
+
 import teneoApiPlugin from './plugins/teneo-api.js';
 import { EventBus, events } from '../src/utils/event-bus.js';
 import { API_VERSION, FALLBACK_LOCALE } from '../src/utils/constants.js';
@@ -10,14 +10,15 @@ import messageListCache from '../src/utils/message-list-cache.js';
 import { store } from '../src/store/store.js';
 import isValidUrl from '../src/utils/validate-url';
 import { translatedMessages } from '../src/utils/localized-messages';
-import VueI18n from 'vue-i18n';
+import { createI18n } from 'vue-i18n'
+
 
 const functionMap = new Map();
 const validFunctionNames = Object.values(apiConstants);
 const messageList = new messageListCache();
 let isInitialised = false;
 
-window.twcTmp = {}
+window.twcTmp = {};
 window.TeneoWebChat = {
   initialize(element, twcProps) {
 
@@ -89,7 +90,7 @@ window.TeneoWebChat = {
       store.commit('initialUploadIconUrl', twcProps.uploadIconUrl);
     }
 
-    if (twcProps.showUploadButton === true || twcProps.showUploadButton === "true") {
+    if (twcProps.showUploadButton === true || twcProps.showUploadButton === 'true') {
       store.commit('showUploadButton', true);
     }
 
@@ -109,21 +110,21 @@ window.TeneoWebChat = {
       store.commit('initialAsrIconUrl', twcProps.asrIconUrl);
     }
 
-    if (twcProps.showAsrButton === true || twcProps.showAsrButton === "true") {
+    if (twcProps.showAsrButton === true || twcProps.showAsrButton === 'true') {
       store.commit('showAsrButton', true);
     }
-    if (twcProps.asrActive === true || twcProps.asrActive === "true") {
-      //Always set to false regardless - ASR on start is a silly proposal.
+    if (twcProps.asrActive === true || twcProps.asrActive === 'true') {
+      // Always set to false regardless - ASR on start is a silly proposal.
       store.commit('asrActive', false);
     }
     if (twcProps.ttsIconUrl) {
       store.commit('initialTtsIconUrl', twcProps.ttsIconUrl);
     }
 
-    if (twcProps.showTtsButton === true || twcProps.showTtsButton === "true") {
+    if (twcProps.showTtsButton === true || twcProps.showTtsButton === 'true') {
       store.commit('showTtsButton', true);
     }
-    if (twcProps.ttsActive === true || twcProps.ttsActive === "true") {
+    if (twcProps.ttsActive === true || twcProps.ttsActive === 'true') {
       store.commit('ttsActive', true);
     }
 
@@ -132,7 +133,7 @@ window.TeneoWebChat = {
       store.commit('locale', twcProps.locale);
     }
 
-//Empty property
+// Empty property
 
     if (twcProps.customLocalizations) {
       // TODO: error handling
@@ -149,8 +150,8 @@ window.TeneoWebChat = {
 
       store.commit('locale', twcProps.locale);
     }
-   //Default is true to autoredirect, false or 'false' will flip it
-    if (twcProps.hasOwnProperty('autoRedirect') && twcProps.autoRedirect !== "" && !JSON.parse(twcProps.autoRedirect)) {
+   // Default is true to autoredirect, false or 'false' will flip it
+    if (twcProps.hasOwnProperty('autoRedirect') && twcProps.autoRedirect !== '' && !JSON.parse(twcProps.autoRedirect)) {
       store.commit('autoRedirect', false);
     }
 
@@ -164,10 +165,12 @@ window.TeneoWebChat = {
       // TODO: throw error if engine url is missing?
       return;
     }
-
-    Vue.use(VueI18n);
-    const i18n = new VueI18n({
+    const i18n = createI18n({
+      globalInjection: true,
+      legacy: false,
       locale: twcProps.locale,
+      globalInjection: true,
+      allowComposition: true,
       fallbackLocale: FALLBACK_LOCALE,
       messages: translatedMessages,
       silentTranslationWarn: true
@@ -184,9 +187,7 @@ window.TeneoWebChat = {
       i18n.locale = payload;
     });
 
-    new Vue({
-      render: (h) => h(TeneoWebChat, { props: { } }), i18n
-    }).$mount(element);
+    createApp(TeneoWebChat).mount(element);
 
     /*
      * After initializing, freeze the boolean
@@ -263,7 +264,7 @@ return filteredMessageList;
         return store.getters.msVoice;
 
       case apiConstants.API_GET_ENGINE_PARAMS:
-        return store.getters.teneoEngineParams
+        return store.getters.teneoEngineParams;
 
       default:
         break;
@@ -309,6 +310,7 @@ return filteredMessageList;
         break;
 
       case apiConstants.API_CALL_SEND_INPUT:
+
         /*
          * Check if payload is object
          * TODO: throw error if payload is invalid?
@@ -347,6 +349,7 @@ return filteredMessageList;
         break;
 
       case apiConstants.API_CALL_ADD_MESSAGE:
+
         /*
          * TODO: throw error if payload is invalid?
          * TODO: check if message type is valid?
@@ -372,8 +375,8 @@ return filteredMessageList;
 
       case apiConstants.API_CALL_SHOW_UPLOAD_BUTTON:
            store.commit('showUploadButton', true);
-        break;   
-        
+        break;
+
         case apiConstants.API_CALL_HIDE_ASR_BUTTON:
           store.commit('showAsrButton', false);
         break;
@@ -530,12 +533,10 @@ return filteredMessageList;
     return API_VERSION;
   }
 };
-//Directive to v-visible to use visibility="hidden" instead of v-show to display="none"
+// Directive to v-visible to use visibility="hidden" instead of v-show to display="none"
 Vue.directive('visible', (el, binding) => {
-  el.style.visibility = !!binding.value ? 'visible' : 'hidden'
+  el.style.visibility = binding.value ? 'visible' : 'hidden';
 });
-
-
 
 
 if ((process.env.NODE_ENV === 'undefined') || (process.env.NODE_ENV !== 'test')) {
