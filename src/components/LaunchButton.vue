@@ -4,11 +4,11 @@
       id="twc-launchbutton"
       class="twc-launch-button"
       :class="{ 'twc-opened': isOpen, 'twc-closed': !isOpen && !isMinimized, 'twc-minimized': isMinimized, 'twc-has-callout' : isCalloutVisible}"
+      :aria-roledescription="t('message.launchbutton_aria_roledescription')"
+      :aria-label="t('message.launchbutton_aria_label')"
       @click.prevent="isOpen ? close() : open()"
       @keydown="handleReturnSpaceKeys"
       tabindex="0"
-      :aria-roledescription="$t('message.launchbutton_aria_roledescription')"
-      :aria-label="$t('message.launchbutton_aria_label')"
     >
       <img v-if="launchIconUrl" class="twc-launch-button__open-icon" :src="launchIconUrl" aria-hidden="true" alt=""/>
       <BubbleIcon v-else class="twc-launch-button__open-icon" id="default-launch-button-icon" aria-hidden="true"/>
@@ -32,6 +32,7 @@ import keyIsSpaceOrEnter from '../utils/is-space-or-enter.js';
 import { mapState } from 'vuex';
 import { store } from '../store/store.js';
 import sanitizeHtml from '../utils/sanitize-html.js';
+import { useI18n } from 'vue-i18n'
 
 export default {
   components: {
@@ -52,6 +53,13 @@ export default {
       required: true,
     },
   },
+  setup() {
+    const { t } = useI18n({ useScope: 'global' });
+
+    return {
+      t,
+    };
+  },
   computed: {
     ...mapState([
         'launchIconUrl',
@@ -66,17 +74,6 @@ export default {
       calloutText: ''
     };
   },
-  methods: {
-    handleReturnSpaceKeys(event) {
-      if (keyIsSpaceOrEnter(event)) {
-        this.open();
-        event.preventDefault();
-      }
-    },
-    closeCallOut() {
-      this.isCalloutVisible = false;
-    }
-  },
   mounted() {
     EventBus.$on(events.SHOW_CALLOUT, (payload) => {
       this.isCalloutVisible = true;
@@ -88,6 +85,17 @@ export default {
       this.isCalloutVisible = false;
       store.commit('calloutVisibility', false);
     });
+  },
+  methods: {
+    handleReturnSpaceKeys(event) {
+      if (keyIsSpaceOrEnter(event)) {
+        this.open();
+        event.preventDefault();
+      }
+    },
+    closeCallOut() {
+      this.isCalloutVisible = false;
+    }
   }
 };
 </script>

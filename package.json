@@ -43,7 +43,7 @@
     "autoprefixer": "^10.4.0",
     "babel-loader": "^8.2.5",
     "body-scroll-lock": "^3.1.5",
-    "core-js": "^3.19.1",
+    "core-js": "^3.27.1",
     "css-loader": "^6.7.1",
     "es6-promise": "^4.2.8",
     "eslint": "^8.1.0",

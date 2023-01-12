@@ -10,7 +10,7 @@ import messageListCache from '../src/utils/message-list-cache.js';
 import { store } from '../src/store/store.js';
 import isValidUrl from '../src/utils/validate-url';
 import { translatedMessages } from '../src/utils/localized-messages';
-import { createI18n } from 'vue-i18n'
+import { createI18n } from 'vue-i18n';
 
 
 const functionMap = new Map();
@@ -187,7 +187,7 @@ window.TeneoWebChat = {
       i18n.locale = payload;
     });
 
-    createApp(TeneoWebChat).mount(element);
+    createApp(TeneoWebChat).use(i18n).mount(element);
 
     /*
      * After initializing, freeze the boolean
