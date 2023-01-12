@@ -123,6 +123,13 @@ export default {
       },
     }
   },
+  data() {
+    return {
+      activeSlide: 0,
+      isFirstSlide: true,
+      isLastSlide: false
+    };
+  },
   computed: {
     carouselItems() {
       return this.message.data.carousel_items;
@@ -140,18 +147,11 @@ export default {
       return this.message.selected;
     },
     isExpired() {
-      const {messageList} = this.$teneoApi;
+      const { messageList } = this.$teneoApi;
       const latestMessage = messageList[messageList.length - 1];
 
       return latestMessage && latestMessage !== this.message;
     }
-  },
-  data() {
-    return {
-      activeSlide: 0,
-      isFirstSlide: true,
-      isLastSlide: false
-    };
   },
   methods: {
     moveSlideElements() {
@@ -188,7 +188,7 @@ export default {
       await handleLinkButtonClick(linkbutton, event);
     },
     async onSelect(reply, idx) {
-      if (!this.replySent) {
+      if (!this.replySent && !this.isExpired) {
         await handleButtonClick(reply, idx, this.$teneoApi);
       }
     },
