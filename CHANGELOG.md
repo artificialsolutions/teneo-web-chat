@@ -1,3 +1,6 @@
+#v3.7.6
+#13-01-2023
+* Fixed expired buttons bug.
 # v3.7.5
 ## 17-11-2022
 * Fixed bug SDSA-225.

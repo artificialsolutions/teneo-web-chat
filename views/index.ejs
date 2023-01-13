@@ -46,58 +46,33 @@ TeneoWebChat.on('ready', () => {
 
 const x = TeneoWebChat.get('storage').getItem('twc_last_state');
 
-if (x) {
+    if (x) {
+        switch (x) {
+            case 'maximized':
+                TeneoWebChat.call('maximize');
+                break;
+            case 'minimized':
+                TeneoWebChat.call('minimize');
+                break;
+            default:
+                logger.warn('TeneoWebChat', 'unknown stored twc_last_state value', x);
+        }
 
-switch (x) {
-
-case 'maximized':
-
-TeneoWebChat.call('maximize');
-
-break;
-
-case 'minimized':
-
-TeneoWebChat.call('minimize');
-
-break;
-
-default:
-
-logger.warn('TeneoWebChat', 'unknown stored twc_last_state value', x);
-
-}
-
-}
+    }
 
 });
 
 
 
 TeneoWebChat.on('visibility_changed', payload => TeneoWebChat.get('storage').setItem('twc_last_state', payload.visibility));
-
-
-
 TeneoWebChat.on('reset', () => TeneoWebChat.get('storage').removeItem('twc_last_state'));
-
-</script>
-
-    
-    
-
-
+</script>  
 
 <!-- needed for Heroku -->
 <!--<% if(process.env.NODE_ENV === 'development') { %>-->
-
-
 <!--<% } %>-->
-
 <script>
 /* <![CDATA[ */
-
-
-
 window.addEventListener('load', () => {
 
     const element = document.getElementById('teneo-web-chat');
