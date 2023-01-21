@@ -6,7 +6,7 @@
 
 <script>
 import messageComponentName from '../utils/message-component-name.js';
-
+import DOMPurify from 'isomorphic-dompurify';
 export default {
   props: {
     message: {
@@ -21,8 +21,8 @@ export default {
       }
     },
     messageText() {
-      return this.message.data.text;
-    },
+        return this.message.data.text;
+ },
     messageSourceClass() {
       if (this.message.author === "bot") {
         return "twc-bot"
