@@ -131,7 +131,6 @@ export default {
     EventBus.$emit(events.API_STATE_READY);
   },
   methods: {
-    // Encapsulating dependency methods makes Testing easier
     async _onMessageReceived(message) {
       await this.$teneoApi._onMessageReceived(message);
     },

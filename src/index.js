@@ -273,7 +273,6 @@ window.TeneoWebChat = {
   },
 
   call(function_name, payload = undefined) {
-
     switch (function_name) {
       case apiConstants.API_CALL_SHOW_CALLOUT:
         if (payload && typeof payload === 'string') {
@@ -355,7 +354,7 @@ window.TeneoWebChat = {
          * TODO: check if message type is valid?
          */
         if (Object.keys(payload).length > 0 && payload.constructor === Object) {
-                 EventBus.$emit(events.ADD_MESSAGE, payload);
+          EventBus.$emit(events.ADD_MESSAGE, payload);
         }
         break;
 
@@ -365,7 +364,7 @@ window.TeneoWebChat = {
 
       case apiConstants.API_CALL_SHOW_TYPING_INDICATOR:
         if (Object.keys(payload).length > 0 && payload.constructor === Object) {
-           EventBus.$emit(events.SHOW_TYPING_INDICATOR, payload);
+          EventBus.$emit(events.SHOW_TYPING_INDICATOR, payload);
         }
         break;
 
@@ -532,6 +531,10 @@ window.TeneoWebChat = {
 
       case apiConstants.API_CALL_HIDE_UPLOAD_PANEL:
         EventBus.$emit(events.HIDE_UPLOAD_PANEL);
+        break;
+
+      case apiConstants.API_ON_SET_UPLOAD_STATE:
+        EventBus.$emit(events.SET_UPLOAD_STATE, payload);
         break;
 
       default:

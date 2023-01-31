@@ -17,7 +17,7 @@
         <div class="twc-upload-item" 
           v-for="(item, id) in idToItem" 
           :key="id"
-          :title = item.file.name
+          :title="item.file.name"
         >
           <svg
             xmlns="http://www.w3.org/2000/svg"
@@ -273,24 +273,56 @@ button:nth-child(4){
 <script>
 /* <![CDATA[ */
 
+// TODO ALPE
+
 import { EventBus, events } from '../utils/event-bus.js';
 import { API_ON_UPLOAD_PANEL_SUBMIT, API_ON_UPLOAD_PANEL_CANCEL } from '../utils/api-function-names.js';
 import basePayload from '../utils/base-payload.js';
 import handleExtension from '../utils/handle-extension.js';
 
-
+/**
+ * Mapping from item ID to the extra data for that item. This extra data is not kept in the item itself
+ * to avoid reactive effects. It can include the size of the image, its data URL and eventual visualization
+ * errors.
+ * 
+ * @type {(object|null|undefined)}
+ */
 var idToExtraData = null;
 
+/**
+ * Indicates if additiona debug information should be logged.
+ * 
+ * @const {boolean}
+ */
+const bDebug = true,
 
-const bDebug = true, sName = 'UploadPreviewPanel',
+/**
+ * The name of the component, to be used for debug purposes.
+ * 
+ * @const {string}
+ */
+sName = 'UploadPreviewPanel',
 
-MAX_IMG_PREVIEW_WIDTH = 32, MAX_IMG_PREVIEW_HEIGHT = 32,
+/**
+ * Max image width in preview, in pixels.
+ * 
+ * @const {number}
+ */
+MAX_IMG_PREVIEW_WIDTH = 32,
+
+/**
+ * Max image height in preview, in pixels.
+ * 
+ * @const {number}
+ */
+ MAX_IMG_PREVIEW_HEIGHT = 32,
 
 
 newId = () => {
   const s = Math.random().toString(36);
-  // Adding a leading non-digit to guarantee the key cannot be interpreted as a
-  // number, to prevent number-induced ordering of the entries in the object:
+  // Adding a leading non-digit and non-letter to guarantee the key cannot be
+  // interpreted as a number, to prevent number-induced ordering of the entries
+  // in the object:
   return ':' + Date.now().toString(36) + s.substring(s.indexOf('.') + 1);
 },
 
@@ -317,12 +349,6 @@ getPreuploadCaption = file => {
 },
 
 
-getPostuploadCaption = file => {
-  var s = file.name;
-  return (!s || (s = s.trim()).length === 0) ? '#' : s;
-},
-
-
 getPrintableDebugObject = obj => {
   if (obj == null) return obj;
   if (Array.isArray(obj)) return obj.map(x => getPrintableDebugObject(x));
@@ -340,16 +366,12 @@ getPrintableDebugObject = obj => {
 },
 
 getFileExtension = file => {
-  var filename = file.name;
-  
-  console.log(filename);
-  if (!filename || ( filename = filename.trim()).length === 0) return '#';
-  else {
-    const extension = filename.split('.').pop();
-    return extension;
-  }
-  
+  var s = file.name;
+  if (!s) return '#';
+  const n = s.lastIndexOf('.');
+  return (n === -1 || (s = s.substring(n + 1).trim()).length === 0) ? '#' : s;
 };
+
 
 export default {
 
@@ -448,7 +470,7 @@ export default {
       this.idToItem[id] = {
         id: id,
         file: file,
-        bImageMime: isImageFile(file)
+        asImage: isImageFile(file)
       };
       if (bDebug) console.log(sName, 'addFile(), adding file [' + file.name + '] of type [' + file.type + '] and size [' + file.size + '] with id [' + id + ']');
     },
@@ -519,7 +541,7 @@ export default {
             this.idToItem[item.id] = {
               id: item.id,
               file: item.file,
-              bImageMime: item.bImageMime == null ? isImageFile(item.file) : item.bImageMime
+              asImage: item.asImage == null ? isImageFile(item.file) : (item.asImage ? true : false)
             };
           }
         }
@@ -571,10 +593,23 @@ export default {
       if (this.processing) return;
       this.processing = true;
       const payload = basePayload();
-      if (this.idToItem) payload.items = Object.values(this.idToItem);
-      else {
+
+      payload.items = [];
+      if (this.idToItem) {
+        //payload.items = Object.values(this.idToItem);
+        let id, item, x;
+        for (id in this.idToItem) {
+          if (this.idToItem.hasOwnProperty(id)) {
+            item = Object.assign({}, this.idToItem[id]);
+            if (idToExtraData && (x = idToExtraData[id]) != null) {
+              x = x.imageUrl;
+              if (x) item.imageUrl = x;
+            }
+            payload.items.push(item);
+          }
+        }
+      } else {
         console.warn(sName, 'clickSubmit(), submitting upload items with undefined idToItem');
-        payload.items = [];
       }
       payload.comment = this.comment;
       try {
@@ -595,11 +630,11 @@ export default {
     },
 
     /** This function can use getPreuploadCaption() to print the first letter of the file content or display a label with the file extension using getfileExtension() */
-    insertTextCaption(canvasElement, item) {
+    insertTextCaption(canvasElement, item, ctx) {
       if (bDebug) console.log(sName, 'insertTextCaption()');
       canvasElement.width = MAX_IMG_PREVIEW_WIDTH;
       canvasElement.height = MAX_IMG_PREVIEW_HEIGHT;
-      const ctx = canvasElement.getContext("2d");
+      if (ctx == null) ctx = canvasElement.getContext("2d");
       if (ctx) {
     
         /*const captionText = getPreuploadCaption(item.file);*/
@@ -651,80 +686,111 @@ export default {
 
     insertImage(canvasElement, item) {
       if (bDebug) console.log(sName, 'insertImage()');
+      const ctx = canvasElement.getContext("2d");
+      if (ctx == null) {
+        alert('No context for image in preload preview canvas');
+        console.error(sName, 'insertImage(), no context for image [' + item.file.name + '] in preload preview canvas');
+        setTimeout(() => this.removeItem(item));
+        return;
+      }
       var extraData = idToExtraData[item.id];
-      if (extraData) {
+      if (extraData == null) idToExtraData[item.id] = extraData = {};
+      else {
+        if (extraData.imageFailure) {
+          this.insertTextCaption(canvasElement, item, ctx);
+          return;
+        }
         canvasElement.width = extraData.width;
         canvasElement.height = extraData.height;
       }
-      var blobURL = window.URL.createObjectURL(item.file);
-      const img = new window.Image();
 
-      img.onload = () => {
-        if (bDebug) console.log(sName, 'insertImage(), img.onload, img.width==' + img.width + ', img.height==' + img.height);
-        window.URL.revokeObjectURL(blobURL);
-        blobURL = null;
-        if (Number.isFinite(img.width) && img.width > 0 && Number.isFinite(img.height) && img.height > 0) {
-          let x;
-          if (extraData == null) {
-            let w = MAX_IMG_PREVIEW_WIDTH / img.width, h = MAX_IMG_PREVIEW_HEIGHT / img.height;
-            if (w < h) {
-              // w is the reference, width > height
-              h = w * img.height;
-              w *= img.width;
-              // here, w === MAX_IMG_PREVIEW_WIDTH
-              x = w / 4;
-              if (h < x) h = x;
-            } else {
-              // h is the reference, height > width
-              w = h * img.width;
-              h *= img.height;
-              // here, h === MAX_IMG_PREVIEW_HEIGHT
-              x = h / 4;
-              if (w < x) w = x;
+      const f = () => {
+        const img = new window.Image();
+        img.addEventListener('load', () => {
+          if (bDebug) console.log(sName, 'insertImage(), img.onload, img.width==' + img.width + ', img.height==' + img.height);
+          if (Number.isFinite(img.width) && img.width > 0 && Number.isFinite(img.height) && img.height > 0) {
+            if (extraData.width == null || extraData.height == null) {
+              let w = MAX_IMG_PREVIEW_WIDTH / img.width, h = MAX_IMG_PREVIEW_HEIGHT / img.height;
+              if (w < h) {
+                // w is the reference, width > height
+                h = w * img.height;
+                w *= img.width;
+                // here, w === MAX_IMG_PREVIEW_WIDTH
+                const x = w / 4;
+                if (h < x) h = x;
+              } else {
+                // h is the reference, height > width
+                w = h * img.width;
+                h *= img.height;
+                // here, h === MAX_IMG_PREVIEW_HEIGHT
+                const x = h / 4;
+                if (w < x) w = x;
+              }
+              canvasElement.width = w;
+              canvasElement.height = h;
+
+              extraData.width = w;
+              extraData.height = h;
             }
-            canvasElement.width = w;
-            canvasElement.height = h;
-            idToExtraData[item.id] = extraData = {
-              width: w,
-              height: h
-            };
-          }
-
-          x = canvasElement.getContext("2d");
-          if (x != null) {
             if (bDebug) console.log(sName, 'insertImage(), img.onload, drawImage, extraData:', extraData);
             try {
-              x.drawImage(img, 0, 0, extraData.width, extraData.height);
+              ctx.drawImage(img, 0, 0, extraData.width, extraData.height);
             } catch (err) {
-              console.warn(sName, 'insertImage(), failure drawing image [' + item.file.name + '] in preload preview canvas', err);
-              this.insertTextCaption(canvasElement, item);
+              extraData.imageFailure = 'insertImage(), failure drawing image [' + item.file.name + '] in preload preview canvas';
+              console.warn(sName, extraData.imageFailure, err);
+              this.insertTextCaption(canvasElement, item, ctx);
             }
           } else {
-            alert('No context for image in preload preview canvas');
-            console.error(sName, 'insertImage(), no context for image [' + item.file.name + '] in preload preview canvas');
-            setTimeout(() => this.removeItem(item));
+            extraData.imageFailure = 'insertImage(), bad image size, width [' + img.width + '], height [' + img.height + ']';
+            console.warn(sName, extraData.imageFailure);
+            this.insertTextCaption(canvasElement, item, ctx);
           }
-        } else {
-          console.warn(sName, 'insertImage(), bad image size, width', img.width, 'height', img.height);
-          this.insertTextCaption(canvasElement, item);
-        }
+        });
+
+        img.addEventListener('error', () => {
+          extraData.imageFailure = 'insertImage(), failure preparing image [' + item.file.name + '] in preload preview canvas';
+          console.warn(sName, extraData.imageFailure);
+          this.insertTextCaption(canvasElement, item, ctx);
+        });
+
+        img.src = extraData.imageUrl;
       };
 
-      img.onerror = e => {
-        console.warn(sName, 'insertImage(), failure preparing image [' + item.file.name + '] in preload preview canvas', e);
-        window.URL.revokeObjectURL(blobURL);
-        blobURL = null;
-        this.insertTextCaption(canvasElement, item);
-      };
+      if (extraData.imageUrl) f();
+      else {
+        const fileReader = new FileReader();
 
-      img.src = blobURL;
+        fileReader.addEventListener('load', () => {
+          if (extraData.imageUrl) return;
+          extraData.imageUrl = fileReader.result;
+          if (extraData.imageUrl) f();
+          else {
+            extraData.imageFailure = 'insertImage(), empty data URL for file [' + item.file.name + ']';
+            console.warn(sName, extraData.imageFailure);
+            this.insertTextCaption(canvasElement, item, ctx);
+          }
+        });
+
+        fileReader.addEventListener('error', () => {
+          extraData.imageFailure = 'insertImage(), failure to read file [' + item.file.name + ']';
+          console.warn(sName, extraData.imageFailure);
+          this.insertTextCaption(canvasElement, item, ctx);
+        });
+
+        fileReader.addEventListener('abort', () => {
+          console.warn(sName, 'insertImage(), aborting reading file', item.file.name);
+          this.insertTextCaption(canvasElement, item, ctx);
+        });
+
+        fileReader.readAsDataURL(item.file);
+      }
     },
 
 
     initCanvas(el, item) {
       if (bDebug) console.log(sName, 'initCanvas()');
       if (el) {
-        if (item.bImageMime) this.insertImage(el, item);
+        if (item.asImage) this.insertImage(el, item);
         else this.insertTextCaption(el, item);
       }
     },
