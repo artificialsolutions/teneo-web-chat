@@ -47,7 +47,8 @@ export const events = {
 
     // TODO ALPE
     HIDE_UPLOAD_PANEL: 'hide_upload_panel',
-    SHOW_UPLOAD_PANEL: 'show_upload_panel'
+    SHOW_UPLOAD_PANEL: 'show_upload_panel',
+    SET_UPLOAD_STATE: 'set_upload_state'
 };
 
 export const EventBus = new Vue();

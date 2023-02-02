@@ -17,7 +17,7 @@
         <div class="twc-upload-item" 
           v-for="(item, id) in idToItem" 
           :key="id"
-          :title = item.file.name
+          :title="item.file.name"
         >
           <svg
             xmlns="http://www.w3.org/2000/svg"
@@ -571,10 +571,23 @@ export default {
       if (this.processing) return;
       this.processing = true;
       const payload = basePayload();
-      if (this.idToItem) payload.items = Object.values(this.idToItem);
-      else {
+      
+      payload.items = [];
+      if (this.idToItem) {
+        //payload.items = Object.values(this.idToItem);
+        let id, item, x;
+        for (id in this.idToItem) {
+          if (this.idToItem.hasOwnProperty(id)) {
+            item = Object.assign({}, this.idToItem[id]);
+            if (idToExtraData && (x = idToExtraData[id]) != null) {
+              x = x.imageUrl;
+              if (x) item.imageUrl = x;
+            }
+            payload.items.push(item);
+          }
+        }
+      } else {
         console.warn(sName, 'clickSubmit(), submitting upload items with undefined idToItem');
-        payload.items = [];
       }
       payload.comment = this.comment;
       try {
@@ -695,6 +708,11 @@ export default {
             if (bDebug) console.log(sName, 'insertImage(), img.onload, drawImage, extraData:', extraData);
             try {
               x.drawImage(img, 0, 0, extraData.width, extraData.height);
+              try {
+                extraData.imageUrl = x.toDataURL('image/jpeg', 0.5);
+              } catch (err2) {
+                console.warn(sName, 'insertImage(), failure to create data URL for image [' + item.file.name + '] in preload preview canvas', err2);
+              }
             } catch (err) {
               console.warn(sName, 'insertImage(), failure drawing image [' + item.file.name + '] in preload preview canvas', err);
               this.insertTextCaption(canvasElement, item);

@@ -272,8 +272,8 @@ window.TeneoWebChat = {
     }
   },
 
-  call(function_name, payload = undefined) {
-
+  call(function_name, payload = undefined, extraData = undefined) {
+    // TODO ALPE adding extraData
     switch (function_name) {
       case apiConstants.API_CALL_SHOW_CALLOUT:
         if (payload && typeof payload === 'string') {
@@ -355,7 +355,7 @@ window.TeneoWebChat = {
          * TODO: check if message type is valid?
          */
         if (Object.keys(payload).length > 0 && payload.constructor === Object) {
-                 EventBus.$emit(events.ADD_MESSAGE, payload);
+          EventBus.$emit(events.ADD_MESSAGE, payload, extraData);
         }
         break;
 
@@ -365,7 +365,7 @@ window.TeneoWebChat = {
 
       case apiConstants.API_CALL_SHOW_TYPING_INDICATOR:
         if (Object.keys(payload).length > 0 && payload.constructor === Object) {
-           EventBus.$emit(events.SHOW_TYPING_INDICATOR, payload);
+          EventBus.$emit(events.SHOW_TYPING_INDICATOR, payload);
         }
         break;
 

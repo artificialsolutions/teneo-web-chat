@@ -84,3 +84,6 @@ export const API_ON_RESET = 'reset';
 // TODO ALPE
 export const API_ON_UPLOAD_PANEL_SUBMIT = 'upload_panel_submit';
 export const API_ON_UPLOAD_PANEL_CANCEL = 'upload_panel_cancel';
+export const API_ON_UPLOAD_FILE_DELETE_CLICK = 'upload_file_delete_clicked';
+export const API_ON_UPLOAD_FILE_STOP_CLICK = 'upload_file_stop_clicked';
+export const API_ON_UPLOAD_FILE_RESTART_CLICK = 'upload_file_restart_clicked';
