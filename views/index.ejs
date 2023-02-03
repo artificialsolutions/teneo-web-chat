@@ -129,19 +129,20 @@ TeneoWebChat.call('hide_upload_panel');
 (() => {
 
 
-
 // TODO Re-implement the fileUploader object for your file upload service!
 // It should have public methods start(item) to start the asynchronous
-// file upload and calcelAll() to cancel all the initiated but not yet finished
-// files uploads.
+// file upload, cancel(item) to cancel it and calcelAll() to cancel all the
+// initiated but not yet finished files uploads.
 const fileUploader = {
 
     itemIdToUploadProcessId: null,
     itemIdToProgressTickerId: null,
+    itemIdToCallback: null,
 
-    upload(item, callbacks) {
+    upload(item, callback) {
         if (this.itemIdToUploadProcessId == null) this.itemIdToUploadProcessId = {};
         if (this.itemIdToProgressTickerId == null) this.itemIdToProgressTickerId = {};
+        if (this.itemIdToCallback == null) this.itemIdToCallback = {};
 
         var nUploadPercentage = 0;
 
@@ -153,10 +154,12 @@ const fileUploader = {
             delete this.itemIdToProgressTickerId[item.id];
         },
         updateUploadPercentage = () => {
-            callbacks.onUploadPersentageChanged(nUploadPercentage);
+            if (callback && callback.onUploadPersentageChanged) callback.onUploadPersentageChanged(nUploadPercentage);
             if (nUploadPercentage < 100) nUploadPercentage += 10;
             else stopTicker();
         };
+
+        if (callback) this.itemIdToCallback[item.id] = callback;
 
         updateUploadPercentage();
         this.itemIdToProgressTickerId[item.id] = setInterval(updateUploadPercentage, tickerInterval);
@@ -164,12 +167,24 @@ const fileUploader = {
         this.itemIdToUploadProcessId[item.id] = setTimeout(() => {
             stopTicker();
             delete this.itemIdToUploadProcessId[item.id];
-            if (bFileUploadSuccessful) callbacks.onSuccess();
-            else callbacks.onFailure(new Error('Upload failure'));
+            if (bFileUploadSuccessful) {
+                if (callback && callback.onSuccess) callback.onSuccess();
+            } else {
+                if (callback && callback.onFailure) callback.onFailure(new Error('Upload failure'));
+            }
         }, delayMillis);
     },
 
     cancel(item) {
+        if (this.itemIdToCallback) {
+            const callback = this.itemIdToCallback[item.id];
+            if (callback) {
+                delete this.itemIdToCallback[item.id];
+                if (callback.onCancelled && this.itemIdToUploadProcessId && this.itemIdToUploadProcessId[item.id]) {
+                    setTimeout(() => callback.onCancelled());
+                }
+            }
+        }
         if (this.itemIdToUploadProcessId) {
             clearTimeout(this.itemIdToUploadProcessId[item.id]);
             delete this.itemIdToUploadProcessId[item.id];
@@ -181,8 +196,14 @@ const fileUploader = {
     },
 
     cancelAll() {
-        // TODO Implement here the cancellation of all the started
-        // but not finished file upload processes 
+        if (this.itemIdToCallback) {
+            if (this.itemIdToUploadProcessId) {
+                Object.entries(this.itemIdToCallback).forEach(e => {
+                    if (e[1].onCancelled && this.itemIdToUploadProcessId[e[0]]) setTimeout(() => e[1].onCancelled());
+                });
+            }
+            this.itemIdToCallback = null;
+        }
         if (this.itemIdToUploadProcessId) {
             Object.values(this.itemIdToUploadProcessId).forEach(processId => clearTimeout(processId));
             this.itemIdToUploadProcessId = null;
@@ -195,12 +216,13 @@ const fileUploader = {
 };
 
 
-var itemIdToUploadState;
+var itemIdToUploadState, itemIdToUnsentItem;
 
 
 const clearFileUploads = () => {
     fileUploader.cancelAll();
     itemIdToUploadState = null;
+    itemIdToUnsentItem = null;
     TeneoWebChat.get('storage').removeItem('twc_itemIdToUploadState');
 },
 
@@ -209,7 +231,59 @@ outputBotText = sText => TeneoWebChat.call('add_message', {
     type: 'text',
     author: 'bot',
     data: { text: sText }
-});
+}),
+
+
+uploadFile = item => {
+    fileUploader.upload(item, {
+        onUploadPersentageChanged: nUploadPercentage => {
+            if (itemIdToUploadState && itemIdToUploadState[item.id]) {
+                TeneoWebChat.call('set_upload_state', {
+                    itemId: item.id,
+                    uploadState: {
+                        uploadPercentage: nUploadPercentage
+                    }
+                });
+            }
+        }, onSuccess: () => {
+            if (itemIdToUnsentItem) delete itemIdToUnsentItem[item.id];
+            const uploadState = itemIdToUploadState ? itemIdToUploadState[item.id] : null;
+            if (uploadState) {
+                uploadState.status = 'SUCCEEDED';
+                TeneoWebChat.get('storage').setItem('twc_itemIdToUploadState', JSON.stringify(itemIdToUploadState));
+                TeneoWebChat.call('set_upload_state', {
+                    itemId: item.id,
+                    uploadState: uploadState
+                });
+            }
+        }, onFailure: err => {
+            if (itemIdToUnsentItem == null) itemIdToUnsentItem = {};
+            itemIdToUnsentItem[item.id] = item;
+            const uploadState = itemIdToUploadState ? itemIdToUploadState[item.id] : null;
+            if (uploadState) {
+                uploadState.status = 'FAILED';
+                TeneoWebChat.get('storage').setItem('twc_itemIdToUploadState', JSON.stringify(itemIdToUploadState));
+                TeneoWebChat.call('set_upload_state', {
+                    itemId: item.id,
+                    uploadState: uploadState
+                });
+            }
+        }, onCancelled: () => {
+            if (itemIdToUnsentItem == null) itemIdToUnsentItem = {};
+            itemIdToUnsentItem[item.id] = item;
+            const uploadState = itemIdToUploadState ? itemIdToUploadState[item.id] : null;
+            if (uploadState) {
+                uploadState.status = 'INTERRUPTED';
+                TeneoWebChat.get('storage').setItem('twc_itemIdToUploadState', JSON.stringify(itemIdToUploadState));
+                TeneoWebChat.call('set_upload_state', {
+                    itemId: item.id,
+                    uploadState: uploadState
+                });
+            }
+        }
+    });
+};
+
 
 
 TeneoWebChat.on('ready', () => {
@@ -230,12 +304,15 @@ TeneoWebChat.on('ready', () => {
     for (x in itemIdToUploadState) {
         if (itemIdToUploadState.hasOwnProperty(x)) {
             uploadState = itemIdToUploadState[x];
-            if (uploadState.status === 'IN_PROGRESS') {
-                uploadState.status = 'INTERRUPTED';
-                bChanged = true;
-            } else if (uploadState.status !== 'SUCCEEDED' && uploadState.controlAllowed) {
-                uploadState.controlAllowed = false;
-                bChanged = true;
+            if (uploadState.status !== 'SUCCEEDED') {
+                if (uploadState.status === 'IN_PROGRESS') {
+                    uploadState.status = 'INTERRUPTED';
+                    uploadState.controlAllowed = false;
+                    bChanged = true;
+                } else if (uploadState.controlAllowed) {
+                    uploadState.controlAllowed = false;
+                    bChanged = true;
+                }
             }
         }
     }
@@ -243,20 +320,18 @@ TeneoWebChat.on('ready', () => {
         TeneoWebChat.get('storage').setItem('twc_itemIdToUploadState', JSON.stringify(itemIdToUploadState));
     }
     setTimeout(() => {
-        for (x in itemIdToUploadState) {
-            if (itemIdToUploadState.hasOwnProperty(x)) {
-                uploadState = itemIdToUploadState[x];
-                TeneoWebChat.call('set_upload_state', {
-                    itemId: x,
-                    uploadState: {
-                        status: uploadState.status,
-                        controlAllowed: uploadState.controlAllowed
-                    }
-                });
-            }
-        }
+        Object.entries(itemIdToUploadState).forEach(e => {
+            TeneoWebChat.call('set_upload_state', {
+                itemId: e[0],
+                uploadState: {
+                    status: e[1].status,
+                    controlAllowed: e[1].controlAllowed
+                }
+            });
+        });
     });
 });
+
 
 
 TeneoWebChat.on('upload_panel_submit', payload => {
@@ -279,32 +354,7 @@ TeneoWebChat.on('upload_panel_submit', payload => {
                 }
             }
         });
-        fileUploader.upload(item, {
-            onUploadPersentageChanged: nUploadPercentage => {
-                TeneoWebChat.call('set_upload_state', {
-                    itemId: item.id,
-                    uploadState: {
-                        uploadPercentage: nUploadPercentage
-                    }
-                });
-            }, onSuccess: () => {
-                TeneoWebChat.call('set_upload_state', {
-                    itemId: item.id,
-                    uploadState: {
-                        status: 'SUCCEEDED',
-                        uploadPercentage: 0
-                    }
-                });
-            }, onFailure: err => {
-                TeneoWebChat.call('set_upload_state', {
-                    itemId: item.id,
-                    uploadState: {
-                        status: 'FAILED',
-                        uploadPercentage: 0
-                    }
-                });
-            }
-        });
+        uploadFile(item);
     });
     TeneoWebChat.get('storage').setItem('twc_itemIdToUploadState', JSON.stringify(itemIdToUploadState));
 });
@@ -313,6 +363,76 @@ TeneoWebChat.on('upload_panel_submit', payload => {
 TeneoWebChat.on('upload_panel_cancel', payload => {
     console.log('upload_panel_cancel', payload);
     outputBotText('You have canceled on ' + payload.itemsCount + ' files');
+});
+
+
+TeneoWebChat.on('upload_file_delete_clicked', payload => {
+    if (itemIdToUploadState == null) {
+        console.warn('upload_file_delete_clicked, itemIdToUploadState==null', payload);
+        return;
+    }
+    console.log('upload_file_delete_clicked', payload);
+
+    var uploadState = itemIdToUploadState[payload.itemId];
+    if (uploadState == null) itemIdToUploadState[payload.itemId] = uploadState = {};
+    uploadState.status = 'DELETED';
+    uploadState.uploadPercentage = 0;
+    TeneoWebChat.get('storage').setItem('twc_itemIdToUploadState', JSON.stringify(itemIdToUploadState));
+    TeneoWebChat.call('set_upload_state', {
+        itemId: payload.itemId,
+        uploadState: uploadState
+    });
+});
+
+
+TeneoWebChat.on('upload_file_stop_clicked', payload => {
+    if (itemIdToUploadState == null) {
+        console.warn('upload_file_stop_clicked, itemIdToUploadState==null', payload);
+        return;
+    }
+    console.log('upload_file_stop_clicked', payload);
+
+    var uploadState = itemIdToUploadState[payload.itemId];
+    if (uploadState == null) itemIdToUploadState[payload.itemId] = uploadState = {};
+    uploadState.status = 'INTERRUPTED';
+    uploadState.uploadPercentage = 0;
+    TeneoWebChat.get('storage').setItem('twc_itemIdToUploadState', JSON.stringify(itemIdToUploadState));
+    TeneoWebChat.call('set_upload_state', {
+        itemId: payload.itemId,
+        uploadState: uploadState
+    });
+});
+
+
+TeneoWebChat.on('upload_file_restart_clicked', payload => {
+    if (itemIdToUploadState == null) {
+        console.error('upload_file_restart_clicked, itemIdToUploadState==null', payload);
+        return;
+    }
+    if (itemIdToUnsentItem == null) {
+        console.error('upload_file_restart_clicked, itemIdToUnsentItem==null', payload);
+        return;
+    }
+    const item = itemIdToUnsentItem[payload.itemId];
+    if (item == null) {
+        console.error('upload_file_restart_clicked, item==null', payload);
+        return;
+    }
+    var uploadState = itemIdToUploadState[payload.itemId];
+    if (uploadState == null) {
+        console.error('upload_file_restart_clicked, uploadState==null', payload);
+        itemIdToUploadState[payload.itemId] = uploadState = {};
+    }
+    console.log('upload_file_restart_clicked', payload);
+
+    uploadState.status = 'IN_PROGRESS';
+    uploadState.uploadPercentage = 0;
+    TeneoWebChat.get('storage').setItem('twc_itemIdToUploadState', JSON.stringify(itemIdToUploadState));
+    TeneoWebChat.call('set_upload_state', {
+        itemId: payload.itemId,
+        uploadState: uploadState
+    });
+    uploadFile(item);
 });
 
 

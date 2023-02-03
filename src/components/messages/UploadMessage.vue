@@ -140,13 +140,13 @@ import {
 
 
 
-const bDebug = true;
+const bDebug = true, sName = 'UploadMessage';
 
 let nUploadPercentage;
 
 
 export default {
-  name: 'UploadMessage',
+  name: sName,
 
   props: {
     message: {
@@ -166,14 +166,22 @@ export default {
        * the file is not an image or if the image thumbnail could not be generated. If this property is
        * empty, null or not not defined, the file name will be displayed.
        * @param {object} [message.data.initialUploadState] - the initial upload state.
-       * @param {string|null} [message.data.initialUploadState.status] - the status of the upload. Possible values are
-       * SUCCEEDED, IN_PROGRESS, FAILED, INTERRUPTED and DELETED.
-       * @param {boolean} [message.data.initialUploadState.controlAllowed] - indicates if the control button should be displayed:
+       * It can have the same properties as the <code>uploadState</code> argument of
+       * the <code>setUploadState()</code> method except <code>dataUrl</code> which is explicitly
+       * not allowed on <code>initialUploadState</code>. Any attemp to use this property here will
+       * produce an error. The purpose of this restriction is to prevent developers from adding
+       * here huge data URLs, which can blow up the browser's storage.
+       * @param {string|null} [message.data.initialUploadState.status] - the status of the upload.
+       * Possible values are SUCCEEDED, IN_PROGRESS, FAILED, INTERRUPTED and DELETED.
+       * @param {boolean} [message.data.initialUploadState.controlAllowed] - indicates if the control button
+       * should be displayed:
        * for SUCCEEDED it is "Delete"; for IN_PROGRESS - "Stop"; for FAILED, INTERRUPTED and DELETED - "Re-upload".
        * If this flag is undefined, it is ignored. Otherwise, if it evaluates to <code>true</code>,
        * the corresponding button is displayed. If it evaluates to <code>false</code>, the button is suppressed.
-       * @param {string|null} [message.data.initialUploadState.imageUrl] the URL of the image to display in the message. It can also be a data URL.
-       * @param {number} [message.data.initialUploadState.uploadPercentage] the percentage of the file upload to display. Allowed values are from 0 to 100.
+       * @param {string|null} [message.data.initialUploadState.imageUrl] the URL of the image to display in the message.
+       * It can also be a data URL.
+       * @param {number} [message.data.initialUploadState.uploadPercentage] the percentage of the file upload to display.
+       * Allowed values are from 0 to 100.
        * 
        * @returns {boolean} <code>true</code> if the argument is a valid upload message, <code>false</code> otherwise.
        */
@@ -181,21 +189,25 @@ export default {
         if (!message || message.type !== 'upload') return false;
         const data = message.data;
         if (!data) {
-          console.error(this.name, 'Missing data', message);
+          console.error(sName, 'Missing data', message);
+          return false;
+        }
+        if (data.initialUploadState?.imageUrl) {
+          console.error(sName, 'data.initialUploadState.imageUrl is not allowed in messages (itemID ' + data.itemId + '). Use "set_upload_state" to set the image URL instead!');
           return false;
         }
         if (!data.itemId) {
-          console.error(this.name, 'Missing itemId', message);
+          console.error(sName, 'Missing itemId', message);
           return false;
         }
         if (!(data.fileSymbol || data.fileName)) {
-          console.warn(this.name, 'Missing both data.fileSymbol and data.fileName', message) ;
+          console.warn(sName, 'Missing both data.fileSymbol and data.fileName', message) ;
         }
         return true;
       }
     }
   },
-  
+
 
   data() {
     return {
@@ -207,38 +219,38 @@ export default {
 
 
   beforeMount() {
-    if (bDebug) console.log(this.name, 'beforeMount with message', this.message);
+    if (bDebug) console.log(sName, 'beforeMount with message', this.message);
     EventBus.$on(events.SET_UPLOAD_STATE, x => {
       if (this.message.data.itemId === x.itemId) this.setUploadState(x.uploadState);
-      else if (bDebug) console.log(this.name, 'Skipping upload status for', this.message.data.itemId);
+      else if (bDebug) console.log(sName, 'Skipping upload status for', this.message.data.itemId);
     });
   },
 
 
   mounted() {
-    if (bDebug) console.log(this.name, 'mounted with message', this.message);
+    if (bDebug) console.log(sName, 'mounted with message', this.message);
     if (nUploadPercentage == null) {
       let x = this.message.initialUploadState;
       if (x && (x = x.uploadPercentage) !== undefined) {
         if (Number.isNaN(x = Number(x))) {
-          console.error(this.name, 'Wrong uploadPercentage value [ ' + this.message.initialUploadState?.uploadPercentage + ' ], should be a number between 0 and 100');
+          console.error(sName, 'Wrong uploadPercentage value [ ' + this.message.initialUploadState?.uploadPercentage + ' ], should be a number between 0 and 100');
         } else {
           nUploadPercentage = x < 0 ? 0 : x > 100 ? 100 : x;
         }
       }
     }
-    this.assignSpinnerValue();
+    this.assignSpinnerValue(nUploadPercentage);
   },
 
 
   updated() {
-    if (bDebug) console.log(this.name, 'updated with message', this.message);
-    this.assignSpinnerValue();
+    if (bDebug) console.log(sName, 'updated with message', this.message);
+    this.assignSpinnerValue(nUploadPercentage);
   },
 
 
   beforeUnmount() {
-    if (bDebug) console.log(this.name, 'beforeUnmount with message', this.message);
+    if (bDebug) console.log(sName, 'beforeUnmount with message', this.message);
     EventBus.$off(events.SET_UPLOAD_STATE);
   },
 
@@ -258,29 +270,29 @@ export default {
 
   methods: {
     async stopUpload() {
-      if (bDebug) console.log(this.name, 'stopUpload() for itemId', this.message.data.itemId);
+      if (bDebug) console.log(sName, 'stopUpload() for itemId', this.message.data.itemId);
       const payload = basePayload();
       payload.itemId = this.message.data.itemId;
       await handleExtension(API_ON_UPLOAD_FILE_STOP_CLICK, payload);
     },
 
     async restartUpload() {
-      if (bDebug) console.log(this.name, 'restartUpload() for itemId', this.message.data.itemId);
+      if (bDebug) console.log(sName, 'restartUpload() for itemId', this.message.data.itemId);
       const payload = basePayload();
       payload.itemId = this.message.data.itemId;
       await handleExtension(API_ON_UPLOAD_FILE_RESTART_CLICK, payload);
     },
 
     async deleteFile() {
-      if (bDebug) console.log(this.name, 'deleteFile() for itemId', this.message.data.itemId);
+      if (bDebug) console.log(sName, 'deleteFile() for itemId', this.message.data.itemId);
       const payload = basePayload();
       payload.itemId = this.message.data.itemId;
       await handleExtension(API_ON_UPLOAD_FILE_DELETE_CLICK, payload);
     },
 
-    assignSpinnerValue() {
+    assignSpinnerValue(n) {
       if (this.$refs.spinner) {
-        const n = nUploadPercentage == null ? 0 : nUploadPercentage;
+        if (n == null) n = 0;
         this.$refs.spinner.style.background = 'conic-gradient(blue ' + n + '%, lightgrey ' + n + '%)';
       }
     },
@@ -288,40 +300,39 @@ export default {
     /**
      * Sets the state of the upload.
      * 
-     * @param {object} x - the upload state.
-     * @param {string|null} [x.status] - the status of the upload. Possible values are
+     * @param {object} uploadState - the upload state.
+     * @param {string|null} [uploadState.status] - the status of the upload. Possible values are
      * SUCCEEDED, IN_PROGRESS, FAILED, INTERRUPTED and DELETED or null.
-     * @param {boolean} [x.controlAllowed] - indicates if the control button should be displayed:
+     * @param {boolean} [uploadState.controlAllowed] - indicates if the control button should be displayed:
      * for SUCCEEDED it is "Delete"; for IN_PROGRESS - "Stop"; for FAILED, INTERRUPTED and DELETED - "Re-upload".
      * If this flag is undefined, it is ignored. Otherwise, if it evaluates to <code>true</code>,
      * the corresponding button is displayed. If it evaluates to <code>false</code>, the button is suppressed.
+     * @param {number} [uploadState.uploadPercentage] the percentage of the file upload to display. Allowed values are from 0 to 100.
      * @param {string|null} [x.imageUrl] the URL of the image to display in the message. It can also be a data URL.
-     * @param {number} [x.uploadPercentage] the percentage of the file upload to display. Allowed values are from 0 to 100.
      */
-    setUploadState(x) {
-      if (x.hasOwnProperty('status') && x.status !== undefined) {
-        if (x.status !== null && !this.getContainerClassAddition(x.status)) {
-          console.error(this.name, 'Wrong upload status [ ' + x.status + ' ]');
+    setUploadState(uploadState) {
+      if (uploadState.hasOwnProperty('status') && uploadState.status !== undefined) {
+        if (uploadState.status !== null && !this.getContainerClassAddition(uploadState.status)) {
+          console.error(sName, 'Wrong upload status [ ' + uploadState.status + ' ]');
           return;
         }
-        this.reStatus = x.status;
+        this.reStatus = uploadState.status;
       }
-      if (x.hasOwnProperty('controlAllowed') && x.controlAllowed !== undefined) {
-        this.reControlAllowed = x.controlAllowed ? true : false;
+      if (uploadState.hasOwnProperty('controlAllowed') && uploadState.controlAllowed !== undefined) {
+        this.reControlAllowed = uploadState.controlAllowed ? true : false;
       }
-      if (x.hasOwnProperty('imageUrl') && x.imageUrl !== undefined) {
-        this.reImageUrl = x.imageUrl;
+      if (uploadState.hasOwnProperty('imageUrl') && uploadState.imageUrl !== undefined) {
+        this.reImageUrl = uploadState.imageUrl;
       }
-      if (x.hasOwnProperty('uploadPercentage') && x.uploadPercentage !== undefined) {
-        const n = Number(x.uploadPercentage);
+      if (uploadState.hasOwnProperty('uploadPercentage') && uploadState.uploadPercentage !== undefined) {
+        const n = Number(uploadState.uploadPercentage);
         if (Number.isNaN(n)) {
-          console.error(this.name, 'Wrong uploadPercentage value [ ' + x.status + ' ], should be a number between 0 and 100');
+          console.error(sName, 'Wrong uploadPercentage value [ ' + uploadState.status + ' ], should be a number between 0 and 100');
         } else {
           nUploadPercentage = n < 0 ? 0 : n > 100 ? 100 : n;
-          this.assignSpinnerValue();
+          this.assignSpinnerValue(nUploadPercentage);
         }
       }
-      if (bDebug) console.log(this.name, 'Setting upload state for', x.itemId);
     },
 
 

@@ -534,6 +534,10 @@ window.TeneoWebChat = {
         EventBus.$emit(events.HIDE_UPLOAD_PANEL);
         break;
 
+      case apiConstants.API_ON_SET_UPLOAD_STATE:
+        EventBus.$emit(events.SET_UPLOAD_STATE, payload);
+        break;
+
       default:
         console.warn('Unknown called function name', function_name);
     }
