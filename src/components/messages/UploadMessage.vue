@@ -50,21 +50,38 @@
   100% { transform: rotate(360deg); }
 }
 
-.twc-upload-file-visualization {
-  position: absolute;
+
+.twc-upload-file {
+  position: relative;
+  height: 12rem;
+  /* width: 16rem; */
   display: flex;
   align-items: center;
   align-content: center;
   justify-content: center;
+  background-color: yellow;
+}
+
+.twc-upload-file-visualization {
+  position: absolute;
+  height: 10rem;
+  width: 90%;
+  display: flex;
+  align-items: center;
+  align-content: center;
+  justify-content: center;
+  background-color: green;
 }
 
 .twc-upload-file-representation {
+  position: absolute;
   height: 8rem;
-  width: 12rem;
+  width: 90%;
   display: flex;
   align-items: center;
   align-content: center;
   justify-content: center;
+  background-color: cyan;
 }
 
 .twc-upload-file-progress-spinner {
@@ -101,10 +118,12 @@
   color: black;
   background-color: red;
   border: thin solid black;
+  /*
   display: flex;
   align-items: center;
   align-content: center;
   justify-content: center;
+  */
   padding: 0.1rem;
   margin: 0.1rem;
 }
@@ -114,13 +133,25 @@
   bottom: 0;
   right: 0;
   color: black;
+  /*
   display: flex;
   align-items: center;
   align-content: center;
   justify-content: center;
+  */
   padding: 0.1rem;
   margin: 0.1rem;
   background-color:white;
+}
+
+.twc-upload-file-name {
+  /*
+  position: absolute;
+  width: 90%;
+  bottom: 0;
+  color: black;
+  background-color: brown;
+  */
 }
 
 </style>
@@ -317,12 +348,15 @@ export default {
           return;
         }
         this.reStatus = uploadState.status;
+        if (bDebug) console.log(sName, 'setUploadState, setting status', this.reStatus);
       }
       if (uploadState.hasOwnProperty('controlAllowed') && uploadState.controlAllowed !== undefined) {
         this.reControlAllowed = uploadState.controlAllowed ? true : false;
+        if (bDebug) console.log(sName, 'setUploadState, setting controlAllowed', this.reControlAllowed);
       }
       if (uploadState.hasOwnProperty('imageUrl') && uploadState.imageUrl !== undefined) {
         this.reImageUrl = uploadState.imageUrl;
+        if (bDebug) console.log(sName, 'setUploadState, setting imageUrl', this.reImageUrl);
       }
       if (uploadState.hasOwnProperty('uploadPercentage') && uploadState.uploadPercentage !== undefined) {
         const n = Number(uploadState.uploadPercentage);
@@ -331,6 +365,7 @@ export default {
         } else {
           nUploadPercentage = n < 0 ? 0 : n > 100 ? 100 : n;
           this.assignSpinnerValue(nUploadPercentage);
+          if (bDebug) console.log(sName, 'setUploadState, applying uploadPercentage', nUploadPercentage);
         }
       }
     },

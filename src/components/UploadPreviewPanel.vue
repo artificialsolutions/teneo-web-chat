@@ -711,7 +711,7 @@ export default {
               try {
                 // Placing imageUrl into extraData, not into item, to avoid reactive updates
                 // since item is a reactive object. 
-                extraData.imageUrl = x.toDataURL('image/jpeg', 0.5);
+                extraData.imageUrl = canvasElement.toDataURL('image/jpeg', 0.5);
               } catch (err2) {
                 console.warn(sName, 'insertImage(), failure to create data URL for image [' + item.file.name + '] in preload preview canvas', err2);
               }
