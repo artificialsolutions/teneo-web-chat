@@ -222,13 +222,13 @@ const fileUploader = {
 };
 
 
-var itemIdToUploadState, itemIdToUnsentItem;
+var itemIdToUploadState, itemIdToControllableItem;
 
 
 const clearFileUploads = () => {
     fileUploader.cancelAll();
     itemIdToUploadState = null;
-    itemIdToUnsentItem = null;
+    itemIdToControllableItem = null;
     TeneoWebChat.get('storage').removeItem('twc_itemIdToUploadState');
 },
 
@@ -263,6 +263,8 @@ modifyUploadState = (itemId, uploadStatus, uploadPercentage, controlAllowed) => 
 
 
 uploadFile = item => {
+    if (itemIdToControllableItem == null) itemIdToControllableItem = {};
+    itemIdToControllableItem[item.id] = item;
     fileUploader.upload(item, {
         onUploadPersentageChanged: nUploadPercentage => {
             if (itemIdToUploadState && itemIdToUploadState[item.id]) {
@@ -274,15 +276,10 @@ uploadFile = item => {
                 });
             }
         }, onSuccess: () => {
-            if (itemIdToUnsentItem) delete itemIdToUnsentItem[item.id];
             modifyUploadState(item.id, 'SUCCEEDED');
         }, onFailure: err => {
-            if (itemIdToUnsentItem == null) itemIdToUnsentItem = {};
-            itemIdToUnsentItem[item.id] = item;
             modifyUploadState(item.id, 'FAILED', 0);
         }, onCancelled: () => {
-            if (itemIdToUnsentItem == null) itemIdToUnsentItem = {};
-            itemIdToUnsentItem[item.id] = item;
             modifyUploadState(item.id, 'INTERRUPTED', 0);
         }
     });
@@ -384,11 +381,11 @@ TeneoWebChat.on('upload_file_stop_clicked', payload => {
 
 
 TeneoWebChat.on('upload_file_restart_clicked', payload => {
-    if (itemIdToUnsentItem == null) {
-        console.error('upload_file_restart_clicked, itemIdToUnsentItem==null', payload);
+    if (itemIdToControllableItem == null) {
+        console.error('upload_file_restart_clicked, itemIdToControllableItem==null', payload);
         return;
     }
-    const item = itemIdToUnsentItem[payload.itemId];
+    const item = itemIdToControllableItem[payload.itemId];
     if (item == null) {
         console.error('upload_file_restart_clicked, item==null', payload);
         return;

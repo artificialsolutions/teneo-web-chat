@@ -7,7 +7,7 @@
 
       <template v-if="status === 'SUCCEEDED'">
         <a v-if="controlAllowed" @click="deleteFile" class="twc-upload-file-action-delete" role="button" title="Delete file">&#x2715;</a>
-        <span class="twc-upload-file-status">Scceeded</span>
+        <span class="twc-upload-file-status">Succeeded</span>
       </template>
       <template v-if="status === 'IN_PROGRESS'">
         <span ref="spinner" class="twc-upload-file-progress-spinner"></span>
@@ -53,19 +53,22 @@
 
 .twc-upload-file {
   position: relative;
-  height: 12rem;
-  /* width: 16rem; */
-  display: flex;
-  align-items: center;
-  align-content: center;
-  justify-content: center;
   background-color: yellow;
+  padding:10px;
+}
+
+.twc-upload-file-name {
+  position: relative;
+  color: black;
+  background-color: brown;
+  text-align: center;
+  padding: 2px 1px;
+  margin: 1px 0 0;
 }
 
 .twc-upload-file-visualization {
-  position: absolute;
-  height: 10rem;
-  width: 90%;
+  position: relative;
+  height: 200px;
   display: flex;
   align-items: center;
   align-content: center;
@@ -75,7 +78,7 @@
 
 .twc-upload-file-representation {
   position: absolute;
-  height: 8rem;
+  height: 160px;
   width: 90%;
   display: flex;
   align-items: center;
@@ -144,16 +147,6 @@
   background-color:white;
 }
 
-.twc-upload-file-name {
-  /*
-  position: absolute;
-  width: 90%;
-  bottom: 0;
-  color: black;
-  background-color: brown;
-  */
-}
-
 </style>
 
 
@@ -209,8 +202,9 @@ export default {
        * for SUCCEEDED it is "Delete"; for IN_PROGRESS - "Stop"; for FAILED, INTERRUPTED and DELETED - "Re-upload".
        * If this flag is undefined, it is ignored. Otherwise, if it evaluates to <code>true</code>,
        * the corresponding button is displayed. If it evaluates to <code>false</code>, the button is suppressed.
-       * @param {string|null} [message.data.initialUploadState.imageUrl] the URL of the image to display in the message.
-       * It can also be a data URL.
+       * @param {?} [message.data.initialUploadState.imageUrl] the URL of the image to display in the message.
+       * If this value evaluates to <code>true</code>, the message will be disacarded
+       * because image URLs are not allowed in messages.
        * @param {number} [message.data.initialUploadState.uploadPercentage] the percentage of the file upload to display.
        * Allowed values are from 0 to 100.
        * 
@@ -242,7 +236,7 @@ export default {
 
   data() {
     return {
-      reImageUrl: undefined,
+      imageUrl: undefined,
       reStatus: undefined,
       reControlAllowed: undefined
     }
@@ -261,10 +255,10 @@ export default {
   mounted() {
     if (bDebug) console.log(sName, 'mounted with message', this.message);
     if (nUploadPercentage == null) {
-      let x = this.message.initialUploadState;
+      let x = this.message.data.initialUploadState;
       if (x && (x = x.uploadPercentage) !== undefined) {
         if (Number.isNaN(x = Number(x))) {
-          console.error(sName, 'Wrong uploadPercentage value [ ' + this.message.initialUploadState?.uploadPercentage + ' ], should be a number between 0 and 100');
+          console.error(sName, 'Wrong initialUploadState.uploadPercentage value [ ' + this.message.data.initialUploadState.uploadPercentage + ' ], should be a number between 0 and 100');
         } else {
           nUploadPercentage = x < 0 ? 0 : x > 100 ? 100 : x;
         }
@@ -287,19 +281,17 @@ export default {
 
 
   computed: {
-    imageUrl() {
-      return this.reImageUrl !== undefined ? this.reImageUrl : this.message.initialUploadState?.imageUrl;
-    },
     status() {
-      return this.reStatus !== undefined ? this.reStatus : this.message.initialUploadState?.status;
+      return this.reStatus !== undefined ? this.reStatus : (this.message.data.initialUploadState?.status || null);
     },
     controlAllowed() {
-      return this.reControlAllowed !== undefined ? this.reControlAllowed : this.message.initialUploadState?.controlAllowed;
+      return this.reControlAllowed !== undefined ? this.reControlAllowed : (this.message.data.initialUploadState?.controlAllowed ? true : false);
     }
   },
 
 
   methods: {
+
     async stopUpload() {
       if (bDebug) console.log(sName, 'stopUpload() for itemId', this.message.data.itemId);
       const payload = basePayload();
@@ -325,47 +317,50 @@ export default {
       if (this.$refs.spinner) {
         if (n == null) n = 0;
         this.$refs.spinner.style.background = 'conic-gradient(blue ' + n + '%, lightgrey ' + n + '%)';
+        if (bDebug) console.log(sName, 'Setting upload percentage', n);
+      } else {
+        console.log(sName, '!$refs.spinner, reStatus:', this.reStatus, ', mesaage:', this.message);
       }
     },
 
     /**
      * Sets the state of the upload.
      * 
-     * @param {object} uploadState - the upload state.
-     * @param {string|null} [uploadState.status] - the status of the upload. Possible values are
+     * @param {object} us - the upload state.
+     * @param {string|null} [us.status] - the status of the upload. Possible values are
      * SUCCEEDED, IN_PROGRESS, FAILED, INTERRUPTED and DELETED or null.
-     * @param {boolean} [uploadState.controlAllowed] - indicates if the control button should be displayed:
+     * @param {boolean} [us.controlAllowed] - indicates if the control button should be displayed:
      * for SUCCEEDED it is "Delete"; for IN_PROGRESS - "Stop"; for FAILED, INTERRUPTED and DELETED - "Re-upload".
      * If this flag is undefined, it is ignored. Otherwise, if it evaluates to <code>true</code>,
      * the corresponding button is displayed. If it evaluates to <code>false</code>, the button is suppressed.
-     * @param {number} [uploadState.uploadPercentage] the percentage of the file upload to display. Allowed values are from 0 to 100.
+     * @param {number} [us.uploadPercentage] the percentage of the file upload to display. Allowed values are from 0 to 100.
      * @param {string|null} [x.imageUrl] the URL of the image to display in the message. It can also be a data URL.
      */
-    setUploadState(uploadState) {
-      if (uploadState.hasOwnProperty('status') && uploadState.status !== undefined) {
-        if (uploadState.status !== null && !this.getContainerClassAddition(uploadState.status)) {
-          console.error(sName, 'Wrong upload status [ ' + uploadState.status + ' ]');
+    setUploadState(us) {
+      if (us.hasOwnProperty('status') && us.status !== undefined) {
+        if (us.status !== null && !this.getContainerClassAddition(us.status)) {
+          console.error(sName, 'Wrong upload status [ ' + us.status + ' ]');
           return;
         }
-        this.reStatus = uploadState.status;
+        this.reStatus = us.status;
         if (bDebug) console.log(sName, 'setUploadState, setting status', this.reStatus);
       }
-      if (uploadState.hasOwnProperty('controlAllowed') && uploadState.controlAllowed !== undefined) {
-        this.reControlAllowed = uploadState.controlAllowed ? true : false;
+      if (us.hasOwnProperty('controlAllowed') && us.controlAllowed !== undefined) {
+        this.reControlAllowed = us.controlAllowed ? true : false;
         if (bDebug) console.log(sName, 'setUploadState, setting controlAllowed', this.reControlAllowed);
       }
-      if (uploadState.hasOwnProperty('imageUrl') && uploadState.imageUrl !== undefined) {
-        this.reImageUrl = uploadState.imageUrl;
-        if (bDebug) console.log(sName, 'setUploadState, setting imageUrl', this.reImageUrl);
+      if (us.hasOwnProperty('imageUrl') && us.imageUrl !== undefined) {
+        this.imageUrl = us.imageUrl;
+        if (bDebug) console.log(sName, 'setUploadState, setting imageUrl', this.imageUrl);
       }
-      if (uploadState.hasOwnProperty('uploadPercentage') && uploadState.uploadPercentage !== undefined) {
-        const n = Number(uploadState.uploadPercentage);
+      if (us.hasOwnProperty('uploadPercentage') && us.uploadPercentage !== undefined) {
+        const n = Number(us.uploadPercentage);
         if (Number.isNaN(n)) {
-          console.error(sName, 'Wrong uploadPercentage value [ ' + uploadState.status + ' ], should be a number between 0 and 100');
+          console.error(sName, 'Wrong uploadPercentage value [ ' + us.status + ' ], should be a number between 0 and 100');
         } else {
           nUploadPercentage = n < 0 ? 0 : n > 100 ? 100 : n;
-          this.assignSpinnerValue(nUploadPercentage);
           if (bDebug) console.log(sName, 'setUploadState, applying uploadPercentage', nUploadPercentage);
+          this.assignSpinnerValue(nUploadPercentage);
         }
       }
     },
