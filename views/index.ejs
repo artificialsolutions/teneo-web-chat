@@ -133,33 +133,59 @@ TeneoWebChat.call('hide_upload_panel');
 (() => {
 
 // TODO Re-implement the fileUploader object for your file upload service!
-// It should have public methods start(item) to start the asynchronous
-// file upload, cancel(item) to cancel it and calcelAll() to cancel all the
-// initiated but not yet finished files uploads.
 const fileUploader = {
 
-    itemIdToUploadProcessId: null,
+    itemIdToProcessId: null,
     itemIdToProgressTickerId: null,
     itemIdToCallback: null,
 
-    upload(item, callback) {
-        if (this.itemIdToUploadProcessId == null) this.itemIdToUploadProcessId = {};
-        if (this.itemIdToProgressTickerId == null) this.itemIdToProgressTickerId = {};
+    stopTicker(itemId) {
+        if (this.itemIdToProgressTickerId == null) return;
+        clearInterval(this.itemIdToProgressTickerId[itemId]);
+        delete this.itemIdToProgressTickerId[itemId];
+    },
+
+    deleteFile(itemId, callback) {
+        if (this.itemIdToProcessId == null) this.itemIdToProcessId = {};
+        else if (this.itemIdToProcessId[itemId]) {
+            if (callback && callback.onRejected) callback.onRejected();
+            return;
+        }
+        this.stopTicker(itemId);
         if (this.itemIdToCallback == null) this.itemIdToCallback = {};
+        if (callback) this.itemIdToCallback[itemId] = callback;
+
+        this.itemIdToProcessId[itemId] = setTimeout(() => {
+            delete this.itemIdToProcessId[itemId];
+            delete this.itemIdToCallback[itemId];
+            //const bFileDeletionSuccessful = Math.random() < 0.5;
+            const bFileDeletionSuccessful = true;
+            if (bFileDeletionSuccessful) {
+                if (callback && callback.onSucceeded) callback.onSucceeded();
+            } else {
+                if (callback && callback.onFailed) callback.onFailed(new Error('Deletion failure'));
+            }
+        }, 2000);
+    },
+
+    uploadFile(item, callback) {
+        if (this.itemIdToProcessId == null) this.itemIdToProcessId = {};
+        else if (this.itemIdToProcessId[item.id]) {
+            if (callback && callback.onRejected) callback.onRejected();
+            return;
+        }
+        if (this.itemIdToCallback == null) this.itemIdToCallback = {};
+        if (this.itemIdToProgressTickerId == null) this.itemIdToProgressTickerId = {};
 
         var nUploadPercentage = 0;
 
         const bFileUploadSuccessful = Math.random() < 0.5,
         delayMillis = Math.random() * 20000,
         tickerInterval = delayMillis / (bFileUploadSuccessful || Math.random() < 0.5 ? 10 : 10 * Math.random()),
-        stopTicker = () => {
-            clearInterval(this.itemIdToProgressTickerId[item.id]);
-            delete this.itemIdToProgressTickerId[item.id];
-        },
         updateUploadPercentage = () => {
             if (callback && callback.onUploadPersentageChanged) callback.onUploadPersentageChanged(nUploadPercentage);
             if (nUploadPercentage < 100) nUploadPercentage += 10;
-            else stopTicker();
+            else this.stopTicker(item.id);
         };
 
         console.log('fileUploader, itemId', item.id, 'bFileUploadSuccessful', bFileUploadSuccessful, 'delayMillis', delayMillis, 'tickerInterval', tickerInterval);
@@ -169,50 +195,51 @@ const fileUploader = {
         updateUploadPercentage();
         this.itemIdToProgressTickerId[item.id] = setInterval(updateUploadPercentage, tickerInterval);
 
-        this.itemIdToUploadProcessId[item.id] = setTimeout(() => {
-            stopTicker();
-            delete this.itemIdToUploadProcessId[item.id];
-            delete this.itemIdToCallback[item.id];
+        this.itemIdToProcessId[item.id] = setTimeout(() => {
+            this.stopTicker(item.id);
+            if (this.itemIdToProcessId) {
+                delete this.itemIdToProcessId[item.id];
+            }
+            if (this.itemIdToCallback) {
+                delete this.itemIdToCallback[item.id];
+            }
             if (bFileUploadSuccessful) {
-                if (callback && callback.onSuccess) callback.onSuccess();
+                if (callback && callback.onSucceeded) callback.onSucceeded();
             } else {
-                if (callback && callback.onFailure) callback.onFailure(new Error('Upload failure'));
+                if (callback && callback.onFailed) callback.onFailed(new Error('Upload failure'));
             }
         }, delayMillis);
     },
 
-    cancel(item) {
+    interrupt(itemId) {
+        this.stopTicker(itemId);
         if (this.itemIdToCallback) {
-            const callback = this.itemIdToCallback[item.id];
+            const callback = this.itemIdToCallback[itemId];
             if (callback) {
-                delete this.itemIdToCallback[item.id];
-                if (callback.onCancelled && this.itemIdToUploadProcessId && this.itemIdToUploadProcessId[item.id]) {
-                    setTimeout(() => callback.onCancelled());
+                delete this.itemIdToCallback[itemId];
+                if (callback.onInterrupted && this.itemIdToProcessId && this.itemIdToProcessId[itemId]) {
+                    setTimeout(() => callback.onInterrupted());
                 }
             }
         }
-        if (this.itemIdToUploadProcessId) {
-            clearTimeout(this.itemIdToUploadProcessId[item.id]);
-            delete this.itemIdToUploadProcessId[item.id];
-        }
-        if (this.itemIdToProgressTickerId) {
-            clearInterval(this.itemIdToProgressTickerId[item.id]);
-            delete this.itemIdToProgressTickerId[item.id];
+        if (this.itemIdToProcessId) {
+            clearTimeout(this.itemIdToProcessId[itemId]);
+            delete this.itemIdToProcessId[itemId];
         }
     },
 
-    cancelAll() {
+    interruptAll() {
         if (this.itemIdToCallback) {
-            if (this.itemIdToUploadProcessId) {
+            if (this.itemIdToProcessId) {
                 Object.entries(this.itemIdToCallback).forEach(e => {
-                    if (e[1].onCancelled && this.itemIdToUploadProcessId[e[0]]) setTimeout(() => e[1].onCancelled());
+                    if (e[1].onInterrupted && this.itemIdToProcessId[e[0]]) setTimeout(() => e[1].onInterrupted());
                 });
             }
             this.itemIdToCallback = null;
         }
-        if (this.itemIdToUploadProcessId) {
-            Object.values(this.itemIdToUploadProcessId).forEach(processId => clearTimeout(processId));
-            this.itemIdToUploadProcessId = null;
+        if (this.itemIdToProcessId) {
+            Object.values(this.itemIdToProcessId).forEach(processId => clearTimeout(processId));
+            this.itemIdToProcessId = null;
         }
         if (this.itemIdToProgressTickerId) {
             Object.values(this.itemIdToProgressTickerId).forEach(processId => clearInterval(processId));
@@ -226,7 +253,7 @@ var itemIdToUploadState, itemIdToControllableItem;
 
 
 const clearFileUploads = () => {
-    fileUploader.cancelAll();
+    fileUploader.interruptAll();
     itemIdToUploadState = null;
     itemIdToControllableItem = null;
     TeneoWebChat.get('storage').removeItem('twc_itemIdToUploadState');
@@ -240,48 +267,37 @@ outputBotText = sText => TeneoWebChat.call('add_message', {
 }),
 
 
-modifyUploadState = (itemId, uploadStatus, uploadPercentage, controlAllowed) => {
-    if (itemIdToUploadState == null) {
-        console.warn('modifyUploadState, itemIdToUploadState==null, itemId', itemId);
-        return;
+setUploadState = (itemId, uploadState) => {
+    if (uploadState.status !== undefined || uploadState.controlAllowed !== undefined) {
+        if (itemIdToUploadState == null) {
+            console.warn('setUploadState, itemIdToUploadState==null, itemId', itemId);
+            return;
+        }
+        const us = itemIdToUploadState[itemId];
+        if (us == null) {
+            console.warn('setUploadState, uploadState==null, itemId', itemId);
+            return;
+        }
+        if (uploadState.status !== undefined) us.status = uploadState.status;
+        if (uploadState.controlAllowed !== undefined) us.controlAllowed = uploadState.controlAllowed;
+        TeneoWebChat.get('storage').setItem('twc_itemIdToUploadState', JSON.stringify(itemIdToUploadState));
     }
-    const uploadState = itemIdToUploadState[itemId];
-    if (uploadState == null) {
-        console.warn('modifyUploadState, uploadState==null, itemId', itemId);
-        return;
-    }
-    uploadState.status = uploadStatus;
-    TeneoWebChat.get('storage').setItem('twc_itemIdToUploadState', JSON.stringify(itemIdToUploadState));
-    const payload = {
+
+    TeneoWebChat.call('set_upload_state', {
         itemId: itemId,
         uploadState: uploadState
-    };
-    if (uploadPercentage != null) payload.uploadPercentage = uploadPercentage;
-    if (controlAllowed != null) payload.controlAllowed = controlAllowed;
-    TeneoWebChat.call('set_upload_state', payload);
+    });
 },
 
 
 uploadFile = item => {
     if (itemIdToControllableItem == null) itemIdToControllableItem = {};
     itemIdToControllableItem[item.id] = item;
-    fileUploader.upload(item, {
-        onUploadPersentageChanged: nUploadPercentage => {
-            if (itemIdToUploadState && itemIdToUploadState[item.id]) {
-                TeneoWebChat.call('set_upload_state', {
-                    itemId: item.id,
-                    uploadState: {
-                        uploadPercentage: nUploadPercentage
-                    }
-                });
-            }
-        }, onSuccess: () => {
-            modifyUploadState(item.id, 'SUCCEEDED');
-        }, onFailure: err => {
-            modifyUploadState(item.id, 'FAILED', 0);
-        }, onCancelled: () => {
-            modifyUploadState(item.id, 'INTERRUPTED', 0);
-        }
+    fileUploader.uploadFile(item, {
+        onSucceeded: () => setUploadState(item.id, { status: 'SUCCEEDED' }),
+        onFailed: err => setUploadState(item.id, { status: 'FAILED', uploadPercentage: 0 }),
+        onInterrupted: () => setUploadState(item.id, { status: 'INTERRUPTED', uploadPercentage: 0 }),
+        onUploadPersentageChanged: uploadPercentage => setUploadState(item.id, { uploadPercentage: uploadPercentage })
     });
 };
 
@@ -370,13 +386,24 @@ TeneoWebChat.on('upload_panel_cancel', payload => {
 
 TeneoWebChat.on('upload_file_delete_clicked', payload => {
     console.log('upload_file_delete_clicked', payload);
-    modifyUploadState(payload.itemId, 'DELETED', 0);
+    fileUploader.deleteFile(payload.itemId, {
+        onSucceeded: () => {
+            setUploadState(payload.itemId, {
+                status: 'DELETED',
+                uploadPercentage: 0,
+                controlAllowed: itemIdToControllableItem != null && itemIdToControllableItem[payload.itemId]
+            });
+        }, onFailed: () => {
+            // A simulated deletion failure
+            console.log('Deletion failed for itemId', payload.itemId);
+        }
+    });
 });
 
 
 TeneoWebChat.on('upload_file_stop_clicked', payload => {
     console.log('upload_file_stop_clicked', payload);
-    modifyUploadState(payload.itemId, 'INTERRUPTED', 0);
+    fileUploader.interrupt(payload.itemId);
 });
 
 
@@ -391,7 +418,7 @@ TeneoWebChat.on('upload_file_restart_clicked', payload => {
         return;
     }
     console.log('upload_file_restart_clicked', payload);
-    modifyUploadState(payload.itemId, 'IN_PROGRESS', 5, true);
+    setUploadState(payload.itemId, { status: 'IN_PROGRESS', controlAllowed: true, uploadPercentage: 5 });
     uploadFile(item);
 });
 

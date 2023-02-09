@@ -9,7 +9,7 @@
         <a v-if="controlAllowed" @click="deleteFile" class="twc-upload-file-action-delete" role="button" title="Delete file">&#x2715;</a>
         <span class="twc-upload-file-status">Succeeded</span>
       </template>
-      <template v-if="status === 'IN_PROGRESS'">
+      <template v-else-if="status === 'IN_PROGRESS'">
         <span ref="spinner" class="twc-upload-file-progress-spinner"></span>
         <a v-if="controlAllowed" @click="stopUpload" class="twc-upload-file-middle-circle twc-upload-file-stop" role="button" title="Stop upload">&#10007;</a>
         <span v-else class="twc-upload-file-middle-circle"></span>
@@ -255,6 +255,8 @@ export default {
   mounted() {
     if (bDebug) console.log(sName, 'mounted with message', this.message);
     if (nUploadPercentage == null) {
+      // nUploadPercentage has not been set explicitly.
+      // Reading it from the message:
       let x = this.message.data.initialUploadState;
       if (x && (x = x.uploadPercentage) !== undefined) {
         if (Number.isNaN(x = Number(x))) {
@@ -337,7 +339,7 @@ export default {
      * @param {string|null} [x.imageUrl] the URL of the image to display in the message. It can also be a data URL.
      */
     setUploadState(us) {
-      if (us.hasOwnProperty('status') && us.status !== undefined) {
+      if (us.status !== undefined) {
         if (us.status !== null && !this.getContainerClassAddition(us.status)) {
           console.error(sName, 'Wrong upload status [ ' + us.status + ' ]');
           return;
@@ -345,15 +347,15 @@ export default {
         this.reStatus = us.status;
         if (bDebug) console.log(sName, 'setUploadState, setting status', this.reStatus);
       }
-      if (us.hasOwnProperty('controlAllowed') && us.controlAllowed !== undefined) {
+      if (us.controlAllowed !== undefined) {
         this.reControlAllowed = us.controlAllowed ? true : false;
         if (bDebug) console.log(sName, 'setUploadState, setting controlAllowed', this.reControlAllowed);
       }
-      if (us.hasOwnProperty('imageUrl') && us.imageUrl !== undefined) {
+      if (us.imageUrl !== undefined) {
         this.imageUrl = us.imageUrl;
         if (bDebug) console.log(sName, 'setUploadState, setting imageUrl', this.imageUrl);
       }
-      if (us.hasOwnProperty('uploadPercentage') && us.uploadPercentage !== undefined) {
+      if (us.uploadPercentage !== undefined) {
         const n = Number(us.uploadPercentage);
         if (Number.isNaN(n)) {
           console.error(sName, 'Wrong uploadPercentage value [ ' + us.status + ' ], should be a number between 0 and 100');
