@@ -46,8 +46,8 @@ export const API_SET_ENGINE_PARAMS = 'set_engine_params';
 export const API_SET_MS_VOICE = 'set_ms_voice';
 
 // TODO ALPE
-export const API_CALL_HIDE_UPLOAD_PANEL = 'hide_upload_panel';
-export const API_CALL_SHOW_UPLOAD_PANEL = 'show_upload_panel';
+export const API_CALL_HIDE_UPLOAD_PANNEL = 'hide_upload_pannel';
+export const API_CALL_SHOW_UPLOAD_PANNEL = 'show_upload_pannel';
 
 // Add dedicated add typing indicator method
 export const API_CALL_HIDE_TYPING_INDICATOR = 'hide_typing_indicator';
@@ -82,8 +82,8 @@ export const API_ON_TTS_BUTTON_CLICK = 'tts_button_clicked';
 export const API_ON_RESET = 'reset';
 
 // TODO ALPE
-export const API_ON_UPLOAD_PANEL_SUBMIT = 'upload_panel_submit';
-export const API_ON_UPLOAD_PANEL_CANCEL = 'upload_panel_cancel';
+export const API_ON_UPLOAD_PANNEL_SUBMIT = 'upload_pannel_submit';
+export const API_ON_UPLOAD_PANNEL_CANCEL = 'upload_pannel_cancel';
 
 export const API_ON_SET_UPLOAD_STATE = 'set_upload_state';
 

@@ -46,8 +46,8 @@ export const events = {
     ZOOM_IMAGE: 'zoom_image',
 
     // TODO ALPE
-    HIDE_UPLOAD_PANEL: 'hide_upload_panel',
-    SHOW_UPLOAD_PANEL: 'show_upload_panel',
+    HIDE_UPLOAD_PANNEL: 'hide_upload_pannel',
+    SHOW_UPLOAD_PANNEL: 'show_upload_pannel',
     SET_UPLOAD_STATE: 'set_upload_state'
 };
 

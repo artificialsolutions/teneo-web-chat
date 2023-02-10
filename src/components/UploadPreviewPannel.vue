@@ -1,6 +1,6 @@
 <template>
   <div v-if="idToItem != null" 
-    class="twc-upload-preview-panel"
+    class="twc-upload-preview-pannel"
     contenteditable="true"
     style="caret-color:transparent"
     onbeforeinput="return false"
@@ -60,8 +60,8 @@
 
 <style scoped>
 
-/* Parent: hall panel */
-.twc-upload-preview-panel {
+/* Parent: hall pannel */
+.twc-upload-preview-pannel {
   box-sizing: border-box;
   height: auto;
   border: none;
@@ -74,7 +74,7 @@
   outline: 0px solid transparent;
 }
 
-.twc-upload-preview-panel-drag {
+.twc-upload-preview-pannel-drag {
   background-color: var(--user-input-fg-color, #565867);
   opacity: 60%;
 }
@@ -274,7 +274,7 @@ button:nth-child(4){
 /* <![CDATA[ */
 
 import { EventBus, events } from '../utils/event-bus.js';
-import { API_ON_UPLOAD_PANEL_SUBMIT, API_ON_UPLOAD_PANEL_CANCEL } from '../utils/api-function-names.js';
+import { API_ON_UPLOAD_PANNEL_SUBMIT, API_ON_UPLOAD_PANNEL_CANCEL } from '../utils/api-function-names.js';
 import basePayload from '../utils/base-payload.js';
 import handleExtension from '../utils/handle-extension.js';
 
@@ -282,7 +282,7 @@ import handleExtension from '../utils/handle-extension.js';
 var idToExtraData = null;
 
 
-const bDebug = true, sName = 'UploadPreviewPanel',
+const bDebug = true, sName = 'UploadPreviewPannel',
 
 MAX_IMG_PREVIEW_WIDTH = 32, MAX_IMG_PREVIEW_HEIGHT = 32,
 
@@ -365,8 +365,8 @@ export default {
 
   mounted() {
     if (bDebug) console.log(sName, 'mounted');
-    EventBus.$on(events.SHOW_UPLOAD_PANEL, payload => this.open(payload));
-    EventBus.$on(events.HIDE_UPLOAD_PANEL, () => this.close());
+    EventBus.$on(events.SHOW_UPLOAD_PANNEL, payload => this.open(payload));
+    EventBus.$on(events.HIDE_UPLOAD_PANNEL, () => this.close());
   },
 
 
@@ -386,8 +386,8 @@ export default {
 
   unmounted() {
     if (bDebug) console.log(sName, 'unmounted');
-    EventBus.$off(events.SHOW_UPLOAD_PANEL);
-    EventBus.$off(events.HIDE_UPLOAD_PANEL);
+    EventBus.$off(events.SHOW_UPLOAD_PANNEL);
+    EventBus.$off(events.HIDE_UPLOAD_PANNEL);
   },
 
 
@@ -396,26 +396,26 @@ export default {
     onDragOver(evt) {
       if (bDebug) console.log(sName, 'onDragOver(), processing:', this.processing);
       if (this.processing) return;
-      evt.currentTarget.classList.add("twc-upload-preview-panel-drag");
+      evt.currentTarget.classList.add("twc-upload-preview-pannel-drag");
     },
 
 
     onDragEnter(evt) {
       if (bDebug) console.log(sName, 'onDragEnter(), processing:', this.processing);
       if (this.processing) return;
-      evt.currentTarget.classList.add("twc-upload-preview-panel-drag");
+      evt.currentTarget.classList.add("twc-upload-preview-pannel-drag");
     },
 
 
     onDragLeave(evt) {
       if (bDebug) console.log(sName, 'onDragLeave(), processing:', this.processing);
-      evt.currentTarget.classList.remove("twc-upload-preview-panel-drag");
+      evt.currentTarget.classList.remove("twc-upload-preview-pannel-drag");
     },
 
 
     addFilesFromDrop(evt) {
       if (bDebug) console.log(sName, 'addFilesFromDrop(), processing:', this.processing);
-      evt.currentTarget.classList.remove("twc-upload-preview-panel-drag");
+      evt.currentTarget.classList.remove("twc-upload-preview-pannel-drag");
       if (this.processing) return;
       this.addFiles(evt.dataTransfer.files);
     },
@@ -504,15 +504,15 @@ export default {
           for (var item, i = 0; i < payload.items.length; i++) {
             item = payload.items[i];
             if (item == null) {
-              console.warn(sName, 'open(), item at index', i, 'is undefined when opening an upload panel');
+              console.warn(sName, 'open(), item at index', i, 'is undefined when opening an upload pannel');
               continue;
             }
             if (item.id == null) {
-              console.warn(sName, 'open(), item.id at index', i, 'is undefined when opening an upload panel');
+              console.warn(sName, 'open(), item.id at index', i, 'is undefined when opening an upload pannel');
               continue;
             }
             if (item.file == null) {
-              console.warn(sName, 'open(), item.file at index', i, 'is undefined when opening an upload panel');
+              console.warn(sName, 'open(), item.file at index', i, 'is undefined when opening an upload pannel');
               continue;
             }
             if (!this.idToItem.hasOwnProperty(item.id)) this.itemsCount++;
@@ -556,7 +556,7 @@ export default {
       const payload = basePayload();
       payload.itemsCount = this.itemsCount;
       try {
-        await handleExtension(API_ON_UPLOAD_PANEL_CANCEL, payload);
+        await handleExtension(API_ON_UPLOAD_PANNEL_CANCEL, payload);
       } finally {
         this.processing = false;
         if (bDebug) console.log(sName, 'clickCancel() end, payload:', getPrintableDebugObject(payload));
@@ -591,7 +591,7 @@ export default {
       }
       payload.comment = this.comment;
       try {
-        await handleExtension(API_ON_UPLOAD_PANEL_SUBMIT, payload);
+        await handleExtension(API_ON_UPLOAD_PANNEL_SUBMIT, payload);
       } finally {
         this.processing = false;
         if (bDebug) console.log(sName, 'clickSubmit() end, payload:', getPrintableDebugObject(payload));

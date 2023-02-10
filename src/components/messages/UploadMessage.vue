@@ -6,33 +6,33 @@
       <span v-else class="twc-upload-file-representation twc-upload-file-representation-symbol">{{ message.data.fileSymbol || message.data.fileName || '#' }}</span>
 
       <template v-if="status === 'SUCCEEDED'">
-        <a v-if="controlAllowed" @click="deleteFile" class="twc-upload-file-action-delete" role="button" title="Delete file">&#x2715;</a>
+        <a v-if="controlAllowed" role="button" @click="deleteFile" class="twc-upload-file-cta twc-upload-file-action-delete" title="Delete file">&#x2715;</a>
         <span class="twc-upload-file-status">Succeeded</span>
       </template>
       <template v-else-if="status === 'IN_PROGRESS'">
         <span ref="spinner" class="twc-upload-file-progress-spinner"></span>
-        <a v-if="controlAllowed" @click="stopUpload" class="twc-upload-file-middle-circle twc-upload-file-stop" role="button" title="Stop upload">&#10007;</a>
+        <a v-if="controlAllowed" role="button" @click="stopUpload" class="twc-upload-file-cta twc-upload-file-middle-circle twc-upload-file-stop" title="Stop upload">&#10007;</a>
         <span v-else class="twc-upload-file-middle-circle"></span>
         <span class="twc-upload-file-status">In progress</span>
       </template>
       <template v-else-if="status === 'INTERRUPTED'">
         <template v-if="controlAllowed">
           <span ref="spinner" class="twc-upload-file-progress-spinner"></span>
-          <a @click="restartUpload" class="twc-upload-file-middle-circle twc-upload-file-restart" role="button" title="Restart upload">&#8687;</a>
+          <a @click="restartUpload" role="button" class="twc-upload-file-cta twc-upload-file-middle-circle twc-upload-file-restart" title="Restart upload">&#8687;</a>
         </template>
         <span class="twc-upload-file-status">Interrupted</span>
       </template>
       <template v-else-if="status === 'FAILED'">
         <template v-if="controlAllowed">
           <span ref="spinner" class="twc-upload-file-progress-spinner"></span>
-          <a @click="restartUpload" class="twc-upload-file-middle-circle twc-upload-file-restart" role="button" title="Restart upload">&#8687;</a>
+          <a @click="restartUpload" role="button" class="twc-upload-file-cta twc-upload-file-middle-circle twc-upload-file-restart" title="Restart upload">&#8687;</a>
         </template>
         <span class="twc-upload-file-status">Failed</span>
       </template>
       <template v-else-if="status === 'DELETED'">
         <template v-if="controlAllowed">
           <span ref="spinner" class="twc-upload-file-progress-spinner"></span>
-          <a @click="restartUpload" class="twc-upload-file-middle-circle twc-upload-file-restart" role="button" title="Restart upload">&#8687;</a>
+          <a @click="restartUpload" role="button" class="twc-upload-file-cta twc-upload-file-middle-circle twc-upload-file-restart" title="Restart upload">&#8687;</a>
         </template>
         <span class="twc-upload-file-status">Deleted</span>
       </template>
@@ -114,6 +114,10 @@
   opacity: 1;
 }
 
+.twc-upload-file-cta {
+  cursor: pointer;
+}
+
 .twc-upload-file-action-delete {
   position: absolute;
   bottom: 0;
@@ -121,12 +125,6 @@
   color: black;
   background-color: red;
   border: thin solid black;
-  /*
-  display: flex;
-  align-items: center;
-  align-content: center;
-  justify-content: center;
-  */
   padding: 0.1rem;
   margin: 0.1rem;
 }
@@ -166,7 +164,7 @@ import {
 
 const bDebug = true, sName = 'UploadMessage';
 
-let nUploadPercentage;
+let nUploadPercentage, bProcessing;
 
 
 export default {
@@ -203,7 +201,7 @@ export default {
        * If this flag is undefined, it is ignored. Otherwise, if it evaluates to <code>true</code>,
        * the corresponding button is displayed. If it evaluates to <code>false</code>, the button is suppressed.
        * @param {?} [message.data.initialUploadState.imageUrl] the URL of the image to display in the message.
-       * If this value evaluates to <code>true</code>, the message will be disacarded
+       * If this value evaluates to <code>true</code>, the message will be discarded
        * because image URLs are not allowed in messages.
        * @param {number} [message.data.initialUploadState.uploadPercentage] the percentage of the file upload to display.
        * Allowed values are from 0 to 100.
@@ -295,24 +293,49 @@ export default {
   methods: {
 
     async stopUpload() {
+      if (bProcessing) {
+        if (bDebug) console.log(sName, 'stopUpload(), already processing for itemId', this.message.data.itemId);
+        return;
+      }
+      bProcessing = true;
       if (bDebug) console.log(sName, 'stopUpload() for itemId', this.message.data.itemId);
       const payload = basePayload();
       payload.itemId = this.message.data.itemId;
-      await handleExtension(API_ON_UPLOAD_FILE_STOP_CLICK, payload);
+      try {
+        await handleExtension(API_ON_UPLOAD_FILE_STOP_CLICK, payload);
+      } finally {
+        bProcessing = false;
+      }
     },
 
     async restartUpload() {
+      if (bProcessing) {
+        if (bDebug) console.log(sName, 'restartUpload(), already processing for itemId', this.message.data.itemId);
+        return;
+      }
       if (bDebug) console.log(sName, 'restartUpload() for itemId', this.message.data.itemId);
       const payload = basePayload();
       payload.itemId = this.message.data.itemId;
-      await handleExtension(API_ON_UPLOAD_FILE_RESTART_CLICK, payload);
+      try {
+        await handleExtension(API_ON_UPLOAD_FILE_RESTART_CLICK, payload);
+      } finally {
+        bProcessing = false;
+      }
     },
 
     async deleteFile() {
+      if (bProcessing) {
+        if (bDebug) console.log(sName, 'deleteFile(), already processing for itemId', this.message.data.itemId);
+        return;
+      }
       if (bDebug) console.log(sName, 'deleteFile() for itemId', this.message.data.itemId);
       const payload = basePayload();
       payload.itemId = this.message.data.itemId;
-      await handleExtension(API_ON_UPLOAD_FILE_DELETE_CLICK, payload);
+      try {
+        await handleExtension(API_ON_UPLOAD_FILE_DELETE_CLICK, payload);
+      } finally {
+        bProcessing = false;
+      }
     },
 
     assignSpinnerValue(n) {
@@ -321,7 +344,7 @@ export default {
         this.$refs.spinner.style.background = 'conic-gradient(blue ' + n + '%, lightgrey ' + n + '%)';
         if (bDebug) console.log(sName, 'Setting upload percentage', n);
       } else {
-        console.log(sName, '!$refs.spinner, reStatus:', this.reStatus, ', mesaage:', this.message);
+        if (bDebug) console.log(sName, '!$refs.spinner, reStatus:', this.reStatus, ', mesaage:', this.message);
       }
     },
 
