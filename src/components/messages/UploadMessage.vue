@@ -2,7 +2,7 @@
   <div v-if="status" :class="'twc-upload-file' + getContainerClassAddition(status)">
     <div class="twc-upload-file-visualization">
 
-      <img v-if="imageUrl" src="imageUrl" ref="fileImageElement" class="twc-upload-file-representation twc-upload-file-representation-image" :style="status === 'SUCCEEDED' ? 'filter:blur(0)' : 'filter:blur(4px)'" :alt="message.data.fileName"/>
+      <img v-if="imageUrl" :src="imageUrl" ref="fileImageElement" class="twc-upload-file-representation twc-upload-file-representation-image" :alt="message.data.fileName"/>
       <span v-else class="twc-upload-file-representation twc-upload-file-representation-symbol">{{ message.data.fileSymbol || message.data.fileName || '#' }}</span>
 
       <template v-if="status === 'SUCCEEDED'">
@@ -85,6 +85,14 @@
   align-content: center;
   justify-content: center;
   background-color: cyan;
+}
+
+.twc-upload-file.twc-upload-file-succeeded .twc-upload-file-representation-image {
+  filter: blur(0);
+}
+
+.twc-upload-file:not(.twc-upload-file-succeeded) .twc-upload-file-representation-image {
+  filter: blur(4px);
 }
 
 .twc-upload-file-progress-spinner {
