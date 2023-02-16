@@ -273,24 +273,56 @@ button:nth-child(4){
 <script>
 /* <![CDATA[ */
 
+// TODO ALPE
+
 import { EventBus, events } from '../utils/event-bus.js';
 import { API_ON_UPLOAD_PANNEL_SUBMIT, API_ON_UPLOAD_PANNEL_CANCEL } from '../utils/api-function-names.js';
 import basePayload from '../utils/base-payload.js';
 import handleExtension from '../utils/handle-extension.js';
 
-
+/**
+ * Mapping from item ID to the extra data for that item. This extra data is not kept in the item itself
+ * to avoid reactive effects. It can include the size of the image, its data URL and eventual visualization
+ * errors.
+ * 
+ * @type {(object|null|undefined)}
+ */
 var idToExtraData = null;
 
+/**
+ * Indicates if additiona debug information should be logged.
+ * 
+ * @const {boolean}
+ */
+const bDebug = true,
 
-const bDebug = true, sName = 'UploadPreviewPannel',
+/**
+ * The name of the component, to be used for debug purposes.
+ * 
+ * @const {string}
+ */
+sName = 'UploadPreviewPannel',
 
-MAX_IMG_PREVIEW_WIDTH = 32, MAX_IMG_PREVIEW_HEIGHT = 32,
+/**
+ * Max image width in preview, in pixels.
+ * 
+ * @const {number}
+ */
+MAX_IMG_PREVIEW_WIDTH = 32,
+
+/**
+ * Max image height in preview, in pixels.
+ * 
+ * @const {number}
+ */
+ MAX_IMG_PREVIEW_HEIGHT = 32,
 
 
 newId = () => {
   const s = Math.random().toString(36);
-  // Adding a leading non-digit to guarantee the key cannot be interpreted as a
-  // number, to prevent number-induced ordering of the entries in the object:
+  // Adding a leading non-digit and non-letter to guarantee the key cannot be
+  // interpreted as a number, to prevent number-induced ordering of the entries
+  // in the object:
   return ':' + Date.now().toString(36) + s.substring(s.indexOf('.') + 1);
 },
 
@@ -317,12 +349,6 @@ getPreuploadCaption = file => {
 },
 
 
-getPostuploadCaption = file => {
-  var s = file.name;
-  return (!s || (s = s.trim()).length === 0) ? '#' : s;
-},
-
-
 getPrintableDebugObject = obj => {
   if (obj == null) return obj;
   if (Array.isArray(obj)) return obj.map(x => getPrintableDebugObject(x));
@@ -340,16 +366,12 @@ getPrintableDebugObject = obj => {
 },
 
 getFileExtension = file => {
-  var filename = file.name;
-  
-  console.log(filename);
-  if (!filename || ( filename = filename.trim()).length === 0) return '#';
-  else {
-    const extension = filename.split('.').pop();
-    return extension;
-  }
-  
+  var s = file.name;
+  if (!s) return '#';
+  const n = s.lastIndexOf('.');
+  return (n === -1 || (s = s.substring(n + 1).trim()).length === 0) ? '#' : s;
 };
+
 
 export default {
 
@@ -571,7 +593,7 @@ export default {
       if (this.processing) return;
       this.processing = true;
       const payload = basePayload();
-      
+
       payload.items = [];
       if (this.idToItem) {
         //payload.items = Object.values(this.idToItem);
@@ -661,172 +683,6 @@ export default {
       }
     },
 
-    /*
-    __insertImage(canvasElement, item) {
-      if (bDebug) console.log(sName, 'insertImage()');
-
-      var blobURL, extraData = idToExtraData[item.id];
-      if (extraData) {
-        canvasElement.width = extraData.width;
-        canvasElement.height = extraData.height;
-        blobURL = extraData.blobURL;
-      } else {
-        blobURL = window.URL.createObjectURL(item.file);
-      }
-      const img = new window.Image();
-
-      img.onload = () => {
-        if (bDebug) console.log(sName, 'insertImage(), img.onload, img.width==' + img.width + ', img.height==' + img.height);
-        //window.URL.revokeObjectURL(blobURL);
-        //blobURL = null;
-        if (Number.isFinite(img.width) && img.width > 0 && Number.isFinite(img.height) && img.height > 0) {
-          let x;
-          if (extraData == null) {
-            let w = MAX_IMG_PREVIEW_WIDTH / img.width, h = MAX_IMG_PREVIEW_HEIGHT / img.height;
-            if (w < h) {
-              // w is the reference, width > height
-              h = w * img.height;
-              w *= img.width;
-              // here, w === MAX_IMG_PREVIEW_WIDTH
-              x = w / 4;
-              if (h < x) h = x;
-            } else {
-              // h is the reference, height > width
-              w = h * img.width;
-              h *= img.height;
-              // here, h === MAX_IMG_PREVIEW_HEIGHT
-              x = h / 4;
-              if (w < x) w = x;
-            }
-            canvasElement.width = w;
-            canvasElement.height = h;
-            idToExtraData[item.id] = extraData = {
-              width: w,
-              height: h,
-              blobURL: blobURL
-            };
-          }
-
-          x = canvasElement.getContext("2d");
-          if (x != null) {
-            if (bDebug) console.log(sName, 'insertImage(), img.onload, drawImage, extraData:', extraData);
-            try {
-              x.drawImage(img, 0, 0, extraData.width, extraData.height);
-            } catch (err) {
-              console.warn(sName, 'insertImage(), failure drawing image [' + item.file.name + '] in preload preview canvas', err);
-              this.insertTextCaption(canvasElement, item);
-            }
-          } else {
-            if (blobURL) {
-              window.URL.revokeObjectURL(blobURL);
-              blobURL = null;
-            }
-            delete idToExtraData[item.id];
-            alert('No context for image in preload preview canvas');
-            console.error(sName, 'insertImage(), no context for image [' + item.file.name + '] in preload preview canvas');
-            setTimeout(() => this.removeItem(item));
-          }
-        } else {
-          if (blobURL) {
-            window.URL.revokeObjectURL(blobURL);
-            blobURL = null;
-          }
-          if (extraData) delete extraData.blobURL;
-          console.warn(sName, 'insertImage(), bad image size, width', img.width, 'height', img.height);
-          this.insertTextCaption(canvasElement, item);
-        }
-      };
-
-      img.onerror = e => {
-        console.warn(sName, 'insertImage(), failure preparing image [' + item.file.name + '] in preload preview canvas', e);
-        window.URL.revokeObjectURL(blobURL);
-        blobURL = null;
-        if (extraData) delete extraData.blobURL;
-        this.insertTextCaption(canvasElement, item);
-      };
-
-      img.src = blobURL;
-    },
-
-
-    _insertImage(canvasElement, item) {
-      if (bDebug) console.log(sName, 'insertImage()');
-      var extraData = idToExtraData[item.id];
-      if (extraData) {
-        canvasElement.width = extraData.width;
-        canvasElement.height = extraData.height;
-      }
-      var blobURL = window.URL.createObjectURL(item.file);
-      const img = new window.Image();
-
-      img.onload = () => {
-        if (bDebug) console.log(sName, 'insertImage(), img.onload, img.width==' + img.width + ', img.height==' + img.height);
-        window.URL.revokeObjectURL(blobURL);
-        blobURL = null;
-        if (Number.isFinite(img.width) && img.width > 0 && Number.isFinite(img.height) && img.height > 0) {
-          let x;
-          if (extraData == null) {
-            let w = MAX_IMG_PREVIEW_WIDTH / img.width, h = MAX_IMG_PREVIEW_HEIGHT / img.height;
-            if (w < h) {
-              // w is the reference, width > height
-              h = w * img.height;
-              w *= img.width;
-              // here, w === MAX_IMG_PREVIEW_WIDTH
-              x = w / 4;
-              if (h < x) h = x;
-            } else {
-              // h is the reference, height > width
-              w = h * img.width;
-              h *= img.height;
-              // here, h === MAX_IMG_PREVIEW_HEIGHT
-              x = h / 4;
-              if (w < x) w = x;
-            }
-            canvasElement.width = w;
-            canvasElement.height = h;
-            idToExtraData[item.id] = extraData = {
-              width: w,
-              height: h
-            };
-          }
-
-          x = canvasElement.getContext("2d");
-          if (x != null) {
-            if (bDebug) console.log(sName, 'insertImage(), img.onload, drawImage, extraData:', extraData);
-            try {
-              x.drawImage(img, 0, 0, extraData.width, extraData.height);
-              try {
-                // Placing imageUrl into extraData, not into item, to avoid reactive updates
-                // since item is a reactive object. 
-                extraData.imageUrl = canvasElement.toDataURL('image/jpeg', 1);
-              } catch (err2) {
-                console.warn(sName, 'insertImage(), failure to create data URL for image [' + item.file.name + '] in preload preview canvas', err2);
-              }
-            } catch (err) {
-              console.warn(sName, 'insertImage(), failure drawing image [' + item.file.name + '] in preload preview canvas', err);
-              this.insertTextCaption(canvasElement, item);
-            }
-          } else {
-            alert('No context for image in preload preview canvas');
-            console.error(sName, 'insertImage(), no context for image [' + item.file.name + '] in preload preview canvas');
-            setTimeout(() => this.removeItem(item));
-          }
-        } else {
-          console.warn(sName, 'insertImage(), bad image size, width', img.width, 'height', img.height);
-          this.insertTextCaption(canvasElement, item);
-        }
-      };
-
-      img.onerror = e => {
-        console.warn(sName, 'insertImage(), failure preparing image [' + item.file.name + '] in preload preview canvas', e);
-        window.URL.revokeObjectURL(blobURL);
-        blobURL = null;
-        this.insertTextCaption(canvasElement, item);
-      };
-
-      img.src = blobURL;
-    },
-    */
 
     insertImage(canvasElement, item) {
       if (bDebug) console.log(sName, 'insertImage()');

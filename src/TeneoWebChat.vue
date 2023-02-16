@@ -112,9 +112,8 @@ export default {
       this.minimize();
     });
 
-    EventBus.$on(events.ADD_MESSAGE, async (message, extraData) => {
-      // TODO ALPE adding extraData
-      this._onMessageReceived(message, extraData);
+    EventBus.$on(events.ADD_MESSAGE, async (message) => {
+      this._onMessageReceived(message);
     });
 
     EventBus.$on(events.SEND_INPUT, (text, parameters, isSilent) => {
@@ -132,10 +131,8 @@ export default {
     EventBus.$emit(events.API_STATE_READY);
   },
   methods: {
-    // Encapsulating dependency methods makes Testing easier
-    // TODO ALPE adding extraData
-    async _onMessageReceived(message, extraData) {
-      await this.$teneoApi._onMessageReceived(message, extraData);
+    async _onMessageReceived(message) {
+      await this.$teneoApi._onMessageReceived(message);
     },
     sendBaseMessage(text, parameters, isSilent) {
       this.$teneoApi.sendBaseMessage(text, parameters, isSilent);

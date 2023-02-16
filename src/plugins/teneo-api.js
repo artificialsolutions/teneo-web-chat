@@ -217,8 +217,7 @@ export default function teneoApiPlugin(teneoApiUrl) {
         async sendSilentMessage(text = '', parameters = {}) {
             await this.sendBaseMessage(text, parameters, true);
         },
-        async _onMessageReceived(message, extraData) {
-            // TODO ALPE adding extraData
+        async _onMessageReceived(message) {
             if (message.author === PARTICIPANT_BOT || message.type === 'system') {
                 EventBus.$emit(events.BOT_MESSAGE_RECEIVED, message);
             }
