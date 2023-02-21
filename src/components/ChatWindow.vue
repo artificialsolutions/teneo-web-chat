@@ -2,7 +2,7 @@
   <div ref="chatWindowId" :class="chatWindowStyles()" role="group" :aria-label="$t('message.chat_window_group_aria_label')">
     <Header :on-close="onClose" :on-minimize="onMinimize" />
     <MessageList id="twc-message-list" :message-list="$teneoApi.messageList" />
-    <UploadPreviewPannel />
+    <UploadPreviewPanel />
     <div v-if="spinnerIsLoading" class="twc-spinner" role="progressbar" aria-valuemin="0" :aria-valuetext="$t('message.chat_window_spinner_aria_valuetext')" aria-valuemax="100">
       <div class="twc-bounce1" aria-hidden="true"></div>
       <div class="twc-bounce2" aria-hidden="true"></div>
@@ -26,14 +26,14 @@ import Vue from 'vue';
 import Header from './Header.vue';
 import MessageList from './MessageList.vue';
 import UserInput from './UserInput.vue';
-import UploadPreviewPannel from './UploadPreviewPannel.vue';
+import UploadPreviewPanel from './UploadPreviewPanel.vue';
 import { EventBus, events } from '../utils/event-bus.js';
 import { API_CALL_SEND_INPUT } from '../utils/constants';
 import detectIosSafari from '../utils/detect-ios-safari';
 
 export default {
   components: {
-    UploadPreviewPannel, 
+    UploadPreviewPanel, 
     Header, MessageList, UserInput 
   },
   props: {

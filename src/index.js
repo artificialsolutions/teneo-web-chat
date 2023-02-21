@@ -525,12 +525,12 @@ window.TeneoWebChat = {
         break;
 
       // TODO ALPE
-      case apiConstants.API_CALL_SHOW_UPLOAD_PANNEL:
-        EventBus.$emit(events.SHOW_UPLOAD_PANNEL, payload);
+      case apiConstants.API_CALL_SHOW_UPLOAD_PANEL:
+        EventBus.$emit(events.SHOW_UPLOAD_PANEL, payload);
         break;
 
-      case apiConstants.API_CALL_HIDE_UPLOAD_PANNEL:
-        EventBus.$emit(events.HIDE_UPLOAD_PANNEL);
+      case apiConstants.API_CALL_HIDE_UPLOAD_PANEL:
+        EventBus.$emit(events.HIDE_UPLOAD_PANEL);
         break;
 
       case apiConstants.API_ON_SET_UPLOAD_STATE:

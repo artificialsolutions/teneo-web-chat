@@ -1,6 +1,6 @@
 <template>
   <div v-if="idToItem != null" 
-    class="twc-upload-preview-pannel"
+    class="twc-upload-preview-panel"
     contenteditable="true"
     style="caret-color:transparent"
     onbeforeinput="return false"
@@ -60,8 +60,8 @@
 
 <style scoped>
 
-/* Parent: hall pannel */
-.twc-upload-preview-pannel {
+/* Parent: hall panel */
+.twc-upload-preview-panel {
   box-sizing: border-box;
   height: auto;
   border: none;
@@ -74,7 +74,7 @@
   outline: 0px solid transparent;
 }
 
-.twc-upload-preview-pannel-drag {
+.twc-upload-preview-panel-drag {
   background-color: var(--user-input-fg-color, #565867);
   opacity: 60%;
 }
@@ -276,7 +276,7 @@ button:nth-child(4){
 // TODO ALPE
 
 import { EventBus, events } from '../utils/event-bus.js';
-import { API_ON_UPLOAD_PANNEL_SUBMIT, API_ON_UPLOAD_PANNEL_CANCEL } from '../utils/api-function-names.js';
+import { API_ON_UPLOAD_PANEL_SUBMIT, API_ON_UPLOAD_PANEL_CANCEL } from '../utils/api-function-names.js';
 import basePayload from '../utils/base-payload.js';
 import handleExtension from '../utils/handle-extension.js';
 
@@ -301,7 +301,7 @@ const bDebug = true,
  * 
  * @const {string}
  */
-sName = 'UploadPreviewPannel',
+sName = 'UploadPreviewPanel',
 
 /**
  * Max image width in preview, in pixels.
@@ -387,8 +387,8 @@ export default {
 
   mounted() {
     if (bDebug) console.log(sName, 'mounted');
-    EventBus.$on(events.SHOW_UPLOAD_PANNEL, payload => this.open(payload));
-    EventBus.$on(events.HIDE_UPLOAD_PANNEL, () => this.close());
+    EventBus.$on(events.SHOW_UPLOAD_PANEL, payload => this.open(payload));
+    EventBus.$on(events.HIDE_UPLOAD_PANEL, () => this.close());
   },
 
 
@@ -408,8 +408,8 @@ export default {
 
   unmounted() {
     if (bDebug) console.log(sName, 'unmounted');
-    EventBus.$off(events.SHOW_UPLOAD_PANNEL);
-    EventBus.$off(events.HIDE_UPLOAD_PANNEL);
+    EventBus.$off(events.SHOW_UPLOAD_PANEL);
+    EventBus.$off(events.HIDE_UPLOAD_PANEL);
   },
 
 
@@ -418,26 +418,26 @@ export default {
     onDragOver(evt) {
       if (bDebug) console.log(sName, 'onDragOver(), processing:', this.processing);
       if (this.processing) return;
-      evt.currentTarget.classList.add("twc-upload-preview-pannel-drag");
+      evt.currentTarget.classList.add("twc-upload-preview-panel-drag");
     },
 
 
     onDragEnter(evt) {
       if (bDebug) console.log(sName, 'onDragEnter(), processing:', this.processing);
       if (this.processing) return;
-      evt.currentTarget.classList.add("twc-upload-preview-pannel-drag");
+      evt.currentTarget.classList.add("twc-upload-preview-panel-drag");
     },
 
 
     onDragLeave(evt) {
       if (bDebug) console.log(sName, 'onDragLeave(), processing:', this.processing);
-      evt.currentTarget.classList.remove("twc-upload-preview-pannel-drag");
+      evt.currentTarget.classList.remove("twc-upload-preview-panel-drag");
     },
 
 
     addFilesFromDrop(evt) {
       if (bDebug) console.log(sName, 'addFilesFromDrop(), processing:', this.processing);
-      evt.currentTarget.classList.remove("twc-upload-preview-pannel-drag");
+      evt.currentTarget.classList.remove("twc-upload-preview-panel-drag");
       if (this.processing) return;
       this.addFiles(evt.dataTransfer.files);
     },
@@ -470,7 +470,7 @@ export default {
       this.idToItem[id] = {
         id: id,
         file: file,
-        bImageMime: isImageFile(file)
+        asImage: isImageFile(file)
       };
       if (bDebug) console.log(sName, 'addFile(), adding file [' + file.name + '] of type [' + file.type + '] and size [' + file.size + '] with id [' + id + ']');
     },
@@ -526,22 +526,22 @@ export default {
           for (var item, i = 0; i < payload.items.length; i++) {
             item = payload.items[i];
             if (item == null) {
-              console.warn(sName, 'open(), item at index', i, 'is undefined when opening an upload pannel');
+              console.warn(sName, 'open(), item at index', i, 'is undefined when opening an upload panel');
               continue;
             }
             if (item.id == null) {
-              console.warn(sName, 'open(), item.id at index', i, 'is undefined when opening an upload pannel');
+              console.warn(sName, 'open(), item.id at index', i, 'is undefined when opening an upload panel');
               continue;
             }
             if (item.file == null) {
-              console.warn(sName, 'open(), item.file at index', i, 'is undefined when opening an upload pannel');
+              console.warn(sName, 'open(), item.file at index', i, 'is undefined when opening an upload panel');
               continue;
             }
             if (!this.idToItem.hasOwnProperty(item.id)) this.itemsCount++;
             this.idToItem[item.id] = {
               id: item.id,
               file: item.file,
-              bImageMime: item.bImageMime == null ? isImageFile(item.file) : item.bImageMime
+              asImage: item.asImage == null ? isImageFile(item.file) : (item.asImage ? true : false)
             };
           }
         }
@@ -578,7 +578,7 @@ export default {
       const payload = basePayload();
       payload.itemsCount = this.itemsCount;
       try {
-        await handleExtension(API_ON_UPLOAD_PANNEL_CANCEL, payload);
+        await handleExtension(API_ON_UPLOAD_PANEL_CANCEL, payload);
       } finally {
         this.processing = false;
         if (bDebug) console.log(sName, 'clickCancel() end, payload:', getPrintableDebugObject(payload));
@@ -613,7 +613,7 @@ export default {
       }
       payload.comment = this.comment;
       try {
-        await handleExtension(API_ON_UPLOAD_PANNEL_SUBMIT, payload);
+        await handleExtension(API_ON_UPLOAD_PANEL_SUBMIT, payload);
       } finally {
         this.processing = false;
         if (bDebug) console.log(sName, 'clickSubmit() end, payload:', getPrintableDebugObject(payload));
@@ -790,7 +790,7 @@ export default {
     initCanvas(el, item) {
       if (bDebug) console.log(sName, 'initCanvas()');
       if (el) {
-        if (item.bImageMime) this.insertImage(el, item);
+        if (item.asImage) this.insertImage(el, item);
         else this.insertTextCaption(el, item);
       }
     },

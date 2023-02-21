@@ -192,7 +192,7 @@ export default {
        * @param {object} message - the message to check.
        * @param {string} message.type - the type of the message, should be "upload".
        * @param {object} message.data - the data contained in the message.
-       * @param {string} message.data.itemId - the upload ID received from the upload pannel.
+       * @param {string} message.data.itemId - the upload ID received from the upload panel.
        * @param {string} [message.data.fileName] - the name of the uploaded file.
        * @param {string} [message.data.fileSymbol] - the string to be displayed in place of the image if
        * the file is not an image or if the image thumbnail could not be generated. If this property is

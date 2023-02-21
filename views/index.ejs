@@ -117,11 +117,11 @@ TeneoWebChat.on('reset', () => TeneoWebChat.get('storage').removeItem('twc_last_
 
 // ============================================================
 
-TeneoWebChat.on('upload_button_clicked', () => TeneoWebChat.call('show_upload_pannel'));
+TeneoWebChat.on('upload_button_clicked', () => TeneoWebChat.call('show_upload_panel'));
 
 /*
-TeneoWebChat.call('show_upload_pannel');4
-TeneoWebChat.call('hide_upload_pannel');
+TeneoWebChat.call('show_upload_panel');4
+TeneoWebChat.call('hide_upload_panel');
 */
 
 // ============================================================
@@ -352,8 +352,8 @@ TeneoWebChat.on('ready', () => {
 
 
 
-TeneoWebChat.on('upload_pannel_submit', payload => {
-    console.log('upload_pannel_submit', payload);
+TeneoWebChat.on('upload_panel_submit', payload => {
+    console.log('upload_panel_submit', payload);
     if (itemIdToUploadState == null) itemIdToUploadState = {};
     payload.items.forEach(item => {
         itemIdToUploadState[item.id] = {
@@ -393,8 +393,8 @@ TeneoWebChat.on('upload_pannel_submit', payload => {
 });
 
 
-TeneoWebChat.on('upload_pannel_cancel', payload => {
-    console.log('upload_pannel_cancel', payload);
+TeneoWebChat.on('upload_panel_cancel', payload => {
+    console.log('upload_panel_cancel', payload);
     outputBotText('You have canceled on ' + payload.itemsCount + ' files');
 });
 
