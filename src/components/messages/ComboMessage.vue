@@ -301,7 +301,7 @@ export default {
       await handleLinkButtonClick(linkbutton, event)
     },
     async onSelect(reply, idx) {
-      if (!this.replySent) {
+      if (!this.replySent && !this.isExpired) {
         await handleButtonClick(reply, idx, this.$teneoApi)
       }
     },

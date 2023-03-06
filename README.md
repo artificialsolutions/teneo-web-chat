@@ -56,6 +56,9 @@ When adding the script to your site, note the following:
 When initializing Teneo Web Chat, an object containing the configuration options can be passed on. In the [code](#update-pages) above, an object called `teneoProps` is used to pass on the configuration options. See the [Teneo Web Chat Documentation](https://developers.artificial-solutions.com/engine/teneo-web-chat) on the Teneo Developers website for all options.
 
 ### Deploy to Heroku
+
+**Note: Starting November 28, 2022, free Heroku Dynos, free Heroku Postgres, and free Heroku Data for Redis® plans will no longer be available.**
+
 If you are looking for a quick way to interact with your bot using Teneo Web Chat but you don't have a website to host it yet, you can deploy it to Heroku. Click the button below to create a new Heroku app that hosts the web chat:
 
 [![Deploy](https://www.herokucdn.com/deploy/button.svg?classes=heroku)](https://heroku.com/deploy?template=https://github.com/artificialsolutions/teneo-web-chat)
