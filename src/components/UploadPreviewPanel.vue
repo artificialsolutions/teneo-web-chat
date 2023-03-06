@@ -50,11 +50,11 @@
     
     <div class="twc-upload-buttons">
       <button type="button" @click.stop.prevent="clickOpenFileInput" :disabled="processing">&#10010;</button>
-      <button type="button" @click.stop.prevent="clickClearAll" :disabled="processing || !itemsCount">Clear all</button>
-      <button type="button" @click.stop.prevent="clickSubmit" :disabled="processing || !itemsCount">Submit</button>
-      <button type="button" @click.stop.prevent="clickCancel" :disabled="processing">Cancel</button>
+      <button v-if="!hideClearAllButton" type="button" @click.stop.prevent="clearAll" :disabled="processing || !itemsCount">Clear all</button>
+      <button v-if="!hideSubmitButton" type="button" @click.stop.prevent="clickSubmit" :disabled="processing || !itemsCount">Submit</button>
+      <button v-if="!hideCancelButton" type="button" @click.stop.prevent="clickCancel" :disabled="processing">Cancel</button>
     </div>
-    
+
   </div>
 </template>
 
@@ -380,6 +380,9 @@ export default {
       idToItem: null,
       itemsCount: 0,
       comment: null,
+      hideSubmitButton: false,
+      hideCancelButton: false,
+      hideClearAllButton: false,
       processing: false
     };
   },
@@ -509,8 +512,15 @@ export default {
       this.idToItem = {};
       this.itemsCount = 0;
       this.processing = false;
-      if (payload == null) this.comment = null;
-      else {
+      if (payload == null) {
+        this.hideSubmitButton = false;
+        this.hideCancelButton = false;
+        this.hideClearAllButton = false;
+        this.comment = null;
+      } else {
+        this.hideSubmitButton = payload.hideSubmitButton ? true : false;
+        this.hideCancelButton = payload.hideCancelButton ? true : false;
+        this.hideClearAllButton = payload.hideClearAllButton ? true : false;
         if (payload.comment == null) this.comment = null;
         else switch (typeof payload.comment) {
           case 'string':
@@ -546,6 +556,7 @@ export default {
           }
         }
       }
+      EventBus.$emit(events.OPEN_UPLOAD_PANEL);
       if (bDebug) console.log(sName, 'open() end, comment [' + this.comment + '], itemsCount [' + this.itemsCount + '], idToItem:', getPrintableDebugObject(this.idToItem));
     },
 
@@ -556,12 +567,16 @@ export default {
       this.idToItem = null;
       this.itemsCount = 0;
       this.comment = null;
+      this.hideSubmitButton = false;
+      this.hideCancelButton = false;
+      this.hideClearAllButton = false;
       this.processing = false;
+      EventBus.$emit(events.CLOSE_UPLOAD_PANEL);
     },
 
 
-    clickClearAll() {
-      if (bDebug) console.log(sName, 'clickClearAll(), processing:', this.processing);
+    clearAll() {
+      if (bDebug) console.log(sName, 'clearAll(), processing:', this.processing);
       if (this.processing) return;
       if (idToExtraData != null) idToExtraData = {};
       if (this.idToItem != null) this.idToItem = {};

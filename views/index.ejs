@@ -362,7 +362,7 @@ TeneoWebChat.on('upload_panel_submit', payload => {
         };
         TeneoWebChat.call('add_message', {
             type: 'upload',
-            author: 'user',
+            author: 'bot',
             data: {
                 itemId: item.id,
                 fileName: item.file.name,
