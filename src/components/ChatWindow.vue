@@ -2,13 +2,14 @@
   <div ref="chatWindowId" :class="chatWindowStyles()" role="group" :aria-label="$t('message.chat_window_group_aria_label')">
     <Header :on-close="onClose" :on-minimize="onMinimize" />
     <MessageList id="twc-message-list" :message-list="$teneoApi.messageList" />
-    <UploadPreviewPanel />
+
     <div v-if="spinnerIsLoading" class="twc-spinner" role="progressbar" aria-valuemin="0" :aria-valuetext="$t('message.chat_window_spinner_aria_valuetext')" aria-valuemax="100">
       <div class="twc-bounce1" aria-hidden="true"></div>
       <div class="twc-bounce2" aria-hidden="true"></div>
       <div class="twc-bounce3" aria-hidden="true"></div>
     </div>
-    
+
+    <UploadPreviewPanel />    
     <UserInput :on-submit="sendMessage" />
 
     <div v-if="isImageZoomed" href="#" class="twc-lightbox" @click="zoomOut">
@@ -86,8 +87,8 @@ export default {
       this.isImageZoomed = true;
 
       setTimeout(() => {
- document.getElementById('twc-lightbox-close').focus();
-}, 50);
+        document.getElementById('twc-lightbox-close').focus();
+      }, 50);
     });
     // Send an empty init message to trigger a welcoming message from Teneo
     if (this.$teneoApi.messageList.length === 0) {

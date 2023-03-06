@@ -86,87 +86,87 @@ export default {
   },
 };
 </script>
+
 <style scoped>
 .twc-message-list {
   height: 80%;
-  overflow-y: auto;
-  overflow-x: hidden;
-  background-size: 100%;
-  padding: 20px 0px;
+  overflow: auto;
+  padding: 20px 0;
 }
 
-/* width */
 .twc-message-list::-webkit-scrollbar {
   width: 5px;
 }
 
-/* Track */
 .twc-message-list::-webkit-scrollbar-track {
   background: var(--user-input-bg-color); 
   border-radius: 10px;
-  margin-top: 2px;
-  margin-bottom: 2px;
-  box-shadow: none;
+  margin: 2px 0;
 }
- 
-/* Handle */
+
 .twc-message-list::-webkit-scrollbar-thumb {
-  background: var(--primary-color) !important; 
+  background: var(--primary-color); 
   border-radius: 10px;
-  box-shadow: none;
-
 }
 
-/* Handle on hover */
 .twc-message-list::-webkit-scrollbar-thumb:hover {
   background: var(--primary-color); 
 }
 
-.twc-message-list:last-child{
+.twc-message-list:last-child {
   scroll-margin-top: 10px;
 }
 
 #twc-scrollDownButton {
-    display: block;
-    position: absolute;
-    right: 3%;
-    bottom: 13%;
-    background-color: var(--user-input-bg-color);
-    opacity: 0.8;
-    box-shadow: 0 2px 4px 0 rgba(85, 87, 85, 0.7);
-    padding: 0;
-    width: 32px;
-    height: 32px;
-    border: none;
-    background-size: 14px auto;
-    border-radius: 50%;
-    z-index: 2;
+  display: block;
+  position: absolute;
+  right: 3%;
+  bottom: 13%;
+  background-color: var(--user-input-bg-color);
+  opacity: 0.8;
+  box-shadow: 0 2px 4px 0 rgba(85, 87, 85, 0.7);
+  width: 20px;
+  height: 20px;
+  border: none;
+  background-size: 14px auto;
+  border-radius: 50%;
+  z-index: 2;
+  cursor: default;
 }
 
 #twc-scrollDownButton:hover {
-    background-color: var(--primary-color);
-    box-shadow: 0 4px 8px 0 rgba(85, 87, 85, 0.7);
-    cursor: pointer;
+  background-color: var(--primary-color);
+  box-shadow: 0 4px 8px 0 rgba(85, 87, 85, 0.7);
 }
-
-#twc-scrollDownButton:hover:before {
-    border: 3px solid white;
-    border-width: 0px 0 2px 2px;
-}
-
 
 #twc-scrollDownButton:before {
-    position: absolute;
-    top: calc(50% - 9px);
-    left: calc(50% - 6.5px);
-    transform: rotate(-45deg);
-    display: block;
-    width: 10px;
-    height: 10px;
-    content: "";
-    border: 1px solid var(--primary-color);
-    border-width: 0px 0 2px 2px;
+  position: absolute;
+  top: calc(50% - 9px);
+  left: calc(50% - 6.5px);
+  display: block;
+  width: 10px;
+  height: 10px;
+  content: "";
+  border: 1px solid var(--primary-color);
+  transform: rotate(-45deg);
+  cursor: default;
 }
+
+#twc-scrollDownButton:after {
+  position: absolute;
+  top: calc(50% - 1px);
+  left: calc(50% - 6.5px);
+  display: block;
+  width: 10px;
+  height: 10px;
+  content: "";
+  border: 1px solid var(--primary-color);
+  transform: rotate(45deg);
+  cursor: default;
+}
+
+
 </style>
+
 
 

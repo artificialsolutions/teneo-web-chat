@@ -1,5 +1,5 @@
 <template>
-  <div>
+  <div v-if="showUserInput">
     <form
         class="twc-user-input"
         :class="{ 'twc-active': inputActive, 'twc-disabled': inputDisabled }"
@@ -229,11 +229,20 @@ export default {
       asrActive: store.getters.asrActive,
       ttsActive: store.getters.ttsActive,
       ttsCumulativeText: '',
-      isCancellation: false
+      isCancellation: false,
+      showUserInput: true
     };
   },
 
   mounted() {
+    EventBus.$on(events.UPLOAD_PANEL_OPENED, () => {
+      this.showUserInput = false;
+    });
+    EventBus.$on(events.UPLOAD_PANEL_CLOSED, () => {
+      this.showUserInput = true;
+    });
+
+
     EventBus.$on(events.MESSAGE_SENT, () => {
       if (this.$refs.userInput) {
         this.$refs.userInput.focus();

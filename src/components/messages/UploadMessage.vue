@@ -6,41 +6,37 @@
       <span v-else class="twc-upload-file-representation twc-upload-file-representation-symbol">{{ message.data.fileSymbol || message.data.fileName || '#' }}</span>
 
       <template v-if="status === 'SUCCEEDED'">
-        <a v-if="controlAllowed" role="button" @click="deleteFile" class="twc-upload-file-cta twc-upload-file-action-delete" title="Delete file"><span style="font-size: 1.0em">&#x1F5D1;</span></a>
-        <span class="twc-upload-file-status"></span>
+        <a v-if="controlAllowed" role="button" @click="deleteFile" class="twc-upload-file-cta twc-upload-file-action-delete" :title="$t('message.upload_file_delete')"><span style="font-size: 1.0em">&#x1F5D1;</span></a>
       </template>
       <template v-else-if="status === 'IN_PROGRESS'">
         <span ref="spinner" class="twc-upload-file-progress-spinner"></span>
-        <a v-if="controlAllowed" role="button" @click="stopUpload" class="twc-upload-file-cta twc-upload-file-middle-circle twc-upload-file-stop" title="Stop upload">&#x23F3;</a>
+        <a v-if="controlAllowed" role="button" @click="stopUpload" class="twc-upload-file-cta twc-upload-file-middle-circle twc-upload-file-stop" :title="$t('message.upload_file_stop')">&#x23F3;</a>
         <span v-else class="twc-upload-file-middle-circle"></span>
-        <span class="twc-upload-file-status"></span>
-      </template>
+              </template>
       <template v-else-if="status === 'INTERRUPTED'">
         <template v-if="controlAllowed">
           <span ref="spinner" class="twc-upload-file-progress-spinner"></span>
-          <a @click="restartUpload" role="button" class="twc-upload-file-cta twc-upload-file-middle-circle twc-upload-file-restart" title="Restart upload">&#9888;</a>
+          <a @click="restartUpload" role="button" class="twc-upload-file-cta twc-upload-file-middle-circle twc-upload-file-restart" :title="$t('message.upload_file_restart')">&#9888;</a>
         </template>
-        <span class="twc-upload-file-status"></span>
+        
       </template>
       <template v-else-if="status === 'FAILED'">
         <template v-if="controlAllowed">
           <span ref="spinner" class="twc-upload-file-progress-spinner"></span>
-          <a @click="restartUpload" role="button" class="twc-upload-file-cta twc-upload-file-middle-circle twc-upload-file-restart" title="Restart upload">&#x27f3;</a>
+          <a @click="restartUpload" role="button" class="twc-upload-file-cta twc-upload-file-middle-circle twc-upload-file-restart" :title="$t('message.upload_file_retry')">&#x27f3;</a>
         </template>
-        <span class="twc-upload-file-status"></span>
+        
       </template>
       <template v-else-if="status === 'DELETED'">
         <template v-if="controlAllowed">
           <span ref="spinner" class="twc-upload-file-progress-spinner"></span>
-          <a @click="restartUpload" role="button" class="twc-upload-file-cta twc-upload-file-middle-circle twc-upload-file-restart" title="Restart upload">&#x27f3;</a>
+          <a @click="restartUpload" role="button" class="twc-upload-file-cta twc-upload-file-middle-circle twc-upload-file-restart" :title="$t('message.upload_file_reupload')">&#x27f3;</a>
         </template>
-        <span class="twc-upload-file-status">Deleted</span>
+        
       </template>
     </div>
-   
-      <div v-if="message.data.fileName" class="twc-upload-file-name">{{ message.data.fileName }}</div> 
-   
 
+    <div v-if="message.data.fileName" class="twc-upload-file-name">{{ message.data.fileName }}</div>
   </div>
 </template>
 
@@ -55,14 +51,14 @@
 
 .twc-upload-file {
   position: relative;
-  background-color: #2f286e;
+  background-color: #eceff1;
   padding: 5px;
 }
 
 .twc-upload-file-name {
   position: relative;
   color: black;
-  background-color: #eceff1;
+  background-color:#eceff1;
   text-align: center;
   padding: 2px 1px;
   margin: 1px 0 0;
@@ -107,7 +103,7 @@
   align-content: center;
   justify-content: center;
   opacity: 1;
-  animation: upload-file-progress-spin 2s linear infinite;
+  animation: twc-upload-file-progress-spin 2s linear infinite;
   /* background: conic-gradient(blue 30%, lightgrey 30%); */
 }
 
@@ -132,7 +128,7 @@
   position: absolute;
   bottom: 0;
   left: 0;
-  color: black;
+  color: black;  
   background-color: #eceff1;
   border: thin solid #eceff1;
   padding: 0.05rem;
@@ -140,7 +136,7 @@
 }
 
 .twc-upload-file-status {
-  position: absolute; 
+  position: absolute;
   bottom: 0;
   right: 0;
   color: black;

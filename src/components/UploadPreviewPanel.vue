@@ -35,7 +35,7 @@
             <line x1="10" y1="1" x2="1" y2="10"></line>
             <line x1="1" y1="1" x2="10" y2="10"></line>
           </svg>
-          
+
           <canvas :id="('twc-upload-item-canvas' + id)" class="twc-upload-item-canvas"></canvas>
           <div class = "twc-file-name">{{item.file.name}}</div>
          
@@ -49,12 +49,12 @@
     <textarea v-if="comment != null" :disabled="processing" v-model="comment" class="twc-upload-comment"></textarea>
     
     <div class="twc-upload-buttons">
-      <button type="button" @click.stop.prevent="clickOpenFileInput" :disabled="processing">&#10010;</button>
-      <button type="button" @click.stop.prevent="clickClearAll" :disabled="processing || !itemsCount">Clear all</button>
-      <button type="button" @click.stop.prevent="clickSubmit" :disabled="processing || !itemsCount">Submit</button>
-      <button type="button" @click.stop.prevent="clickCancel" :disabled="processing">Cancel</button>
+      <button type="button" @click.stop.prevent="clickOpenFileInput" :disabled="processing" :title="$t('message.upload_panel_add_files')">&#10010;</button>
+      <button v-if="!hideClearAllButton" type="button" @click.stop.prevent="clearAll" :disabled="processing || !itemsCount">{{ $t('message.upload_panel_clear_all') }}</button>
+      <button v-if="!hideSubmitButton" type="button" @click.stop.prevent="clickSubmit" :disabled="processing || !itemsCount">{{ $t('message.upload_panel_submit') }}</button>
+      <button v-if="!hideCancelButton" type="button" @click.stop.prevent="clickCancel" :disabled="processing">{{ $t('message.upload_panel_cancel') }}</button>
     </div>
-    
+
   </div>
 </template>
 
@@ -89,7 +89,7 @@
 /* Uploaded items visualizer */
 .twc-upload-items {
   -webkit-overflow-scrolling: touch; /** Makes it possible to scroll in mobile */
-  width: 90%;
+  width: 80%;
   height: 90px;
   position: absolute;
   top: 0;
@@ -381,6 +381,9 @@ export default {
       idToItem: null,
       itemsCount: 0,
       comment: null,
+      hideSubmitButton: false,
+      hideCancelButton: false,
+      hideClearAllButton: false,
       processing: false
     };
   },
@@ -510,8 +513,15 @@ export default {
       this.idToItem = {};
       this.itemsCount = 0;
       this.processing = false;
-      if (payload == null) this.comment = null;
-      else {
+      if (payload == null) {
+        this.hideSubmitButton = false;
+        this.hideCancelButton = false;
+        this.hideClearAllButton = false;
+        this.comment = null;
+      } else {
+        this.hideSubmitButton = payload.hideSubmitButton ? true : false;
+        this.hideCancelButton = payload.hideCancelButton ? true : false;
+        this.hideClearAllButton = payload.hideClearAllButton ? true : false;
         if (payload.comment == null) this.comment = null;
         else switch (typeof payload.comment) {
           case 'string':
@@ -547,6 +557,7 @@ export default {
           }
         }
       }
+      EventBus.$emit(events.UPLOAD_PANEL_OPENED);
       if (bDebug) console.log(sName, 'open() end, comment [' + this.comment + '], itemsCount [' + this.itemsCount + '], idToItem:', getPrintableDebugObject(this.idToItem));
     },
 
@@ -557,12 +568,16 @@ export default {
       this.idToItem = null;
       this.itemsCount = 0;
       this.comment = null;
+      this.hideSubmitButton = false;
+      this.hideCancelButton = false;
+      this.hideClearAllButton = false;
       this.processing = false;
+      EventBus.$emit(events.UPLOAD_PANEL_CLOSED);
     },
 
 
-    clickClearAll() {
-      if (bDebug) console.log(sName, 'clickClearAll(), processing:', this.processing);
+    clearAll() {
+      if (bDebug) console.log(sName, 'clearAll(), processing:', this.processing);
       if (this.processing) return;
       if (idToExtraData != null) idToExtraData = {};
       if (this.idToItem != null) this.idToItem = {};
