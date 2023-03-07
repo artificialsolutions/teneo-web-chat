@@ -10,7 +10,7 @@
     </div>
 
     <UploadPreviewPanel />    
-    <UserInput v-if="showUserInput" :on-submit="sendMessage" />
+    <UserInput :on-submit="sendMessage" />
 
     <div v-if="isImageZoomed" href="#" class="twc-lightbox" @click="zoomOut">
       <span class="twc-lightbox-image-wrapper" @click="zoomOut">
@@ -55,8 +55,7 @@ export default {
       chatWindowBaseStyle: 'twc-chat-window',
       keyboardUp: false,
       isIosSafari: false,
-      lastScrollY: 0,
-      showUserInput: true
+      lastScrollY: 0
     };
   },
   beforeMount() {
@@ -90,13 +89,6 @@ export default {
       setTimeout(() => {
         document.getElementById('twc-lightbox-close').focus();
       }, 50);
-    });
-    //TODO:
-    EventBus.$on(events.OPEN_UPLOAD_PANEL, () => {
-      this.showUserInput = false;
-    });
-    EventBus.$on(events.CLOSE_UPLOAD_PANEL, () => {
-      this.showUserInput = true;
     });
     // Send an empty init message to trigger a welcoming message from Teneo
     if (this.$teneoApi.messageList.length === 0) {

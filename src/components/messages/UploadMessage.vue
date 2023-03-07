@@ -6,35 +6,35 @@
       <span v-else class="twc-upload-file-representation twc-upload-file-representation-symbol">{{ message.data.fileSymbol || message.data.fileName || '#' }}</span>
 
       <template v-if="status === 'SUCCEEDED'">
-        <a v-if="controlAllowed" role="button" @click="deleteFile" class="twc-upload-file-cta twc-upload-file-action-delete" title="Delete file">&#x2715;</a>
-        <span class="twc-upload-file-status">Succeeded</span>
+        <a v-if="controlAllowed" role="button" @click="deleteFile" class="twc-upload-file-cta twc-upload-file-action-delete" :title="$t('message.upload_file_delete')">&#x2715;</a>
+        <span class="twc-upload-file-status">{{ $t('message.upload_file_succeeded') }}</span>
       </template>
       <template v-else-if="status === 'IN_PROGRESS'">
         <span ref="spinner" class="twc-upload-file-progress-spinner"></span>
-        <a v-if="controlAllowed" role="button" @click="stopUpload" class="twc-upload-file-cta twc-upload-file-middle-circle twc-upload-file-stop" title="Stop upload">&#10007;</a>
+        <a v-if="controlAllowed" role="button" @click="stopUpload" class="twc-upload-file-cta twc-upload-file-middle-circle twc-upload-file-stop" :title="$t('message.upload_file_stop')">&#10007;</a>
         <span v-else class="twc-upload-file-middle-circle"></span>
-        <span class="twc-upload-file-status">In progress</span>
+        <span class="twc-upload-file-status">{{ $t('message.upload_file_in_progress') }}</span>
       </template>
       <template v-else-if="status === 'INTERRUPTED'">
         <template v-if="controlAllowed">
           <span ref="spinner" class="twc-upload-file-progress-spinner"></span>
-          <a @click="restartUpload" role="button" class="twc-upload-file-cta twc-upload-file-middle-circle twc-upload-file-restart" title="Restart upload">&#8687;</a>
+          <a @click="restartUpload" role="button" class="twc-upload-file-cta twc-upload-file-middle-circle twc-upload-file-restart" :title="$t('message.upload_file_restart')">&#8687;</a>
         </template>
-        <span class="twc-upload-file-status">Interrupted</span>
+        <span class="twc-upload-file-status">{{ $t('message.upload_file_interrupted') }}</span>
       </template>
       <template v-else-if="status === 'FAILED'">
         <template v-if="controlAllowed">
           <span ref="spinner" class="twc-upload-file-progress-spinner"></span>
-          <a @click="restartUpload" role="button" class="twc-upload-file-cta twc-upload-file-middle-circle twc-upload-file-restart" title="Restart upload">&#8687;</a>
+          <a @click="restartUpload" role="button" class="twc-upload-file-cta twc-upload-file-middle-circle twc-upload-file-restart" :title="$t('message.upload_file_retry')">&#8687;</a>
         </template>
-        <span class="twc-upload-file-status">Failed</span>
+        <span class="twc-upload-file-status">{{ $t('message.upload_file_failed') }}</span>
       </template>
       <template v-else-if="status === 'DELETED'">
         <template v-if="controlAllowed">
           <span ref="spinner" class="twc-upload-file-progress-spinner"></span>
-          <a @click="restartUpload" role="button" class="twc-upload-file-cta twc-upload-file-middle-circle twc-upload-file-restart" title="Restart upload">&#8687;</a>
+          <a @click="restartUpload" role="button" class="twc-upload-file-cta twc-upload-file-middle-circle twc-upload-file-restart" :title="$t('message.upload_file_reupload')">&#8687;</a>
         </template>
-        <span class="twc-upload-file-status">Deleted</span>
+        <span class="twc-upload-file-status">{{ $t('message.upload_file_deleted') }}</span>
       </template>
     </div>
 

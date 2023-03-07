@@ -49,8 +49,8 @@ export const events = {
     HIDE_UPLOAD_PANEL: 'hide_upload_panel',
     SHOW_UPLOAD_PANEL: 'show_upload_panel',
     SET_UPLOAD_STATE: 'set_upload_state',
-    CLOSE_UPLOAD_PANEL: 'close-upload-panel',
-    OPEN_UPLOAD_PANEL: 'open-upload-panel'
+    UPLOAD_PANEL_CLOSED: 'upload_panel_closed',
+    UPLOAD_PANEL_OPENED: 'upload_panel_opened'
 };
 
 export const EventBus = new Vue();

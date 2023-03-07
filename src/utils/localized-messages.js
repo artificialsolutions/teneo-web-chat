@@ -80,7 +80,23 @@ export var translatedMessages = {
             preview_title_not_available: "Untitled",
             preview_description_not_available: "No Description Available",
             connection_error_retry_message: "There is a problem communicating with the server. Please wait.",
-            connection_error_final_message: "Could not establish connection to server. Please try again later."
+            connection_error_final_message: "Could not establish connection to server. Please try again later.",
+
+            upload_file_delete: "Delete uploaded file",
+            upload_file_stop: "Stop file upload",
+            upload_file_restart: "Restart file upload",
+            upload_file_retry: "Retry file upload",
+            upload_file_reupload: "Reupload file",
+            upload_file_succeeded: "Succeeded",
+            upload_file_in_progress: "In progress",
+            upload_file_interrupted: "Interrupted",
+            upload_file_failed: "Failed",
+            upload_file_deleted: "Deleted",
+
+            upload_panel_clear_all: "Clear all",
+            upload_panel_submit: "Submit",
+            upload_panel_cancel: "Cancel",
+            upload_panel_add_files: "Add files"
         }
     },
     'en-GB': {

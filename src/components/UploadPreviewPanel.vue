@@ -35,7 +35,7 @@
             <line x1="10" y1="1" x2="1" y2="10"></line>
             <line x1="1" y1="1" x2="10" y2="10"></line>
           </svg>
-          
+
           <canvas :id="('twc-upload-item-canvas' + id)" class="twc-upload-item-canvas"></canvas>
           <div class = "twc-file-name">{{item.file.name}}</div>
          
@@ -49,10 +49,10 @@
     <textarea v-if="comment != null" :disabled="processing" v-model="comment" class="twc-upload-comment"></textarea>
     
     <div class="twc-upload-buttons">
-      <button type="button" @click.stop.prevent="clickOpenFileInput" :disabled="processing">&#10010;</button>
-      <button v-if="!hideClearAllButton" type="button" @click.stop.prevent="clearAll" :disabled="processing || !itemsCount">Clear all</button>
-      <button v-if="!hideSubmitButton" type="button" @click.stop.prevent="clickSubmit" :disabled="processing || !itemsCount">Submit</button>
-      <button v-if="!hideCancelButton" type="button" @click.stop.prevent="clickCancel" :disabled="processing">Cancel</button>
+      <button type="button" @click.stop.prevent="clickOpenFileInput" :disabled="processing" :title="$t('message.upload_panel_add_files')">&#10010;</button>
+      <button v-if="!hideClearAllButton" type="button" @click.stop.prevent="clearAll" :disabled="processing || !itemsCount">{{ $t('message.upload_panel_clear_all') }}</button>
+      <button v-if="!hideSubmitButton" type="button" @click.stop.prevent="clickSubmit" :disabled="processing || !itemsCount">{{ $t('message.upload_panel_submit') }}</button>
+      <button v-if="!hideCancelButton" type="button" @click.stop.prevent="clickCancel" :disabled="processing">{{ $t('message.upload_panel_cancel') }}</button>
     </div>
 
   </div>
@@ -556,7 +556,7 @@ export default {
           }
         }
       }
-      EventBus.$emit(events.OPEN_UPLOAD_PANEL);
+      EventBus.$emit(events.UPLOAD_PANEL_OPENED);
       if (bDebug) console.log(sName, 'open() end, comment [' + this.comment + '], itemsCount [' + this.itemsCount + '], idToItem:', getPrintableDebugObject(this.idToItem));
     },
 
@@ -571,7 +571,7 @@ export default {
       this.hideCancelButton = false;
       this.hideClearAllButton = false;
       this.processing = false;
-      EventBus.$emit(events.CLOSE_UPLOAD_PANEL);
+      EventBus.$emit(events.UPLOAD_PANEL_CLOSED);
     },
 
 
