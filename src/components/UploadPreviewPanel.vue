@@ -99,6 +99,7 @@
   overflow-x: auto;
   overflow-y: hidden;
   padding: 5px;
+  direction: rtl; /* right to left scrolling */ 
 }
 
 /* width */
