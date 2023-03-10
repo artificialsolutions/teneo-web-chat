@@ -48,23 +48,30 @@
   100% { transform: rotate(360deg); }
 }
 
+.text-center {
+  text-align: center;
+}
 
-.twc-upload-file {
+.bg-grey {
+  background-color: #eceff1;
+}
+
+.twc-upload-file,
+.twc-upload-file-name {
   position: relative;
   background-color: #eceff1;
   padding: 5px;
 }
 
 .twc-upload-file-name {
-  position: relative;
   color: black;
-  background-color:#eceff1;
   text-align: center;
   padding: 2px 1px;
   margin: 1px 0 0;
 }
 
-.twc-upload-file-visualization {
+.twc-upload-file-visualization,
+.twc-upload-file-representation {
   position: relative;
   height: 200px;
   display: flex;
@@ -72,17 +79,36 @@
   align-content: center;
   justify-content: center;
   background-color: #eceff1;
+  padding: 10px;
 }
 
-.twc-upload-file-representation {
+.twc-upload-file-representation-image {
+  object-fit: contain;
+  max-height: 90%;
+  max-width: 90%;
+}
+
+.twc-upload-file-progress-spinner,
+.twc-upload-file-middle-circle {
   position: absolute;
-  height: 160px;
-  width: 90%;
+  border-radius: 50%;
   display: flex;
   align-items: center;
   align-content: center;
   justify-content: center;
-  background-color: #eceff1;
+  opacity: 1;
+}
+
+.twc-upload-file-progress-spinner {
+  height: 4rem;
+  width: 4rem;
+  animation: twc-upload-file-progress-spin 2s linear infinite;
+}
+
+.twc-upload-file-middle-circle {
+  height: 3rem;
+  width: 3rem;
+  background-color: lightgrey;
 }
 
 .twc-upload-file.twc-upload-file-succeeded .twc-upload-file-representation-image {
@@ -91,33 +117,6 @@
 
 .twc-upload-file:not(.twc-upload-file-succeeded) .twc-upload-file-representation-image {
   filter: blur(4px);
-}
-
-.twc-upload-file-progress-spinner {
-  position: absolute;
-  border-radius: 50%;
-  height: 4rem;
-  width: 4rem;
-  display: flex;
-  align-items: center;
-  align-content: center;
-  justify-content: center;
-  opacity: 1;
-  animation: twc-upload-file-progress-spin 2s linear infinite;
-  /* background: conic-gradient(blue 30%, lightgrey 30%); */
-}
-
-.twc-upload-file-middle-circle {
-  position: absolute;
-  border-radius: 50%;
-  height: 3rem;
-  width: 3rem;
-  background-color: lightgrey;
-  display: flex;
-  align-items: center;
-  align-content: center;
-  justify-content: center;
-  opacity: 1;
 }
 
 .twc-upload-file-cta {
@@ -129,7 +128,6 @@
   bottom: 0;
   left: 0;
   color: black;  
-  background-color: #eceff1;
   border: thin solid #eceff1;
   padding: 0.05rem;
   margin: 0.05rem;
@@ -140,18 +138,13 @@
   bottom: 0;
   right: 0;
   color: black;
-  /*
-  display: flex;
-  align-items: center;
-  align-content: center;
-  justify-content: center;
-  */
   padding: 0.1rem;
   margin: 0.1rem;
   background-color:#eceff1;
 }
 
 </style>
+
 
 
 <script>

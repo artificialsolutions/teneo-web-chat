@@ -88,85 +88,53 @@ export default {
 </script>
 
 <style scoped>
-.twc-message-list {
-  height: 80%;
-  overflow: auto;
-  padding: 20px 0;
-}
+  :root {
+    --user-input-bg-color: #fff;
+    --primary-color: #00f;
+  }
 
-.twc-message-list::-webkit-scrollbar {
-  width: 5px;
-}
+  .twc-message-list {
+    height: 80%;
+    overflow: auto;
+    padding: 20px 0;
+  }
 
-.twc-message-list::-webkit-scrollbar-track {
-  background: var(--user-input-bg-color); 
-  border-radius: 10px;
-  margin: 2px 0;
-}
+  .twc-message-list::-webkit-scrollbar {
+    width: 5px;
+  }
 
-.twc-message-list::-webkit-scrollbar-thumb {
-  background: var(--primary-color); 
-  border-radius: 10px;
-}
+  .twc-message-list::-webkit-scrollbar-track {
+    background: var(--user-input-bg-color); border-radius: 10px;
+    margin: 2px 0;
+  }
 
-.twc-message-list::-webkit-scrollbar-thumb:hover {
-  background: var(--primary-color); 
-}
+  .twc-message-list::-webkit-scrollbar-thumb {
+    background: var(--primary-color);
+    border-radius: 10px;
+  }
 
-.twc-message-list:last-child {
-  scroll-margin-top: 10px;
-}
+  .twc-message-list:last-child {
+    scroll-margin-top: 10px;
+  }
 
-#twc-scrollDownButton {
-  display: block;
-  position: absolute;
-  right: 3%;
-  bottom: 13%;
-  background-color: var(--user-input-bg-color);
-  opacity: 0.8;
-  box-shadow: 0 2px 4px 0 rgba(85, 87, 85, 0.7);
-  width: 20px;
-  height: 20px;
-  border: none;
-  background-size: 14px auto;
-  border-radius: 50%;
-  z-index: 2;
-  cursor: default;
-}
+  #twc-scrollDownButton {
+    display: block;
+    position: absolute;
+    right: 3%;
+    bottom: 13%;
+    width: 20px;
+    height: 20px;
+    border: none;
+    background: var(--user-input-bg-color) url('/src/icons/double-down.jpg') no-repeat center center / 14px auto;
+    border-radius: 50%;
+    z-index: 2;
+    cursor: default;
+    opacity: 0.8;
+    box-shadow: 0 2px 4px 0 rgba(85, 87, 85, 0.7);
+  }
 
-#twc-scrollDownButton:hover {
-  background-color: var(--primary-color);
-  box-shadow: 0 4px 8px 0 rgba(85, 87, 85, 0.7);
-}
-
-#twc-scrollDownButton:before {
-  position: absolute;
-  top: calc(50% - 9px);
-  left: calc(50% - 6.5px);
-  display: block;
-  width: 10px;
-  height: 10px;
-  content: "";
-  border: 1px solid var(--primary-color);
-  transform: rotate(-45deg);
-  cursor: default;
-}
-
-#twc-scrollDownButton:after {
-  position: absolute;
-  top: calc(50% - 1px);
-  left: calc(50% - 6.5px);
-  display: block;
-  width: 10px;
-  height: 10px;
-  content: "";
-  border: 1px solid var(--primary-color);
-  transform: rotate(45deg);
-  cursor: default;
-}
-
-
+  #twc-scrollDownButton:hover {
+    background-color: var(--primary-color);
+    box-shadow: 0 4px 8px 0 rgba(85, 87, 85, 0.7);
+  }
 </style>
-
-
-
