@@ -12,10 +12,15 @@
     @paste.prevent="addFilesFromPaste"
   >
     <div class = "twc-files-space">
+      
       <div class="twc-upload-items">
-
-        <div class="twc-upload-item" 
-          v-for="(item, id) in idToItem" 
+        <div id="drop-zone" v-if="Object.keys(idToItem).length === 0">
+          <div id="drop-message">
+            {{ $t('message.upload_panel_add_files') }}
+          </div>
+        </div>
+        <div class="twc-upload-item"
+          v-for="(item, id) in idToItem"
           :key="id"
           :title="item.file.name"
         >
@@ -35,15 +40,12 @@
             <line x1="10" y1="1" x2="1" y2="10"></line>
             <line x1="1" y1="1" x2="10" y2="10"></line>
           </svg>
-
           <canvas :id="('twc-upload-item-canvas' + id)" class="twc-upload-item-canvas"></canvas>
-          <div class = "twc-file-name">{{item.file.name}}</div>
-         
+          <div class="twc-file-name">{{item.file.name}}</div>
         </div>
       </div>
 
       <input type="file" ref="fileInputElement" multiple="multiple" @click.stop="e=>{e.currentTarget.value=null}" @change="addFilesFromInput" style="opacity:0"/>
-      
     </div>
 
     <textarea v-if="comment != null" :disabled="processing" v-model="comment" class="twc-upload-comment"></textarea>
@@ -58,7 +60,29 @@
   </div>
 </template>
 
+
+<script>
+export default {
+  computed: {
+    showDropMessage() {
+      return Object.keys(this.idToItem).length === 0;
+    },
+  },
+}
+</script>
+
+
 <style scoped>
+#drop-message {
+  border: 2px dotted #ccc;
+  border-radius: 5px;
+  padding: 50px;
+  text-align: center;
+  height: auto;
+  width: auto;
+  padding-bottom: 20%;
+  padding-top: 0px;
+}
 
 /* Parent: hall panel */
 .twc-upload-preview-panel {

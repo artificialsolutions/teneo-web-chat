@@ -52,6 +52,6 @@ export default {
 }
 
 .twc-message.twc-bot {
-  justify-content: flex-start;
+  justify-content: flex-end;
 }
 </style>

@@ -68,24 +68,29 @@
   text-align: center;
   padding: 2px 1px;
   margin: 1px 0 0;
+  right: 0;
 }
 
 .twc-upload-file-visualization,
 .twc-upload-file-representation {
   position: relative;
-  height: 200px;
   display: flex;
   align-items: center;
   align-content: center;
   justify-content: center;
   background-color: #eceff1;
   padding: 10px;
+  right: 0;
+  max-width: 100%;
+  height: auto;
 }
 
 .twc-upload-file-representation-image {
+  max-height: 50%;
+  max-width: 50%;
+  height: auto;
+  width: auto;
   object-fit: contain;
-  max-height: 90%;
-  max-width: 90%;
 }
 
 .twc-upload-file-progress-spinner,
