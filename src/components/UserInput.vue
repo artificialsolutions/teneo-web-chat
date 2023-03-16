@@ -236,7 +236,7 @@ export default {
 
   mounted() {
     EventBus.$on(events.UPLOAD_PANEL_OPENED, () => {
-      this.showUserInput = false;
+      this.showUserInput = false;      
     });
     EventBus.$on(events.UPLOAD_PANEL_CLOSED, () => {
       this.showUserInput = true;

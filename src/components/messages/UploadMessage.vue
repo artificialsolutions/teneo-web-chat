@@ -28,9 +28,7 @@
         
       </template>
       <template v-else-if="status === 'DELETED'">
-        <template v-if="controlAllowed">
-          <span ref="spinner" class="twc-upload-file-progress-spinner"></span>
-          <a @click="restartUpload" role="button" class="twc-upload-file-cta twc-upload-file-middle-circle twc-upload-file-restart" :title="$t('message.upload_file_reupload')">&#x27f3;</a>
+        <template v-if="controlAllowed">        
         </template>
         
       </template>
@@ -43,9 +41,15 @@
 
 <style>
 
+
 @keyframes twc-upload-file-progress-spin {
   0% { transform: rotate(0deg); }
   100% { transform: rotate(360deg); }
+}
+.twc-upload-file-deleted .twc-upload-file-representation-symbol {
+  color: #eceff1;
+  text-decoration: line-through;
+  filter: blur(0);
 }
 
 .text-center {
@@ -59,12 +63,17 @@
 .twc-upload-file,
 .twc-upload-file-name {
   position: relative;
-  background-color: #eceff1;
+  background-color: #2f286e;
   padding: 5px;
+  border-radius: 10px;
+  width: 150px;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
 }
 
 .twc-upload-file-name {
-  color: black;
+  color: #eceff1;
   text-align: center;
   padding: 2px 1px;
   margin: 1px 0 0;
@@ -78,7 +87,7 @@
   align-items: center;
   align-content: center;
   justify-content: center;
-  background-color: #eceff1;
+  background-color: #2f286e;
   padding: 10px;
   right: 0;
   max-width: 100%;

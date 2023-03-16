@@ -5,9 +5,10 @@
       :key="idx"
       :message="message"
     />
-    <button id = "twc-scrollDownButton" @click="scrollDownDirectly"></button>
+    <button id="twc-scrollDownButton" v-show="showScrollDownButton" @click="scrollDownDirectly"></button>
   </div>
 </template>
+
 <script>
 import Message from './Message.vue';
 import { EventBus,events } from '../utils/event-bus';
@@ -22,54 +23,74 @@ export default {
       required: true,
     },
   },
-  mounted () {
-      setTimeout(this._scrollDownInstantly.bind(this), 80);
-      //Setup a downwards scroller
-      EventBus.$on(events.SCROLL_CHAT_DOWN, () => {
-        setTimeout(() => { this._scrollDown()}, 40);
-      });
+  data() {
+    return {
+      showScrollDownButton: false,
+    };
+  },
+  mounted() {
+    // Setup a downwards scroller
+    EventBus.$on(events.SCROLL_CHAT_DOWN, () => {
+      setTimeout(() => {
+        this._scrollDown();
+      }, 40);
+    });
+
+    // Add scroll event listener to show/hide scroll down button
+    this.$refs.scrollList.addEventListener('scroll', () => {
+  this.handleScroll();
+});
+
   },
   updated() {
-    if (this.shouldScrollToBottom()) {
-      this.$nextTick(this._scrollDown);
-    }
-
+    if (this.shouldScrollToBottom() && !this.showScrollDownButton) {
+  this.$nextTick(this._scrollDown);
+}
     // Additional scroll down after images etc have loaded
     setTimeout(this._scrollDown.bind(this), 700);
   },
+  beforeDestroy() {
+    // Remove scroll event listener
+    this.$refs.scrollList.removeEventListener('scroll', this.handleScroll);
+  },
   methods: {
     _scrollDown() {
-      const latestMessage = document.querySelector('.twc-message:last-child');
+  const scrollList = this.$refs.scrollList;
+  const latestMessage = document.querySelector('.twc-message:last-child');
 
-      if (latestMessage && typeof latestMessage.scrollIntoView === 'function') {
-        latestMessage.scrollIntoView({
-          behavior: 'smooth',
-          block: 'start',
-          inline: 'nearest'
-        });
-      } else if (this.$refs.scrollList) {
-        this.$refs.scrollList.scrollTop = this.$refs.scrollList.scrollHeight;
-      }
-    },
-    _scrollDownInstantly() {
+  if (!scrollList) {
+    return;
+  }
 
-      const latestMessage = document.querySelector('.twc-message:last-child');
+  // Only scroll to the bottom if the user is already at the bottom
+  if (scrollList.scrollTop === (scrollList.scrollHeight - scrollList.offsetHeight)) {
+    if (latestMessage && typeof latestMessage.scrollIntoView === 'function') {
+      latestMessage.scrollIntoView({
+        behavior: 'smooth',
+        block: 'end',
+        inline: 'nearest'
+      });
+    } else {
+      scrollList.scrollTop = scrollList.scrollHeight;
+    }
+  }
+},
 
-      if (latestMessage && typeof latestMessage.scrollIntoView === 'function') {
-        latestMessage.scrollIntoView({
-          behavior: 'smooth',
-          inline: "nearest",
-          block: 'start',
-        });
-      } else if (this.$refs.scrollList) {
-        this.$refs.scrollList.scrollTop = this.$refs.scrollList.scrollHeight;
-      }
-    },
-    shouldScrollToBottom() {
-      return (
-        this.$refs.scrollList.scrollTop < this.$refs.scrollList.scrollHeight
-      );
-    },
+shouldScrollToBottom() {
+  return this.$refs.scrollList.scrollTop >= 0;
+},
+
+
+handleScroll() {
+  const scrollList = this.$refs.scrollList;
+
+  if (scrollList.scrollTop === (scrollList.scrollHeight - scrollList.offsetHeight)) {
+    this.showScrollDownButton = false;
+  } else {
+    this.showScrollDownButton = true;
+  }
+},
+
     scrollDownDirectly() {
       const latestMessage = document.querySelector('.twc-message:last-child');
 
@@ -86,6 +107,8 @@ export default {
   },
 };
 </script>
+
+
 
 <style scoped>
   :root {

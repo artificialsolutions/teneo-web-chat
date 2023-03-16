@@ -73,6 +73,13 @@ export default {
 
 
 <style scoped>
+
+@media only screen and (max-width: 767px) {
+  #drop-message {
+    display: none;
+  }
+}
+
 #drop-message {
   border: 2px dotted #ccc;
   border-radius: 5px;
