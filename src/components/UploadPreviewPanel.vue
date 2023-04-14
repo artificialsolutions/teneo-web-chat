@@ -737,11 +737,11 @@ export default {
       if (ctx == null) {
         alert('No context for image in preload preview canvas');
         console.error(sName, 'insertImage(), no context for image [' + item.file.name + '] in preload preview canvas');
-        setTimeout(() => this.removeItem(item));
+        setTimeout(() => this.removeItem(item),0);
         return;
       }
       var extraData = idToExtraData[item.id];
-      if (extraData == null) idToExtraData[item.id] = extraData = {};
+      if (extraData == null) idToExtraData[item.id] = extraData = { images: [] };
       else {
         if (extraData.imageFailure) {
           this.insertTextCaption(canvasElement, item, ctx);
@@ -757,6 +757,7 @@ export default {
           if (bDebug) console.log(sName, 'insertImage(), img.onload, img.width==' + img.width + ', img.height==' + img.height);
           if (Number.isFinite(img.width) && img.width > 0 && Number.isFinite(img.height) && img.height > 0) {
             if (extraData.width == null || extraData.height == null) {
+              extraData.images.unshift(item.id);
               let w = MAX_IMG_PREVIEW_WIDTH / img.width, h = MAX_IMG_PREVIEW_HEIGHT / img.height;
               if (w < h) {
                 // w is the reference, width > height
@@ -845,7 +846,8 @@ export default {
 
     removeItem(item) {
       if (bDebug) console.log(sName, 'removeItem()');
-      delete idToExtraData[item.id];
+      idToExtraData[item.id].images.splice(idToExtraData[item.id].images.indexOf(item.id), 1);
+      if (idToExtraData[item.id].images.length === 0) delete idToExtraData[item.id];
       if (this.idToItem.hasOwnProperty(item.id)) {
         delete this.idToItem[item.id];
         this.itemsCount--;
