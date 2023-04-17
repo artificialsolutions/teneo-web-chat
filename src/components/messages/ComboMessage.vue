@@ -204,6 +204,7 @@
             <tr class="twc-table-header-row">
               <th
                   v-for="(header) in message.data.headers"
+                  :key="header"
                   class="twc-table-header-cell"
               >
                 {{ header }}
@@ -213,10 +214,12 @@
             <tbody v-if="message.data.body">
             <tr
                 v-for="(row) in message.data.body"
+                :key="row"
                 class="twc-table-body-row"
             >
               <td
                   v-for="(cell) in row"
+                  :key="cell"
                   class="twc-table-body-cell"
               >{{ cell }}
               </td>
@@ -226,6 +229,7 @@
             <tr class="twc-table-footer-row">
               <td
                   v-for="(footer) in message.data.footers"
+                  :key="footer"
                   class="twc-table-footer-cell"
               >{{ footer }}
               </td>
@@ -331,6 +335,7 @@ export default {
   padding: 0;
   margin: 0 0 -10px 0;
   width: 100%;
+  position: relative;
 }
 
 .twc-combo-message {
@@ -343,7 +348,67 @@ export default {
 </style>
 
 <style scoped>
-.twc-buttons {
+
+.twc-combo-message .twc-card {
+  height: 50%;
+  display: flex;
+  align-items: center;
+  position: relative;
+  border: 2px solid rgb(202, 202, 202);
+}
+
+.twc-combo-message .twc-card .twc-clickablelist {
+  display: flex;
+  justify-content: center;
+  width: 100%;
+  height: auto;
+  overflow: auto;
+  box-shadow: none;
+  margin-right: 0px;
+  margin-bottom: 0%;
+  position: relative;
+  border-radius: 10px;
+}
+
+.twc-combo-message .twc-card .twc-clickablelist-message {
+  width: 80%;
+  margin-bottom: 3%;
+  margin-top: 10px;
+  border-radius: 10px;
+}
+.twc-combo-message .twc-card .twc-clickablelist-message__item {
+  width: 100%;
+  height: auto;
+  border-radius: 5px;
+  background-color: var(--primary-color) !important;
+  border:none;
+  color:white;
+  margin: 0;
+  margin: 2px;
+  padding: 0;
+  padding-top: 3px;
+  padding-bottom: 3px;
+  text-align: center;
+  outline: none;
+  font-size: 0.9rem;
+}
+
+.twc-combo-message .twc-card .twc-clickablelist-message__item:hover {
+  height: auto ;
+  background-color: var(--primary-color-dark) !important; /**Comment on this */
+  border: none;
+  border-radius: 5px;
+  margin: 2px;
+  padding: 0;
+  padding-top: 3px;
+  padding-bottom: 3px;
+  color: white;
+  font-size: 0.9rem;
+  outline:none;
+}
+
+
+.twc-combo-message .twc-buttons {
   width: 100%;
   margin: -3px 47px -3px -3px;
   text-align: center;
@@ -353,15 +418,17 @@ export default {
   min-width: 62px;
 }
 
-.twc-linkbuttons {
+.twc-combo-message .twc-linkbuttons {
+  position:relative;
   width: 100%;
   margin: -3px;
   margin-right: 37px;
   text-align: center;
 }
 
-.twc-card .twc-linkbuttons {
+.twc-combo-message .twc-card .twc-linkbuttons {
   width: auto;
   margin: 0;
+  position: relative;
 }
 </style>

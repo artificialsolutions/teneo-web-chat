@@ -131,7 +131,6 @@ export default {
     EventBus.$emit(events.API_STATE_READY);
   },
   methods: {
-    // Encapsulating dependency methods makes Testing easier
     async _onMessageReceived(message) {
       await this.$teneoApi._onMessageReceived(message);
     },
@@ -267,22 +266,40 @@ export default {
 
 <style scoped>
 .teneo-web-chat {
+  /** New variables: */
+  --line-light-color: #e0e0e0;
+  --link-button-color-: #2f286e;
+
+  /** Basic colors */
   --light-fg-color: #ffffff;
   --light-bg-color: #eceff1;
   --light-border-color: #c9c9c9;
   --dark-fg-color: #263238;
   --dark-bg-color: #7b7b7b;
-  --primary-color: #4e8cff;
+
+  /** Button colors */
+  --primary-color: #2f286e;
+  --primary-color-dark:#160d27; /** */
   --secondary-color: #6c757d;
+  --secondary-color-dark: #4e5459; /** */
   --danger-color: #dc3545;
+  --danger-color-dark: #ac2936; /** */
   --success-color: #28a745;
-  --warning-color: #ffc107;
+  --success-color-dark: #1c7932; /** */
+  --warning-color: #e2ab07;
+  --warning-color-dark: #c79605; /** */
   --warning-fg-text-color: #d19d00;
   --info-color: #17a2b8;
+  --info-color-dark: #0e798a;
+
   --expired-color: #a9a9a9;
-  --text-link-color: #007bff;
+  --expired-bg-color: #f0f0f0;
+
+  --text-link-color: var(--primary-color);
+
   --user-input-bg-color: #f4f7f9;
   --user-input-fg-color: #565867;
+
   --spinner-color: var(--light-border-color);
   --sendicon-fg-color: var(--dark-fg-color);
   --uploadicon-fg-color: var(--dark-fg-color);
@@ -310,33 +327,58 @@ export default {
   --agent-typing-indicator-bg-color: var(--agent-message-bg-color);
   --user-typing-indicator-fg-color: var(--user-message-fg-color);
   --user-typing-indicator-bg-color: var(--user-message-bg-color);
+  
+
+  /** Messages colors */
+
+  /**buttons */
   --buttons-title-color: var(--dark-fg-color);
   --button-fg-color: var(--light-fg-color);
   --button-bg-color: var(--primary-color);
+
+  /**Cards */
   --card-bg-color: var(--light-fg-color);
   --card-link-color: var(--text-link-color);
+
+  /**links */
   --link-button-fg-color: var(--text-link-color);
   --link-button-bg-color: var(--light-fg-color);
-  --link-button-border-color: var(--light-border-color);
+  --link-button-border-color: var(--primary-color);
+
+  /**Clickablelist */
   --clickablelist-title-color: var(--dark-fg-color);
   --clickablelist-bg-color: var(--light-fg-color);
   --clickablelist-fg-color: var(--dark-fg-color);
   --clickablelist-selected-bg-color: var(--bot-message-bg-color);
   --clickablelist-selected-fg-color: var(--dark-fg-color);
+
+  /**quickreply */
   --quickreply-fg-color: var(--primary-color);
   --quickreply-bg-color: var(--light-fg-color);
   --quickreply-border-color: var(--primary-color);
   --quickreply-expired-color: var(--expired-color);
+
+  /**light box */
   --lightbox-overlay-color: rgba(0, 0, 0, 0.8);
   --lightbox-image-background-color: #ffffff;
+
+  /**Modal */
   --modal-overlay-color: rgba(0, 0, 0, 0.5);
+
+  /**Carrousel */
   --carousel-ctrl-panel-bg-color: var(--primary-color);
   --carousel-ctrl-panel-fg-color: var(--light-fg-color);
   --carousel-ctrl-panel-active-color: var(--secondary-color);
   --carousel-ctrl-panel-disabled-color: var(--expired-color);
+  --carousel-arrows-bg-color: #74728f;
+  --carousel-ctrl-dots-bg-color: #808080;
+
+  /**Link preview */
   --link-preview-background-color: var(--light-bg-color);
   --link-preview-text-color: var(--dark-fg-color);
   --link-preview-image-background-color: var(--dark-bg-color);
+
+  /**Table */
   --table-border-color: var(--light-border-color);
   --table-title-text-color: var(--dark-fg-color);
   --table-title-background-color: var(--light-bg-color);
@@ -348,6 +390,8 @@ export default {
   --table-body-even-background-color: #aaa;
   --table-footer-text-color: var(--primary-color);
   --table-footer-background-color: var(--light-bg-color);
+
+  /**Form */
   --form-background-color: var(--light-bg-color);
   --form-title-text-color: var(--dark-fg-color);
   --form-subtitle-text-color: var(--dark-fg-color);
@@ -361,6 +405,7 @@ export default {
   --form-reset-text-color: var(--dark-fg-color);
   --form-reset-background-color: var(--warning-color);
 
+  /**Font */
   --primary-font: 'Helvetica Neue', Helvetica, Arial, sans-serif;
 }
 

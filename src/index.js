@@ -228,6 +228,7 @@ window.TeneoWebChat = {
       callbackFunctions.push(func);
 
       // Store the list of callbacks function for this 'function_name'
+
       functionMap.set(function_name, callbackFunctions);
     }
   },
@@ -247,7 +248,7 @@ window.TeneoWebChat = {
           return message.type !== 'typing';
         });
 
-return filteredMessageList;
+        return filteredMessageList;
       }
 
       case apiConstants.API_GET_ENGINE_URL:
@@ -259,18 +260,19 @@ return filteredMessageList;
       case apiConstants.API_GET_LOCALE:
         return store.getters.localeObj;
 
-        case apiConstants.API_GET_MS_VOICE:
+      case apiConstants.API_GET_MS_VOICE:
         return store.getters.msVoice;
 
       case apiConstants.API_GET_ENGINE_PARAMS:
-        return store.getters.teneoEngineParams
+        return store.getters.teneoEngineParams;
 
       default:
-        break;
+        console.warn('Unknown get function name', function_name);
+        return undefined;
     }
   },
-  call(function_name, payload = undefined) {
 
+  call(function_name, payload = undefined) {
     switch (function_name) {
       case apiConstants.API_CALL_SHOW_CALLOUT:
         if (payload && typeof payload === 'string') {
@@ -288,13 +290,13 @@ return filteredMessageList;
         EventBus.$emit(events.SET_LOCALE, store.getters.locale);
         break;
 
-        case apiConstants.API_SET_ENGINE_PARAMS:
+      case apiConstants.API_SET_ENGINE_PARAMS:
         // TODO: throw error if payload is invalid or if store throws error
         store.commit('teneoEngineParams', payload);
         EventBus.$emit(events.SET_ENGINE_PARAMS, store.getters.teneoEngineParams);
         break;
 
-        case apiConstants.API_SET_MS_VOICE:
+      case apiConstants.API_SET_MS_VOICE:
         // TODO: throw error if payload is invalid or if store throws error
         store.commit('msVoice', payload);
         EventBus.$emit(events.SET_MS_VOICE, store.getters.msVoice);
@@ -352,7 +354,7 @@ return filteredMessageList;
          * TODO: check if message type is valid?
          */
         if (Object.keys(payload).length > 0 && payload.constructor === Object) {
-                 EventBus.$emit(events.ADD_MESSAGE, payload);
+          EventBus.$emit(events.ADD_MESSAGE, payload);
         }
         break;
 
@@ -362,7 +364,7 @@ return filteredMessageList;
 
       case apiConstants.API_CALL_SHOW_TYPING_INDICATOR:
         if (Object.keys(payload).length > 0 && payload.constructor === Object) {
-           EventBus.$emit(events.SHOW_TYPING_INDICATOR, payload);
+          EventBus.$emit(events.SHOW_TYPING_INDICATOR, payload);
         }
         break;
 
@@ -522,8 +524,21 @@ return filteredMessageList;
         }
         break;
 
-      default:
+      // TODO ALPE
+      case apiConstants.API_CALL_SHOW_UPLOAD_PANEL:
+        EventBus.$emit(events.SHOW_UPLOAD_PANEL, payload);
         break;
+
+      case apiConstants.API_CALL_HIDE_UPLOAD_PANEL:
+        EventBus.$emit(events.HIDE_UPLOAD_PANEL);
+        break;
+
+      case apiConstants.API_ON_SET_UPLOAD_STATE:
+        EventBus.$emit(events.SET_UPLOAD_STATE, payload);
+        break;
+
+      default:
+        console.warn('Unknown called function name', function_name);
     }
   },
   version() {

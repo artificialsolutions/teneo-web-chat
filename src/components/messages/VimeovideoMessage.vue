@@ -35,8 +35,20 @@ export default {
 
 <style>
 .twc-vimeo-video {
-  width: 100%;
+  width: 260px;
+  height: 150px;
   margin-right: 40px;
-  min-width: 260px;
+  box-shadow: 0 2px 5px 0 rgba(0,0,0,0.16),0 2px 10px 0 rgba(0,0,0,0.12);
+  background-color: transparent;
+  border-radius: 5px;
+  border-bottom-left-radius: 0%;
+}
+
+iframe {
+  background: none;
+  width: 260px;
+  height: 150px;
+  border-radius: 5px;
+  border-bottom-left-radius: 0%;
 }
 </style>

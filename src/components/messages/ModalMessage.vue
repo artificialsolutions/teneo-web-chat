@@ -1,6 +1,8 @@
 <template>
   <div class="twc-modal" v-on:click.stop>
+    
     <div class="twc-modal-content">
+      <button class="close" @click = "closeModal()">x</button>
       <div class="twc-modal-img" v-if="imageUrl">
         <img :src="imageUrl" :alt="altText"/>
       </div>
@@ -24,7 +26,6 @@
           >{{ button.title }}</a>
         </div>
       </div>
-
     </div>
   </div>
 </template>
@@ -120,8 +121,14 @@ export default {
       this.$teneoApi.messageList = messages;
       EventBus.$emit(events.ENABLE_INPUT);
     },
+
+    closeModal() {
+      var modal = document.getElementsByClassName("twc-modal");
+      modal.style.display = "none";
+    }
   },
 };
+
 </script>
 
 <style>
@@ -139,7 +146,7 @@ export default {
   box-sizing: border-box;
   border-radius: 10px;
   transition: 0.3s ease-in-out;
-  box-shadow: 0 2px 10px 0 rgba(0, 0, 0, 0.15);
+  box-shadow: 0 2px 10px 0 rgba(0, 0, 0, 0.4);
   display: flex;
   flex-direction: column;
   justify-content: space-between;
@@ -164,10 +171,19 @@ export default {
   transform: translate(-50%, -50%);
 }
 
-.twc-modal-content .twc-modal-img, .twc-modal-content .twc-modal-img img {
+.twc-modal-content .twc-modal-img {
+  display: flex;
+  justify-content: center;
+}
+
+.twc-modal-content .twc-modal-img img {
   max-width: 100% !important;
+  width: auto;
   max-height: 100px;
   text-align: center;
+  margin-top: 15px;
+  border-radius: 5px;
+  object-fit: cover;
 }
 
 .twc-modal-content .twc-modal-body {
@@ -194,6 +210,7 @@ export default {
     color: var(--bot-message-fg-color, #263238);
     margin-top: 0.6rem;
     margin-bottom: 0.6rem;
+    text-align: left;
 }
 
 .twc-modal-content .twc-buttons {

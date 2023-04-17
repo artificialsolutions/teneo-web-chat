@@ -4,3 +4,5 @@ stats-prod.json
 .env
 /.idea/
 /dist/
+src/.DS_Store
+.DS_Store

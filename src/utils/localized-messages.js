@@ -24,7 +24,9 @@ export var translatedMessages = {
             preview_title_not_available: "Uden titel",
             preview_description_not_available: "Ingen beskrivelse tilgængelig",
             connection_error_retry_message: "Der er problemer med forbindelsen til serveren. Vent venligst.",
-            connection_error_final_message: "Kunne ikke oprette forbindelse til serveren. Forsøg venligst igen senere."
+            connection_error_final_message: "Kunne ikke oprette forbindelse til serveren. Forsøg venligst igen senere.",
+            upload_panel_add_files: "Træk og slip eller indsæt filer her"
+
         }
     },
     de: {
@@ -52,7 +54,8 @@ export var translatedMessages = {
             preview_title_not_available: "Unbenannt",
             preview_description_not_available: "Keine Beschreibung verfügbar",
             connection_error_retry_message: "There is a problem communicating with the server. Please wait.",
-            connection_error_final_message: "Could not establish connection to server. Please try again later."
+            connection_error_final_message: "Could not establish connection to server. Please try again later.",
+            upload_panel_add_files:"Dateien hier ablegen oder einfügen"
         }
     },
     en: {
@@ -80,7 +83,22 @@ export var translatedMessages = {
             preview_title_not_available: "Untitled",
             preview_description_not_available: "No Description Available",
             connection_error_retry_message: "There is a problem communicating with the server. Please wait.",
-            connection_error_final_message: "Could not establish connection to server. Please try again later."
+            connection_error_final_message: "Could not establish connection to server. Please try again later.",
+
+            upload_file_delete: "Delete uploaded file",
+            upload_file_stop: "Stop file upload",
+            upload_file_restart: "Restart file upload",
+            upload_file_retry: "Retry file upload",
+            upload_file_reupload: "Reupload file",
+            upload_file_succeeded: "Succeeded",
+            upload_file_in_progress: "In progress",
+            upload_file_interrupted: "Interrupted",
+            upload_file_failed: "Failed",
+            upload_file_deleted: "Deleted",
+            upload_panel_add_files: "Drop or paste files here",
+            upload_panel_clear_all: "Clear all",
+            upload_panel_submit: "Submit",
+            upload_panel_cancel: "Cancel",
         }
     },
     'en-GB': {
@@ -108,7 +126,8 @@ export var translatedMessages = {
             preview_title_not_available: "Untitled",
             preview_description_not_available: "No Description Available",
             connection_error_retry_message: "There is a problem communicating with the server. Please wait.",
-            connection_error_final_message: "Could not establish connection to server. Please try again later."
+            connection_error_final_message: "Could not establish connection to server. Please try again later.",
+            upload_panel_add_files:"Drop or paste files here"
         }
     },
     es: {
@@ -136,7 +155,8 @@ export var translatedMessages = {
             preview_title_not_available: "Sin Título",
             preview_description_not_available: "Descripción no disponible",
             connection_error_retry_message: "Ha habido un problema comunicándose con el servidor. Por favor espere.",
-            connection_error_final_message: "No se ha podido establecer una conexión con el servidar. Por favor, inténtelo más tarde."
+            connection_error_final_message: "No se ha podido establecer una conexión con el servidar. Por favor, inténtelo más tarde.",
+            upload_panel_add_files:"Arrastra o pega archivos aquí"
         }
     },
     fr: {
@@ -164,7 +184,8 @@ export var translatedMessages = {
             preview_title_not_available: "Sans titre",
             preview_description_not_available: "Aucune description disponible",
             connection_error_retry_message: "There is a problem communicating with the server. Please wait.",
-            connection_error_final_message: "Could not establish connection to server. Please try again later."
+            connection_error_final_message: "Could not establish connection to server. Please try again later.",
+            upload_panel_add_files:"Déposez ou collez les fichiers ici"
         }
     },
     id: {
@@ -192,7 +213,8 @@ export var translatedMessages = {
             preview_title_not_available: "Tanpa judul",
             preview_description_not_available: "Deskripsi tidak tersedia",
             connection_error_retry_message: "Ada masalah saat berkomunikasi dengan server. Mohon tunggu.",
-            connection_error_final_message: "Tidak dapat membuat sambungan ke server. Silakan coba lagi nanti."
+            connection_error_final_message: "Tidak dapat membuat sambungan ke server. Silakan coba lagi nanti.",
+            upload_panel_add_files:"Seret atau tempel file di sini"
         }
     },
     it: {
@@ -220,7 +242,8 @@ export var translatedMessages = {
             preview_title_not_available: "Senza Titolo",
             preview_description_not_available: "Descrizione non disponibile",
             connection_error_retry_message: "Attendere prego, abbiamo rilevato un problema di comunicazione con il server.",
-            connection_error_final_message: "Non è possibile stabilire una connessione con il server. Si prega di riprovare più tardi."
+            connection_error_final_message: "Non è possibile stabilire una connessione con il server. Si prega di riprovare più tardi.",
+            upload_panel_add_files:"Trascina o incolla i file qui"
         }
     },
     ja: {
@@ -248,7 +271,8 @@ export var translatedMessages = {
             preview_title_not_available: "タイトルなし",
             preview_description_not_available: "説明なし",
             connection_error_retry_message: "There is a problem communicating with the server. Please wait.",
-            connection_error_final_message: "Could not establish connection to server. Please try again later."
+            connection_error_final_message: "Could not establish connection to server. Please try again later.",
+            upload_panel_add_files:"ファイルをここにドロップまたは貼り付けてください"
         }
     },
     ms: {
@@ -276,7 +300,8 @@ export var translatedMessages = {
             preview_title_not_available: "Tanpa tajuk",
             preview_description_not_available: "Tidak ada keterangan",
             connection_error_retry_message: "Terdapat masalah untuk berkomunikasi dengan pelayan. Sila tunggu.",
-            connection_error_final_message: "Tidak dapat membuat sambungan ke pelayan. Sila cuba sebentar lagi."
+            connection_error_final_message: "Tidak dapat membuat sambungan ke pelayan. Sila cuba sebentar lagi.",
+            upload_panel_add_files:"Jatuhkan atau tampal fail di sini"
         }
     },
     nl: {
@@ -304,7 +329,8 @@ export var translatedMessages = {
             preview_title_not_available: "Geen titel",
             preview_description_not_available: "Geen beschrijving beschikbaar",
             connection_error_retry_message: "There is a problem communicating with the server. Please wait.",
-            connection_error_final_message: "Could not establish connection to server. Please try again later."
+            connection_error_final_message: "Could not establish connection to server. Please try again later.",
+            upload_panel_add_files:"Sleep of plak bestanden hier"
         }
     },
     pt: {
@@ -332,7 +358,8 @@ export var translatedMessages = {
             preview_title_not_available: "Sem título",
             preview_description_not_available: "Descrição não disponível",
             connection_error_retry_message: "Há um problema de comunicação com o servidor. Por favor, aguarde.",
-            connection_error_final_message: "Não foi possível estabelecer conexão com o servidor. Por favor, tente novamente mais tarde."
+            connection_error_final_message: "Não foi possível estabelecer conexão com o servidor. Por favor, tente novamente mais tarde.",
+            upload_panel_add_files:"Arraste e solte ou cole os arquivos aqui"
         }
     },
     sv: {
@@ -360,7 +387,8 @@ export var translatedMessages = {
             preview_title_not_available: "Namnlös",
             preview_description_not_available: "Beskrivning saknas",
             connection_error_retry_message: "There is a problem communicating with the server. Please wait.",
-            connection_error_final_message: "Could not establish connection to server. Please try again later."
+            connection_error_final_message: "Could not establish connection to server. Please try again later.",
+            upload_panel_add_files: "Dra och släpp eller klistra in filer här"
         }
     },
     tr: {
@@ -388,7 +416,8 @@ export var translatedMessages = {
             preview_title_not_available: "İsimsiz",
             preview_description_not_available: "Açıklama Yok",
             connection_error_retry_message: "There is a problem communicating with the server. Please wait.",
-            connection_error_final_message: "Could not establish connection to server. Please try again later."
+            connection_error_final_message: "Could not establish connection to server. Please try again later.",
+            upload_panel_add_files:"Dosyaları buraya bırakın veya yapıştırın"
         }
     },
     zh: {
@@ -416,7 +445,8 @@ export var translatedMessages = {
             preview_title_not_available: "無標題",
             preview_description_not_available: "無可用描述",
             connection_error_retry_message: "There is a problem communicating with the server. Please wait.",
-            connection_error_final_message: "Could not establish connection to server. Please try again later."
+            connection_error_final_message: "Could not establish connection to server. Please try again later.",
+            upload_panel_add_files:"拖放或粘贴文件到此处"
         }
     },
     'zh-CN': {
@@ -444,7 +474,8 @@ export var translatedMessages = {
             preview_title_not_available: "无标题",
             preview_description_not_available: "没有可用的描述",
             connection_error_retry_message: "There is a problem communicating with the server. Please wait.",
-            connection_error_final_message: "Could not establish connection to server. Please try again later."
+            connection_error_final_message: "Could not establish connection to server. Please try again later.",
+            upload_panel_add_files:"拖放或粘贴文件到此处"
         }
     }
 }
