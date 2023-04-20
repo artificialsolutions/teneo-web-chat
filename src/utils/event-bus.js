@@ -43,7 +43,8 @@ export const events = {
     SET_MS_VOICE: 'set_ms_voice',
     SHOW_CALLOUT: 'show_callout',
     HIDE_CALLOUT: 'hide_calllout',
-    ZOOM_IMAGE: 'zoom_image'
+    ZOOM_IMAGE: 'zoom_image',
+    STOP_ASR_TTS: 'stop_asr_tts'
 };
 
 export const EventBus = new Vue();

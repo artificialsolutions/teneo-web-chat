@@ -40,40 +40,32 @@ div.scroll {
 
 </style>
 
-<script src="teneo-web-chat.js"></script> 
-<script>
-TeneoWebChat.on('ready', () => {
-
-const x = TeneoWebChat.get('storage').getItem('twc_last_state');
-
-    if (x) {
-        switch (x) {
-            case 'maximized':
-                TeneoWebChat.call('maximize');
-                break;
-            case 'minimized':
-                TeneoWebChat.call('minimize');
-                break;
-            default:
-                logger.warn('TeneoWebChat', 'unknown stored twc_last_state value', x);
-        }
-
-    }
-
-});
-
-
-
-TeneoWebChat.on('visibility_changed', payload => TeneoWebChat.get('storage').setItem('twc_last_state', payload.visibility));
-TeneoWebChat.on('reset', () => TeneoWebChat.get('storage').removeItem('twc_last_state'));
-</script>  
-
+<!-- script src="teneo-web-chat.js"></script -->
 <!-- needed for Heroku -->
 <!--<% if(process.env.NODE_ENV === 'development') { %>-->
 <!--<% } %>-->
 <script>
 /* <![CDATA[ */
 window.addEventListener('load', () => {
+
+    TeneoWebChat.on('ready', () => {
+        const x = TeneoWebChat.get('storage').getItem('twc_last_state');
+        if (x) {
+            switch (x) {
+                case 'maximized':
+                    TeneoWebChat.call('maximize');
+                    break;
+                case 'minimized':
+                    TeneoWebChat.call('minimize');
+                    break;
+                default:
+                    logger.warn('TeneoWebChat', 'unknown stored twc_last_state value', x);
+            }
+        }
+    });
+
+    TeneoWebChat.on('visibility_changed', payload => TeneoWebChat.get('storage').setItem('twc_last_state', payload.visibility));
+    TeneoWebChat.on('reset', () => TeneoWebChat.get('storage').removeItem('twc_last_state'));
 
     const element = document.getElementById('teneo-web-chat');
     const teneoProps = {
@@ -92,14 +84,36 @@ window.addEventListener('load', () => {
         'showUploadButton': '<%= process.env.SHOW_UPLOAD_BUTTON %>',
         'asrIconUrl': '<%= process.env.ASR_ICON_URL %>',
         'showAsrButton': '<%= process.env.SHOW_ASR_BUTTON %>',
-        'asrActive': '<%= process.env.ASR_ACTIVE %>',
         'ttsIconUrl': '<%= process.env.TTS_ICON_URL %>',
         'showTtsButton': '<%= process.env.SHOW_TTS_BUTTON %>',
+
         'ttsActive': '<%= process.env.TTS_ACTIVE %>',
+        'asrActive': '<%= process.env.ASR_ACTIVE %>',
+
+        'msCognitiveAsrSubscriptionKey': '<%= process.env.MS_COGNITIVE_ASR_SUBSCRIPTION_KEY %>',
+        'msCognitiveAsrRegion': '<%= process.env.MS_COGNITIVE_ASR_REGION %>',
+        'msCognitiveAsrSubscriptionOnly': <%= process.env.MS_COGNITIVE_ASR_SUBSCRIPTION_ONLY %>,
+        'msCognitiveAsrCustomAuthTokenUrl': '<%= process.env.MS_COGNITIVE_ASR_CUSTOM_AUTH_TOKEN_URL %>',
+        'msCognitiveAsrEndpoint': '<%= process.env.MS_COGNITIVE_ASR_ENDPOINT %>',
+        'msCognitiveAsrHost': '<%= process.env.MS_COGNITIVE_ASR_HOST %>',
+
+        'msCognitiveTtsSubscriptionKey': '<%= process.env.MS_COGNITIVE_TTS_SUBSCRIPTION_KEY %>',
+        'msCognitiveTtsRegion': '<%= process.env.MS_COGNITIVE_TTS_REGION %>',
+        'msCognitiveTtsSubscriptionOnly': <%= process.env.MS_COGNITIVE_TTS_SUBSCRIPTION_ONLY %>,
+        'msCognitiveTtsCustomAuthTokenUrl': '<%= process.env.MS_COGNITIVE_TTS_CUSTOM_AUTH_TOKEN_URL %>',
+        'msCognitiveTtsEndpoint': '<%= process.env.MS_COGNITIVE_TTS_ENDPOINT %>',
+        'msCognitiveTtsHost': '<%= process.env.MS_COGNITIVE_TTS_HOST %>',
+
         'msCognitiveSubscriptionKey': '<%= process.env.MS_COGNITIVE_SUBSCRIPTION_KEY %>',
         'msCognitiveRegion': '<%= process.env.MS_COGNITIVE_REGION %>',
+        'msCognitiveSubscriptionOnly': <%= process.env.MS_COGNITIVE_SUBSCRIPTION_ONLY %>,
+        'msCognitiveCustomAuthTokenUrl': '<%= process.env.MS_COGNITIVE_CUSTOM_AUTH_TOKEN_URL %>',
+        'msCognitiveEndpoint': '<%= process.env.MS_COGNITIVE_ENDPOINT %>',
+        'msCognitiveHost': '<%= process.env.MS_COGNITIVE_HOST %>',
+
         'msVoice': '<%= process.env.MS_VOICE %>',
         'locale': '<%= process.env.LOCALE %>',
+
         'autoRedirect': '<%= process.env.AUTO_OUTPUT_LINK_REDIRECT %>'
     };
     <% if(process.env.NODE_ENV === 'development') { %>
