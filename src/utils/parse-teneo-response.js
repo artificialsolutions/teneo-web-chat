@@ -115,26 +115,16 @@ export default async function parseTeneoResponse(teneoResponse) {
 
     }
 
-
-
-    for (const message of messages) {
-        const index = messages.indexOf(message);
-        message.placeInQueue = index + 1;
+    var ind = 0;
+    while (ind < messages.length) {
+        const message = messages[ind];
+        message.placeInQueue = ++ind;
         message.queueLength = messages.length;
         // Emit event to update UI with new bubble, with a delay timer
-
-        await timeout(index === 0 ? 0 : BUBBLE_DELAY).then(() => {
-            EventBus.$emit(events.PUSH_BUBBLE, message)
+        await timeout(ind === 1 ? 0 : BUBBLE_DELAY).then(() => {
+            EventBus.$emit(events.PUSH_BUBBLE, message);
         })
     }
 
-    if (parameters.hasOwnProperty('twcAutoReply')) {
-        return JSON.parse(parameters.twcAutoReply)
-
-    }
-    else{
-        return false
-    }
-
-
+    return parameters.hasOwnProperty('twcAutoReply') ? JSON.parse(parameters.twcAutoReply) : false;
 }

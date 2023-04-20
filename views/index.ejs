@@ -41,10 +41,8 @@ div.scroll {
 </style>
 
 <script src="teneo-web-chat.js"></script> 
-<script>
 
-</script>  
-
+<!-- script src="teneo-web-chat.js"></script -->
 <!-- needed for Heroku -->
 <!--<% if(process.env.NODE_ENV === 'development') { %>-->
 <!--<% } %>-->
@@ -74,6 +72,8 @@ window.addEventListener('load', () => {
     TeneoWebChat.on('minimize_button_clicked', payload => {
         console.info('minimize_button_clicked', payload);
     });
+
+    TeneoWebChat.on('visibility_changed', payload => TeneoWebChat.get('storage').setItem('twc_last_state', payload.visibility));
     TeneoWebChat.on('reset', () => TeneoWebChat.get('storage').removeItem('twc_last_state'));
 
     const element = document.getElementById('teneo-web-chat');
@@ -126,39 +126,6 @@ window.addEventListener('load', () => {
 
 <body>
 <button onclick="TeneoWebChat.call('reset')">Reset Chat</button>
-
-<!--
-
-<br/>
-<h3>Messages</h3>
-<button class="btn" onclick="TeneoWebChat.call('add_message',textMessageAgent)">Message from agent</button><br>
-
-<h3>Messages with avatar</h3>
-<button class="btn" onclick="TeneoWebChat.call('add_message',textMessageUserAvatar)">Message from user</button><br>
-<button class="btn" onclick="TeneoWebChat.call('add_message',textMessageBotAvatar)">Message from bot</button><br>
-<button class="btn" onclick="TeneoWebChat.call('add_message',textMessageAgentAvatar)">Message from agent</button><br>
-
-<h3>Messages with avatar and dateline</h3>
-<button class="btn" onclick="TeneoWebChat.call('add_message',textMessageUserAvatarDateline)">Message from user</button><br>
-<button class="btn" onclick="TeneoWebChat.call('add_message',textMessageBotAvatarDateline)">Message from bot</button><br>
-<button class="btn" onclick="TeneoWebChat.call('add_message',textMessageAgentAvatarDateline)">Message from agent</button><br>
-
-<h3>Typing indicators</h3>
-<button class="btn" onclick="TeneoWebChat.call('show_typing_indicator',typingIndicatorAgent)">Show agent typing indicator</button><br>
-<button class="btn" onclick="TeneoWebChat.call('show_typing_indicator',typingIndicatorBot)">Show bot typing indicator</button><br>
-<button class="btn" onclick="TeneoWebChat.call('show_typing_indicator',typingIndicatorUser)">Show user typing indicator</button><br>
-
-<button class="btn" onclick="TeneoWebChat.call('hide_typing_indicator',{'author': 'agent'})">Hide agent typing indicator</button><br>
-<button class="btn" onclick="TeneoWebChat.call('hide_typing_indicator',{'author': 'bot'})">Hide bot typing indicator</button><br>
-<button class="btn" onclick="TeneoWebChat.call('hide_typing_indicator',{'author': 'user'})">Hide user typing indicator</button><br>
-
-<h3>Other</h3>
-<button class="btn" onclick="TeneoWebChat.call('disable_user_input')">Disable user input</button><br>
-<button class="btn" onclick="TeneoWebChat.call('enable_user_input')">Enable user input</button><br>
-<button class="btn" onclick="TeneoWebChat.call('maximize')">Maximize</button><br>
-<button class="btn" onclick="TeneoWebChat.on('visibility_changed', function(){console.log('Bad button')})">Bad button!</button>
-
--->
 
 <div class="scroll">
     This is a Dummy Paragraph to test vertical and horizontal scrolling. Lorem ipsum dolor sit amet, consectetur adipiscing elit. Kokruous maximus et blandit diam. Orci varius natoque penatibus et magnis dis parturient montes, nascetur ridiculus mus. Mauris non ex eget augue lobortis iaculis id a mauris. Sed auctor est quis lectus fringilla pharetra. Mauris efficitur nulla at augue porttitor laoreet. Duis pharetra lectus et fermentum commodo. Sed ullamcorper ante lectus, sit amet facilisis erat auctor quis. Mauris varius pharetra velit, in varius leo consequat sed. Aenean porta lorem non neque feugiat, nec ultrices est commodo. Ut vulputate quis neque sed tincidunt. Suspendisse in ligula accumsan, pharetra libero id, dignissim felis. Morbi scelerisque lacus sed ipsum faucibus suscipit. Vestibulum vitae efficitur nunc. Etiam ornare, risus nec dictum condimentum, ipsum tellus condimentum neque, vitae tempus velit tortor et magna. Vivamus egestas porta lacinia. Aenean interdum, dui ut maximus varius, massa ligula efficitur ex, eget cursus dui diam eget est.

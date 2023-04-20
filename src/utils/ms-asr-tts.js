@@ -1,4 +1,3 @@
-
 import {
     AudioConfig,
     SpeakerAudioDestination,
@@ -10,7 +9,22 @@ import {
 
 function getMSToken(region, key) {
 
-    return new Promise(function (resolve) {
+    return fetch('https://' + region + '.api.cognitive.microsoft.com/sts/v1.0/issuetoken', {
+        method: 'POST',
+        headers: {
+            'Content-Type': 'application/x-www-form-urlencoded',
+            'Ocp-Apim-Subscription-Key': key
+        }
+    }).then(tokenResponse => {
+        if (tokenResponse.ok) return tokenResponse.text();
+        throw new Error(tokenResponse.statusText);
+    });
+}
+
+/*
+function getMSToken(region, key) {
+
+    return new Promise(function (resolve, reject) {
 
         fetch('https://' + region + '.api.cognitive.microsoft.com/sts/v1.0/issuetoken', {
             method: 'POST',
@@ -18,15 +32,13 @@ function getMSToken(region, key) {
                 'Content-Type': 'application/x-www-form-urlencoded',
                 'Ocp-Apim-Subscription-Key': key
             }
-        }).then(function (tokenResponse) {
-            tokenResponse.text().then(function (tokenText) {
-                resolve(tokenText);
-            });
-
-        })
+        }).then(tokenResponse => {
+            if (tokenResponse.ok) tokenResponse.text().then(resolve, () => reject('Failure to obtain token text'));
+            else reject(tokenResponse.statusText);     
+        }, reject);
     })
-
 }
+*/
 
 function processAudioToText(authToken, region, locale) {
     return new Promise((resolve, reject) => {
@@ -105,7 +117,7 @@ function processTextToAudio(authToken, region, locale, textToRead, voice) {
 function generateText(messageData) {
     let utteranceArray = [];
     // These include the Table elements, uncomment to have table fields read out -> let validKeys = ['type', 'alt', 'title', 'subtitle', 'text', 'headers','body', 'footers'];
-    let validKeys = ['type', 'alt', 'title', 'subtitle', 'text'];
+    let validKeys = ['alt', 'title', 'subtitle', 'text'];
     JSON.stringify(messageData, function (key, value) {
         if (validKeys.includes(key)) {
             let cleanText = new DOMParser().parseFromString(value, 'text/html').body.textContent || "";

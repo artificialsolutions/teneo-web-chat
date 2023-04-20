@@ -173,6 +173,7 @@ export default {
 
       // Proceed if extension does not handle function itself
       if (!payload.handledState.handled === true) {
+        EventBus.$emit(events.STOP_ASR_TTS);
         this.changeWindowState(events.MINIMIZE_WINDOW);
       }
     },
@@ -186,6 +187,7 @@ export default {
 
       // Proceed if extension does not handle function itself
       if (!payload.handledState.handled === true) {
+        EventBus.$emit(events.STOP_ASR_TTS);
         this.changeWindowState(events.CLOSE_WINDOW);
       }
     },
