@@ -200,7 +200,10 @@ export default function teneoApiPlugin(teneoApiUrl) {
                                 'placeInQueue':1,
                                 'queueLength':1
                             });
-                            setTimeout(()=>{EventBus.$emit(events.CLOSE_WINDOW);},5000)
+                            setTimeout(() => {
+                                EventBus.$emit(events.STOP_ASR_TTS);
+                                EventBus.$emit(events.CLOSE_WINDOW);
+                            }, 5000);
 
                         }
 

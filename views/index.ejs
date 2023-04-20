@@ -40,11 +40,7 @@ div.scroll {
 
 </style>
 
-<script src="teneo-web-chat.js"></script> 
-<script>
-
-</script>  
-
+<!-- script src="teneo-web-chat.js"></script -->
 <!-- needed for Heroku -->
 <!--<% if(process.env.NODE_ENV === 'development') { %>-->
 <!--<% } %>-->
@@ -67,13 +63,8 @@ window.addEventListener('load', () => {
             }
         }
     });
-    TeneoWebChat.on('visibility_changed', payload => {
-        TeneoWebChat.get('storage').setItem('twc_last_state', payload.visibility);
-        console.info('visibility_changed', payload);
-    });
-    TeneoWebChat.on('minimize_button_clicked', payload => {
-        console.info('minimize_button_clicked', payload);
-    });
+
+    TeneoWebChat.on('visibility_changed', payload => TeneoWebChat.get('storage').setItem('twc_last_state', payload.visibility));
     TeneoWebChat.on('reset', () => TeneoWebChat.get('storage').removeItem('twc_last_state'));
 
     const element = document.getElementById('teneo-web-chat');
