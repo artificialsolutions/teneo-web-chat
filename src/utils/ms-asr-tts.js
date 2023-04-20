@@ -10,7 +10,22 @@ import {
 
 function getMSToken(region, key) {
 
-    return new Promise(function (resolve) {
+    return fetch('https://' + region + '.api.cognitive.microsoft.com/sts/v1.0/issuetoken', {
+        method: 'POST',
+        headers: {
+            'Content-Type': 'application/x-www-form-urlencoded',
+            'Ocp-Apim-Subscription-Key': key
+        }
+    }).then(tokenResponse => {
+        if (tokenResponse.ok) return tokenResponse.text();
+        throw new Error(tokenResponse.statusText);
+    });
+}
+
+/*
+function getMSToken(region, key) {
+
+    return new Promise(function (resolve, reject) {
 
         fetch('https://' + region + '.api.cognitive.microsoft.com/sts/v1.0/issuetoken', {
             method: 'POST',
@@ -18,15 +33,13 @@ function getMSToken(region, key) {
                 'Content-Type': 'application/x-www-form-urlencoded',
                 'Ocp-Apim-Subscription-Key': key
             }
-        }).then(function (tokenResponse) {
-            tokenResponse.text().then(function (tokenText) {
-                resolve(tokenText);
-            });
-
-        })
+        }).then(tokenResponse => {
+            if (tokenResponse.ok) tokenResponse.text().then(resolve, () => reject('Failure to obtain token text'));
+            else reject(tokenResponse.statusText);     
+        }, reject);
     })
-
 }
+*/
 
 function processAudioToText(authToken, region, locale) {
     return new Promise((resolve, reject) => {
