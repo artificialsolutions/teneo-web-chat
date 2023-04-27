@@ -168,6 +168,12 @@ import RecordingEndedBeep from '../sounds/recordingEndedBeep.vue'
 import RecordingCancelledBeep from '../sounds/recordingCancelledBeep.vue'
 import DOMPurify from 'isomorphic-dompurify';
 
+import API_GET_CHAT_HISTORY from '../utils/api-function-names';
+import BUBBLE_DELAY from '../utils/constants';
+import PARTICIPANT_USER from '../utils/constants';
+
+
+
 import {
   getMSToken,
   processAudioToText,
@@ -191,6 +197,28 @@ import basePayload from '../utils/base-payload.js';
 import detectMobile from '../utils/detect-mobile.js';
 import {mapState} from 'vuex';
 import {store} from "../store/store";
+
+
+const isProvidedWithInput = m => {
+    if (m) {
+        var x = m.type;
+        if (x && (x === 'buttons' || x === 'clickablelist' || x === 'quickreply' || x === 'form')) return true;
+        if (Array.isArray(m)) {
+            x = m.length;
+            while (--x >= 0) {
+                if (isProvidedWithInput(m[x])) return true;
+            }
+        } else if ('object' === typeof m) {
+            for (x in m) {
+                if (m.hasOwnProperty(x) && (x === 'postback' || x === 'parameters' || isProvidedWithInput(m[x]))) return true;
+            }
+        }
+    }
+    return false;
+},
+
+isLikelyCtaMessage = m => m && m.author !== PARTICIPANT_USER && m.type !== 'system' && m.type !== 'text' && isProvidedWithInput(m);
+
 
 Vue.use(vueDebounce);
 
@@ -255,7 +283,7 @@ export default {
 
     EventBus.$on(events.BOT_MESSAGE_RECEIVED, async (message) => {
       // TODO collect or reset
-      if (!this.ttsActive) return;
+      if (!this.ttsActive || message._skipTts) return;
       if (message.placeInQueue === 1) {
         this.ttsCumulativeText = '';
       }
@@ -497,7 +525,7 @@ export default {
       }
 
       if (this.asrActive) {
-        // Listening mode is on, so it is switched off and recording is stopped
+        // Listening mode is on, so here it is toggled to off and the recording is stopped
         e.dataset.cancelled = "true";
         this.$refs.recordingCancelledBeep.$el.play();
         this.stopAsr();
@@ -510,6 +538,10 @@ export default {
       if (e.dataset.used !== "true") {
         e.dataset.used = "true";
         firstClick = true;
+
+        let h = window.TeneoWebChat.get(API_GET_CHAT_HISTORY);
+        h = h[h.length - 1];
+
         EventBus.$emit(events.ADD_MESSAGE, {
           'type': 'system',
           'data': {
@@ -518,6 +550,12 @@ export default {
           'placeInQueue': 1,
           'queueLength': 1
         });
+        if (isLikelyCtaMessage(h)) {
+            // Repeat the last message if it contains CTAs
+            h = Object.assign({}, h);
+            h._skipTts = true;
+            setTimeout(() => EventBus.$emit(events.ADD_MESSAGE, h), BUBBLE_DELAY);
+        }
       }
       this.asrActive = true;
 
