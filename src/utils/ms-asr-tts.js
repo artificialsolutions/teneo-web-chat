@@ -117,7 +117,7 @@ function processTextToAudio(authToken, region, locale, textToRead, voice) {
 function generateText(messageData) {
     let utteranceArray = [];
     // These include the Table elements, uncomment to have table fields read out -> let validKeys = ['type', 'alt', 'title', 'subtitle', 'text', 'headers','body', 'footers'];
-    let validKeys = ['type', 'alt', 'title', 'subtitle', 'text'];
+    let validKeys = ['alt', 'title', 'subtitle', 'text'];
     JSON.stringify(messageData, function (key, value) {
         if (validKeys.includes(key)) {
             let cleanText = new DOMParser().parseFromString(value, 'text/html').body.textContent || "";

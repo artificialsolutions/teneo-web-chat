@@ -168,12 +168,6 @@ import RecordingEndedBeep from '../sounds/recordingEndedBeep.vue'
 import RecordingCancelledBeep from '../sounds/recordingCancelledBeep.vue'
 import DOMPurify from 'isomorphic-dompurify';
 
-import API_GET_CHAT_HISTORY from '../utils/api-function-names';
-import BUBBLE_DELAY from '../utils/constants';
-import PARTICIPANT_USER from '../utils/constants';
-
-
-
 import {
   getMSToken,
   processAudioToText,
@@ -183,6 +177,8 @@ import {
   stopTTSAudio
 } from '../utils/ms-asr-tts'
 import {PARTICIPANT_USER} from '../utils/constants.js';
+import {API_GET_CHAT_HISTORY} from '../utils/api-function-names';
+import {BUBBLE_DELAY} from '../utils/constants';
 import {
   API_ON_ASR_BUTTON_CLICK,
   API_ON_INPUT_SUBMITTED,
@@ -261,40 +257,41 @@ export default {
   },
 
   mounted() {
-    //TODO - CLOSE_WINDOW, etc dont work
-    EventBus.$on(events.CLOSE_WINDOW, () => {
-      this.stopAsr();
-      this.stopTts();
-    });
-    EventBus.$on(events.END_SESSION, () => {
-      this.stopAsr();
-      this.stopTts();
-    });
-    EventBus.$on(events.RESET_SESSION, () => {
+    //TODO - CLOSE_WINDOW, etc dont work as they overwrite other event instances in the TWC code
+    console.info('alpe mounted');
+    EventBus.$on(events.STOP_ASR_TTS, () => {
+      console.info('alpe STOP_ASR_TTS');
       this.stopAsr();
       this.stopTts();
     });
 
+    /*
     EventBus.$on(events.MESSAGE_SENT, () => {
       if (this.$refs.userInput) {
         this.$refs.userInput.focus();
       }
     });
+    */
 
     EventBus.$on(events.BOT_MESSAGE_RECEIVED, async (message) => {
       // TODO collect or reset
+      console.info('alpe BOT_MESSAGE_RECEIVED', message);
       if (!this.ttsActive || message._skipTts) return;
-      if (message.placeInQueue === 1) {
-        this.ttsCumulativeText = '';
+      stopTTSAudio();
+      if (!message.placeInQueue || message.placeInQueue === 1) {
+        this.ttsCumulativeText = generateText(message.data);
+      } else {
+        this.ttsCumulativeText += '\n' + generateText(message.data);
       }
-      this.ttsCumulativeText += '\n' + generateText(message.data);
       if (message.placeInQueue === message.queueLength) {
+        const cumulativeText = this.ttsCumulativeText;
+        this.ttsCumulativeText = '';
         this.msTokenCheck().then(() => {
           processTextToAudio(
             store.getters.msCognitiveToken,
             store.getters.msCognitiveRegion,
             store.getters.locale,
-            this.ttsCumulativeText,
+            cumulativeText,
             store.getters.msVoice
           )
           /*
@@ -375,6 +372,7 @@ export default {
           this.$refs.ttsButton.setAttribute('disabled', 'true');
         }
         this.ttsDisabled = true;
+        this.ttsCumulativeText = '';
       }
     });
 
@@ -394,10 +392,7 @@ export default {
     });
 
     EventBus.$on(events.TTS_INACTIVE, () => {
-      if (this.showTtsButton && this.$refs.ttsButton) {
-        this.ttsActive = false;
-        stopTTSAudio();
-      }
+      if (this.showTtsButton && this.$refs.ttsButton) this.stopTts();
     });
 
     EventBus.$on(events.DISABLE_INPUT, () => {
@@ -447,7 +442,9 @@ export default {
   },
 
   beforeDestroy() {
+    console.info('alpe beforeDestroy');
     EventBus.$off(events.BOT_MESSAGE_RECEIVED);
+    EventBus.$off(events.STOP_ASR_TTS);
   },
 
   methods: {
@@ -610,6 +607,7 @@ export default {
 
     stopTts() {
       this.ttsActive = false;
+      this.ttsCumulativeText = '';
       stopTTSAudio();
     },
 
@@ -621,7 +619,7 @@ export default {
 
     async _submitText() {
       // Create payload object
-      const payload = basePayload() ;
+      const payload = basePayload();
 
       // Add user input to base payload
       payload.text = DOMPurify.sanitize(this.$refs.userInput.value);
@@ -646,20 +644,12 @@ export default {
       }
 
       if (payload.text && payload.text.trim().length > 0) {
-        const {text} = payload;
-
-        let parameters = {};
-
-        if (payload.parameters) {
-          parameters = payload.parameters;
-        }
-
         this.onSubmit({
           author: PARTICIPANT_USER,
           type: 'text',
           data: {
-            text,
-            parameters,
+            text: payload.text,
+            parameters: payload.parameters || {},
           },
         });
       }
