@@ -257,10 +257,7 @@ export default {
   },
 
   mounted() {
-    //TODO - CLOSE_WINDOW, etc dont work as they overwrite other event instances in the TWC code
-    console.info('alpe mounted');
     EventBus.$on(events.STOP_ASR_TTS, () => {
-      console.info('alpe STOP_ASR_TTS');
       this.stopAsr();
       this.stopTts();
     });
@@ -274,8 +271,6 @@ export default {
     */
 
     EventBus.$on(events.BOT_MESSAGE_RECEIVED, async (message) => {
-      // TODO collect or reset
-      console.info('alpe BOT_MESSAGE_RECEIVED', message);
       if (!this.ttsActive || message._skipTts) return;
       stopTTSAudio();
       if (!message.placeInQueue || message.placeInQueue === 1) {
@@ -442,7 +437,6 @@ export default {
   },
 
   beforeDestroy() {
-    console.info('alpe beforeDestroy');
     EventBus.$off(events.BOT_MESSAGE_RECEIVED);
     EventBus.$off(events.STOP_ASR_TTS);
   },
