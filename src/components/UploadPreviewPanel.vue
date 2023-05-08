@@ -14,7 +14,7 @@
     <div class = "twc-files-space">
       
       <div class="twc-upload-items">
-        <div id="drop-zone" v-if="Object.keys(idToItem).length === 0">
+        <div id="drop-zone" v-if="itemsCount === 0">
           <div id="drop-message">
             {{ $t('message.upload_panel_add_files') }}
           </div>
@@ -65,7 +65,7 @@
 export default {
   computed: {
     showDropMessage() {
-      return Object.keys(this.idToItem).length === 0;
+      return itemsCount === 0;
     },
   },
 }
