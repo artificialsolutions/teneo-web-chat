@@ -171,10 +171,7 @@ import {
 } from '../../utils/api-function-names.js';
 
 
-
-const bDebug = true, sName = 'UploadMessage';
-
-let nUploadPercentage, bProcessing;
+const bDebug = false, sName = 'UploadMessage';
 
 
 export default {
@@ -246,7 +243,9 @@ export default {
     return {
       imageUrl: undefined,
       reStatus: undefined,
-      reControlAllowed: undefined
+      reControlAllowed: undefined,
+      nUploadPercentage: undefined,
+      bProcessing: false
     }
   },
 
@@ -262,25 +261,25 @@ export default {
 
   mounted() {
     if (bDebug) console.log(sName, 'mounted with message', this.message);
-    if (nUploadPercentage == null) {
-      // nUploadPercentage has not been set explicitly.
+    if (this.nUploadPercentage == null) {
+      // this.nUploadPercentage has not been set explicitly.
       // Reading it from the message:
       let x = this.message.data.initialUploadState;
       if (x && (x = x.uploadPercentage) !== undefined) {
         if (Number.isNaN(x = Number(x))) {
           console.error(sName, 'Wrong initialUploadState.uploadPercentage value [ ' + this.message.data.initialUploadState.uploadPercentage + ' ], should be a number between 0 and 100');
         } else {
-          nUploadPercentage = x < 0 ? 0 : x > 100 ? 100 : x;
+          this.nUploadPercentage = x < 0 ? 0 : x > 100 ? 100 : x;
         }
       }
     }
-    this.assignSpinnerValue(nUploadPercentage);
+    this.assignSpinnerValue(this.nUploadPercentage);
   },
 
 
   updated() {
     if (bDebug) console.log(sName, 'updated with message', this.message);
-    this.assignSpinnerValue(nUploadPercentage);
+    this.assignSpinnerValue(this.nUploadPercentage);
   },
 
 
@@ -303,23 +302,23 @@ export default {
   methods: {
 
     async stopUpload() {
-      if (bProcessing) {
+      if (this.bProcessing) {
         if (bDebug) console.log(sName, 'stopUpload(), already processing for itemId', this.message.data.itemId);
         return;
       }
-      bProcessing = true;
+      this.bProcessing = true;
       if (bDebug) console.log(sName, 'stopUpload() for itemId', this.message.data.itemId);
       const payload = basePayload();
       payload.itemId = this.message.data.itemId;
       try {
         await handleExtension(API_ON_UPLOAD_FILE_STOP_CLICK, payload);
       } finally {
-        bProcessing = false;
+        this.bProcessing = false;
       }
     },
 
     async restartUpload() {
-      if (bProcessing) {
+      if (this.bProcessing) {
         if (bDebug) console.log(sName, 'restartUpload(), already processing for itemId', this.message.data.itemId);
         return;
       }
@@ -329,12 +328,12 @@ export default {
       try {
         await handleExtension(API_ON_UPLOAD_FILE_RESTART_CLICK, payload);
       } finally {
-        bProcessing = false;
+        this.bProcessing = false;
       }
     },
 
     async deleteFile() {
-      if (bProcessing) {
+      if (this.bProcessing) {
         if (bDebug) console.log(sName, 'deleteFile(), already processing for itemId', this.message.data.itemId);
         return;
       }
@@ -344,7 +343,7 @@ export default {
       try {
         await handleExtension(API_ON_UPLOAD_FILE_DELETE_CLICK, payload);
       } finally {
-        bProcessing = false;
+        this.bProcessing = false;
       }
     },
 
@@ -393,9 +392,9 @@ export default {
         if (Number.isNaN(n)) {
           console.error(sName, 'Wrong uploadPercentage value [ ' + us.status + ' ], should be a number between 0 and 100');
         } else {
-          nUploadPercentage = n < 0 ? 0 : n > 100 ? 100 : n;
-          if (bDebug) console.log(sName, 'setUploadState, applying uploadPercentage', nUploadPercentage);
-          this.assignSpinnerValue(nUploadPercentage);
+          this.nUploadPercentage = n < 0 ? 0 : n > 100 ? 100 : n;
+          if (bDebug) console.log(sName, 'setUploadState, applying uploadPercentage', this.nUploadPercentage);
+          this.assignSpinnerValue(this.nUploadPercentage);
         }
       }
     },

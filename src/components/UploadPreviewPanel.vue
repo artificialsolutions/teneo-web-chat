@@ -294,7 +294,7 @@ var idToExtraData = null;
  * 
  * @const {boolean}
  */
-const bDebug = true,
+const bDebug = false,
 
 /**
  * The name of the component, to be used for debug purposes.
