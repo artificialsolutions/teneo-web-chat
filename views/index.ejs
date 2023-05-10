@@ -42,30 +42,7 @@ div.scroll {
 
 <script src="teneo-web-chat.js"></script> 
 <script>
-TeneoWebChat.on('ready', () => {
 
-const x = TeneoWebChat.get('storage').getItem('twc_last_state');
-
-    if (x) {
-        switch (x) {
-            case 'maximized':
-                TeneoWebChat.call('maximize');
-                break;
-            case 'minimized':
-                TeneoWebChat.call('minimize');
-                break;
-            default:
-                logger.warn('TeneoWebChat', 'unknown stored twc_last_state value', x);
-        }
-
-    }
-
-});
-
-
-
-TeneoWebChat.on('visibility_changed', payload => TeneoWebChat.get('storage').setItem('twc_last_state', payload.visibility));
-TeneoWebChat.on('reset', () => TeneoWebChat.get('storage').removeItem('twc_last_state'));
 </script>  
 
 <!-- needed for Heroku -->
@@ -74,6 +51,30 @@ TeneoWebChat.on('reset', () => TeneoWebChat.get('storage').removeItem('twc_last_
 <script>
 /* <![CDATA[ */
 window.addEventListener('load', () => {
+
+    TeneoWebChat.on('ready', () => {
+        const x = TeneoWebChat.get('storage').getItem('twc_last_state');
+        if (x) {
+            switch (x) {
+                case 'maximized':
+                    TeneoWebChat.call('maximize');
+                    break;
+                case 'minimized':
+                    TeneoWebChat.call('minimize');
+                    break;
+                default:
+                    logger.warn('TeneoWebChat', 'unknown stored twc_last_state value', x);
+            }
+        }
+    });
+    TeneoWebChat.on('visibility_changed', payload => {
+        TeneoWebChat.get('storage').setItem('twc_last_state', payload.visibility);
+        console.info('visibility_changed', payload);
+    });
+    TeneoWebChat.on('minimize_button_clicked', payload => {
+        console.info('minimize_button_clicked', payload);
+    });
+    TeneoWebChat.on('reset', () => TeneoWebChat.get('storage').removeItem('twc_last_state'));
 
     const element = document.getElementById('teneo-web-chat');
     const teneoProps = {
