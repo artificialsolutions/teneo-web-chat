@@ -64,6 +64,7 @@ export default {
   mounted() {
     this.isIosSafari = detectIosSafari();
 
+    /*
     // Set the name of the hidden property and the change event for visibility
     let hidden,
         visibilityChange;
@@ -88,7 +89,7 @@ export default {
         document.addEventListener(visibilityChange, this.handleBrowserMinimize, false);
       }
     }
-
+    */
 
     EventBus.$on(events.RESET_SESSION, () => {
       this.resetChat();
@@ -196,7 +197,6 @@ export default {
 
         if (this.isIosSafari) {
           const targetElement = document.querySelector(messageListId);
-
           enableBodyScroll(targetElement);
         }
 
@@ -256,11 +256,11 @@ export default {
 
       data[API_KEY_VISIBILITY] = this.$store.getters.visibility;
       await handleExtension(API_ON_VISIBILITY_CHANGED, data);
-    },
+    }/*,
     async handleBrowserMinimize() {
-      // Console.log('handleBrowserMinimize: '+document.hidden)
+      //console.log('handleBrowserMinimize', document.hidden);
       await this.minimize();
-    }
+    }*/
   },
 };
 </script>
