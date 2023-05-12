@@ -145,7 +145,6 @@ We need to change the corner from it's resizable-->
   display: flex;
   flex-direction: column;
   justify-content: space-between;
-  transition: 0.3s ease-in-out;
   border-radius: 10px;
   overscroll-behavior: contain;
   -webkit-animation: twc-fade-in 0.3s cubic-bezier(0.390, 0.575, 0.565, 1.000) both;
@@ -165,14 +164,16 @@ We need to change the corner from it's resizable-->
   }
 }
 
-.twc-ios-keyboard-shown {
-  transition: 0.3s ease-in-out !important;
+.twc-ios-keyboard-shown {  
   height: calc(66% - 60px);
+  overflow: hidden;
   /* top: 0px; */
 }
 .twc-ios-keyboard-hidden {
   transition: 0.2s ease-in-out !important;
   height: 100%;
+  overflow: hidden;
+
 }
 
 .twc-spinner {

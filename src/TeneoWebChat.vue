@@ -266,6 +266,13 @@ export default {
 
 <style scoped>
 .teneo-web-chat {
+  position: fixed;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  height: calc(100% - 60px);
+  overflow-y: auto;
+
   /** New variables: */
   --line-light-color: #e0e0e0;
   --link-button-color-: #2f286e;
