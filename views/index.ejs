@@ -41,8 +41,88 @@ div.scroll {
 
 </style>
 
-<!-- script src="teneo-web-chat.js"></script -->
+<script src="teneo-web-chat.js"></script> 
+<script>
 
+</script>  
+
+<!-- needed for Heroku -->
+<!--<% if(process.env.NODE_ENV === 'development') { %>-->
+<!--<% } %>-->
+<script>
+/* <![CDATA[ */
+window.addEventListener('load', () => {
+
+    TeneoWebChat.on('ready', () => {
+        const x = TeneoWebChat.get('storage').getItem('twc_last_state');
+        if (x) {
+            switch (x) {
+                case 'maximized':
+                    TeneoWebChat.call('maximize');
+                    break;
+                case 'minimized':
+                    TeneoWebChat.call('minimize');
+                    break;
+                default:
+                    logger.warn('TeneoWebChat', 'unknown stored twc_last_state value', x);
+            }
+        }
+    });
+    TeneoWebChat.on('visibility_changed', payload => {
+        TeneoWebChat.get('storage').setItem('twc_last_state', payload.visibility);
+        console.info('visibility_changed', payload);
+    });
+    TeneoWebChat.on('minimize_button_clicked', payload => {
+        console.info('minimize_button_clicked', payload);
+    });
+    TeneoWebChat.on('reset', () => TeneoWebChat.get('storage').removeItem('twc_last_state'));
+
+    const element = document.getElementById('teneo-web-chat');
+    const teneoProps = {
+        'teneoEngineUrl': '<%= process.env.TENEO_ENGINE_URL %>',
+        'title': '<%= process.env.HEADER_TITLE %>',
+        'titleIconUrl': '<%= process.env.HEADER_ICON_URL %>',
+        'showCloseButton': '<%= process.env.SHOW_CLOSE_BUTTON %>',
+        'agentAvatarUrl': '<%= process.env.AGENT_AVATAR_URL %>',
+        'botAvatarUrl': '<%= process.env.BOT_AVATAR_URL %>',
+        'userAvatarUrl': '<%= process.env.USER_AVATAR_URL %>',
+        'minimizeIconUrl': '<%= process.env.MINIMIZE_ICON_URL %>',
+        'closeIconUrl': '<%= process.env.CLOSE_ICON_URL %>',
+        'launchIconUrl': '<%= process.env.LAUNCH_ICON_URL %>',
+        'sendIconUrl': '<%= process.env.SEND_ICON_URL %>',
+        'uploadIconUrl': '<%= process.env.UPLOAD_ICON_URL %>',
+        'showUploadButton': '<%= process.env.SHOW_UPLOAD_BUTTON %>',
+        'asrIconUrl': '<%= process.env.ASR_ICON_URL %>',
+        'showAsrButton': '<%= process.env.SHOW_ASR_BUTTON %>',
+        'asrActive': '<%= process.env.ASR_ACTIVE %>',
+        'ttsIconUrl': '<%= process.env.TTS_ICON_URL %>',
+        'showTtsButton': '<%= process.env.SHOW_TTS_BUTTON %>',
+        'ttsActive': '<%= process.env.TTS_ACTIVE %>',
+        'msCognitiveSubscriptionKey': '<%= process.env.MS_COGNITIVE_SUBSCRIPTION_KEY %>',
+        'msCognitiveRegion': '<%= process.env.MS_COGNITIVE_REGION %>',
+        'msVoice': '<%= process.env.MS_VOICE %>',
+        'locale': '<%= process.env.LOCALE %>',
+        'autoRedirect': '<%= process.env.AUTO_OUTPUT_LINK_REDIRECT %>'
+    };
+    <% if(process.env.NODE_ENV === 'development') { %>
+    //Keep last input on up arrow for rapid testing
+    /*
+    TeneoWebChat.on('input_submitted', (payload) => {
+        window.sessionStorage.setItem('lastSentPhrase', payload.text);
+    });
+    document.addEventListener('keydown', function(e){
+        if(e.code === 'ArrowUp') {
+            let inputField = document.getElementById('twc-user-input-field');
+            inputField.value = window.sessionStorage.getItem('lastSentPhrase')
+        }
+    });
+    */
+    <% } %>
+    window.TeneoWebChat.initialize(element, teneoProps);
+});
+
+/* ]]> */
+</script>
 </head>
 
 <body>
