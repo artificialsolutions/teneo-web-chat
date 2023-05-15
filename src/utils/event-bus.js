@@ -50,7 +50,7 @@ export const events = {
     SHOW_UPLOAD_PANEL: 'show_upload_panel',
     SET_UPLOAD_STATE: 'set_upload_state',
     UPLOAD_PANEL_CLOSED: 'upload_panel_closed',
-    UPLOAD_PANEL_OPENED: 'upload_panel_opened'
+    UPLOAD_PANEL_OPENED: 'upload_panel_opened',
     STOP_ASR_TTS: 'stop_asr_tts'
 };
 
