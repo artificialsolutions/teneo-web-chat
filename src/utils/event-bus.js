@@ -51,6 +51,7 @@ export const events = {
     SET_UPLOAD_STATE: 'set_upload_state',
     UPLOAD_PANEL_CLOSED: 'upload_panel_closed',
     UPLOAD_PANEL_OPENED: 'upload_panel_opened'
+    STOP_ASR_TTS: 'stop_asr_tts'
 };
 
 export const EventBus = new Vue();

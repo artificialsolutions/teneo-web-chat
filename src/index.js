@@ -307,6 +307,7 @@ window.TeneoWebChat = {
         break;
 
       case apiConstants.API_CALL_MINIMIZE:
+        EventBus.$emit(events.STOP_ASR_TTS);
         EventBus.$emit(events.MINIMIZE_WINDOW);
         break;
 
@@ -337,6 +338,7 @@ window.TeneoWebChat = {
         break;
 
       case apiConstants.API_CALL_END_SESSION:
+        EventBus.$emit(events.STOP_ASR_TTS);
         EventBus.$emit(events.END_SESSION);
         break;
 
@@ -345,6 +347,7 @@ window.TeneoWebChat = {
         break;
 
       case apiConstants.API_CALL_RESET:
+        EventBus.$emit(events.STOP_ASR_TTS);
         EventBus.$emit(events.RESET_SESSION);
         break;
 

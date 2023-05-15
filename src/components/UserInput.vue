@@ -177,6 +177,8 @@ import {
   stopTTSAudio
 } from '../utils/ms-asr-tts'
 import {PARTICIPANT_USER} from '../utils/constants.js';
+import {API_GET_CHAT_HISTORY} from '../utils/api-function-names';
+import {BUBBLE_DELAY} from '../utils/constants';
 import {
   API_ON_ASR_BUTTON_CLICK,
   API_ON_INPUT_SUBMITTED,
@@ -191,6 +193,28 @@ import basePayload from '../utils/base-payload.js';
 import detectMobile from '../utils/detect-mobile.js';
 import {mapState} from 'vuex';
 import {store} from "../store/store";
+
+
+const isProvidedWithInput = m => {
+    if (m) {
+        var x = m.type;
+        if (x && (x === 'buttons' || x === 'clickablelist' || x === 'quickreply' || x === 'form')) return true;
+        if (Array.isArray(m)) {
+            x = m.length;
+            while (--x >= 0) {
+                if (isProvidedWithInput(m[x])) return true;
+            }
+        } else if ('object' === typeof m) {
+            for (x in m) {
+                if (m.hasOwnProperty(x) && (x === 'postback' || x === 'parameters' || isProvidedWithInput(m[x]))) return true;
+            }
+        }
+    }
+    return false;
+},
+
+isLikelyCtaMessage = m => m && m.author !== PARTICIPANT_USER && m.type !== 'system' && m.type !== 'text' && isProvidedWithInput(m);
+
 
 Vue.use(vueDebounce);
 
@@ -243,50 +267,66 @@ export default {
     });
 
 
+    EventBus.$on(events.STOP_ASR_TTS, () => {
+      this.stopAsr();
+      this.stopTts();
+    });
+
+    /*
     EventBus.$on(events.MESSAGE_SENT, () => {
       if (this.$refs.userInput) {
         this.$refs.userInput.focus();
       }
     });
-
+    */
 
     EventBus.$on(events.BOT_MESSAGE_RECEIVED, async (message) => {
-      let _this = this;
-      if (_this.ttsActive) {
-        if (message.placeInQueue === 1) {
-          _this.ttsCumulativeText = '';
-        }
-        _this.ttsCumulativeText += '\n' + generateText(message.data);
-        if (message.placeInQueue === message.queueLength) {
-          this.msTokenCheck().then(() => {
-            processTextToAudio(store.getters.msCognitiveToken, store.getters.msCognitiveRegion, store.getters.locale, _this.ttsCumulativeText, store.getters.msVoice).then(() => {
-              window.twcTmp.twcAudioPlayer.onAudioEnd = () => {
-                if (_this.$refs.asrButton.dataset.used === "true" && _this.$refs.asrButton.dataset.cancelled !== "true") {
-                  _this.asrButtonClicked(_this.$refs.asrButton)
-                }
-              }
-            }).catch((e)=>{
-              console.error('Error converting text to audio. ' + e.toString())
-              this.setTtsDisabled(true);
-              this.setTtsBroken(true);
-            })
-          }).catch((e)=>{
-            console.error('Error getting authentication token for TTS. ' + e.toString())
-            this.setTtsDisabled(true);
-            this.setTtsBroken(true);
-          })
-        }
-
-
+      if (!this.ttsActive || message._skipTts) return;
+      stopTTSAudio();
+      if (!message.placeInQueue || message.placeInQueue === 1) {
+        this.ttsCumulativeText = generateText(message.data);
+      } else {
+        this.ttsCumulativeText += '\n' + generateText(message.data);
       }
-    })
+      if (message.placeInQueue === message.queueLength) {
+        const cumulativeText = this.ttsCumulativeText;
+        this.ttsCumulativeText = '';
+        this.msTokenCheck().then(() => {
+          processTextToAudio(
+            store.getters.msCognitiveToken,
+            store.getters.msCognitiveRegion,
+            store.getters.locale,
+            cumulativeText,
+            store.getters.msVoice
+          )
+          /*
+          .then(() => {
+            window.twcTmp.twcAudioPlayer.onAudioEnd = () => {
+              if (this.$refs.asrButton.dataset.used === "true" && this.$refs.asrButton.dataset.cancelled !== "true") {
+                this.asrButtonClicked(this.$refs.asrButton);
+              }
+            }
+          })
+          */
+          .catch(e => {
+            console.error('Error converting text to audio', e);
+            this.ttsDisabled = true;
+            this.ttsBroken = true;
+          });
+        }).catch(e => {
+          console.error('Error getting authentication token for TTS', e);
+          this.ttsDisabled = true;
+          this.ttsBroken = true;
+        })
+      }
+    });
 
     EventBus.$on(events.DISABLE_UPLOAD, () => {
       if (this.showUploadButton) {
         if (this.$refs.uploadButton) {
           this.$refs.uploadButton.setAttribute('disabled', 'true');
         }
-        this.setUploadDisabled(true);
+        this.uploadDisabled = true;
       }
     });
 
@@ -295,15 +335,16 @@ export default {
         if (this.$refs.uploadButton) {
           this.$refs.uploadButton.removeAttribute('disabled');
         }
-        this.setUploadDisabled(false);
+        this.uploadDisabled = false;
       }
     });
+
     EventBus.$on(events.DISABLE_ASR, () => {
       if (this.showAsrButton) {
         if (this.$refs.asrButton) {
           this.$refs.asrButton.setAttribute('disabled', 'true');
         }
-        this.setAsrDisabled(true);
+        this.asrDisabled = true;
       }
     });
 
@@ -312,7 +353,7 @@ export default {
         if (this.$refs.asrButton) {
           this.$refs.asrButton.removeAttribute('disabled');
         }
-        this.setAsrDisabled(false);
+        this.asrDisabled = false;
       }
     });
 
@@ -324,19 +365,19 @@ export default {
 
     EventBus.$on(events.ASR_INACTIVE, () => {
       if (this.showAsrButton && this.$refs.asrButton) {
-        this.setAsrActive(false);
+        this.asrActive = false;
         stopAsrRecording();
         this.$refs.recordingCancelledBeep.$el.play()
       }
     });
-
 
     EventBus.$on(events.DISABLE_TTS, () => {
       if (this.showTtsButton) {
         if (this.$refs.ttsButton) {
           this.$refs.ttsButton.setAttribute('disabled', 'true');
         }
-        this.setTtsDisabled(true);
+        this.ttsDisabled = true;
+        this.ttsCumulativeText = '';
       }
     });
 
@@ -345,33 +386,31 @@ export default {
         if (this.$refs.ttsButton) {
           this.$refs.ttsButton.removeAttribute('disabled');
         }
-        this.setTtsDisabled(false);
+        this.ttsDisabled = false;
       }
     });
+
     EventBus.$on(events.TTS_ACTIVE, () => {
       if (this.showTtsButton && this.$refs.ttsButton) {
-        this.setTtsActive(true);
+        this.ttsActive = true;
       }
     });
 
     EventBus.$on(events.TTS_INACTIVE, () => {
-      if (this.showTtsButton && this.$refs.ttsButton) {
-        this.setTtsActive(false);
-        stopTTSAudio();
-      }
+      if (this.showTtsButton && this.$refs.ttsButton) this.stopTts();
     });
+
     EventBus.$on(events.DISABLE_INPUT, () => {
       this.setInputActive(false);
-      this.setInputDisabled(true);
+      this.inputDisabled = true;
 
       if (document.getElementById('twc-user-input-field')) {
-        document.getElementById('twc-user-input-field')
-            .blur();
+        document.getElementById('twc-user-input-field').blur();
       }
     });
 
     EventBus.$on(events.ENABLE_INPUT, () => {
-      this.setInputDisabled(false);
+      this.inputDisabled = false;
       this.setInputActive(true);
 
       if (document.getElementById('twc-user-input-field')) {
@@ -396,7 +435,6 @@ export default {
     if (!detectMobile()) {
       this.$refs.userInput.focus();
     } else {
-
       /*
        * If user gives input field focus without having first interacted with the chatwindow
        * the chat window will shrink down and the keyboard will overlap the chat window
@@ -404,13 +442,15 @@ export default {
        * it also prevents the keyboard from taking up too much space on other devices
        */
       const dummyFocusElement = document.getElementById('twc-focus-fix');
-
       dummyFocusElement.focus();
     }
   },
+
   beforeDestroy() {
     EventBus.$off(events.BOT_MESSAGE_RECEIVED);
+    EventBus.$off(events.STOP_ASR_TTS);
   },
+
   methods: {
     setInputActive(onoff) {
       this.inputActive = onoff;
@@ -419,41 +459,13 @@ export default {
       }
     },
 
-    setAsrActive(onoff) {
-
-      this.asrActive = onoff;
-    },
-
-    setTtsActive(onoff) {
-      this.ttsActive = onoff;
-    },
-    setInputDisabled(onoff) {
-      this.inputDisabled = onoff;
-    },
-    setUploadDisabled(onoff) {
-      this.uploadDisabled = onoff;
-    },
-    setAsrDisabled(onoff) {
-      this.asrDisabled = onoff;
-    },
-    setTtsDisabled(onoff) {
-      this.ttsDisabled = onoff;
-    },
-    setAsrBroken(onoff) {
-      this.asrBroken = onoff;
-    },
-    setTtsBroken(onoff) {
-      this.ttsBroken = onoff;
-    },
-    setIsCancellation(onoff){
-      this.isCancellation = onoff;
-    },
     handleReturnKey(event) {
       if (event.keyCode === 13 && !event.shiftKey) {
         this._submitText(event);
         event.preventDefault();
       }
     },
+
     userTyping() {
       // Check if userinput field still exists to prevent error in IE11
       if (document.getElementById('twc-user-input-field')) {
@@ -464,9 +476,11 @@ export default {
         handleExtension(API_ON_USER_TYPING, payload);
       }
     },
+
     isMobile() {
       return detectMobile();
     },
+
     async sendButtonClicked() {
       const payload = basePayload();
 
@@ -480,126 +494,136 @@ export default {
 
       await this._submitText();
     },
+
     async uploadButtonClicked() {
       await handleExtension(API_ON_UPLOAD_BUTTON_CLICK);
     },
+
     msTokenCheck() {
-      return new Promise(resolve => {
-        let now = Date.now();
-        if (now - store.getters.msCognitiveTokenTimeStamp >= 540000) {
-          getMSToken(store.getters.msCognitiveRegion, store.getters.msCognitiveSubscriptionKey)
-              .then((token) => {
-                store.commit('msCognitiveToken', token);
-                resolve();
-              })
-        } else {
-          resolve();
-        }
-      })
+      if (Date.now() - store.getters.msCognitiveTokenTimeStamp < 540000) return Promise.resolve();
+      return getMSToken(store.getters.msCognitiveRegion, store.getters.msCognitiveSubscriptionKey).then(token => {
+        store.commit('msCognitiveToken', token);
+      });
     },
+
+    stopAsr() {
+      this.asrActive = false;
+      stopAsrRecording();
+    },
+
     async asrButtonClicked(e) {
+      // Check if any extensions are set up to handle them.
+      // If not, use default functionality with Azure.
+      if (await handleExtension(API_ON_ASR_BUTTON_CLICK, e)) return;
 
-      //Check if any extensions are set up to handle them. If not, use default functionality with Azure.
-      let asrExtension = await handleExtension(API_ON_ASR_BUTTON_CLICK, e);
-      if (!asrExtension && window.isSecureContext) {
-        //Send system message with instructions on first click, mark button as used so it won't repeat
-        let firstClick = false;
-        if (e.dataset.used !== "true") {
-          e.dataset.used = "true";
-          firstClick = true;
-          EventBus.$emit(events.ADD_MESSAGE, {
-            'type': 'system',
-            'data': {
-              'text': this.$t('message.first_use_asr_system_message')
-            },
-            'placeInQueue': 1,
-            'queueLength': 1
-          });
-        }
-
-        if (this.asrActive && window.twcTmp.twcRecognizer) {
-          this.setAsrActive(false);
-          e.dataset.cancelled = "true";
-          this.setIsCancellation(true);
-          this.$refs.recordingCancelledBeep.$el.play()
-          stopAsrRecording();
-        } else {
-          this.setAsrActive(true);
-
-          new Promise(resolve => {
-
-            if (firstClick) {
-
-              setTimeout(() => {
-                if (this.ttsActive && window.twcTmp.twcAudioPlayer) {
-                  window.twcTmp.twcAudioPlayer.onAudioEnd = function () {
-                    resolve();
-                  }
-                } else {
-                  resolve();
-                }
-              }, 100)
-
-            } else {
-              resolve();
-            }
-          }).then(() => {
-            this.$refs.recordingStartedBeep.$el.play();
-            this.msTokenCheck().then(() => {
-              processAudioToText(store.getters.msCognitiveToken, store.getters.msCognitiveRegion, store.getters.locale)
-                  .then(async (processedText) => {
-                    if (typeof processedText === 'string' && this.asrActive) {
-                      this.$refs.userInput.value = processedText;
-                      this.$refs.recordingEndedBeep.$el.play();
-                      await this._submitText();
-                    } else {
-                      console.warn('ASR recognition failed.')
-                    }
-                    this.setAsrActive(false);
-                  })
-                  .catch(() => {
-                    if(!this.isCancellation){
-                      console.warn('Error processing audio to text. ')
-                      this.setAsrBroken(true);
-                    }
-                    else{
-                      this.setIsCancellation(false);
-                    }
-
-                    this.setAsrDisabled(true);
-
-                  })
-            }).catch((e) => {
-              console.error('Error getting authentication token for ASR. ' + e)
-              this.setAsrDisabled(true);
-              this.setAsrBroken(true);
-            })
-          })
-
-
-        }
-      } else {
-        if (!window.isSecureContext) {
-          console.log('Insecure Context, use of ASR requires an SSL-enabled location.');
-        }
+      if (!window.isSecureContext) {
+        console.log('Insecure Context, use of ASR requires an SSL-enabled location.');
         if (window.location.protocol !== 'https:') {
           console.log('Page is on HTTPS, but the certificate is not accepted. You may need to change certificates or force your browser to accept the context as secure.')
         }
-        this.setAsrDisabled(true);
+        this.asrDisabled = true;
+        return;
       }
-    },
-    async ttsButtonClicked(e) {
-      let ttsExtension = await handleExtension(API_ON_TTS_BUTTON_CLICK, e);
-      if (!ttsExtension) {
-        this.setTtsActive(!this.ttsActive);
-        if (!this.ttsActive && window.twcTmp.hasOwnProperty('twcAudioPlayer')) {
-          stopTTSAudio();
+
+      if (this.asrActive) {
+        // Listening mode is on, so here it is toggled to off and the recording is stopped
+        e.dataset.cancelled = "true";
+        this.$refs.recordingCancelledBeep.$el.play();
+        this.stopAsr();
+        return;
+      }
+
+      // Send system message with instructions on first click,
+      // mark button as used so it won't repeat
+      var firstClick;
+      if (e.dataset.used !== "true") {
+        e.dataset.used = "true";
+        firstClick = true;
+
+        let h = window.TeneoWebChat.get(API_GET_CHAT_HISTORY);
+        h = h[h.length - 1];
+
+        EventBus.$emit(events.ADD_MESSAGE, {
+          'type': 'system',
+          'data': {
+            'text': this.$t('message.first_use_asr_system_message')
+          },
+          'placeInQueue': 1,
+          'queueLength': 1
+        });
+        if (isLikelyCtaMessage(h)) {
+            // Repeat the last message if it contains CTAs
+            h = Object.assign({}, h);
+            h._skipTts = true;
+            setTimeout(() => EventBus.$emit(events.ADD_MESSAGE, h), BUBBLE_DELAY);
         }
       }
+      this.asrActive = true;
+
+      new Promise(resolve => {
+        if (firstClick) {
+          setTimeout(() => {
+            if (this.ttsActive && window.twcTmp.twcAudioPlayer) {
+              // Let first the 'message.first_use_asr_system_message'
+              // announcement play to th end
+              window.twcTmp.twcAudioPlayer.onAudioEnd = resolve;
+            } else {
+              resolve();
+            }
+          }, 200);
+        } else {
+          resolve();
+        }
+      }).then(() => {
+        if (!this.asrActive) return;
+        this.$refs.recordingStartedBeep.$el.play();
+        this.msTokenCheck().then(() => {
+          if (!this.asrActive) return;
+          processAudioToText(
+            store.getters.msCognitiveToken,
+            store.getters.msCognitiveRegion,
+            store.getters.locale
+          ).then(async (processedText) => {
+            if (!this.asrActive) return;
+            this.asrActive = false;
+            if (typeof processedText === 'string') {
+              this.$refs.userInput.value = processedText;
+              this.$refs.recordingEndedBeep.$el.play();
+              await this._submitText();
+            } else {
+              console.warn('ASR recognition failed');
+            }
+          }, e => {
+            if (!this.asrActive) return;
+            this.asrActive = false;
+            this.asrBroken = true;
+            this.asrDisabled = true;
+            console.warn('Error processing audio to text', e);
+          });
+        }).catch(e => {
+          console.error('Error getting authentication token for ASR', e);
+          this.asrActive = false;
+          this.asrDisabled = true;
+          this.asrBroken = true;
+        });
+      });
     },
+
+    stopTts() {
+      this.ttsActive = false;
+      this.ttsCumulativeText = '';
+      stopTTSAudio();
+    },
+
+    async ttsButtonClicked(e) {
+      if (await handleExtension(API_ON_TTS_BUTTON_CLICK, e)) return;
+      if (this.ttsActive) this.stopTts();
+      else this.ttsActive = true;
+    },
+
     async _submitText() {
       // Create payload object
-      const payload = basePayload() ;
+      const payload = basePayload();
 
       // Add user input to base payload
       payload.text = DOMPurify.sanitize(this.$refs.userInput.value);
@@ -624,20 +648,12 @@ export default {
       }
 
       if (payload.text && payload.text.trim().length > 0) {
-        const {text} = payload;
-
-        let parameters = {};
-
-        if (payload.parameters) {
-          parameters = payload.parameters;
-        }
-
         this.onSubmit({
           author: PARTICIPANT_USER,
           type: 'text',
           data: {
-            text,
-            parameters,
+            text: payload.text,
+            parameters: payload.parameters || {},
           },
         });
       }
@@ -647,9 +663,9 @@ export default {
         this.$refs.userInput.focus();
       }
     },
+
     autoTextareaHeight() {
       const userInput = document.getElementById('twc-user-input-field');
-
       userInput.style.height = '1px';
       userInput.style.height = `${userInput.scrollHeight}px`;
     },
