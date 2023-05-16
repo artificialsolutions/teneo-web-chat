@@ -7,9 +7,8 @@ import {
 } from "microsoft-cognitiveservices-speech-sdk";
 
 
-function getMSToken(region, key) {
-
-    return fetch('https://' + region + '.api.cognitive.microsoft.com/sts/v1.0/issuetoken', {
+function getMSTokenFromCustomUrl(url, key) {
+    return fetch(url, {
         method: 'POST',
         headers: {
             'Content-Type': 'application/x-www-form-urlencoded',
@@ -21,32 +20,16 @@ function getMSToken(region, key) {
     });
 }
 
-/*
-function getMSToken(region, key) {
 
-    return new Promise(function (resolve, reject) {
-
-        fetch('https://' + region + '.api.cognitive.microsoft.com/sts/v1.0/issuetoken', {
-            method: 'POST',
-            headers: {
-                'Content-Type': 'application/x-www-form-urlencoded',
-                'Ocp-Apim-Subscription-Key': key
-            }
-        }).then(tokenResponse => {
-            if (tokenResponse.ok) tokenResponse.text().then(resolve, () => reject('Failure to obtain token text'));
-            else reject(tokenResponse.statusText);     
-        }, reject);
-    })
+function getMSTokenFromRegion(region, key) {
+    return getMSTokenFromCustomUrl('https://' + region + '.api.cognitive.microsoft.com/sts/v1.0/issuetoken', key);
 }
-*/
 
-function processAudioToText(authToken, region, locale) {
+
+function _processAudioToText(authToken, region, locale) {
     return new Promise((resolve, reject) => {
-        if(locale.indexOf('_') > 0){
-            locale.replaceAll('_', '-');
-        }
         const speechConfig = SpeechConfig.fromAuthorizationToken(authToken, region);
-        speechConfig.speechRecognitionLanguage = locale;
+        speechConfig.speechRecognitionLanguage = locale.replaceAll('_', '-');
         const audioConfig = AudioConfig.fromDefaultMicrophoneInput();
         window.twcTmp.twcRecognizer = new SpeechRecognizer(speechConfig, audioConfig);
         window.twcTmp.twcRecognizer.recognizeOnceAsync(
@@ -64,9 +47,41 @@ function processAudioToText(authToken, region, locale) {
                 delete window.twcTmp.twcRecognizer
             })
     })
-
-
 }
+
+
+const getSpeechConfig = m => m.hostURL ? SpeechConfig.fromHost(m.hostURL, m.subscriptionKey)
+    : m.endpointURL ? SpeechConfig.fromEndpoint(m.endpointURL, m.subscriptionKey)
+    : m.token ? SpeechConfig.fromAuthorizationToken(m.token, m.region)
+    : m.subscriptionKey ? SpeechConfig.fromSubscription(m.subscriptionKey, m.region) : null;
+
+
+function processAudioToText(m) {
+    //authToken, region, locale
+    return new Promise((resolve, reject) => {
+        const speechConfig = getSpeechConfig(m);
+        if (speechConfig == null) {
+            reject('Neither hostURL, endpointURL, authToken nor subscriptionKey is specified for processAudioToText()');
+            return;
+        }
+        speechConfig.speechRecognitionLanguage = m.locale;
+        //speechConfig.speechRecognitionLanguage = locale.replaceAll('_', '-');;
+        const audioConfig = AudioConfig.fromDefaultMicrophoneInput();
+        window.twcTmp.twcRecognizer = new SpeechRecognizer(speechConfig, audioConfig);
+        window.twcTmp.twcRecognizer.recognizeOnceAsync(
+            result => {
+                if (result.text && !result.errorDetails) resolve(result.text);
+                else reject(result.errorDetails);
+                delete window.twcTmp.twcRecognizer;
+            },
+            error => {
+                reject(error);
+                delete window.twcTmp.twcRecognizer;
+            }
+        );
+    });
+}
+
 
 function stopAsrRecording() {
     if (window.twcTmp.twcRecognizer) {
@@ -83,13 +98,41 @@ function stopTTSAudio() {
     }
 }
 
-function processTextToAudio(authToken, region, locale, textToRead, voice) {
+
+function processTextToAudio(m) {
+    // authToken, region, locale, textToRead, voice
     return new Promise((resolve, reject) => {
-        if(locale.indexOf('_') > 0){
-            locale.replaceAll('_', '-');
+        const speechConfig = getSpeechConfig(m);
+        if (speechConfig == null) {
+            reject('Neither hostURL, endpointURL, token nor subscriptionKey is specified for processTextToAudio()');
+            return;
         }
+        speechConfig.speechSynthesisLanguage = m.locale;
+        //speechConfig.speechSynthesisLanguage = locale.replaceAll('_', '-');
+        if (m.voice) speechConfig.speechSynthesisVoiceName = m.voice;
+        window.twcTmp.twcAudioPlayer = new SpeakerAudioDestination();
+        const audioConfig = AudioConfig.fromSpeakerOutput(window.twcTmp.twcAudioPlayer);
+        const synthesizer = new SpeechSynthesizer(speechConfig, audioConfig);
+
+        synthesizer.speakTextAsync(m.textToRead,
+            result => {
+                if (result.audioData && !result.errorDetails) resolve(result);
+                else reject(result.errorDetails)
+                synthesizer.close();
+            },
+            error => {
+                reject(error);
+                synthesizer.close();
+            }
+        );
+    });
+}
+
+
+function _processTextToAudio(authToken, region, locale, textToRead, voice) {
+    return new Promise((resolve, reject) => {
         const speechConfig = SpeechConfig.fromAuthorizationToken(authToken, region);
-        speechConfig.speechSynthesisLanguage = locale;
+        speechConfig.speechSynthesisLanguage = locale.replaceAll('_', '-');
         if (voice) {
             speechConfig.speechSynthesisVoiceName = voice;
         }
@@ -114,6 +157,7 @@ function processTextToAudio(authToken, region, locale, textToRead, voice) {
     })
 }
 
+
 function generateText(messageData) {
     let utteranceArray = [];
     // These include the Table elements, uncomment to have table fields read out -> let validKeys = ['type', 'alt', 'title', 'subtitle', 'text', 'headers','body', 'footers'];
@@ -129,4 +173,12 @@ function generateText(messageData) {
     return utteranceArray.join('.\n')
 }
 
-module.exports = {getMSToken, processTextToAudio, processAudioToText, generateText, stopAsrRecording, stopTTSAudio}
+module.exports = {
+    getMSTokenFromRegion,
+    getMSTokenFromCustomUrl,
+    processTextToAudio,
+    processAudioToText,
+    generateText,
+    stopAsrRecording,
+    stopTTSAudio
+};

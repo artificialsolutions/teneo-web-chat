@@ -169,7 +169,8 @@ import RecordingCancelledBeep from '../sounds/recordingCancelledBeep.vue'
 import DOMPurify from 'isomorphic-dompurify';
 
 import {
-  getMSToken,
+  getMSTokenFromRegion,
+  getMSTokenFromCustomUrl,
   processAudioToText,
   processTextToAudio,
   generateText,
@@ -281,14 +282,11 @@ export default {
       if (message.placeInQueue === message.queueLength) {
         const cumulativeText = this.ttsCumulativeText;
         this.ttsCumulativeText = '';
-        this.msTokenCheck().then(() => {
-          processTextToAudio(
-            store.getters.msCognitiveToken,
-            store.getters.msCognitiveRegion,
-            store.getters.locale,
-            cumulativeText,
-            store.getters.msVoice
-          )
+        this.msAuthCheck().then(m => {
+          m.locale = store.getters.locale;
+          m.voice = store.getters.msVoice;
+          m.textToRead = cumulativeText;
+          processTextToAudio(m)
           /*
           .then(() => {
             window.twcTmp.twcAudioPlayer.onAudioEnd = () => {
@@ -489,12 +487,53 @@ export default {
       await handleExtension(API_ON_UPLOAD_BUTTON_CLICK);
     },
 
+    /*
     msTokenCheck() {
       if (Date.now() - store.getters.msCognitiveTokenTimeStamp < 540000) return Promise.resolve();
-      return getMSToken(store.getters.msCognitiveRegion, store.getters.msCognitiveSubscriptionKey).then(token => {
+      var x;
+      if (store.getters.msCognitiveCustomAuthTokenUrl) {
+        x = getMSTokenFromCustomUrl(store.getters.msCognitiveCustomAuthTokenUrl, store.getters.msCognitiveSubscriptionKey);
+      } else {
+        x = getMSTokenFromRegion(store.getters.msCognitiveRegion, store.getters.msCognitiveSubscriptionKey);
+      }
+      return x.then(token => store.commit('msCognitiveToken', token));
+    },
+    */
+
+    msAuthCheck() {
+      const m = {};
+      if (store.getters.msCognitiveSubscriptionKey) m.subscriptionKey = store.getters.msCognitiveSubscriptionKey;
+      if (store.getters.msCognitiveUseDirectSubscription) {
+        return m.subscriptionKey ? Promise.resolve(m) : Promise.reject('Missing subscriptionKey for direct subscription');
+      }
+      if (store.getters.msCognitiveEndpoint) {
+        m.endpointURL = new URL(store.getters.msCognitiveEndpoint);
+        return Promise.resolve(m);
+      }
+      if (store.getters.msCognitiveHost) {
+        m.hostURL = new URL(store.getters.msCognitiveHost);
+        return Promise.resolve(m);
+      }
+      // Do it via token
+      if (Date.now() - store.getters.msCognitiveTokenTimeStamp < 540000 && store.getters.msCognitiveToken) {
+        m.token = store.getters.msCognitiveToken;
+        return Promise.resolve(m);
+      }
+      var x;
+      if (store.getters.msCognitiveCustomAuthTokenUrl) {
+        x = getMSTokenFromCustomUrl(store.getters.msCognitiveCustomAuthTokenUrl, store.getters.msCognitiveSubscriptionKey);
+      } else if (store.getters.msCognitiveRegion) {
+        x = getMSTokenFromRegion(store.getters.msCognitiveRegion, store.getters.msCognitiveSubscriptionKey);
+      } else {
+        return Promise.reject('Missing both msCognitiveCustomAuthTokenUrl and msCognitiveRegion for token');
+      }
+      return x.then(token => {
         store.commit('msCognitiveToken', token);
+        m.token = token;
+        return m;
       });
     },
+
 
     stopAsr() {
       this.asrActive = false;
@@ -567,13 +606,10 @@ export default {
       }).then(() => {
         if (!this.asrActive) return;
         this.$refs.recordingStartedBeep.$el.play();
-        this.msTokenCheck().then(() => {
+        this.msAuthCheck().then(m => {
           if (!this.asrActive) return;
-          processAudioToText(
-            store.getters.msCognitiveToken,
-            store.getters.msCognitiveRegion,
-            store.getters.locale
-          ).then(async (processedText) => {
+          m.locale = store.getters.locale;
+          processAudioToText(m).then(async (processedText) => {
             if (!this.asrActive) return;
             this.asrActive = false;
             if (typeof processedText === 'string') {

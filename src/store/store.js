@@ -2,7 +2,6 @@ import Vue from 'vue';
 import Vuex from 'vuex';
 import {DEFAULT_TITLE, FALLBACK_LOCALE} from '../utils/constants.js';
 import isValidUrl from '../utils/validate-url';
-import {getMSToken} from '../utils/ms-asr-tts'
 
 Vue.use(Vuex);
 
@@ -41,6 +40,10 @@ export const store = new Vuex.Store({
         msCognitiveSubscriptionKey: '',
         msCognitiveRegion: '',
         msCognitiveToken: '',
+        msCognitiveCustomAuthTokenUrl: '',
+        msCognitiveUseDirectSubscription: false,
+        msCognitiveEndpoint: '',
+        msCognitiveHost: '',
         msCognitiveTokenTimeStamp: 0,
         msVoice: '',
         locale: FALLBACK_LOCALE,
@@ -221,6 +224,18 @@ export const store = new Vuex.Store({
             state.msCognitiveTokenTimeStamp = Date.now();
             state.msCognitiveToken = token;
         },
+        msCognitiveCustomAuthTokenUrl(state, s) {
+            if (typeof s === 'string') state.msCognitiveCustomAuthTokenUrl = s;
+        },
+        msCognitiveUseDirectSubscription(state, b) {
+            if (typeof b === 'boolean') state.msCognitiveUseDirectSubscription = b;
+        },
+        msCognitiveEndpoint(state, s) {
+            if (typeof s === 'string') state.msCognitiveEndpoint = s;
+        },
+        msCognitiveHost(state, s) {
+            if (typeof s === 'string') state.msCognitiveHost = s;
+        },
         msVoice(state, voiceName) {
             if (typeof voiceName === 'string') {
                 state.msVoice = voiceName;
@@ -315,6 +330,12 @@ export const store = new Vuex.Store({
         }, msCognitiveTokenTimeStamp: (state) => {
             return state.msCognitiveTokenTimeStamp;
         },
+
+        msCognitiveCustomAuthTokenUrl: (state) => state.msCognitiveCustomAuthTokenUrl,
+        msCognitiveUseDirectSubscription: (state) => state.msCognitiveUseDirectSubscription,
+        msCognitiveEndpoint: (state) => state.msCognitiveEndpoint,
+        msCognitiveHost: (state) => state.msCognitiveHost,
+
         msVoice: (state) => {
             return state.msVoice;
         },

@@ -101,6 +101,22 @@ window.TeneoWebChat = {
       store.commit('msCognitiveRegion', twcProps.msCognitiveRegion);
     }
 
+    if (twcProps.msCognitiveCustomAuthTokenUrl) {
+      store.commit('msCognitiveCustomAuthTokenUrl', twcProps.msCognitiveCustomAuthTokenUrl);
+    }
+
+    if (twcProps.msCognitiveUseDirectSubscription) {
+      store.commit('msCognitiveUseDirectSubscription', twcProps.msCognitiveUseDirectSubscription);
+    }
+
+    if (twcProps.msCognitiveEndpoint) {
+      store.commit('msCognitiveEndpoint', twcProps.msCognitiveEndpoint);
+    }
+
+    if (twcProps.msCognitiveHost) {
+      store.commit('msCognitiveHost', twcProps.msCognitiveHost);
+    }
+
     if (twcProps.msVoice) {
       store.commit('msVoice', twcProps.msVoice);
     }
