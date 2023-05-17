@@ -3,7 +3,8 @@
     <div class="twc-upload-file-visualization">
 
       <img v-if="imageUrl" :src="imageUrl" ref="fileImageElement" class="twc-upload-file-representation twc-upload-file-representation-image" :alt="message.data.fileName"/>
-      <span v-else class="twc-upload-file-representation twc-upload-file-representation-symbol">{{ message.data.fileSymbol || message.data.fileName || '#' }}</span>
+      <span v-else class="twc-upload-file-representation twc-upload-file-representation-symbol">{{status === 'INTERRUPTED' ? '&#9888;': status === 'Failed' ? '&#x27f3;': (message.data.fileSymbol || message.data.fileName || '#') }} </span>
+
 
       <template v-if="status === 'SUCCEEDED'">
         <a v-if="controlAllowed" role="button" @click="deleteFile" class="twc-upload-file-cta twc-upload-file-action-delete" :title="$t('message.upload_file_delete')"><span style="font-size: 1.0em">&#x1F5D1;</span></a>
@@ -34,7 +35,7 @@
       </template>
     </div>
 
-    <div v-if="message.data.fileName" class="twc-upload-file-name">{{ message.data.fileName }}</div>
+    <div v-if="message.data.fileName" class="twc-upload-file-name">{{ message.data.fileName}}</div>
   </div>
 </template>
 

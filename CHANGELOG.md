@@ -1,5 +1,12 @@
-#v3.7.6
-#13-01-2023
+# v3.7.7
+## May-2023
+* Bug Fixes
+    * Attach from Camera in iOS closes FrontEnd.
+    * Output is read simultaneously twice.
+    * Attachments Feature.
+    * IPhone Scrolling Bug.
+# v3.7.6
+## 13-01-2023
 * Fixed expired buttons bug.
 # v3.7.5
 ## 17-11-2022
