@@ -1,85 +1,102 @@
 <template>
-        <form id ="twc-ratingmessage" v-on:submit.prevent = "handleFormSubmit">
-          
-          <fieldset id = "twc-ratingsection">
-            <p class = "twc-rating-title">{{ratingText}}</p>
-            <fieldset id = "twc-stars">
-              <span class="twc-star-cb-group">
-                
-                  <input type="radio" id="twc-rating-5" v-on:input ="showInput()" name="rating" value="5" /><label for="twc-rating-5">5</label>
-                  <input type="radio" id="twc-rating-4" name="rating" value="4" /><label for="twc-rating-4">4</label>
-                  <input type="radio" id="twc-rating-3" name="rating" value="3" /><label for="twc-rating-3">3</label>
-                  <input type="radio" id="twc-rating-2" name="rating" value="2" /><label for="twc-rating-2">2</label>
-                  <input type="radio" id="twc-rating-1" name="rating" value="1" /><label for="twc-rating-1">1</label>
-                  <input type="radio" id="twc-rating-0" name="rating" value="0" class="twc-star-cb-clear" /><label for="twc-rating-0">0</label>
-
-                <!--
-                <input v-for = "starIdx in message.data.maxValue"
-                v-bind:key = "starIdx"
-                :value = (starIdx-1)
-                :id = "'rating-'+(starIdx-1)"
-                type = "radio"
-                name = "rating"/>
-
-                <label v-for ="starIdx in message.data.maxValue" 
-                :key = "starIdx" 
-                :for = "'rating-'+(starIdx-1)"></label>
-                -->
-              </span>
-            </fieldset>
-
-            <textarea v-show = "message.data.commentsAllowed" class ="twc-feedback-comment" placeholder="Leave us a comment..."></textarea>
-            <fieldset class = "twc-submit-section">
-              <button type ="submit" id = "twc-rating-submit-button">submit</button>
-            </fieldset>
-          </fieldset>
-        </form> 
+  <form id="twc-ratingmessage" @submit.prevent="handleFormSubmit">
+    <fieldset id="twc-ratingsection">
+      <p class="twc-rating-title">{{ ratingText }}</p>
+      <fieldset id="twc-stars">
+        <span class="twc-star-cb-group">
+          <span
+            v-for="(star, index) in stars"
+            :key="index"
+            :class="{
+              'star': true,
+              'filled': index < selectedStar,
+              'highlighted': index === hoveredStar
+            }"
+            @click="selectStar(index + 1)"
+            @mouseover="highlightStar(index)"
+            @mouseout="resetStars"
+          >
+            &#9733;
+          </span>
+        </span>
+      </fieldset>      
+      <textarea v-model="formData.comment" v-show="message.data.commentsAllowed" class="twc-feedback-comment" placeholder="Leave us a comment..."></textarea>
+      <fieldset class="twc-submit-section">
+        <button type="submit" id="twc-rating-submit-button">Submit</button>
+      </fieldset>
+    </fieldset>
+  </form>
 </template>
 
 <script>
-
 export default {
-    name: 'RatingMessage',
-    props: {
-        message: {
-        type: Object,
-        required: true,
-        validator: (message) => {
-            return (
-            message &&
-            message.type === 'rating' &&
-            message.data &&
-            message.data.title && 
-            message.data.maxValue &&
-            message.data.commentsAllowed
-            /* Other elements that may have the rating message */
-            );
-        },
-        }
+  name: 'RatingMessage',
+  data() {
+    return {
+      formData: {
+      comment: '',
+      success: false    
     },
-    computed: {
-        ratingText() {
-            return this.message.data.title;
-        }
-    }, 
-    mounted() {
-      let element = this.$el.querySelectorAll("#rating-1");
-      element.className = "star-cb-clear";
-    },
-    methods: {
-        showInput() {
-            console.log("The input is 5");
-        },
-        handleFormSubmit(e) {
-            console.log(this.$el);
-            let formData = Object.fromEntries(new FormData(this.$el).entries());
-            
-            formData.success = true;
-            this.$teneoApi.sendSilentMessage(JSON.stringify(formData));
-        }
+      stars: 5, // Total number of stars
+      selectedStar: 0, // Currently selected star
+      hoveredStar: -1 // Currently hovered star
+    };
+  },
+  props: {
+    message: {
+      type: Object,
+      required: true,
+      validator: (message) => {
+        return (
+          message &&
+          message.type === 'rating' &&
+          message.data &&
+          message.data.title &&
+          message.data.maxValue &&
+          message.data.commentsAllowed
+          /* Other elements that may have the rating message */
+        );
+      }
     }
-}
+  },
+  computed: {
+    ratingText() {
+      return this.message.data.title;
+    }
+  },
+  methods: {
+    handleFormSubmit() {
+      const formData = {
+        rating: this.selectedStar,
+        success: true,
+        comment: ''
+      };
+      
+      const textarea = document.querySelector('.twc-feedback-comment');
+      if (textarea) {
+        formData.comment = textarea.value;
+      }
+      
+      console.log('Form data:', formData);
+      // Send the form data or perform any other desired action
+      this.$teneoApi.sendSilentMessage(JSON.stringify(formData));
+    },
+
+    selectStar(star) {
+      this.selectedStar = star;
+      console.log('Selected stars:', this.selectedStar); // Display selected star count in the console
+    },
+    highlightStar(star) {
+      this.hoveredStar = star;
+    },
+    resetStars() {
+      this.hoveredStar = -1;
+    }
+  }
+};
 </script>
+
+
 
 <style scoped>
 #twc-ratingmessage {
@@ -203,6 +220,19 @@ fieldset {
   -webkit-font-smoothing: subpixel-antialiased;
   margin: 0.5rem 0;
 }
+.star {
+  cursor: pointer;
+  font-size: 24px;
+  color: #aaa;
+  transition: color 0.2s;
+}
 
+.filled {
+  color: #ffca28;
+}
+
+.highlighted {
+  color: #ffc107;
+}
 
 </style>
