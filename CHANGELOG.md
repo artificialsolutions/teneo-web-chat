@@ -1,5 +1,9 @@
 # v3.7.7
 ## May-2023
+* Features
+    * Attachment Messages.
+    * Rating Messages.
+    
 * Bug Fixes
     * Attach from Camera in iOS closes FrontEnd.
     * Output is read simultaneously twice.
