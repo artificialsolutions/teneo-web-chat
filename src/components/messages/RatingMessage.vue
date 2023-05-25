@@ -3,26 +3,33 @@
     <fieldset id="twc-ratingsection">
       <p class="twc-rating-title">{{ ratingText }}</p>
       <fieldset id="twc-stars">
-        <span class="twc-star-cb-group">
-          <span
-            v-for="(star, index) in stars"
-            :key="index"
-            :class="{
-              'star': true,
-              'filled': index < selectedStar,
-              'highlighted': index === hoveredStar
-            }"
-            @click="selectStar(index + 1)"
-            @mouseover="highlightStar(index)"
-            @mouseout="resetStars"
-          >
-            &#9733;
-          </span>
-        </span>
-      </fieldset>      
-      <textarea v-model="formData.comment" v-show="message.data.commentsAllowed" class="twc-feedback-comment" placeholder="Leave us a comment..."></textarea>
+        <span
+  v-for="(star, index) in stars"
+  :key="index"
+  :class="{
+    'star': true,
+    'filled': index < selectedStar,
+    'highlighted': index <= hoveredStar
+  }"
+  @click="selectStar(stars - index)"
+  @mouseover="highlightStar(index)"
+  @mouseout="resetStars"
+  :disabled="disabled"
+>
+  &#9733;
+</span>
+
+      </fieldset>
+      <textarea
+        v-model="formData.comment"
+        v-show="message.data.commentsAllowed"
+        class="twc-feedback-comment"
+        placeholder="Leave us a comment..."
+        :disabled="disabled"
+      ></textarea>
       <fieldset class="twc-submit-section">
-        <button type="submit" id="twc-rating-submit-button">Submit</button>
+        <button type="submit" id="twc-rating-submit-button" :disabled="disabled" :class="{ 'disabled': disabled }">Submit</button>
+
       </fieldset>
     </fieldset>
   </form>
@@ -34,12 +41,13 @@ export default {
   data() {
     return {
       formData: {
-      comment: '',
-      success: false    
-    },
+        comment: '',
+        success: false
+      },
       stars: 5, // Total number of stars
       selectedStar: 0, // Currently selected star
-      hoveredStar: -1 // Currently hovered star
+      hoveredStar: -1, // Currently hovered star
+      disabled: false // Flag to disable the component
     };
   },
   props: {
@@ -71,42 +79,55 @@ export default {
         success: true,
         comment: ''
       };
-      
+
       const textarea = document.querySelector('.twc-feedback-comment');
       if (textarea) {
         formData.comment = textarea.value;
       }
-      
+
       console.log('Form data:', formData);
       // Send the form data or perform any other desired action
       this.$teneoApi.sendSilentMessage(JSON.stringify(formData));
+
+      const submitButton = document.getElementById('twc-rating-submit-button');
+    if (submitButton) {
+      submitButton.style.backgroundColor = '#a9a9a9';
+    }
+      // Disable the component after submitting the form
+      this.disabled = true;
     },
 
     selectStar(star) {
-      this.selectedStar = star;
-      console.log('Selected stars:', this.selectedStar); // Display selected star count in the console
-    },
+  if (!this.disabled) {
+    this.selectedStar = this.stars - star + 1;
+    console.log('Selected stars:', this.selectedStar); // Display selected star count in the console
+  }
+},
+
     highlightStar(star) {
-      this.hoveredStar = star;
-    },
-    resetStars() {
-      this.hoveredStar = -1;
-    }
+  if (!this.disabled) {
+    this.hoveredStar = star;
+  }
+},
+
+resetStars() {
+  if (!this.disabled) {
+    this.hoveredStar = -1;
+  }
+}
+
   }
 };
 </script>
-
-
-
 <style scoped>
 #twc-ratingmessage {
   max-width: calc(100% - 84px);
 }
 #twc-stars {
-  height : 2rem;
-  display : flex;
+  height: 2rem;
+  display: flex;
   flex-direction: row;
-  justify-content: space-around;
+  justify-content: flex-start;
 }
 .twc-star-cb-group {
   /* remove inline-block whitespace */
@@ -138,8 +159,8 @@ export default {
   color: #888;
   font-size: 30px;
 }
-.twc-star-cb-group > input:checked ~ label:before, 
-.twc-star-cb-group > input + label:hover ~ label:before, 
+.twc-star-cb-group > input:checked ~ label:before,
+.twc-star-cb-group > input + label:hover ~ label:before,
 .twc-star-cb-group > input + label:hover:before {
   content: "★";
   color: #e52;
@@ -160,7 +181,7 @@ export default {
   text-shadow: none;
   font-size: 30px;
 }
-.twc-star-cb-group:hover > input + label:hover ~ label:before, 
+.twc-star-cb-group:hover > input + label:hover ~ label:before,
 .twc-star-cb-group:hover > input + label:hover:before {
   content: "★";
   color: #e52;
@@ -193,11 +214,11 @@ fieldset {
 }
 
 .twc-feedback-comment:focus {
-  outline: 0; 
-  border: 1px solid rgb(47, 40, 110,0.5);
+  outline: 0;
+  border: 1px solid rgb(47, 40, 110, 0.5);
   color: black;
-  
 }
+
 .twc-submit-section {
   display: flex;
   flex-direction: row;
@@ -205,7 +226,7 @@ fieldset {
 }
 
 #twc-rating-submit-button {
-  border:none;
+  border: none;
   color: white;
   background-color: var(--primary-color);
   padding: 5px;
@@ -220,6 +241,7 @@ fieldset {
   -webkit-font-smoothing: subpixel-antialiased;
   margin: 0.5rem 0;
 }
+
 .star {
   cursor: pointer;
   font-size: 24px;
@@ -234,5 +256,4 @@ fieldset {
 .highlighted {
   color: #ffc107;
 }
-
 </style>
