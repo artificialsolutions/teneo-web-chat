@@ -1,5 +1,5 @@
 <template>
-  <div v-if="idToItem != null" 
+  <div v-if="keyToItem != null"
     class="twc-upload-preview-panel"
     contenteditable="true"
     style="caret-color:transparent"
@@ -12,16 +12,17 @@
     @paste.prevent="addFilesFromPaste"
   >
     <div class = "twc-files-space">
-      
+
       <div class="twc-upload-items">
-        <div id="drop-zone" v-if="itemsCount === 0">
-          <div id="drop-message">
+        <div class="twc-drop-zone" v-if="itemsCount === 0">
+          <div class="twc-drop-message">
             {{ $t('message.upload_panel_add_files') }}
           </div>
         </div>
+
         <div class="twc-upload-item"
-          v-for="(item, id) in idToItem"
-          :key="id"
+          v-for="item in keyToItem"
+          :key="item.id"
           :title="item.file.name"
         >
           <svg
@@ -40,7 +41,7 @@
             <line x1="10" y1="1" x2="1" y2="10"></line>
             <line x1="1" y1="1" x2="10" y2="10"></line>
           </svg>
-          <canvas :id="('twc-upload-item-canvas' + id)" class="twc-upload-item-canvas"></canvas>
+          <canvas :id="('twc-upload-item-canvas' + item.id)" class="twc-upload-item-canvas"></canvas>
           <div class="twc-file-name">{{item.file.name}}</div>
         </div>
       </div>
@@ -75,12 +76,12 @@ export default {
 <style scoped>
 
 @media only screen and (max-width: 767px) {
-  #drop-message {
+  .twc-drop-message {
     display: none;
   }
 }
 
-#drop-message {
+.twc-drop-message {
   border: 2px dotted #ccc;
   border-radius: 5px;
   padding: 50px;
@@ -130,7 +131,7 @@ export default {
   overflow-x: auto;
   overflow-y: hidden;
   padding: 5px;
-  direction: rtl; /* right to left scrolling */ 
+  /* direction: rtl; */
 }
 
 /* width */
@@ -319,7 +320,12 @@ import handleExtension from '../utils/handle-extension.js';
  * 
  * @type {(object|null|undefined)}
  */
-var idToExtraData = null;
+var idToExtraData = null,
+
+
+//numIdBase = 4294967294;
+numIdBase = 0;
+
 
 /**
  * Indicates if additiona debug information should be logged.
@@ -327,6 +333,7 @@ var idToExtraData = null;
  * @const {boolean}
  */
 const bDebug = true,
+
 
 /**
  * The name of the component, to be used for debug purposes.
@@ -347,7 +354,7 @@ MAX_IMG_PREVIEW_WIDTH = 32,
  * 
  * @const {number}
  */
- MAX_IMG_PREVIEW_HEIGHT = 32,
+MAX_IMG_PREVIEW_HEIGHT = 32,
 
 
 newId = () => {
@@ -409,7 +416,7 @@ export default {
 
   data() {
     return {
-      idToItem: null,
+      keyToItem: null,
       itemsCount: 0,
       comment: null,
       hideSubmitButton: false,
@@ -429,15 +436,18 @@ export default {
 
   updated() {
     if (bDebug) console.log(sName, 'updated');
-    if (this.idToItem) {
-      for (var id in this.idToItem) {
-        if (this.idToItem.hasOwnProperty(id)) {
-          const canvas = document.getElementById('twc-upload-item-canvas' + id);
-          if (canvas) this.initCanvas(canvas, this.idToItem[id]);
-          else console.warn(sName, 'Missing canvas for id', id);
-        }
+    if (this.keyToItem == null) return;
+    var lastCanvas;
+    Object.values(this.keyToItem).forEach(item => {
+      const canvas = document.getElementById('twc-upload-item-canvas' + item.id);
+      if (canvas) {
+        this.initCanvas(canvas, item);
+        lastCanvas = canvas;
+      } else {
+        console.warn(sName, 'Missing canvas for id', item.id);
       }
-    }
+    });
+    if (lastCanvas) lastCanvas.scrollIntoView();
   },
 
 
@@ -500,9 +510,11 @@ export default {
 
 
     addFile(file) {
-      const id = newId();
-      if (!this.idToItem.hasOwnProperty(id)) this.itemsCount++;
-      this.idToItem[id] = {
+      const key = (numIdBase++).toString(),
+      x = Math.random().toString(36),
+      id = '_' + key + '_' + Date.now().toString(36) + '_' + x.substring(x.indexOf('.') + 1);
+      if (!this.keyToItem.hasOwnProperty(key)) this.itemsCount++;
+      this.keyToItem[key] = {
         id: id,
         file: file,
         asImage: isImageFile(file)
@@ -520,7 +532,7 @@ export default {
       } else {
         if (bDebug) console.log(sName, 'addFiles(), files chosen: NO');
       }
-      if (bDebug) console.log(sName, 'addFiles(), end, itemsCount [' + this.itemsCount + '], idToItem:', getPrintableDebugObject(this.idToItem));
+      if (bDebug) console.log(sName, 'addFiles(), end, itemsCount [' + this.itemsCount + '], keyToItem:', getPrintableDebugObject(this.keyToItem));
     },
 
 
@@ -534,14 +546,17 @@ export default {
       } else {
         if (bDebug) console.log(sName, 'addAsFiles(), dataTransferItems chosen: NO');
       }
-      if (bDebug) console.log(sName, 'addAsFiles(), end, itemsCount [' + this.itemsCount + '], idToItem:', getPrintableDebugObject(this.idToItem));
+      if (bDebug) console.log(sName, 'addAsFiles(), end, itemsCount [' + this.itemsCount + '], keyToItem:', getPrintableDebugObject(this.keyToItem));
     },
 
 
     open(payload) {
       if (bDebug) console.log(sName, 'open(), payload:', payload);
+      if (payload && payload.items != null) {
+        throw new Error('payload.items may not be used in open()');
+      }
       idToExtraData = {};
-      this.idToItem = {};
+      this.keyToItem = {};
       this.itemsCount = 0;
       this.processing = false;
       if (payload == null) {
@@ -564,39 +579,17 @@ export default {
           default:
             this.comment = payload.comment.toString();
         }
-        if (payload.items != null) {
-          for (var item, i = 0; i < payload.items.length; i++) {
-            item = payload.items[i];
-            if (item == null) {
-              console.warn(sName, 'open(), item at index', i, 'is undefined when opening an upload panel');
-              continue;
-            }
-            if (item.id == null) {
-              console.warn(sName, 'open(), item.id at index', i, 'is undefined when opening an upload panel');
-              continue;
-            }
-            if (item.file == null) {
-              console.warn(sName, 'open(), item.file at index', i, 'is undefined when opening an upload panel');
-              continue;
-            }
-            if (!this.idToItem.hasOwnProperty(item.id)) this.itemsCount++;
-            this.idToItem[item.id] = {
-              id: item.id,
-              file: item.file,
-              asImage: item.asImage == null ? isImageFile(item.file) : (item.asImage ? true : false)
-            };
-          }
-        }
+        this.addFiles(payload.files);
       }
       EventBus.$emit(events.UPLOAD_PANEL_OPENED);
-      if (bDebug) console.log(sName, 'open() end, comment [' + this.comment + '], itemsCount [' + this.itemsCount + '], idToItem:', getPrintableDebugObject(this.idToItem));
+      if (bDebug) console.log(sName, 'open() end, comment [' + this.comment + '], itemsCount [' + this.itemsCount + '], keyToItem:', getPrintableDebugObject(this.keyToItem));
     },
 
 
     close() {
       if (bDebug) console.log(sName, 'close()');
       idToExtraData = null;
-      this.idToItem = null;
+      this.keyToItem = null;
       this.itemsCount = 0;
       this.comment = null;
       this.hideSubmitButton = false;
@@ -611,7 +604,7 @@ export default {
       if (bDebug) console.log(sName, 'clearAll(), processing:', this.processing);
       if (this.processing) return;
       if (idToExtraData != null) idToExtraData = {};
-      if (this.idToItem != null) this.idToItem = {};
+      if (this.keyToItem != null) this.keyToItem = {};
       this.itemsCount = 0;
       if (this.comment != null) this.comment = '';
       this.processing = false;
@@ -642,21 +635,14 @@ export default {
       const payload = basePayload();
 
       payload.items = [];
-      if (this.idToItem) {
-        //payload.items = Object.values(this.idToItem);
-        let id, item, x;
-        for (id in this.idToItem) {
-          if (this.idToItem.hasOwnProperty(id)) {
-            item = Object.assign({}, this.idToItem[id]);
-            if (idToExtraData && (x = idToExtraData[id]) != null) {
-              x = x.imageUrl;
-              if (x) item.imageUrl = x;
-            }
-            payload.items.push(item);
-          }
-        }
+      if (this.keyToItem) {
+        Object.values(this.keyToItem).forEach(item => {
+          const itemCopy = Object.assign({}, item), extraData = idToExtraData && idToExtraData.hasOwnProperty(item.id) ? idToExtraData[item.id] : null;
+          if (extraData && extraData.imageUrl) itemCopy.imageUrl = extraData.imageUrl;
+          payload.items.push(itemCopy);
+        });
       } else {
-        console.warn(sName, 'clickSubmit(), submitting upload items with undefined idToItem');
+        console.warn(sName, 'clickSubmit(), submitting upload items with undefined keyToItem');
       }
       payload.comment = this.comment;
       try {
@@ -741,7 +727,7 @@ export default {
         return;
       }
       var extraData = idToExtraData[item.id];
-      if (extraData == null) idToExtraData[item.id] = extraData = { images: [] };
+      if (extraData == null) idToExtraData[item.id] = extraData = {};
       else {
         if (extraData.imageFailure) {
           this.insertTextCaption(canvasElement, item, ctx);
@@ -757,7 +743,6 @@ export default {
           if (bDebug) console.log(sName, 'insertImage(), img.onload, img.width==' + img.width + ', img.height==' + img.height);
           if (Number.isFinite(img.width) && img.width > 0 && Number.isFinite(img.height) && img.height > 0) {
             if (extraData.width == null || extraData.height == null) {
-              extraData.images.unshift(item.id);
               let w = MAX_IMG_PREVIEW_WIDTH / img.width, h = MAX_IMG_PREVIEW_HEIGHT / img.height;
               if (w < h) {
                 // w is the reference, width > height
@@ -844,13 +829,20 @@ export default {
     },
 
 
-    removeItem(item) {
+     removeItem(item) {
       if (bDebug) console.log(sName, 'removeItem()');
-      idToExtraData[item.id].images.splice(idToExtraData[item.id].images.indexOf(item.id), 1);
-      if (idToExtraData[item.id].images.length === 0) delete idToExtraData[item.id];
-      if (this.idToItem.hasOwnProperty(item.id)) {
-        delete this.idToItem[item.id];
+      var k = item.id.indexOf('_', 1);
+      if (k === -1 || k === 1 || item.id.charAt(0) !== '_') {
+        console.error(sName, 'removeItem(): bad item id for item', item);
+        return;
+      }
+      delete idToExtraData[item.id];
+      k = item.id.substring(1, k);
+      if (this.keyToItem.hasOwnProperty(k)) {
+        delete this.keyToItem[k];
         this.itemsCount--;
+      } else {
+        console.error(sName, 'removeItem(): item does not exist', item);
       }
     }
   }
