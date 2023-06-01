@@ -131,7 +131,7 @@ export default {
   overflow-x: auto;
   overflow-y: hidden;
   padding: 5px;
-  /* direction: rtl; */
+  direction: rtl;
 }
 
 /* width */
@@ -636,11 +636,14 @@ export default {
 
       payload.items = [];
       if (this.keyToItem) {
-        Object.values(this.keyToItem).forEach(item => {
-          const itemCopy = Object.assign({}, item), extraData = idToExtraData && idToExtraData.hasOwnProperty(item.id) ? idToExtraData[item.id] : null;
+        const items = Object.values(this.keyToItem);
+        let i, itemCopy, extraData;
+        for (i = 0; i < items.length; i++) {
+          itemCopy = Object.assign({}, items[i]);
+          extraData = idToExtraData && idToExtraData.hasOwnProperty(itemCopy.id) ? idToExtraData[itemCopy.id] : null;
           if (extraData && extraData.imageUrl) itemCopy.imageUrl = extraData.imageUrl;
           payload.items.push(itemCopy);
-        });
+        }
       } else {
         console.warn(sName, 'clickSubmit(), submitting upload items with undefined keyToItem');
       }
