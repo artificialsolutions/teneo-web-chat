@@ -12,6 +12,10 @@ Core features:
 * Available in multiple languages, easy to localize
 * Open source
 
+Additional Features:
+ * [Rating Message](docs/features/Rating%20Message.md).
+ * [Upload files](docs/features/upload.md).
+
 NOTE: This readme contains high-level information about running Teneo Web Chat. For full documentation, please refer to the [Teneo Web Chat Documentation](https://developers.artificial-solutions.com/engine/teneo-web-chat) on the Teneo Developers website.
 
 ## Prerequisites
