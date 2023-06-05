@@ -84,18 +84,36 @@ window.addEventListener('load', () => {
         'showUploadButton': '<%= process.env.SHOW_UPLOAD_BUTTON %>',
         'asrIconUrl': '<%= process.env.ASR_ICON_URL %>',
         'showAsrButton': '<%= process.env.SHOW_ASR_BUTTON %>',
-        'asrActive': '<%= process.env.ASR_ACTIVE %>',
         'ttsIconUrl': '<%= process.env.TTS_ICON_URL %>',
         'showTtsButton': '<%= process.env.SHOW_TTS_BUTTON %>',
+
         'ttsActive': '<%= process.env.TTS_ACTIVE %>',
+        'asrActive': '<%= process.env.ASR_ACTIVE %>',
+
+        'msCognitiveAsrSubscriptionKey': '<%= process.env.MS_COGNITIVE_ASR_SUBSCRIPTION_KEY %>',
+        'msCognitiveAsrRegion': '<%= process.env.MS_COGNITIVE_ASR_REGION %>',
+        'msCognitiveAsrCustomAuthTokenUrl': '<%= process.env.MS_COGNITIVE_ASR_CUSTOM_AUTH_TOKEN_URL %>',
+        'msCognitiveAsrUseDirectSubscription': '<%= process.env.MS_COGNITIVE_ASR_USE_DIRECT_SUBSCRIPTION %>',
+        'msCognitiveAsrEndpoint': '<%= process.env.MS_COGNITIVE_ASR_ENDPOINT %>',
+        'msCognitiveAsrHost': '<%= process.env.MS_COGNITIVE_ASR_HOST %>',
+
+        'msCognitiveTtsSubscriptionKey': '<%= process.env.MS_COGNITIVE_TTS_SUBSCRIPTION_KEY %>',
+        'msCognitiveTtsRegion': '<%= process.env.MS_COGNITIVE_TTS_REGION %>',
+        'msCognitiveTtsCustomAuthTokenUrl': '<%= process.env.MS_COGNITIVE_TTS_CUSTOM_AUTH_TOKEN_URL %>',
+        'msCognitiveTtsUseDirectSubscription': '<%= process.env.MS_COGNITIVE_TTS_USE_DIRECT_SUBSCRIPTION %>',
+        'msCognitiveTtsEndpoint': '<%= process.env.MS_COGNITIVE_TTS_ENDPOINT %>',
+        'msCognitiveTtsHost': '<%= process.env.MS_COGNITIVE_TTS_HOST %>',
+
         'msCognitiveSubscriptionKey': '<%= process.env.MS_COGNITIVE_SUBSCRIPTION_KEY %>',
         'msCognitiveRegion': '<%= process.env.MS_COGNITIVE_REGION %>',
         'msCognitiveCustomAuthTokenUrl': '<%= process.env.MS_COGNITIVE_CUSTOM_AUTH_TOKEN_URL %>',
         'msCognitiveUseDirectSubscription': '<%= process.env.MS_COGNITIVE_USE_DIRECT_SUBSCRIPTION %>',
         'msCognitiveEndpoint': '<%= process.env.MS_COGNITIVE_ENDPOINT %>',
         'msCognitiveHost': '<%= process.env.MS_COGNITIVE_HOST %>',
+
         'msVoice': '<%= process.env.MS_VOICE %>',
         'locale': '<%= process.env.LOCALE %>',
+
         'autoRedirect': '<%= process.env.AUTO_OUTPUT_LINK_REDIRECT %>'
     };
     <% if(process.env.NODE_ENV === 'development') { %>

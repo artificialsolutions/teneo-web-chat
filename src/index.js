@@ -93,6 +93,57 @@ window.TeneoWebChat = {
       store.commit('showUploadButton', true);
     }
 
+
+    if (twcProps.msCognitiveAsrSubscriptionKey) {
+      store.commit('msCognitiveAsrSubscriptionKey', twcProps.msCognitiveAsrSubscriptionKey);
+    }
+
+    if (twcProps.msCognitiveAsrRegion) {
+      store.commit('msCognitiveAsrRegion', twcProps.msCognitiveAsrRegion);
+    }
+
+    if (twcProps.msCognitiveAsrCustomAuthTokenUrl) {
+      store.commit('msCognitiveAsrCustomAuthTokenUrl', twcProps.msCognitiveAsrCustomAuthTokenUrl);
+    }
+
+    if (twcProps.msCognitiveAsrUseDirectSubscription) {
+      store.commit('msCognitiveAsrUseDirectSubscription', twcProps.msCognitiveAsrUseDirectSubscription);
+    }
+
+    if (twcProps.msCognitiveAsrEndpoint) {
+      store.commit('msCognitiveAsrEndpoint', twcProps.msCognitiveAsrEndpoint);
+    }
+
+    if (twcProps.msCognitiveAsrHost) {
+      store.commit('msCognitiveAsrHost', twcProps.msCognitiveAsrHost);
+    }
+
+
+    if (twcProps.msCognitiveTtsSubscriptionKey) {
+      store.commit('msCognitiveTtsSubscriptionKey', twcProps.msCognitiveTtsSubscriptionKey);
+    }
+
+    if (twcProps.msCognitiveTtsRegion) {
+      store.commit('msCognitiveTtsRegion', twcProps.msCognitiveTtsRegion);
+    }
+
+    if (twcProps.msCognitiveTtsCustomAuthTokenUrl) {
+      store.commit('msCognitiveTtsCustomAuthTokenUrl', twcProps.msCognitiveTtsCustomAuthTokenUrl);
+    }
+
+    if (twcProps.msCognitiveTtsUseDirectSubscription) {
+      store.commit('msCognitiveTtsUseDirectSubscription', twcProps.msCognitiveTtsUseDirectSubscription);
+    }
+
+    if (twcProps.msCognitiveTtsEndpoint) {
+      store.commit('msCognitiveTtsEndpoint', twcProps.msCognitiveTtsEndpoint);
+    }
+
+    if (twcProps.msCognitiveTtsHost) {
+      store.commit('msCognitiveTtsHost', twcProps.msCognitiveTtsHost);
+    }
+
+
     if (twcProps.msCognitiveSubscriptionKey) {
       store.commit('msCognitiveSubscriptionKey', twcProps.msCognitiveSubscriptionKey);
     }
@@ -116,6 +167,7 @@ window.TeneoWebChat = {
     if (twcProps.msCognitiveHost) {
       store.commit('msCognitiveHost', twcProps.msCognitiveHost);
     }
+
 
     if (twcProps.msVoice) {
       store.commit('msVoice', twcProps.msVoice);

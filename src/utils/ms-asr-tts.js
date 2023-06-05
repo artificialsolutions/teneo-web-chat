@@ -8,12 +8,16 @@ import {
 
 
 function getMSTokenFromCustomUrl(url, key) {
+    const ac = new AbortController(), timeoutId = setTimeout(() => ac.abort(), 3000);
     return fetch(url, {
+        signal: ac.signal,
         method: 'POST',
         headers: {
             'Content-Type': 'application/x-www-form-urlencoded',
             'Ocp-Apim-Subscription-Key': key
         }
+    }).finally(() => {
+        clearTimeout(timeoutId);
     }).then(tokenResponse => {
         if (tokenResponse.ok) return tokenResponse.text();
         throw new Error(tokenResponse.statusText);
@@ -25,8 +29,8 @@ function getMSTokenFromRegion(region, key) {
     return getMSTokenFromCustomUrl('https://' + region + '.api.cognitive.microsoft.com/sts/v1.0/issuetoken', key);
 }
 
-
-function _processAudioToText(authToken, region, locale) {
+/*
+function processAudioToText(authToken, region, locale) {
     return new Promise((resolve, reject) => {
         const speechConfig = SpeechConfig.fromAuthorizationToken(authToken, region);
         speechConfig.speechRecognitionLanguage = locale.replaceAll('_', '-');
@@ -48,6 +52,7 @@ function _processAudioToText(authToken, region, locale) {
             })
     })
 }
+*/
 
 
 const getSpeechConfig = m => m.hostURL ? SpeechConfig.fromHost(m.hostURL, m.subscriptionKey)
@@ -61,7 +66,7 @@ function processAudioToText(m) {
     return new Promise((resolve, reject) => {
         const speechConfig = getSpeechConfig(m);
         if (speechConfig == null) {
-            reject('Neither hostURL, endpointURL, authToken nor subscriptionKey is specified for processAudioToText()');
+            reject('Neither hostURL, endpointURL, token nor subscriptionKey is specified for processAudioToText()');
             return;
         }
         speechConfig.speechRecognitionLanguage = m.locale;

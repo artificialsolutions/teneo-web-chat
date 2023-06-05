@@ -282,21 +282,11 @@ export default {
       if (message.placeInQueue === message.queueLength) {
         const cumulativeText = this.ttsCumulativeText;
         this.ttsCumulativeText = '';
-        this.msAuthCheck().then(m => {
+        this.msAuthCheck(false).then(m => {
           m.locale = store.getters.locale;
           m.voice = store.getters.msVoice;
           m.textToRead = cumulativeText;
-          processTextToAudio(m)
-          /*
-          .then(() => {
-            window.twcTmp.twcAudioPlayer.onAudioEnd = () => {
-              if (this.$refs.asrButton.dataset.used === "true" && this.$refs.asrButton.dataset.cancelled !== "true") {
-                this.asrButtonClicked(this.$refs.asrButton);
-              }
-            }
-          })
-          */
-          .catch(e => {
+          processTextToAudio(m).catch(e => {
             console.error('Error converting text to audio', e);
             this.ttsDisabled = true;
             this.ttsBroken = true;
@@ -500,38 +490,99 @@ export default {
     },
     */
 
-    msAuthCheck() {
+
+    msAuthCheck(bAsr) {
       const m = {};
-      if (store.getters.msCognitiveSubscriptionKey) m.subscriptionKey = store.getters.msCognitiveSubscriptionKey;
-      if (store.getters.msCognitiveUseDirectSubscription) {
-        return m.subscriptionKey ? Promise.resolve(m) : Promise.reject('Missing subscriptionKey for direct subscription');
+      var bSpecific, x = bAsr ? store.getters.msCognitiveAsrSubscriptionKey : store.getters.msCognitiveTtsSubscriptionKey;
+      if (x) bSpecific = true;
+      else x = store.getters.msCognitiveSubscriptionKey;
+      if (x) m.subscriptionKey = x;
+
+      x = bAsr ? store.getters.msCognitiveAsrUseDirectSubscription : store.getters.msCognitiveTtsUseDirectSubscription;
+      if (x === undefined) x = store.getters.msCognitiveUseDirectSubscription;
+      if (x) {
+        return m.subscriptionKey ? Promise.resolve(m) : Promise.reject('Missing subscription key for direct subscription');
       }
-      if (store.getters.msCognitiveEndpoint) {
-        m.endpointURL = new URL(store.getters.msCognitiveEndpoint);
-        return Promise.resolve(m);
+      
+      x = bAsr ? store.getters.msCognitiveAsrEndpoint : store.getters.msCognitiveTtsEndpoint;
+      if (!x) x = store.getters.msCognitiveEndpoint;
+      if (x) {
+        try {
+          m.endpointURL = new URL(x);
+          return Promise.resolve(m);
+        } catch(err) {
+          return Promise.reject('Bad cognitive endpoint [' + x + ']');
+        }
       }
-      if (store.getters.msCognitiveHost) {
-        m.hostURL = new URL(store.getters.msCognitiveHost);
-        return Promise.resolve(m);
+
+      x = bAsr ? store.getters.msCognitiveAsrHost : store.getters.msCognitiveTtsHost;
+      if (!x) x = store.getters.msCognitiveHost;
+      if (x) {
+        try {
+          m.hostURL = new URL(x);
+          return Promise.resolve(m);
+        } catch(err) {
+          return Promise.reject('Bad cognitive host [' + x + ']');
+        }
       }
-      // Do it via token
-      if (Date.now() - store.getters.msCognitiveTokenTimeStamp < 540000 && store.getters.msCognitiveToken) {
+
+      if (bAsr) {
+        x = store.getters.msCognitiveAsrToken;
+        if (x && Date.now() - store.getters.msCognitiveAsrTokenTimeStamp < 540000) {
+          m.token = x;
+          return Promise.resolve(m);
+        }
+      } else {
+        x = store.getters.msCognitiveTtsToken;
+        if (x && Date.now() - store.getters.msCognitiveTtsTokenTimeStamp < 540000) {
+          m.token = x;
+          return Promise.resolve(m);
+        }
+      }
+      // Here, x means a specific token existed, but expired
+
+      if (!x && store.getters.msCognitiveToken && Date.now() - store.getters.msCognitiveTokenTimeStamp < 540000) {
+        // No specific token exist, but a general token does, and it is still valid
         m.token = store.getters.msCognitiveToken;
         return Promise.resolve(m);
       }
-      var x;
-      if (store.getters.msCognitiveCustomAuthTokenUrl) {
-        x = getMSTokenFromCustomUrl(store.getters.msCognitiveCustomAuthTokenUrl, store.getters.msCognitiveSubscriptionKey);
-      } else if (store.getters.msCognitiveRegion) {
-        x = getMSTokenFromRegion(store.getters.msCognitiveRegion, store.getters.msCognitiveSubscriptionKey);
+      // Here, token expired or there was no token
+
+      if (bAsr) {
+        x = store.getters.msCognitiveAsrCustomAuthTokenUrl;
+        if (x) x = getMSTokenFromCustomUrl(x, m.subscriptionKey);
+        else {
+          x = store.getters.msCognitiveAsrRegion;
+          if (x) x = getMSTokenFromRegion(x, m.subscriptionKey);
+        }
       } else {
-        return Promise.reject('Missing both msCognitiveCustomAuthTokenUrl and msCognitiveRegion for token');
+        x = store.getters.msCognitiveTtsCustomAuthTokenUrl;
+        if (x) x = getMSTokenFromCustomUrl(x, m.subscriptionKey);
+        else {
+          x = store.getters.msCognitiveTtsRegion;
+          if (x) x = getMSTokenFromRegion(x, m.subscriptionKey);
+        }
       }
-      return x.then(token => {
-        store.commit('msCognitiveToken', token);
-        m.token = token;
-        return m;
-      });
+
+      // Here, !x means no specific token was used
+      if (x) bSpecific = true;
+      else {
+        x = store.getters.msCognitiveCustomAuthTokenUrl;
+        if (x) x = getMSTokenFromCustomUrl(x, m.subscriptionKey);
+        else {
+          x = store.getters.msCognitiveRegion;
+          if (x) x = getMSTokenFromRegion(x, m.subscriptionKey);
+        }
+      }
+
+      if (x) {
+        return x.then(token => {
+          store.commit(bSpecific ? (bAsr ? 'msCognitiveAsrToken' : 'msCognitiveTtsToken') : 'msCognitiveToken', token);
+          m.token = token;
+          return m;
+        });
+      }
+      return Promise.reject('Missing both cognitive custom auth token URL and cognitive region for token');
     },
 
 
@@ -606,7 +657,7 @@ export default {
       }).then(() => {
         if (!this.asrActive) return;
         this.$refs.recordingStartedBeep.$el.play();
-        this.msAuthCheck().then(m => {
+        this.msAuthCheck(true).then(m => {
           if (!this.asrActive) return;
           m.locale = store.getters.locale;
           processAudioToText(m).then(async (processedText) => {
