@@ -214,7 +214,29 @@ const isProvidedWithInput = m => {
     return false;
 },
 
-isLikelyCtaMessage = m => m && m.author !== PARTICIPANT_USER && m.type !== 'system' && m.type !== 'text' && isProvidedWithInput(m);
+
+isLikelyCtaMessage = m => m && m.author !== PARTICIPANT_USER && m.type !== 'system' && m.type !== 'text' && isProvidedWithInput(m),
+
+
+addSystemMessage = s => {
+  var h = window.TeneoWebChat.get(API_GET_CHAT_HISTORY);
+  h = h[h.length - 1];
+
+  EventBus.$emit(events.ADD_MESSAGE, {
+    'type': 'system',
+    'data': {
+      'text': s
+    },
+    'placeInQueue': 1,
+    'queueLength': 1
+  });
+  if (isLikelyCtaMessage(h)) {
+      // Repeat the last message if it contains CTAs
+      h = Object.assign({}, h);
+      h._skipTts = true;
+      setTimeout(() => EventBus.$emit(events.ADD_MESSAGE, h), BUBBLE_DELAY);
+  }
+};
 
 
 Vue.use(vueDebounce);
@@ -477,19 +499,6 @@ export default {
       await handleExtension(API_ON_UPLOAD_BUTTON_CLICK);
     },
 
-    /*
-    msTokenCheck() {
-      if (Date.now() - store.getters.msCognitiveTokenTimeStamp < 540000) return Promise.resolve();
-      var x;
-      if (store.getters.msCognitiveCustomAuthTokenUrl) {
-        x = getMSTokenFromCustomUrl(store.getters.msCognitiveCustomAuthTokenUrl, store.getters.msCognitiveSubscriptionKey);
-      } else {
-        x = getMSTokenFromRegion(store.getters.msCognitiveRegion, store.getters.msCognitiveSubscriptionKey);
-      }
-      return x.then(token => store.commit('msCognitiveToken', token));
-    },
-    */
-
 
     msAuthCheck(bAsr) {
       const m = {};
@@ -498,14 +507,18 @@ export default {
       else x = store.getters.msCognitiveSubscriptionKey;
       if (x) m.subscriptionKey = x;
 
+      x = bAsr ? store.getters.msCognitiveAsrRegion : store.getters.msCognitiveTtsRegion;
+      if (x) bSpecific = true;
+      else x = store.getters.msCognitiveRegion;
+      if (x) m.region = x;
+
       x = bAsr ? store.getters.msCognitiveAsrUseDirectSubscription : store.getters.msCognitiveTtsUseDirectSubscription;
       if (x === undefined) x = store.getters.msCognitiveUseDirectSubscription;
       if (x) {
         return m.subscriptionKey ? Promise.resolve(m) : Promise.reject('Missing subscription key for direct subscription');
       }
       
-      x = bAsr ? store.getters.msCognitiveAsrEndpoint : store.getters.msCognitiveTtsEndpoint;
-      if (!x) x = store.getters.msCognitiveEndpoint;
+      x = (bAsr ? store.getters.msCognitiveAsrEndpoint : store.getters.msCognitiveTtsEndpoint) || store.getters.msCognitiveEndpoint;
       if (x) {
         try {
           m.endpointURL = new URL(x);
@@ -515,8 +528,7 @@ export default {
         }
       }
 
-      x = bAsr ? store.getters.msCognitiveAsrHost : store.getters.msCognitiveTtsHost;
-      if (!x) x = store.getters.msCognitiveHost;
+      x = (bAsr ? store.getters.msCognitiveAsrHost : store.getters.msCognitiveTtsHost) || store.getters.msCognitiveHost;
       if (x) {
         try {
           m.hostURL = new URL(x);
@@ -528,25 +540,34 @@ export default {
 
       if (bAsr) {
         x = store.getters.msCognitiveAsrToken;
-        if (x && Date.now() - store.getters.msCognitiveAsrTokenTimeStamp < 540000) {
-          m.token = x;
-          return Promise.resolve(m);
+        if (x) {
+          if (Date.now() - store.getters.msCognitiveAsrTokenTimeStamp < 540000) {
+            m.token = x;
+            return Promise.resolve(m);
+          }
+          store.commit('msCognitiveAsrToken', '');
         }
       } else {
         x = store.getters.msCognitiveTtsToken;
-        if (x && Date.now() - store.getters.msCognitiveTtsTokenTimeStamp < 540000) {
-          m.token = x;
-          return Promise.resolve(m);
+        if (x) {
+          if (Date.now() - store.getters.msCognitiveTtsTokenTimeStamp < 540000) {
+            m.token = x;
+            return Promise.resolve(m);
+          }
+          store.commit('msCognitiveTtsToken', '');
         }
       }
       // Here, x means a specific token existed, but expired
 
-      if (!x && store.getters.msCognitiveToken && Date.now() - store.getters.msCognitiveTokenTimeStamp < 540000) {
-        // No specific token exist, but a general token does, and it is still valid
-        m.token = store.getters.msCognitiveToken;
-        return Promise.resolve(m);
+      if (!x && store.getters.msCognitiveToken) {
+        if (Date.now() - store.getters.msCognitiveTokenTimeStamp < 540000) {
+          // No specific token exists, but a general token does, and it is still valid
+          m.token = store.getters.msCognitiveToken;
+          return Promise.resolve(m);
+        }
+        store.commit('msCognitiveToken', '');
       }
-      // Here, token expired or there was no token
+      // Here, a token expired or there was no token
 
       if (bAsr) {
         x = store.getters.msCognitiveAsrCustomAuthTokenUrl;
@@ -563,7 +584,6 @@ export default {
           if (x) x = getMSTokenFromRegion(x, m.subscriptionKey);
         }
       }
-
       // Here, !x means no specific token was used
       if (x) bSpecific = true;
       else {
@@ -574,6 +594,7 @@ export default {
           if (x) x = getMSTokenFromRegion(x, m.subscriptionKey);
         }
       }
+      // Here, x is a Promise to be resolved with a token
 
       if (x) {
         return x.then(token => {
@@ -590,6 +611,7 @@ export default {
       this.asrActive = false;
       stopAsrRecording();
     },
+
 
     async asrButtonClicked(e) {
       // Check if any extensions are set up to handle them.
@@ -620,23 +642,7 @@ export default {
         e.dataset.used = "true";
         firstClick = true;
 
-        let h = window.TeneoWebChat.get(API_GET_CHAT_HISTORY);
-        h = h[h.length - 1];
-
-        EventBus.$emit(events.ADD_MESSAGE, {
-          'type': 'system',
-          'data': {
-            'text': this.$t('message.first_use_asr_system_message')
-          },
-          'placeInQueue': 1,
-          'queueLength': 1
-        });
-        if (isLikelyCtaMessage(h)) {
-            // Repeat the last message if it contains CTAs
-            h = Object.assign({}, h);
-            h._skipTts = true;
-            setTimeout(() => EventBus.$emit(events.ADD_MESSAGE, h), BUBBLE_DELAY);
-        }
+        addSystemMessage(this.$t('message.first_use_asr_system_message'));
       }
       this.asrActive = true;
 
@@ -669,6 +675,7 @@ export default {
               await this._submitText();
             } else {
               console.warn('ASR recognition failed');
+              addSystemMessage('Automatic speech recognition error 1');
             }
           }, e => {
             if (!this.asrActive) return;
@@ -676,9 +683,11 @@ export default {
             this.asrBroken = true;
             this.asrDisabled = true;
             console.warn('Error processing audio to text', e);
+            addSystemMessage('Automatic speech recognition error 2');
           });
         }).catch(e => {
           console.error('Error getting authentication token for ASR', e);
+          addSystemMessage('Automatic speech recognition error 3');
           this.asrActive = false;
           this.asrDisabled = true;
           this.asrBroken = true;

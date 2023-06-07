@@ -29,31 +29,6 @@ function getMSTokenFromRegion(region, key) {
     return getMSTokenFromCustomUrl('https://' + region + '.api.cognitive.microsoft.com/sts/v1.0/issuetoken', key);
 }
 
-/*
-function processAudioToText(authToken, region, locale) {
-    return new Promise((resolve, reject) => {
-        const speechConfig = SpeechConfig.fromAuthorizationToken(authToken, region);
-        speechConfig.speechRecognitionLanguage = locale.replaceAll('_', '-');
-        const audioConfig = AudioConfig.fromDefaultMicrophoneInput();
-        window.twcTmp.twcRecognizer = new SpeechRecognizer(speechConfig, audioConfig);
-        window.twcTmp.twcRecognizer.recognizeOnceAsync(
-            result => {
-                if (result.text && !result.errorDetails) {
-                    resolve(result.text);
-                } else {
-                    reject(result.errorDetails);
-
-                }
-                delete window.twcTmp.twcRecognizer
-            },
-            error => {
-                reject(error);
-                delete window.twcTmp.twcRecognizer
-            })
-    })
-}
-*/
-
 
 const getSpeechConfig = m => m.hostURL ? SpeechConfig.fromHost(m.hostURL, m.subscriptionKey)
     : m.endpointURL ? SpeechConfig.fromEndpoint(m.endpointURL, m.subscriptionKey)
@@ -75,12 +50,15 @@ function processAudioToText(m) {
         window.twcTmp.twcRecognizer = new SpeechRecognizer(speechConfig, audioConfig);
         window.twcTmp.twcRecognizer.recognizeOnceAsync(
             result => {
-                if (result.text && !result.errorDetails) resolve(result.text);
-                else reject(result.errorDetails);
+                if (result && result.text && !result.errorDetails) resolve(result.text);
+                else {
+                    if (result != null && typeof result === 'object') reject('result: ' + JSON.stringify(result));
+                    else reject('result: ' + result);
+                }
                 delete window.twcTmp.twcRecognizer;
             },
             error => {
-                reject(error);
+                reject('error: ' + error);
                 delete window.twcTmp.twcRecognizer;
             }
         );
@@ -131,35 +109,6 @@ function processTextToAudio(m) {
             }
         );
     });
-}
-
-
-function _processTextToAudio(authToken, region, locale, textToRead, voice) {
-    return new Promise((resolve, reject) => {
-        const speechConfig = SpeechConfig.fromAuthorizationToken(authToken, region);
-        speechConfig.speechSynthesisLanguage = locale.replaceAll('_', '-');
-        if (voice) {
-            speechConfig.speechSynthesisVoiceName = voice;
-        }
-        window.twcTmp.twcAudioPlayer = new SpeakerAudioDestination();
-        const audioConfig = AudioConfig.fromSpeakerOutput(window.twcTmp.twcAudioPlayer);
-        const synthesizer = new SpeechSynthesizer(speechConfig, audioConfig);
-
-        synthesizer.speakTextAsync(textToRead,
-            result => {
-            if(result.audioData && !result.errorDetails) {
-                resolve(result);
-            }
-            else{
-                reject(result.errorDetails)
-            }
-                synthesizer.close();
-            },
-            error => {
-                reject(error);
-                synthesizer.close();
-            });
-    })
 }
 
 
