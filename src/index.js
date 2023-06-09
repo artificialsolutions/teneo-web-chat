@@ -102,12 +102,12 @@ window.TeneoWebChat = {
       store.commit('msCognitiveAsrRegion', twcProps.msCognitiveAsrRegion);
     }
 
-    if (twcProps.msCognitiveAsrCustomAuthTokenUrl) {
-      store.commit('msCognitiveAsrCustomAuthTokenUrl', twcProps.msCognitiveAsrCustomAuthTokenUrl);
+    if (twcProps.msCognitiveAsrSubscriptionOnly) {
+      store.commit('msCognitiveAsrSubscriptionOnly', twcProps.msCognitiveAsrSubscriptionOnly);
     }
 
-    if (twcProps.msCognitiveAsrUseDirectSubscription) {
-      store.commit('msCognitiveAsrUseDirectSubscription', twcProps.msCognitiveAsrUseDirectSubscription);
+    if (twcProps.msCognitiveAsrCustomAuthTokenUrl) {
+      store.commit('msCognitiveAsrCustomAuthTokenUrl', twcProps.msCognitiveAsrCustomAuthTokenUrl);
     }
 
     if (twcProps.msCognitiveAsrEndpoint) {
@@ -127,12 +127,12 @@ window.TeneoWebChat = {
       store.commit('msCognitiveTtsRegion', twcProps.msCognitiveTtsRegion);
     }
 
-    if (twcProps.msCognitiveTtsCustomAuthTokenUrl) {
-      store.commit('msCognitiveTtsCustomAuthTokenUrl', twcProps.msCognitiveTtsCustomAuthTokenUrl);
+    if (twcProps.msCognitiveTtsSubscriptionOnly) {
+      store.commit('msCognitiveTtsSubscriptionOnly', twcProps.msCognitiveTtsSubscriptionOnly);
     }
 
-    if (twcProps.msCognitiveTtsUseDirectSubscription) {
-      store.commit('msCognitiveTtsUseDirectSubscription', twcProps.msCognitiveTtsUseDirectSubscription);
+    if (twcProps.msCognitiveTtsCustomAuthTokenUrl) {
+      store.commit('msCognitiveTtsCustomAuthTokenUrl', twcProps.msCognitiveTtsCustomAuthTokenUrl);
     }
 
     if (twcProps.msCognitiveTtsEndpoint) {
@@ -152,12 +152,12 @@ window.TeneoWebChat = {
       store.commit('msCognitiveRegion', twcProps.msCognitiveRegion);
     }
 
-    if (twcProps.msCognitiveCustomAuthTokenUrl) {
-      store.commit('msCognitiveCustomAuthTokenUrl', twcProps.msCognitiveCustomAuthTokenUrl);
+    if (twcProps.msCognitiveSubscriptionOnly) {
+      store.commit('msCognitiveSubscriptionOnly', twcProps.msCognitiveSubscriptionOnly);
     }
 
-    if (twcProps.msCognitiveUseDirectSubscription) {
-      store.commit('msCognitiveUseDirectSubscription', twcProps.msCognitiveUseDirectSubscription);
+    if (twcProps.msCognitiveCustomAuthTokenUrl) {
+      store.commit('msCognitiveCustomAuthTokenUrl', twcProps.msCognitiveCustomAuthTokenUrl);
     }
 
     if (twcProps.msCognitiveEndpoint) {

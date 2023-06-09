@@ -41,27 +41,27 @@ export const store = new Vuex.Store({
 
         msCognitiveAsrSubscriptionKey: '',
         msCognitiveAsrRegion: '',
+        msCognitiveAsrSubscriptionOnly: false,
         msCognitiveAsrToken: '',
         msCognitiveAsrCustomAuthTokenUrl: '',
-        msCognitiveAsrUseDirectSubscription: false,
         msCognitiveAsrEndpoint: '',
         msCognitiveAsrHost: '',
         msCognitiveAsrTokenTimeStamp: 0,
 
         msCognitiveTtsSubscriptionKey: '',
         msCognitiveTtsRegion: '',
+        msCognitiveTtsSubscriptionOnly: false,
         msCognitiveTtsToken: '',
         msCognitiveTtsCustomAuthTokenUrl: '',
-        msCognitiveTtsUseDirectSubscription: false,
         msCognitiveTtsEndpoint: '',
         msCognitiveTtsHost: '',
         msCognitiveTtsTokenTimeStamp: 0,
 
         msCognitiveSubscriptionKey: '',
         msCognitiveRegion: '',
+        msCognitiveSubscriptionOnly: false,
         msCognitiveToken: '',
         msCognitiveCustomAuthTokenUrl: '',
-        msCognitiveUseDirectSubscription: false,
         msCognitiveEndpoint: '',
         msCognitiveHost: '',
         msCognitiveTokenTimeStamp: 0,
@@ -239,15 +239,15 @@ export const store = new Vuex.Store({
         msCognitiveAsrSubscriptionKey(state, s) {
             if (typeof s === 'string') state.msCognitiveAsrSubscriptionKey = s;
         },
+        msCognitiveAsrSubscriptionOnly(state, b) {
+            if (typeof b === 'boolean') state.msCognitiveAsrSubscriptionOnly = b;
+        },
         msCognitiveAsrToken(state, token) {
             state.msCognitiveAsrTokenTimeStamp = Date.now();
             state.msCognitiveAsrToken = token;
         },
         msCognitiveAsrCustomAuthTokenUrl(state, s) {
             if (typeof s === 'string') state.msCognitiveAsrCustomAuthTokenUrl = s;
-        },
-        msCognitiveAsrUseDirectSubscription(state, b) {
-            if (typeof b === 'boolean') state.msCognitiveAsrUseDirectSubscription = b;
         },
         msCognitiveAsrEndpoint(state, s) {
             if (typeof s === 'string') state.msCognitiveAsrEndpoint = s;
@@ -263,15 +263,15 @@ export const store = new Vuex.Store({
         msCognitiveTtsSubscriptionKey(state, s) {
             if (typeof s === 'string') state.msCognitiveTtsSubscriptionKey = s;
         },
+        msCognitiveTtsSubscriptionOnly(state, b) {
+            if (typeof b === 'boolean') state.msCognitiveTtsSubscriptionOnly = b;
+        },
         msCognitiveTtsToken(state, token) {
             state.msCognitiveTtsTokenTimeStamp = Date.now();
             state.msCognitiveTtsToken = token;
         },
         msCognitiveTtsCustomAuthTokenUrl(state, s) {
             if (typeof s === 'string') state.msCognitiveTtsCustomAuthTokenUrl = s;
-        },
-        msCognitiveTtsUseDirectSubscription(state, b) {
-            if (typeof b === 'boolean') state.msCognitiveTtsUseDirectSubscription = b;
         },
         msCognitiveTtsEndpoint(state, s) {
             if (typeof s === 'string') state.msCognitiveTtsEndpoint = s;
@@ -287,15 +287,15 @@ export const store = new Vuex.Store({
         msCognitiveSubscriptionKey(state, s) {
             if (typeof s === 'string') state.msCognitiveSubscriptionKey = s;
         },
+        msCognitiveSubscriptionOnly(state, b) {
+            if (typeof b === 'boolean') state.msCognitiveSubscriptionOnly = b;
+        },
         msCognitiveToken(state, token) {
             state.msCognitiveTokenTimeStamp = Date.now();
             state.msCognitiveToken = token;
         },
         msCognitiveCustomAuthTokenUrl(state, s) {
             if (typeof s === 'string') state.msCognitiveCustomAuthTokenUrl = s;
-        },
-        msCognitiveUseDirectSubscription(state, b) {
-            if (typeof b === 'boolean') state.msCognitiveUseDirectSubscription = b;
         },
         msCognitiveEndpoint(state, s) {
             if (typeof s === 'string') state.msCognitiveEndpoint = s;
@@ -385,28 +385,28 @@ export const store = new Vuex.Store({
 
         msCognitiveSubscriptionKey: (state) => state.msCognitiveSubscriptionKey,
         msCognitiveRegion: (state) => state.msCognitiveRegion,
+        msCognitiveSubscriptionOnly: (state) => state.msCognitiveSubscriptionOnly,
         msCognitiveToken: (state) => state.msCognitiveToken,
         msCognitiveTokenTimeStamp: (state) => state.msCognitiveTokenTimeStamp,
         msCognitiveCustomAuthTokenUrl: (state) => state.msCognitiveCustomAuthTokenUrl,
-        msCognitiveUseDirectSubscription: (state) => state.msCognitiveUseDirectSubscription,
         msCognitiveEndpoint: (state) => state.msCognitiveEndpoint,
         msCognitiveHost: (state) => state.msCognitiveHost,
 
         msCognitiveAsrSubscriptionKey: (state) => state.msCognitiveAsrSubscriptionKey,
         msCognitiveAsrRegion: (state) => state.msCognitiveAsrRegion,
+        msCognitiveAsrSubscriptionOnly: (state) => state.msCognitiveAsrSubscriptionOnly,
         msCognitiveAsrToken: (state) => state.msCognitiveAsrToken,
         msCognitiveAsrTokenTimeStamp: (state) => state.msCognitiveAsrTokenTimeStamp,
         msCognitiveAsrCustomAuthTokenUrl: (state) => state.msCognitiveAsrCustomAuthTokenUrl,
-        msCognitiveAsrUseDirectSubscription: (state) => state.msCognitiveAsrUseDirectSubscription,
         msCognitiveAsrEndpoint: (state) => state.msCognitiveAsrEndpoint,
         msCognitiveAsrHost: (state) => state.msCognitiveAsrHost,
 
         msCognitiveTtsSubscriptionKey: (state) => state.msCognitiveTtsSubscriptionKey,
         msCognitiveTtsRegion: (state) => state.msCognitiveTtsRegion,
+        msCognitiveTtsSubscriptionOnly: (state) => state.msCognitiveTtsSubscriptionOnly,
         msCognitiveTtsToken: (state) => state.msCognitiveTtsToken,
         msCognitiveTtsTokenTimeStamp: (state) => state.msCognitiveTtsTokenTimeStamp,
         msCognitiveTtsCustomAuthTokenUrl: (state) => state.msCognitiveTtsCustomAuthTokenUrl,
-        msCognitiveTtsUseDirectSubscription: (state) => state.msCognitiveTtsUseDirectSubscription,
         msCognitiveTtsEndpoint: (state) => state.msCognitiveTtsEndpoint,
         msCognitiveTtsHost: (state) => state.msCognitiveTtsHost,
 

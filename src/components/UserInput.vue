@@ -505,34 +505,36 @@ export default {
       var bSpecific, x = bAsr ? store.getters.msCognitiveAsrSubscriptionKey : store.getters.msCognitiveTtsSubscriptionKey;
       if (x) bSpecific = true;
       else x = store.getters.msCognitiveSubscriptionKey;
-      if (x) m.subscriptionKey = x;
+      if (x != null) m.subscriptionKey = x;
 
       x = bAsr ? store.getters.msCognitiveAsrRegion : store.getters.msCognitiveTtsRegion;
       if (x) bSpecific = true;
       else x = store.getters.msCognitiveRegion;
       if (x) m.region = x;
 
-      x = bAsr ? store.getters.msCognitiveAsrUseDirectSubscription : store.getters.msCognitiveTtsUseDirectSubscription;
-      if (x === undefined) x = store.getters.msCognitiveUseDirectSubscription;
+      x = bAsr ? store.getters.msCognitiveAsrSubscriptionOnly : store.getters.msCognitiveTtsSubscriptionOnly;
+      if (x === undefined) x = store.getters.msCognitiveSubscriptionOnly;
       if (x) {
         return m.subscriptionKey ? Promise.resolve(m) : Promise.reject('Missing subscription key for direct subscription');
       }
-      
-      x = (bAsr ? store.getters.msCognitiveAsrEndpoint : store.getters.msCognitiveTtsEndpoint) || store.getters.msCognitiveEndpoint;
+
+      x = bAsr ? store.getters.msCognitiveAsrEndpoint : store.getters.msCognitiveTtsEndpoint;
+      if (x) bSpecific = true;
+      else x = store.getters.msCognitiveEndpoint;
       if (x) {
         try {
           m.endpointURL = new URL(x);
-          return Promise.resolve(m);
         } catch(err) {
           return Promise.reject('Bad cognitive endpoint [' + x + ']');
         }
       }
 
-      x = (bAsr ? store.getters.msCognitiveAsrHost : store.getters.msCognitiveTtsHost) || store.getters.msCognitiveHost;
+      x = bAsr ? store.getters.msCognitiveAsrHost : store.getters.msCognitiveTtsHost;
+      if (x) bSpecific = true;
+      else x = store.getters.msCognitiveHost;
       if (x) {
         try {
           m.hostURL = new URL(x);
-          return Promise.resolve(m);
         } catch(err) {
           return Promise.reject('Bad cognitive host [' + x + ']');
         }
@@ -541,69 +543,64 @@ export default {
       if (bAsr) {
         x = store.getters.msCognitiveAsrToken;
         if (x) {
-          if (Date.now() - store.getters.msCognitiveAsrTokenTimeStamp < 540000) {
-            m.token = x;
-            return Promise.resolve(m);
-          }
-          store.commit('msCognitiveAsrToken', '');
+          if (Date.now() - store.getters.msCognitiveAsrTokenTimeStamp < 540000) m.token = x;
+          else store.commit('msCognitiveAsrToken', '');
         }
       } else {
         x = store.getters.msCognitiveTtsToken;
         if (x) {
-          if (Date.now() - store.getters.msCognitiveTtsTokenTimeStamp < 540000) {
-            m.token = x;
-            return Promise.resolve(m);
-          }
-          store.commit('msCognitiveTtsToken', '');
+          if (Date.now() - store.getters.msCognitiveTtsTokenTimeStamp < 540000) m.token = x;
+          else store.commit('msCognitiveTtsToken', '');
         }
       }
-      // Here, x means a specific token existed, but expired
-
-      if (!x && store.getters.msCognitiveToken) {
+      // Here, x means a specific token exists
+      if (x) bSpecific = true;
+      else if (store.getters.msCognitiveToken) {
         if (Date.now() - store.getters.msCognitiveTokenTimeStamp < 540000) {
           // No specific token exists, but a general token does, and it is still valid
           m.token = store.getters.msCognitiveToken;
-          return Promise.resolve(m);
+        } else {
+          store.commit('msCognitiveToken', '');
         }
-        store.commit('msCognitiveToken', '');
       }
-      // Here, a token expired or there was no token
+      // Here, !m.token means no token or token expired
 
-      if (bAsr) {
-        x = store.getters.msCognitiveAsrCustomAuthTokenUrl;
-        if (x) x = getMSTokenFromCustomUrl(x, m.subscriptionKey);
-        else {
-          x = store.getters.msCognitiveAsrRegion;
-          if (x) x = getMSTokenFromRegion(x, m.subscriptionKey);
+      if (!m.token) {
+        if (bAsr) {
+          x = store.getters.msCognitiveAsrCustomAuthTokenUrl;
+          if (x) x = getMSTokenFromCustomUrl(x, m.subscriptionKey);
+          else {
+            x = store.getters.msCognitiveAsrRegion;
+            if (x) x = getMSTokenFromRegion(x, m.subscriptionKey);
+          }
+        } else {
+          x = store.getters.msCognitiveTtsCustomAuthTokenUrl;
+          if (x) x = getMSTokenFromCustomUrl(x, m.subscriptionKey);
+          else {
+            x = store.getters.msCognitiveTtsRegion;
+            if (x) x = getMSTokenFromRegion(x, m.subscriptionKey);
+          }
         }
-      } else {
-        x = store.getters.msCognitiveTtsCustomAuthTokenUrl;
-        if (x) x = getMSTokenFromCustomUrl(x, m.subscriptionKey);
+        // Here, !x means no specific token was used
+        if (x) bSpecific = true;
         else {
-          x = store.getters.msCognitiveTtsRegion;
-          if (x) x = getMSTokenFromRegion(x, m.subscriptionKey);
+          x = store.getters.msCognitiveCustomAuthTokenUrl;
+          if (x) x = getMSTokenFromCustomUrl(x, m.subscriptionKey);
+          else {
+            x = store.getters.msCognitiveRegion;
+            if (x) x = getMSTokenFromRegion(x, m.subscriptionKey);
+          }
+        }
+        if (x) {
+          // A token is used
+          return x.then(token => {
+            store.commit(bSpecific ? (bAsr ? 'msCognitiveAsrToken' : 'msCognitiveTtsToken') : 'msCognitiveToken', token);
+            m.token = token;
+            return m;
+          });
         }
       }
-      // Here, !x means no specific token was used
-      if (x) bSpecific = true;
-      else {
-        x = store.getters.msCognitiveCustomAuthTokenUrl;
-        if (x) x = getMSTokenFromCustomUrl(x, m.subscriptionKey);
-        else {
-          x = store.getters.msCognitiveRegion;
-          if (x) x = getMSTokenFromRegion(x, m.subscriptionKey);
-        }
-      }
-      // Here, x is a Promise to be resolved with a token
-
-      if (x) {
-        return x.then(token => {
-          store.commit(bSpecific ? (bAsr ? 'msCognitiveAsrToken' : 'msCognitiveTtsToken') : 'msCognitiveToken', token);
-          m.token = token;
-          return m;
-        });
-      }
-      return Promise.reject('Missing both cognitive custom auth token URL and cognitive region for token');
+      return Promise.resolve(m);
     },
 
 

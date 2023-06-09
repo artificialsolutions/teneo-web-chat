@@ -30,10 +30,20 @@ function getMSTokenFromRegion(region, key) {
 }
 
 
-const getSpeechConfig = m => m.hostURL ? SpeechConfig.fromHost(m.hostURL, m.subscriptionKey)
-    : m.endpointURL ? SpeechConfig.fromEndpoint(m.endpointURL, m.subscriptionKey)
-    : m.token ? SpeechConfig.fromAuthorizationToken(m.token, m.region)
-    : m.subscriptionKey ? SpeechConfig.fromSubscription(m.subscriptionKey, m.region) : null;
+const getSpeechConfig = m => {
+    if (m.hostURL) {
+        const sc = SpeechConfig.fromHost(m.hostURL, m.subscriptionKey);
+        if (m.token) sc.authorizationToken = m.token;
+        return sc;
+    }
+    if (m.endpointURL) {
+        const sc = SpeechConfig.fromEndpoint(m.endpointURL, m.subscriptionKey);
+        if (m.token) sc.authorizationToken = m.token;
+        return sc;
+    }
+    return m.token ? SpeechConfig.fromAuthorizationToken(m.token, m.region)
+        : m.subscriptionKey ? SpeechConfig.fromSubscription(m.subscriptionKey, m.region) : null;
+};
 
 
 function processAudioToText(m) {
