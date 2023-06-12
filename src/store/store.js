@@ -41,7 +41,7 @@ export const store = new Vuex.Store({
 
         msCognitiveAsrSubscriptionKey: '',
         msCognitiveAsrRegion: '',
-        msCognitiveAsrSubscriptionOnly: false,
+        msCognitiveAsrSubscriptionOnly: undefined,
         msCognitiveAsrToken: '',
         msCognitiveAsrCustomAuthTokenUrl: '',
         msCognitiveAsrEndpoint: '',
@@ -50,7 +50,7 @@ export const store = new Vuex.Store({
 
         msCognitiveTtsSubscriptionKey: '',
         msCognitiveTtsRegion: '',
-        msCognitiveTtsSubscriptionOnly: false,
+        msCognitiveTtsSubscriptionOnly: undefined,
         msCognitiveTtsToken: '',
         msCognitiveTtsCustomAuthTokenUrl: '',
         msCognitiveTtsEndpoint: '',
@@ -59,7 +59,7 @@ export const store = new Vuex.Store({
 
         msCognitiveSubscriptionKey: '',
         msCognitiveRegion: '',
-        msCognitiveSubscriptionOnly: false,
+        msCognitiveSubscriptionOnly: undefined,
         msCognitiveToken: '',
         msCognitiveCustomAuthTokenUrl: '',
         msCognitiveEndpoint: '',
