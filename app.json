@@ -23,6 +23,22 @@
           "description": "Microsoft Cognitive serivces region",
           "required": false
         },
+        "MS_COGNITIVE_CUSTOM_AUTH_TOKEN_URL": {
+          "description": "Microsoft Cognitive serivces custom URL to obtain the authorization token from (optional, if you want to overwrite the one based on region)",
+          "required": false
+        },
+        "MS_COGNITIVE_USE_DIRECT_SUBSCRIPTION": {
+          "description": "Indicates if the step to obtain the MS auth token should be skipped and subscription key should be used directly",
+          "required": false
+        },
+        "MS_COGNITIVE_ENDPOINT": {
+          "description": "Microsoft Cognitive serivces non-standard endpoint (including if the endpoint is standard, but it is using additional parameters)",
+          "required": false
+        },
+        "MS_COGNITIVE_HOST": {
+          "description": "Microsoft Cognitive serivces host. Format is 'protocol://host:port' where ':port' is optional. Standard resource path will be assumed.",
+          "required": false
+        },
         "SHOW_TTS_BUTTON": {
           "description": "Show TTS button",
           "required": false
