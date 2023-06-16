@@ -224,9 +224,31 @@ export default {
       return sanitizeHtml(text);
     },
     handleFormSubmit(e) {
-      let formData = Object.fromEntries(new FormData(this.$el).entries());
+      var formData = {}, arrayKeys, x;
+      for (const e of new FormData(this.$el).entries()) {
+        if (formData.hasOwnProperty(e[0])) {
+          x = formData[e[0]];
+          if (Array.isArray(x)) x.push(e[1]);
+          else {
+            formData[e[0]] = [x, e[1]];
+            if (arrayKeys) arrayKeys.push(e[0]);
+            else arrayKeys = [e[0]];
+          }
+        } else {
+          formData[e[0]] = e[1];
+        }
+      }
+      if (arrayKeys) {
+        x = arrayKeys.length;
+        do {
+          x--;
+          formData[arrayKeys[x]] = JSON.stringify(formData[arrayKeys[x]]);
+        } while (x > 0);
+        arrayKeys = null;
+      }
       formData.success = true;
       this.$teneoApi.sendSilentMessage(JSON.stringify(formData));
+      formData = null;
       e.preventDefault();
       this.decommissionForm();
 
