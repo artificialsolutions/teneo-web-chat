@@ -62,13 +62,6 @@ window.addEventListener('load', () => {
             }
         }
     });
-    TeneoWebChat.on('visibility_changed', payload => {
-        TeneoWebChat.get('storage').setItem('twc_last_state', payload.visibility);
-        console.info('visibility_changed', payload);
-    });
-    TeneoWebChat.on('minimize_button_clicked', payload => {
-        console.info('minimize_button_clicked', payload);
-    });
 
     TeneoWebChat.on('visibility_changed', payload => TeneoWebChat.get('storage').setItem('twc_last_state', payload.visibility));
     TeneoWebChat.on('reset', () => TeneoWebChat.get('storage').removeItem('twc_last_state'));
@@ -90,14 +83,36 @@ window.addEventListener('load', () => {
         'showUploadButton': '<%= process.env.SHOW_UPLOAD_BUTTON %>',
         'asrIconUrl': '<%= process.env.ASR_ICON_URL %>',
         'showAsrButton': '<%= process.env.SHOW_ASR_BUTTON %>',
-        'asrActive': '<%= process.env.ASR_ACTIVE %>',
         'ttsIconUrl': '<%= process.env.TTS_ICON_URL %>',
         'showTtsButton': '<%= process.env.SHOW_TTS_BUTTON %>',
+
         'ttsActive': '<%= process.env.TTS_ACTIVE %>',
+        'asrActive': '<%= process.env.ASR_ACTIVE %>',
+
+        'msCognitiveAsrSubscriptionKey': '<%= process.env.MS_COGNITIVE_ASR_SUBSCRIPTION_KEY %>',
+        'msCognitiveAsrRegion': '<%= process.env.MS_COGNITIVE_ASR_REGION %>',
+        'msCognitiveAsrSubscriptionOnly': <%= process.env.MS_COGNITIVE_ASR_SUBSCRIPTION_ONLY %>,
+        'msCognitiveAsrCustomAuthTokenUrl': '<%= process.env.MS_COGNITIVE_ASR_CUSTOM_AUTH_TOKEN_URL %>',
+        'msCognitiveAsrEndpoint': '<%= process.env.MS_COGNITIVE_ASR_ENDPOINT %>',
+        'msCognitiveAsrHost': '<%= process.env.MS_COGNITIVE_ASR_HOST %>',
+
+        'msCognitiveTtsSubscriptionKey': '<%= process.env.MS_COGNITIVE_TTS_SUBSCRIPTION_KEY %>',
+        'msCognitiveTtsRegion': '<%= process.env.MS_COGNITIVE_TTS_REGION %>',
+        'msCognitiveTtsSubscriptionOnly': <%= process.env.MS_COGNITIVE_TTS_SUBSCRIPTION_ONLY %>,
+        'msCognitiveTtsCustomAuthTokenUrl': '<%= process.env.MS_COGNITIVE_TTS_CUSTOM_AUTH_TOKEN_URL %>',
+        'msCognitiveTtsEndpoint': '<%= process.env.MS_COGNITIVE_TTS_ENDPOINT %>',
+        'msCognitiveTtsHost': '<%= process.env.MS_COGNITIVE_TTS_HOST %>',
+
         'msCognitiveSubscriptionKey': '<%= process.env.MS_COGNITIVE_SUBSCRIPTION_KEY %>',
         'msCognitiveRegion': '<%= process.env.MS_COGNITIVE_REGION %>',
+        'msCognitiveSubscriptionOnly': <%= process.env.MS_COGNITIVE_SUBSCRIPTION_ONLY %>,
+        'msCognitiveCustomAuthTokenUrl': '<%= process.env.MS_COGNITIVE_CUSTOM_AUTH_TOKEN_URL %>',
+        'msCognitiveEndpoint': '<%= process.env.MS_COGNITIVE_ENDPOINT %>',
+        'msCognitiveHost': '<%= process.env.MS_COGNITIVE_HOST %>',
+
         'msVoice': '<%= process.env.MS_VOICE %>',
         'locale': '<%= process.env.LOCALE %>',
+
         'autoRedirect': '<%= process.env.AUTO_OUTPUT_LINK_REDIRECT %>'
     };
     <% if(process.env.NODE_ENV === 'development') { %>
