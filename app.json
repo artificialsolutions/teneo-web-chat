@@ -15,30 +15,82 @@
             "description": "Optional language code. Used for things like the placeholder text in the input box. Defaults to 'en' if left blank.",
             "required":false
         },
+
+        "MS_COGNITIVE_ASR_SUBSCRIPTION_KEY": {
+          "description": "Subscription key for ASR of Microsoft Cognitive services",
+          "required": false
+        },
+        "MS_COGNITIVE_ASR_REGION": {
+          "description": "Microsoft Cognitive serivces region for ASR",
+          "required": false
+        },
+        "MS_COGNITIVE_ASR_SUBSCRIPTION_ONLY": {
+          "description": "Indicates for ASR if the step to obtain the MS auth token should be skipped and subscription key should be used directly",
+          "required": false
+        },
+        "MS_COGNITIVE_ASR_CUSTOM_AUTH_TOKEN_URL": {
+          "description": "Microsoft Cognitive serivces custom URL for ASR to obtain the authorization token from (optional, if you want to overwrite the one based on region)",
+          "required": false
+        },
+        "MS_COGNITIVE_ASR_ENDPOINT": {
+          "description": "Microsoft Cognitive serivces non-standard endpoint for ASR (including if the endpoint is standard, but it is using additional parameters)",
+          "required": false
+        },
+        "MS_COGNITIVE_ASR_HOST": {
+          "description": "Microsoft Cognitive serivces host for ASR. Format is 'protocol://host:port' where ':port' is optional. Standard resource path will be assumed.",
+          "required": false
+        },
+
+        "MS_COGNITIVE_TTS_SUBSCRIPTION_KEY": {
+          "description": "Subscription key for TTS of Microsoft Cognitive services",
+          "required": false
+        },
+        "MS_COGNITIVE_TTS_REGION": {
+          "description": "Microsoft Cognitive serivces region for TTS",
+          "required": false
+        },
+        "MS_COGNITIVE_TTS_SUBSCRIPTION_ONLY": {
+          "description": "Indicates for TTS if the step to obtain the MS auth token should be skipped and subscription key should be used directly",
+          "required": false
+        },
+        "MS_COGNITIVE_TTS_CUSTOM_AUTH_TOKEN_URL": {
+          "description": "Microsoft Cognitive serivces custom URL for TTS to obtain the authorization token from (optional, if you want to overwrite the one based on region)",
+          "required": false
+        },
+        "MS_COGNITIVE_TTS_ENDPOINT": {
+          "description": "Microsoft Cognitive serivces non-standard endpoint for TTS (including if the endpoint is standard, but it is using additional parameters)",
+          "required": false
+        },
+        "MS_COGNITIVE_TTS_HOST": {
+          "description": "Microsoft Cognitive serivces host for TTS. Format is 'protocol://host:port' where ':port' is optional. Standard resource path will be assumed.",
+          "required": false
+        },
+
         "MS_COGNITIVE_SUBSCRIPTION_KEY": {
-          "description": "Subscription key to Microsoft Cognitive services to power ASR and TTS",
+          "description": "Subscription key for both ASR and TTS of Microsoft Cognitive services",
           "required": false
         },
         "MS_COGNITIVE_REGION": {
-          "description": "Microsoft Cognitive serivces region",
+          "description": "Microsoft Cognitive serivces region for both ASR and TTS",
+          "required": false
+        },
+        "MS_COGNITIVE_SUBSCRIPTION_ONLY": {
+          "description": "Indicates for both ASR and TTS if the step to obtain the MS auth token should be skipped and subscription key should be used directly",
           "required": false
         },
         "MS_COGNITIVE_CUSTOM_AUTH_TOKEN_URL": {
-          "description": "Microsoft Cognitive serivces custom URL to obtain the authorization token from (optional, if you want to overwrite the one based on region)",
-          "required": false
-        },
-        "MS_COGNITIVE_USE_DIRECT_SUBSCRIPTION": {
-          "description": "Indicates if the step to obtain the MS auth token should be skipped and subscription key should be used directly",
+          "description": "Microsoft Cognitive serivces custom URL for both ASR and TTS to obtain the authorization token from (optional, if you want to overwrite the one based on region)",
           "required": false
         },
         "MS_COGNITIVE_ENDPOINT": {
-          "description": "Microsoft Cognitive serivces non-standard endpoint (including if the endpoint is standard, but it is using additional parameters)",
+          "description": "Microsoft Cognitive serivces non-standard endpoint for both ASR and TTS (including if the endpoint is standard, but it is using additional parameters)",
           "required": false
         },
         "MS_COGNITIVE_HOST": {
-          "description": "Microsoft Cognitive serivces host. Format is 'protocol://host:port' where ':port' is optional. Standard resource path will be assumed.",
+          "description": "Microsoft Cognitive serivces host for both ASR and TTS. Format is 'protocol://host:port' where ':port' is optional. Standard resource path will be assumed.",
           "required": false
         },
+
         "SHOW_TTS_BUTTON": {
           "description": "Show TTS button",
           "required": false

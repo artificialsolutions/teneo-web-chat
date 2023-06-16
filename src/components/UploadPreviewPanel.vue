@@ -306,8 +306,6 @@ button:nth-child(4){
 <script>
 /* <![CDATA[ */
 
-// TODO ALPE
-
 import { EventBus, events } from '../utils/event-bus.js';
 import { API_ON_UPLOAD_PANEL_SUBMIT, API_ON_UPLOAD_PANEL_CANCEL } from '../utils/api-function-names.js';
 import basePayload from '../utils/base-payload.js';

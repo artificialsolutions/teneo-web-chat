@@ -23,7 +23,6 @@ function getMSTokenFromCustomUrl(url, key) {
         throw new Error(tokenResponse.statusText);
     });
 }
-*/
 
 
 function getMSTokenFromRegion(region, key) {

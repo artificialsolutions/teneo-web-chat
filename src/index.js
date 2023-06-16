@@ -592,7 +592,6 @@ return filteredMessageList;
         }
         break;
 
-      // TODO ALPE
       case apiConstants.API_CALL_SHOW_UPLOAD_PANEL:
         EventBus.$emit(events.SHOW_UPLOAD_PANEL, payload);
         break;

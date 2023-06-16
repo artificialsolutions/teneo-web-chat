@@ -78,7 +78,6 @@ export const API_ON_ASR_BUTTON_CLICK = 'asr_button_clicked';
 export const API_ON_TTS_BUTTON_CLICK = 'tts_button_clicked';
 export const API_ON_RESET = 'reset';
 
-// TODO ALPE
 export const API_CALL_HIDE_UPLOAD_PANEL = 'hide_upload_panel';
 export const API_CALL_SHOW_UPLOAD_PANEL = 'show_upload_panel';
 

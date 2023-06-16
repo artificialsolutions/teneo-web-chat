@@ -28,7 +28,6 @@ import {
   API_KEY_VISIBILITY,
   API_STATE_MAXIMIZED,
   API_STATE_MINIMIZED,
-  DEFAULT_TITLE,
   SESSION_ID_STORAGE_KEY
 } from './utils/constants.js';
 import detectSafari from './utils/detect-safari.js';
@@ -63,33 +62,6 @@ export default {
   },
   mounted() {
     this.isIosSafari = detectIosSafari();
-
-    /*
-    // Set the name of the hidden property and the change event for visibility
-    let hidden,
-        visibilityChange;
-
-    if (typeof document.hidden !== 'undefined') { // Opera 12.10 and Firefox 18 and later support
-      hidden = 'hidden';
-      visibilityChange = 'visibilitychange';
-    } else if (typeof document.msHidden !== 'undefined') {
-      hidden = 'msHidden';
-      visibilityChange = 'msvisibilitychange';
-    } else if (typeof document.webkitHidden !== 'undefined') {
-      hidden = 'webkitHidden';
-      visibilityChange = 'webkitvisibilitychange';
-    }
-
-    if (this.isIosSafari === true) {
-      // Warn if the browser doesn't support addEventListener or the Page Visibility API
-      if ((typeof document.addEventListener === 'undefined' || hidden === undefined)) {
-        // Console.log("This application requires a browser, such as Google Chrome or Firefox, that supports the Page Visibility API.");
-      } else {
-        // Handle page visibility change
-        document.addEventListener(visibilityChange, this.handleBrowserMinimize, false);
-      }
-    }
-    */
 
     EventBus.$on(events.RESET_SESSION, () => {
       this.resetChat();
