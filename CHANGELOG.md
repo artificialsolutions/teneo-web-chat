@@ -3,6 +3,8 @@
 * Features
     * Attachment Messages.
     * Rating Messages.
+    * [MCS integration](docs/features/TWC+MCS%20integration.md).
+    
 
 * Bug Fixes
     * Attach from Camera in iOS closes FrontEnd.
