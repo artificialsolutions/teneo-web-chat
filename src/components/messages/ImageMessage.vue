@@ -76,11 +76,24 @@ export default {
 
 <style>
 .twc-image-message {
-  width: 100%;
+  display:flex;
+  width: auto;
+  height: auto;
+  min-width: auto;
+  max-width: 260px;
   margin-right: 40px;
+  border-radius: 10px;
+  border-bottom-left-radius: 0px;
+  box-shadow: 0 2px 5px 0 rgba(0,0,0,0.16),0 2px 10px 0 rgba(0,0,0,0.12);
+  background-color: transparent; /*For images with transparent background*/
 }
 .twc-image-message img {
+  width: auto;
+  height: auto;
+  max-height: 100%;
   max-width: 100%;
-  max-height: 200px;
+  border-radius: 10px;
+  border-bottom-left-radius: 0px;
+
 }
 </style>

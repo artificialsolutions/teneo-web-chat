@@ -93,6 +93,57 @@ window.TeneoWebChat = {
       store.commit('showUploadButton', true);
     }
 
+
+    if (twcProps.msCognitiveAsrSubscriptionKey) {
+      store.commit('msCognitiveAsrSubscriptionKey', twcProps.msCognitiveAsrSubscriptionKey);
+    }
+
+    if (twcProps.msCognitiveAsrRegion) {
+      store.commit('msCognitiveAsrRegion', twcProps.msCognitiveAsrRegion);
+    }
+
+    if (twcProps.msCognitiveAsrSubscriptionOnly) {
+      store.commit('msCognitiveAsrSubscriptionOnly', twcProps.msCognitiveAsrSubscriptionOnly);
+    }
+
+    if (twcProps.msCognitiveAsrCustomAuthTokenUrl) {
+      store.commit('msCognitiveAsrCustomAuthTokenUrl', twcProps.msCognitiveAsrCustomAuthTokenUrl);
+    }
+
+    if (twcProps.msCognitiveAsrEndpoint) {
+      store.commit('msCognitiveAsrEndpoint', twcProps.msCognitiveAsrEndpoint);
+    }
+
+    if (twcProps.msCognitiveAsrHost) {
+      store.commit('msCognitiveAsrHost', twcProps.msCognitiveAsrHost);
+    }
+
+
+    if (twcProps.msCognitiveTtsSubscriptionKey) {
+      store.commit('msCognitiveTtsSubscriptionKey', twcProps.msCognitiveTtsSubscriptionKey);
+    }
+
+    if (twcProps.msCognitiveTtsRegion) {
+      store.commit('msCognitiveTtsRegion', twcProps.msCognitiveTtsRegion);
+    }
+
+    if (twcProps.msCognitiveTtsSubscriptionOnly) {
+      store.commit('msCognitiveTtsSubscriptionOnly', twcProps.msCognitiveTtsSubscriptionOnly);
+    }
+
+    if (twcProps.msCognitiveTtsCustomAuthTokenUrl) {
+      store.commit('msCognitiveTtsCustomAuthTokenUrl', twcProps.msCognitiveTtsCustomAuthTokenUrl);
+    }
+
+    if (twcProps.msCognitiveTtsEndpoint) {
+      store.commit('msCognitiveTtsEndpoint', twcProps.msCognitiveTtsEndpoint);
+    }
+
+    if (twcProps.msCognitiveTtsHost) {
+      store.commit('msCognitiveTtsHost', twcProps.msCognitiveTtsHost);
+    }
+
+
     if (twcProps.msCognitiveSubscriptionKey) {
       store.commit('msCognitiveSubscriptionKey', twcProps.msCognitiveSubscriptionKey);
     }
@@ -100,6 +151,23 @@ window.TeneoWebChat = {
     if (twcProps.msCognitiveRegion) {
       store.commit('msCognitiveRegion', twcProps.msCognitiveRegion);
     }
+
+    if (twcProps.msCognitiveSubscriptionOnly) {
+      store.commit('msCognitiveSubscriptionOnly', twcProps.msCognitiveSubscriptionOnly);
+    }
+
+    if (twcProps.msCognitiveCustomAuthTokenUrl) {
+      store.commit('msCognitiveCustomAuthTokenUrl', twcProps.msCognitiveCustomAuthTokenUrl);
+    }
+
+    if (twcProps.msCognitiveEndpoint) {
+      store.commit('msCognitiveEndpoint', twcProps.msCognitiveEndpoint);
+    }
+
+    if (twcProps.msCognitiveHost) {
+      store.commit('msCognitiveHost', twcProps.msCognitiveHost);
+    }
+
 
     if (twcProps.msVoice) {
       store.commit('msVoice', twcProps.msVoice);
@@ -270,7 +338,6 @@ return filteredMessageList;
     }
   },
   call(function_name, payload = undefined) {
-
     switch (function_name) {
       case apiConstants.API_CALL_SHOW_CALLOUT:
         if (payload && typeof payload === 'string') {
@@ -305,6 +372,7 @@ return filteredMessageList;
         break;
 
       case apiConstants.API_CALL_MINIMIZE:
+        EventBus.$emit(events.STOP_ASR_TTS);
         EventBus.$emit(events.MINIMIZE_WINDOW);
         break;
 
@@ -335,6 +403,7 @@ return filteredMessageList;
         break;
 
       case apiConstants.API_CALL_END_SESSION:
+        EventBus.$emit(events.STOP_ASR_TTS);
         EventBus.$emit(events.END_SESSION);
         break;
 
@@ -343,6 +412,7 @@ return filteredMessageList;
         break;
 
       case apiConstants.API_CALL_RESET:
+        EventBus.$emit(events.STOP_ASR_TTS);
         EventBus.$emit(events.RESET_SESSION);
         break;
 
@@ -352,7 +422,7 @@ return filteredMessageList;
          * TODO: check if message type is valid?
          */
         if (Object.keys(payload).length > 0 && payload.constructor === Object) {
-                 EventBus.$emit(events.ADD_MESSAGE, payload);
+          EventBus.$emit(events.ADD_MESSAGE, payload);
         }
         break;
 
@@ -362,7 +432,7 @@ return filteredMessageList;
 
       case apiConstants.API_CALL_SHOW_TYPING_INDICATOR:
         if (Object.keys(payload).length > 0 && payload.constructor === Object) {
-           EventBus.$emit(events.SHOW_TYPING_INDICATOR, payload);
+          EventBus.$emit(events.SHOW_TYPING_INDICATOR, payload);
         }
         break;
 
@@ -520,6 +590,18 @@ return filteredMessageList;
             EventBus.$emit(events.SET_ENGINE_URL, payload);
           }
         }
+        break;
+
+      case apiConstants.API_CALL_SHOW_UPLOAD_PANEL:
+        EventBus.$emit(events.SHOW_UPLOAD_PANEL, payload);
+        break;
+
+      case apiConstants.API_CALL_HIDE_UPLOAD_PANEL:
+        EventBus.$emit(events.HIDE_UPLOAD_PANEL);
+        break;
+
+      case apiConstants.API_ON_SET_UPLOAD_STATE:
+        EventBus.$emit(events.SET_UPLOAD_STATE, payload);
         break;
 
       default:

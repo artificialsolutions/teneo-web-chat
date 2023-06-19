@@ -1,5 +1,18 @@
-#v3.7.6
-#13-01-2023
+# v3.7.7
+## June-2023
+* Features
+    * Attachment Messages.
+    * Rating Messages.
+    * [MCS integration](docs/features/TWC+MCS%20integration.md).
+    
+
+* Bug Fixes
+    * Attach from Camera in iOS closes FrontEnd.
+    * Output is read simultaneously twice.
+    * Attachments Feature.
+    * IPhone Scrolling Bug.
+# v3.7.6
+## 13-01-2023
 * Fixed expired buttons bug.
 # v3.7.5
 ## 17-11-2022
