@@ -294,14 +294,10 @@ export default {
     EventBus.$on(events.UPLOAD_PANEL_CLOSED, () => {
       this.showUserInput = true;
     });
-
-
-    EventBus.$on(events.MESSAGE_SENT, () => {
-      if (this.$refs.userInput) {
-        this.$refs.userInput.focus();
-      }
-    });
     */
+
+    EventBus.$on(events.MESSAGE_SENT, () => this.stopAsr());
+
 
     EventBus.$on(events.BOT_MESSAGE_RECEIVED, async (message) => {
       if (!this.ttsActive || message._skipTts) return;

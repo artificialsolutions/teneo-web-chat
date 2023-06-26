@@ -106,7 +106,7 @@ export default function teneoApiPlugin(teneoApiUrl) {
 
                 return
             }
-
+            EventBus.$emit(events.MESSAGE_SENT);
             EventBus.$emit(events.START_SPINNER);
 
             // get session from storage when safari is used
