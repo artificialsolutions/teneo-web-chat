@@ -2,11 +2,11 @@
   <div class="twc-carousel" :class="{ 'twc-expired': replySent || isExpired}">
     <div class="twc-carousel-ctrl">
       <button class="twc-carousel-bck twc-carousel-ctrl-arrows"
-              @click="slideBack()"
-              v-bind:disabled="this.isFirstSlide"
-              ref="backBtn"
-      >&#171;
-      </button>
+        @click="slideToIndex(activeSlide - 1)"
+        v-bind:disabled="isFirstSlide"
+        ref="backBtn"
+        >&#171;</button>
+
       <span class="twc-carousel-ctrl-dots-container">
       <button class="twc-carousel-ctrl-dots"
               v-for="(btnIndex) in carouselItemCount"
@@ -17,11 +17,10 @@
       </button>
       </span>
       <button class="twc-carousel-fwd twc-carousel-ctrl-arrows"
-              @click="slideForward()"
-              v-bind:disabled="this.isLastSlide"
-              :ref="'fwdBtn'"
-      >&#187;
-      </button>
+        @click="slideToIndex(activeSlide + 1)"
+        v-bind:disabled="isLastSlide"
+        :ref="'fwdBtn'"
+        >&#187;</button>
     </div>
 
     <ul class="twc-carousel-list">
@@ -99,9 +98,8 @@
 </template>
 <script>
 
-import {PARTICIPANT_BOT} from '../../utils/constants.js';
 import handleButtonClick from '../../utils/handle-button-click.js';
-import {EventBus, events} from '../../utils/event-bus.js';
+import { EventBus, events } from '../../utils/event-bus.js';
 import handleLinkButtonClick from '../../utils/handle-linkbutton-click.js';
 import keyIsSpaceOrEnter from '../../utils/is-space-or-enter.js';
 import sanitizeHtml from '../../utils/sanitize-html.js';
@@ -168,19 +166,10 @@ export default {
     isActiveSlide(idx) {
       return idx === this.activeSlide;
     },
-    skipToSlide(idx) {
-      this.activeSlide = idx - 1;
-      this.moveSlideElements();
-    },
-    slideBack() {
-      if (this.activeSlide !== 0) {
-        this.activeSlide--;
-        this.moveSlideElements();
-      }
-    },
-    slideForward() {
-      if (this.activeSlide < this.message.data.carousel_items.length - 1) {
-        this.activeSlide++;
+
+    slideToIndex(idx) {
+      if (idx >= 0 && idx < this.message.data.carousel_items.length) {
+        this.activeSlide = idx;
         this.moveSlideElements();
       }
     },
@@ -236,7 +225,6 @@ export default {
 <style>
 .twc-carousel {
   background: none;
-  height: auto;
   display: flex;
   flex-direction: column;
   max-width: 100%;
@@ -257,7 +245,6 @@ export default {
   position: relative;
 }
 
-
 .twc-carousel-list-item {
   display: inline-block;
   position: relative;
@@ -265,18 +252,14 @@ export default {
   width: 95%;
   height: 100%;
   vertical-align: top;
-  margin:0%;
+  margin: 0;
   transition: all 1s ease;
 }
 
-
-/** Content of the carrousel */
 .twc-carousel .twc-card {
-  margin: 10px;
-  margin-bottom: 5px;
+  margin: 10px 10px 5px;
   border-radius: 10px;
-  box-shadow: 1px 2px 2px 1px rgba(0,0,0,0.16);
-  /**Show the  */
+  box-shadow: 1px 2px 2px 1px rgba(0, 0, 0, 0.16);
   border: 1px solid var(--light-border-color, #c9c9c9);
   width: 95%;
   height: 95%;
@@ -298,7 +281,7 @@ export default {
   height: 30%;
   overflow: auto;
   box-shadow: none;
-  margin-right: 0px;
+  margin-right: 0;
   margin-bottom: 5%;
   position: relative;
   border-radius: 10px;
@@ -316,7 +299,6 @@ export default {
   background-color: var(--primary-color, #2f286e);
   border: none;
   color: var(--light-fg-color, #ffffff);
-  margin: 0;
   margin: 2px;
   padding: 0;
   padding-top: 3px;
@@ -327,17 +309,7 @@ export default {
 }
 
 .twc-carousel-list .twc-clickablelist-message .twc-clickablelist-message__item:hover {
-  height: auto ;
-  background-color: var(--primary-color-dark, #160d27); /**Comment on this */
-  border: none;
-  border-radius: 5px;
-  margin: 2px;
-  padding: 0;
-  padding-top: 3px;
-  padding-bottom: 3px;
-  color: var(--light-fg-color, #ffffff);
-  font-size: 0.9rem;
-  outline:none;
+  background-color: var(--primary-color-dark, #160d27);
 }
 
 .twc-buttons {
@@ -351,14 +323,14 @@ export default {
 }
 
 .twc-linkbuttons {
-  align-items:center;
+  align-items: center;
   justify-content: flex-end;
   width: 100%;
   margin: -3px;
   margin-right: 37px;
   text-align: center;
   position: absolute;
-  bottom: 0%;
+  bottom: 0;
 }
 
 .twc-card .twc-linkbuttons {
@@ -366,18 +338,14 @@ export default {
   width: auto;
   margin: 0;
   margin-bottom: 5%;
-  bottom: 0%;
+  bottom: 0;
   align-self: center;
 }
-/** end of the content */
-
-
 
 .twc-carousel-ctrl {
   display: flex;
-  /**background: var(--carousel-ctrl-panel-bg-color, #4e8cff);**/
   align-items: center;
-  background:none;
+  background: none;
   padding: 0.5rem 0;
   border-radius: 5px 5px 0 0;
 }
@@ -416,13 +384,13 @@ export default {
 }
 
 .twc-carousel-ctrl-arrows:hover {
-  opacity:0.9;
-  cursor:pointer;
+  opacity: 0.9;
+  cursor: pointer;
 }
 
 .twc-carousel-ctrl-arrows:active {
-  opacity:1;
-  cursor:pointer;
+  opacity: 1;
+  cursor: pointer;
 }
 
 .twc-carousel-ctrl-arrows:disabled {
@@ -434,7 +402,7 @@ export default {
   flex: 3;
   justify-content: space-evenly;
   align-items: center;
-  position:absolute;
+  position: absolute;
   top: 94%;
   left: 39%;
   opacity: 0.8;
@@ -463,20 +431,43 @@ export default {
   width: 3px;
 }
 
-/* Track */
 .twc-carousel .twc-card .twc-card-body::-webkit-scrollbar-track {
-  background: var(--light-fg-color, #ffffff); 
+  background: var(--light-fg-color, #ffffff);
   border-radius: 10px;
-  margin-top: 2px;
-  margin-bottom: 2px;
+  margin: 2px;
   box-shadow: none;
 }
- 
-/* Handle */
+
 .twc-carousel .twc-card .twc-card-body::-webkit-scrollbar-thumb {
   background-color: var(--light-bg-color, #eceff1);
   border-radius: 10px;
   box-shadow: none;
+}
+
+/* Adaptive Styles */
+@media only screen and (max-width: 480px) {
+  /* Styles for phones */
+  .twc-carousel-list-item {
+    flex: 0 0 90%;
+    width: 90%;
+    max-width: 90%;
+  }
+  
+  .twc-carousel .twc-card {
+    width: 100%;
+  }
+  
+  .twc-carousel .twc-card .twc-card-body {
+    width: 100%;
+  }
+
+  .twc-linkbuttons {
+    margin-right: 10px;
+  }
+
+  .twc-carousel-ctrl-dots-container {
+    top: 100%;    
+  }
 }
 
 </style>
