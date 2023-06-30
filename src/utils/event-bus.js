@@ -53,4 +53,43 @@ export const events = {
     UPLOAD_PANEL_OPENED: 'upload_panel_opened'
 };
 
-export const EventBus = new Vue();
+
+class EB {
+
+    #eventNameToListeners = new Map();
+
+    $on(eventName, f) {
+        if ('function' !== typeof f) throw new Error('Bad listener for event [' + eventName + ']');
+        const ff = this.#eventNameToListeners.get(eventName);
+        if (ff) ff.push(f);
+        else this.#eventNameToListeners.set(eventName, [ f ]);
+    }
+
+
+    $off(eventName, f) {
+        var ff;
+        if (f != null && (ff = this.#eventNameToListeners.get(eventName)) != null) {
+            let n = ff.length;
+            while (--n !== -1 && (n = ff.lastIndexOf(f, n)) !== -1) ff.splice(n, 1);
+            if (ff.length === 0) ff = null;
+        }
+        if (ff == null) this.#eventNameToListeners.delete(eventName);
+    }
+
+
+    $emit(eventName, ...args) {
+        const ff = this.#eventNameToListeners.get(eventName);
+        if (ff == null) return;
+        var i = 0;
+        do {
+            try {
+                ff[i].apply(null, args);
+            } catch (err) {
+                console.warn('Error in callback nr', i, 'for event', eventName, ':', err);
+            }
+        } while (++i < ff.length);
+    }
+}
+
+
+export const EventBus = new EB();

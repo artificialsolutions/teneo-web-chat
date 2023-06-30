@@ -62,16 +62,6 @@
 </template>
 
 
-<script>
-export default {
-  computed: {
-    showDropMessage() {
-      return itemsCount === 0;
-    },
-  },
-}
-</script>
-
 
 <style scoped>
 

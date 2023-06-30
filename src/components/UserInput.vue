@@ -287,14 +287,18 @@ export default {
       this.stopTts();
     });
 
-    /*
+
     EventBus.$on(events.UPLOAD_PANEL_OPENED, () => {
-      this.showUserInput = false;      
+      this.showUserInput = false;
+      this.stopAsr();
     });
+
+
     EventBus.$on(events.UPLOAD_PANEL_CLOSED, () => {
       this.showUserInput = true;
+      this.stopAsr();
     });
-    */
+
 
     EventBus.$on(events.MESSAGE_SENT, () => this.stopAsr());
 
