@@ -2,138 +2,12 @@
 <html lang="en">
 <head>
 <meta charset="UTF-8"/>
-<title>Teneo Web Chat</title>
-<meta name="viewport" content="width=device-width, height=device-height, initial-scale=1.0 user-scalable=no">
-<style>
-    body {
-        background: #E5F5FE;
-    }
-    .centerimage {
-        position: absolute;
-        top: 50%;
-        left: 50%;
-        width: 400px;
-        height: 300px;
-        margin-top: -150px;
-        margin-left: -200px;
-        z-index: -10;
-    }
-    .btn {
-        margin-bottom: 5px;
-    }
-    @media (max-width: 500px) {
-        .centerimage {
-            opacity: 0.3;
-            transition-property: opacity;
-            transition-duration: 0.2s;
-            transition-timing-function: linear;
-        }
-    }
-    div.scroll {
-        width: 600px;
-        overflow-x: hidden;
-        text-align: justify;
-    }
-</style>
-    
-
-<script src="teneo-web-chat.js"></script> 
+<title>Teneo Web Chat - Demo</title>
+<link rel="stylesheet" href="style.css"/>
+<meta name="viewport" content="width=device-width, height=device-height, initial-scale=1.0 user-scalable=no"/>
 
 <!-- script src="teneo-web-chat.js"></script -->
-<!-- needed for Heroku -->
-<!--<% if(process.env.NODE_ENV === 'development') { %>-->
-<!--<% } %>-->
-<script>
-/* <![CDATA[ */
-window.addEventListener('load', () => {
 
-    TeneoWebChat.on('ready', () => {
-        const x = TeneoWebChat.get('storage').getItem('twc_last_state');
-        if (x) {
-            switch (x) {
-                case 'maximized':
-                    TeneoWebChat.call('maximize');
-                    break;
-                case 'minimized':
-                    TeneoWebChat.call('minimize');
-                    break;
-                default:
-                    logger.warn('TeneoWebChat', 'unknown stored twc_last_state value', x);
-            }
-        }
-    });
-
-    TeneoWebChat.on('visibility_changed', payload => TeneoWebChat.get('storage').setItem('twc_last_state', payload.visibility));
-    TeneoWebChat.on('reset', () => TeneoWebChat.get('storage').removeItem('twc_last_state'));
-
-    const element = document.getElementById('teneo-web-chat');
-    const teneoProps = {
-        'teneoEngineUrl': '<%= process.env.TENEO_ENGINE_URL %>',
-        'title': '<%= process.env.HEADER_TITLE %>',
-        'titleIconUrl': '<%= process.env.HEADER_ICON_URL %>',
-        'showCloseButton': '<%= process.env.SHOW_CLOSE_BUTTON %>',
-        'agentAvatarUrl': '<%= process.env.AGENT_AVATAR_URL %>',
-        'botAvatarUrl': '<%= process.env.BOT_AVATAR_URL %>',
-        'userAvatarUrl': '<%= process.env.USER_AVATAR_URL %>',
-        'minimizeIconUrl': '<%= process.env.MINIMIZE_ICON_URL %>',
-        'closeIconUrl': '<%= process.env.CLOSE_ICON_URL %>',
-        'launchIconUrl': '<%= process.env.LAUNCH_ICON_URL %>',
-        'sendIconUrl': '<%= process.env.SEND_ICON_URL %>',
-        'uploadIconUrl': '<%= process.env.UPLOAD_ICON_URL %>',
-        'showUploadButton': '<%= process.env.SHOW_UPLOAD_BUTTON %>',
-        'asrIconUrl': '<%= process.env.ASR_ICON_URL %>',
-        'showAsrButton': '<%= process.env.SHOW_ASR_BUTTON %>',
-        'ttsIconUrl': '<%= process.env.TTS_ICON_URL %>',
-        'showTtsButton': '<%= process.env.SHOW_TTS_BUTTON %>',
-
-        'ttsActive': '<%= process.env.TTS_ACTIVE %>',
-        'asrActive': '<%= process.env.ASR_ACTIVE %>',
-
-        'msCognitiveAsrSubscriptionKey': '<%= process.env.MS_COGNITIVE_ASR_SUBSCRIPTION_KEY %>',
-        'msCognitiveAsrRegion': '<%= process.env.MS_COGNITIVE_ASR_REGION %>',
-        'msCognitiveAsrSubscriptionOnly': <%= process.env.MS_COGNITIVE_ASR_SUBSCRIPTION_ONLY %>,
-        'msCognitiveAsrCustomAuthTokenUrl': '<%= process.env.MS_COGNITIVE_ASR_CUSTOM_AUTH_TOKEN_URL %>',
-        'msCognitiveAsrEndpoint': '<%= process.env.MS_COGNITIVE_ASR_ENDPOINT %>',
-        'msCognitiveAsrHost': '<%= process.env.MS_COGNITIVE_ASR_HOST %>',
-
-        'msCognitiveTtsSubscriptionKey': '<%= process.env.MS_COGNITIVE_TTS_SUBSCRIPTION_KEY %>',
-        'msCognitiveTtsRegion': '<%= process.env.MS_COGNITIVE_TTS_REGION %>',
-        'msCognitiveTtsSubscriptionOnly': <%= process.env.MS_COGNITIVE_TTS_SUBSCRIPTION_ONLY %>,
-        'msCognitiveTtsCustomAuthTokenUrl': '<%= process.env.MS_COGNITIVE_TTS_CUSTOM_AUTH_TOKEN_URL %>',
-        'msCognitiveTtsEndpoint': '<%= process.env.MS_COGNITIVE_TTS_ENDPOINT %>',
-        'msCognitiveTtsHost': '<%= process.env.MS_COGNITIVE_TTS_HOST %>',
-
-        'msCognitiveSubscriptionKey': '<%= process.env.MS_COGNITIVE_SUBSCRIPTION_KEY %>',
-        'msCognitiveRegion': '<%= process.env.MS_COGNITIVE_REGION %>',
-        'msCognitiveSubscriptionOnly': <%= process.env.MS_COGNITIVE_SUBSCRIPTION_ONLY %>,
-        'msCognitiveCustomAuthTokenUrl': '<%= process.env.MS_COGNITIVE_CUSTOM_AUTH_TOKEN_URL %>',
-        'msCognitiveEndpoint': '<%= process.env.MS_COGNITIVE_ENDPOINT %>',
-        'msCognitiveHost': '<%= process.env.MS_COGNITIVE_HOST %>',
-
-        'msVoice': '<%= process.env.MS_VOICE %>',
-        'locale': '<%= process.env.LOCALE %>',
-
-        'autoRedirect': '<%= process.env.AUTO_OUTPUT_LINK_REDIRECT %>'
-    };
-    <% if(process.env.NODE_ENV === 'development') { %>
-    //Keep last input on up arrow for rapid testing
-    /*
-    TeneoWebChat.on('input_submitted', (payload) => {
-        window.sessionStorage.setItem('lastSentPhrase', payload.text);
-    });
-    document.addEventListener('keydown', function(e){
-        if(e.code === 'ArrowUp') {
-            let inputField = document.getElementById('twc-user-input-field');
-            inputField.value = window.sessionStorage.getItem('lastSentPhrase')
-        }
-    });
-    */
-    <% } %>
-//    window.TeneoWebChat.initialize(element, teneoProps);
-});
-
-/* ]]> */
-</script>
 </head>
 
 <body>
@@ -150,6 +24,329 @@ window.addEventListener('load', () => {
 <script>
 /* <![CDATA[ */
 window.addEventListener('load', () => {
+// ============================================================
+
+TeneoWebChat.on('upload_button_clicked', () => TeneoWebChat.call('show_upload_panel'));
+
+// ============================================================
+
+
+
+// BEGIN: upload extension
+// TODO ALPE
+
+(() => {
+
+// TODO Re-implement the fileUploader object for your file upload service!
+const fileUploader = {
+
+    itemIdToProcessId: null,
+    itemIdToProgressTickerId: null,
+    itemIdToCallback: null,
+
+    stopTicker(itemId) {
+        if (this.itemIdToProgressTickerId == null) return;
+        clearInterval(this.itemIdToProgressTickerId[itemId]);
+        delete this.itemIdToProgressTickerId[itemId];
+    },
+
+    deleteFile(itemId, callback) {
+        if (this.itemIdToProcessId == null) this.itemIdToProcessId = {};
+        else if (this.itemIdToProcessId[itemId]) {
+            if (callback && callback.onRejected) callback.onRejected();
+            return;
+        }
+        this.stopTicker(itemId);
+        if (this.itemIdToCallback == null) this.itemIdToCallback = {};
+        if (callback) this.itemIdToCallback[itemId] = callback;
+
+        this.itemIdToProcessId[itemId] = setTimeout(() => {
+            delete this.itemIdToProcessId[itemId];
+            delete this.itemIdToCallback[itemId];
+            //const bFileDeletionSuccessful = Math.random() < 0.5;
+            const bFileDeletionSuccessful = true;
+            if (bFileDeletionSuccessful) {
+                if (callback && callback.onSucceeded) callback.onSucceeded();
+            } else {
+                if (callback && callback.onFailed) callback.onFailed(new Error('Deletion failure'));
+            }
+        }, 2000);
+    },
+
+    uploadFile(item, callback) {
+        if (this.itemIdToProcessId == null) this.itemIdToProcessId = {};
+        else if (this.itemIdToProcessId[item.id]) {
+            if (callback && callback.onRejected) callback.onRejected();
+            return;
+        }
+        if (this.itemIdToCallback == null) this.itemIdToCallback = {};
+        if (this.itemIdToProgressTickerId == null) this.itemIdToProgressTickerId = {};
+
+        var nUploadPercentage = 0;
+
+        const bFileUploadSuccessful = Math.random() < 0.5,
+        delayMillis = Math.random() * 20000,
+        tickerInterval = delayMillis / (bFileUploadSuccessful || Math.random() < 0.5 ? 10 : 10 * Math.random()),
+        updateUploadPercentage = () => {
+            if (callback && callback.onUploadPersentageChanged) callback.onUploadPersentageChanged(nUploadPercentage);
+            if (nUploadPercentage < 100) nUploadPercentage += 10;
+            else this.stopTicker(item.id);
+        };
+
+        console.log('fileUploader, itemId', item.id, 'bFileUploadSuccessful', bFileUploadSuccessful, 'delayMillis', delayMillis, 'tickerInterval', tickerInterval);
+
+        if (callback) this.itemIdToCallback[item.id] = callback;
+
+        updateUploadPercentage();
+        this.itemIdToProgressTickerId[item.id] = setInterval(updateUploadPercentage, tickerInterval);
+
+        this.itemIdToProcessId[item.id] = setTimeout(() => {
+            this.stopTicker(item.id);
+            if (this.itemIdToProcessId) {
+                delete this.itemIdToProcessId[item.id];
+            }
+            if (this.itemIdToCallback) {
+                delete this.itemIdToCallback[item.id];
+            }
+            if (bFileUploadSuccessful) {
+                if (callback && callback.onSucceeded) callback.onSucceeded();
+            } else {
+                if (callback && callback.onFailed) callback.onFailed(new Error('Upload failure'));
+            }
+        }, delayMillis);
+    },
+
+    interrupt(itemId) {
+        this.stopTicker(itemId);
+        if (this.itemIdToCallback) {
+            const callback = this.itemIdToCallback[itemId];
+            if (callback) {
+                delete this.itemIdToCallback[itemId];
+                if (callback.onInterrupted && this.itemIdToProcessId && this.itemIdToProcessId[itemId]) {
+                    setTimeout(() => callback.onInterrupted());
+                }
+            }
+        }
+        if (this.itemIdToProcessId) {
+            clearTimeout(this.itemIdToProcessId[itemId]);
+            delete this.itemIdToProcessId[itemId];
+        }
+    },
+
+    interruptAll() {
+        if (this.itemIdToCallback) {
+            if (this.itemIdToProcessId) {
+                Object.entries(this.itemIdToCallback).forEach(e => {
+                    if (e[1].onInterrupted && this.itemIdToProcessId[e[0]]) setTimeout(() => e[1].onInterrupted());
+                });
+            }
+            this.itemIdToCallback = null;
+        }
+        if (this.itemIdToProcessId) {
+            Object.values(this.itemIdToProcessId).forEach(processId => clearTimeout(processId));
+            this.itemIdToProcessId = null;
+        }
+        if (this.itemIdToProgressTickerId) {
+            Object.values(this.itemIdToProgressTickerId).forEach(processId => clearInterval(processId));
+            this.itemIdToProgressTickerId = null;
+        }
+    }
+};
+
+
+var itemIdToUploadState, itemIdToControllableItem;
+
+
+const clearFileUploads = () => {
+    fileUploader.interruptAll();
+    itemIdToUploadState = null;
+    itemIdToControllableItem = null;
+    TeneoWebChat.get('storage').removeItem('twc_itemIdToUploadState');
+},
+
+
+outputBotText = sText => TeneoWebChat.call('add_message', {
+    type: 'text',
+    author: 'bot',
+    data: { text: sText }
+}),
+
+
+setUploadState = (itemId, uploadState) => {
+    if (uploadState.status !== undefined || uploadState.controlAllowed !== undefined) {
+        if (itemIdToUploadState == null) {
+            console.warn('setUploadState, itemIdToUploadState==null, itemId', itemId);
+            return;
+        }
+        const us = itemIdToUploadState[itemId];
+        if (us == null) {
+            console.warn('setUploadState, uploadState==null, itemId', itemId);
+            return;
+        }
+        if (uploadState.status !== undefined) us.status = uploadState.status;
+        if (uploadState.controlAllowed !== undefined) us.controlAllowed = uploadState.controlAllowed;
+        TeneoWebChat.get('storage').setItem('twc_itemIdToUploadState', JSON.stringify(itemIdToUploadState));
+    }
+
+    TeneoWebChat.call('set_upload_state', {
+        itemId: itemId,
+        uploadState: uploadState
+    });
+},
+
+
+uploadFile = item => {
+    if (itemIdToControllableItem == null) itemIdToControllableItem = {};
+    itemIdToControllableItem[item.id] = item;
+    fileUploader.uploadFile(item, {
+        onSucceeded: () => setUploadState(item.id, { status: 'SUCCEEDED' }),
+        onFailed: err => setUploadState(item.id, { status: 'FAILED', uploadPercentage: 0 }),
+        onInterrupted: () => setUploadState(item.id, { status: 'INTERRUPTED', uploadPercentage: 0 }),
+        onUploadPersentageChanged: uploadPercentage => setUploadState(item.id, { uploadPercentage: uploadPercentage })
+    });
+};
+
+
+
+TeneoWebChat.on('ready', () => {
+    var x = TeneoWebChat.get('storage').getItem('twc_itemIdToUploadState');
+    if (!x || (x = x.trim()).length === 0) return;
+    try {
+        itemIdToUploadState = JSON.parse(x);
+        if (itemIdToUploadState == null || typeof itemIdToUploadState !== 'object' || Array.isArray(itemIdToUploadState)) {
+            console.warn('Bad twc_itemIdToUploadState value [ ' + x + ' ], should be an object');
+            itemIdToUploadState = null;
+            return;
+        }
+    } catch(err) {
+        console.warn('Bad twc_itemIdToUploadState value [ ' + x + ' ]', err);
+        return;
+    }
+    var uploadState, bChanged;
+    for (x in itemIdToUploadState) {
+        if (itemIdToUploadState.hasOwnProperty(x)) {
+            uploadState = itemIdToUploadState[x];
+            if (uploadState.status !== 'SUCCEEDED') {
+                if (uploadState.status === 'IN_PROGRESS') {
+                    uploadState.status = 'INTERRUPTED';
+                    uploadState.controlAllowed = false;
+                    bChanged = true;
+                } else if (uploadState.controlAllowed) {
+                    uploadState.controlAllowed = false;
+                    bChanged = true;
+                }
+            }
+        }
+    }
+    if (bChanged) {
+        TeneoWebChat.get('storage').setItem('twc_itemIdToUploadState', JSON.stringify(itemIdToUploadState));
+    }
+    setTimeout(() => {
+        Object.entries(itemIdToUploadState).forEach(e => {
+            TeneoWebChat.call('set_upload_state', {
+                itemId: e[0],
+                uploadState: {
+                    status: e[1].status,
+                    controlAllowed: e[1].controlAllowed
+                }
+            });
+        });
+    });
+});
+
+
+
+TeneoWebChat.on('upload_panel_submit', payload => {
+    console.log('upload_panel_submit', payload);
+    if (itemIdToUploadState == null) itemIdToUploadState = {};
+    payload.items.forEach(item => {
+        itemIdToUploadState[item.id] = {
+            status: 'IN_PROGRESS',
+            controlAllowed: true
+        };
+        TeneoWebChat.call('add_message', {
+            type: 'upload',
+            author: 'user',
+            data: {
+                itemId: item.id,
+                fileName: item.file.name,
+                fileSymbol: item.file.name.substring(item.file.name.lastIndexOf('.') + 1),
+                initialUploadState: {
+                    // To prevent storing huge URLs in the browser storage,
+                    // imageUrl may not be used here. It is set at a next step
+                    // via an object which is not stored.
+                    status: 'IN_PROGRESS',
+                    controlAllowed: true
+                }
+            }
+        });
+        uploadFile(item);
+        if (item.imageUrl) {
+            // Setting imageUrl
+            setTimeout(() => {
+                TeneoWebChat.call('set_upload_state', {
+                    itemId: item.id,
+                    uploadState: {
+                        imageUrl: item.imageUrl
+                    }
+                });
+            });
+        }
+    });
+    TeneoWebChat.get('storage').setItem('twc_itemIdToUploadState', JSON.stringify(itemIdToUploadState));
+});
+
+
+TeneoWebChat.on('upload_panel_cancel', payload => {
+    console.log('upload_panel_cancel', payload);
+    outputBotText('You have canceled on ' + payload.itemsCount + ' files');
+});
+
+
+TeneoWebChat.on('upload_file_delete_clicked', payload => {
+    console.log('upload_file_delete_clicked', payload);
+    fileUploader.deleteFile(payload.itemId, {
+        onSucceeded: () => {
+            setUploadState(payload.itemId, {
+                status: 'DELETED',
+                uploadPercentage: 0,
+                controlAllowed: itemIdToControllableItem != null && itemIdToControllableItem[payload.itemId]
+            });
+        }, onFailed: () => {
+            // A simulated deletion failure
+            console.log('Deletion failed for itemId', payload.itemId);
+        }
+    });
+});
+
+
+TeneoWebChat.on('upload_file_stop_clicked', payload => {
+    console.log('upload_file_stop_clicked', payload);
+    fileUploader.interrupt(payload.itemId);
+});
+
+
+TeneoWebChat.on('upload_file_restart_clicked', payload => {
+    if (itemIdToControllableItem == null) {
+        console.error('upload_file_restart_clicked, itemIdToControllableItem==null', payload);
+        return;
+    }
+    const item = itemIdToControllableItem[payload.itemId];
+    if (item == null) {
+        console.error('upload_file_restart_clicked, item==null', payload);
+        return;
+    }
+    console.log('upload_file_restart_clicked', payload);
+    setUploadState(payload.itemId, { status: 'IN_PROGRESS', controlAllowed: true, uploadPercentage: 5 });
+    uploadFile(item);
+});
+
+
+TeneoWebChat.on('reset', clearFileUploads);
+
+})();
+
+// END: upload extension
 
 
 TeneoWebChat.on('ready', () => {
@@ -178,7 +375,7 @@ const teneoProps = {
     'teneoEngineUrl': '<%= process.env.TENEO_ENGINE_URL %>',
     'title': '<%= process.env.HEADER_TITLE %>',
     'titleIconUrl': '<%= process.env.HEADER_ICON_URL %>',
-    'showCloseButton': '<%= process.env.SHOW_CLOSE_BUTTON %>',
+    'showCloseButton': <%= process.env.SHOW_CLOSE_BUTTON %>,
     'agentAvatarUrl': '<%= process.env.AGENT_AVATAR_URL %>',
     'botAvatarUrl': '<%= process.env.BOT_AVATAR_URL %>',
     'userAvatarUrl': '<%= process.env.USER_AVATAR_URL %>',
@@ -187,17 +384,39 @@ const teneoProps = {
     'launchIconUrl': '<%= process.env.LAUNCH_ICON_URL %>',
     'sendIconUrl': '<%= process.env.SEND_ICON_URL %>',
     'uploadIconUrl': '<%= process.env.UPLOAD_ICON_URL %>',
-    'showUploadButton': '<%= process.env.SHOW_UPLOAD_BUTTON %>',
+    'showUploadButton': <%= process.env.SHOW_UPLOAD_BUTTON %>,
     'asrIconUrl': '<%= process.env.ASR_ICON_URL %>',
-    'showAsrButton': '<%= process.env.SHOW_ASR_BUTTON %>',
-    'asrActive': '<%= process.env.ASR_ACTIVE %>',
+    'showAsrButton': <%= process.env.SHOW_ASR_BUTTON %>,
     'ttsIconUrl': '<%= process.env.TTS_ICON_URL %>',
-    'showTtsButton': '<%= process.env.SHOW_TTS_BUTTON %>',
-    'ttsActive': '<%= process.env.TTS_ACTIVE %>',
+    'showTtsButton': <%= process.env.SHOW_TTS_BUTTON %>,
+
+    'ttsActive': <%= process.env.TTS_ACTIVE %>,
+    'asrActive': <%= process.env.ASR_ACTIVE %>,
+
+    'msCognitiveAsrSubscriptionKey': '<%= process.env.MS_COGNITIVE_ASR_SUBSCRIPTION_KEY %>',
+    'msCognitiveAsrRegion': '<%= process.env.MS_COGNITIVE_ASR_REGION %>',
+    'msCognitiveAsrSubscriptionOnly': <%= process.env.MS_COGNITIVE_ASR_SUBSCRIPTION_ONLY %>,
+    'msCognitiveAsrCustomAuthTokenUrl': '<%= process.env.MS_COGNITIVE_ASR_CUSTOM_AUTH_TOKEN_URL %>',
+    'msCognitiveAsrEndpoint': '<%= process.env.MS_COGNITIVE_ASR_ENDPOINT %>',
+    'msCognitiveAsrHost': '<%= process.env.MS_COGNITIVE_ASR_HOST %>',
+
+    'msCognitiveTtsSubscriptionKey': '<%= process.env.MS_COGNITIVE_TTS_SUBSCRIPTION_KEY %>',
+    'msCognitiveTtsRegion': '<%= process.env.MS_COGNITIVE_TTS_REGION %>',
+    'msCognitiveTtsSubscriptionOnly': <%= process.env.MS_COGNITIVE_TTS_SUBSCRIPTION_ONLY %>,
+    'msCognitiveTtsCustomAuthTokenUrl': '<%= process.env.MS_COGNITIVE_TTS_CUSTOM_AUTH_TOKEN_URL %>',
+    'msCognitiveTtsEndpoint': '<%= process.env.MS_COGNITIVE_TTS_ENDPOINT %>',
+    'msCognitiveTtsHost': '<%= process.env.MS_COGNITIVE_TTS_HOST %>',
+
     'msCognitiveSubscriptionKey': '<%= process.env.MS_COGNITIVE_SUBSCRIPTION_KEY %>',
     'msCognitiveRegion': '<%= process.env.MS_COGNITIVE_REGION %>',
+    'msCognitiveSubscriptionOnly': <%= process.env.MS_COGNITIVE_SUBSCRIPTION_ONLY %>,
+    'msCognitiveCustomAuthTokenUrl': '<%= process.env.MS_COGNITIVE_CUSTOM_AUTH_TOKEN_URL %>',
+    'msCognitiveEndpoint': '<%= process.env.MS_COGNITIVE_ENDPOINT %>',
+    'msCognitiveHost': '<%= process.env.MS_COGNITIVE_HOST %>',
+
     'msVoice': '<%= process.env.MS_VOICE %>',
     'locale': '<%= process.env.LOCALE %>',
+
     'autoRedirect': '<%= process.env.AUTO_OUTPUT_LINK_REDIRECT %>'
 };
 
