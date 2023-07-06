@@ -11,7 +11,7 @@
 
 <script>
 import Message from './Message.vue';
-import { EventBus,events } from '../utils/event-bus';
+import { EventBus, events } from '../utils/event-bus';
 
 export default {
   components: {
@@ -26,89 +26,56 @@ export default {
   data() {
     return {
       showScrollDownButton: false,
+      mutationObserver: null,
     };
   },
   mounted() {
-    // Setup a downwards scroller
-    EventBus.$on(events.SCROLL_CHAT_DOWN, () => {
-      setTimeout(() => {
-        this._scrollDown();
-      }, 40);
+    // Used MutationObserver to detect changes in the messageList or new messages are added
+    this.mutationObserver = new MutationObserver(this.handleMutation);
+
+    // Start observing changes in the scrollList
+    this.mutationObserver.observe(this.$refs.scrollList, {
+      childList: true,
     });
 
-    // Add scroll event listener to show/hide scroll down button
-    this.$refs.scrollList.addEventListener('scroll', () => {
-  this.handleScroll();
-});
-
-  },
-  updated() {
-    if (this.shouldScrollToBottom() && !this.showScrollDownButton) {
-  this.$nextTick(this._scrollDown);
-}
-    // Additional scroll down after images etc have loaded
-    setTimeout(this._scrollDown.bind(this), 700);
+    // Scroll to the last message when component is mounted
+    this.$nextTick(this.scrollDown);
   },
   beforeDestroy() {
-    // Remove scroll event listener
-    this.$refs.scrollList.removeEventListener('scroll', this.handleScroll);
+    // Stop observing changes and disconnect MutationObserver
+    this.mutationObserver.disconnect();
   },
   methods: {
-    _scrollDown() {
-  const scrollList = this.$refs.scrollList;
-  const latestMessage = document.querySelector('.twc-message:last-child');
+    scrollDown() {
+      const scrollList = this.$refs.scrollList;
 
-  if (!scrollList) {
-    return;
-  }
-
-  // Only scroll to the bottom if the user is already at the bottom
-  if (scrollList.scrollTop === (scrollList.scrollHeight - scrollList.offsetHeight)) {
-    if (latestMessage && typeof latestMessage.scrollIntoView === 'function') {
-      latestMessage.scrollIntoView({
-        behavior: 'smooth',
-        block: 'end',
-        inline: 'nearest'
-      });
-    } else {
-      scrollList.scrollTop = scrollList.scrollHeight;
-    }
-  }
-},
-
-shouldScrollToBottom() {
-  return this.$refs.scrollList.scrollTop >= 0;
-},
-
-
-handleScroll() {
-  const scrollList = this.$refs.scrollList;
-
-  if (scrollList.scrollTop === (scrollList.scrollHeight - scrollList.offsetHeight)) {
-    this.showScrollDownButton = false;
-  } else {
-    this.showScrollDownButton = true;
-  }
-},
-
-    scrollDownDirectly() {
-      const latestMessage = document.querySelector('.twc-message:last-child');
-
-      if (latestMessage && typeof latestMessage.scrollIntoView === 'function') {
-        latestMessage.scrollIntoView({
-          behavior: 'smooth',
-          block: 'end',
-          inline: 'nearest'
-        });
-      } else if (this.$refs.scrollList) {
-        this.$refs.scrollList.scrollTop = this.$refs.scrollList.scrollHeight;
+      if (!scrollList) {
+        return;
       }
+
+      this.$nextTick(() => {
+        const latestMessage = scrollList.querySelector('.twc-message:last-child');
+
+        if (latestMessage && typeof latestMessage.scrollIntoView === 'function') {
+          latestMessage.scrollIntoView({
+            behavior: 'smooth',
+            block: 'end',
+            inline: 'nearest',
+          });
+        } else {
+          scrollList.scrollTop = scrollList.scrollHeight;
+        }
+      });
+    },
+    handleMutation() {
+      this.$nextTick(this.scrollDown);
+    },
+    scrollDownDirectly() {
+      this.scrollDown();
     },
   },
 };
 </script>
-
-
 
 <style scoped>
   :root {
@@ -127,7 +94,8 @@ handleScroll() {
   }
 
   .twc-message-list::-webkit-scrollbar-track {
-    background: var(--user-input-bg-color); border-radius: 10px;
+    background: var(--user-input-bg-color);
+    border-radius: 10px;
     margin: 2px 0;
   }
 
