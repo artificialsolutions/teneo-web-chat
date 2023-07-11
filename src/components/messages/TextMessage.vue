@@ -127,7 +127,7 @@ _:-ms-fullscreen, :root .twc-message.twc-user .twc-text-message-wrapper  {
 }
 
 .twc-message.twc-user .twc-text-message {
-  background: var(--user-message-bg-color, #4e8cff);
+  background: var(--user-message-bg-color, #2f286e);
   color: var(--user-message-fg-color, #ffffff);
   margin-left: 40px;
   border-bottom-right-radius: 0px;

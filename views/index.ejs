@@ -3,7 +3,6 @@
 <head>
 <meta charset="UTF-8"/>
 <title>Teneo Web Chat - Demo</title>
-<link rel="stylesheet" href="style.css"/>
 <meta name="viewport" content="width=device-width, height=device-height, initial-scale=1.0 user-scalable=no"/>
 
 <!-- script src="teneo-web-chat.js"></script -->
@@ -375,7 +374,7 @@ const teneoProps = {
     'teneoEngineUrl': '<%= process.env.TENEO_ENGINE_URL %>',
     'title': '<%= process.env.HEADER_TITLE %>',
     'titleIconUrl': '<%= process.env.HEADER_ICON_URL %>',
-    'showCloseButton': <%= process.env.SHOW_CLOSE_BUTTON %>,
+    'showCloseButton': '<%= process.env.SHOW_CLOSE_BUTTON %>',
     'agentAvatarUrl': '<%= process.env.AGENT_AVATAR_URL %>',
     'botAvatarUrl': '<%= process.env.BOT_AVATAR_URL %>',
     'userAvatarUrl': '<%= process.env.USER_AVATAR_URL %>',
@@ -384,32 +383,32 @@ const teneoProps = {
     'launchIconUrl': '<%= process.env.LAUNCH_ICON_URL %>',
     'sendIconUrl': '<%= process.env.SEND_ICON_URL %>',
     'uploadIconUrl': '<%= process.env.UPLOAD_ICON_URL %>',
-    'showUploadButton': <%= process.env.SHOW_UPLOAD_BUTTON %>,
+    'showUploadButton': '<%= process.env.SHOW_UPLOAD_BUTTON %>',
     'asrIconUrl': '<%= process.env.ASR_ICON_URL %>',
-    'showAsrButton': <%= process.env.SHOW_ASR_BUTTON %>,
+    'showAsrButton': '<%= process.env.SHOW_ASR_BUTTON %>',
     'ttsIconUrl': '<%= process.env.TTS_ICON_URL %>',
-    'showTtsButton': <%= process.env.SHOW_TTS_BUTTON %>,
+    'showTtsButton': '<%= process.env.SHOW_TTS_BUTTON %>',
 
-    'ttsActive': <%= process.env.TTS_ACTIVE %>,
-    'asrActive': <%= process.env.ASR_ACTIVE %>,
+    'ttsActive': '<%= process.env.TTS_ACTIVE %>',
+    'asrActive': '<%= process.env.ASR_ACTIVE %>',
 
     'msCognitiveAsrSubscriptionKey': '<%= process.env.MS_COGNITIVE_ASR_SUBSCRIPTION_KEY %>',
     'msCognitiveAsrRegion': '<%= process.env.MS_COGNITIVE_ASR_REGION %>',
-    'msCognitiveAsrSubscriptionOnly': <%= process.env.MS_COGNITIVE_ASR_SUBSCRIPTION_ONLY %>,
+    'msCognitiveAsrSubscriptionOnly': '<%= process.env.MS_COGNITIVE_ASR_SUBSCRIPTION_ONLY %>',
     'msCognitiveAsrCustomAuthTokenUrl': '<%= process.env.MS_COGNITIVE_ASR_CUSTOM_AUTH_TOKEN_URL %>',
     'msCognitiveAsrEndpoint': '<%= process.env.MS_COGNITIVE_ASR_ENDPOINT %>',
     'msCognitiveAsrHost': '<%= process.env.MS_COGNITIVE_ASR_HOST %>',
 
     'msCognitiveTtsSubscriptionKey': '<%= process.env.MS_COGNITIVE_TTS_SUBSCRIPTION_KEY %>',
     'msCognitiveTtsRegion': '<%= process.env.MS_COGNITIVE_TTS_REGION %>',
-    'msCognitiveTtsSubscriptionOnly': <%= process.env.MS_COGNITIVE_TTS_SUBSCRIPTION_ONLY %>,
+    'msCognitiveTtsSubscriptionOnly': '<%= process.env.MS_COGNITIVE_TTS_SUBSCRIPTION_ONLY %>',
     'msCognitiveTtsCustomAuthTokenUrl': '<%= process.env.MS_COGNITIVE_TTS_CUSTOM_AUTH_TOKEN_URL %>',
     'msCognitiveTtsEndpoint': '<%= process.env.MS_COGNITIVE_TTS_ENDPOINT %>',
     'msCognitiveTtsHost': '<%= process.env.MS_COGNITIVE_TTS_HOST %>',
 
     'msCognitiveSubscriptionKey': '<%= process.env.MS_COGNITIVE_SUBSCRIPTION_KEY %>',
     'msCognitiveRegion': '<%= process.env.MS_COGNITIVE_REGION %>',
-    'msCognitiveSubscriptionOnly': <%= process.env.MS_COGNITIVE_SUBSCRIPTION_ONLY %>,
+    'msCognitiveSubscriptionOnly': '<%= process.env.MS_COGNITIVE_SUBSCRIPTION_ONLY %>',
     'msCognitiveCustomAuthTokenUrl': '<%= process.env.MS_COGNITIVE_CUSTOM_AUTH_TOKEN_URL %>',
     'msCognitiveEndpoint': '<%= process.env.MS_COGNITIVE_ENDPOINT %>',
     'msCognitiveHost': '<%= process.env.MS_COGNITIVE_HOST %>',

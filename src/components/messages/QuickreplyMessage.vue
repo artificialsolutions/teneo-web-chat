@@ -77,12 +77,12 @@ export default {
 }
 
 .twc-quickreply-message__item {
-  border: 1px solid var(--quickreply-border-color, #4e8cff);
+  border: 1px solid var(--quickreply-border-color, #2f286e);
   border-radius: 16px;
   border-top-right-radius: 0px;
   border-bottom-right-radius: 0px;
   padding: 12.4px 18px;
-  color: var(--quickreply-fg-color, #4e8cff);
+  color: var(--quickreply-fg-color, #2f286e);
   cursor: pointer;
   font-weight: 300;
   font-size: 0.9em;
@@ -111,7 +111,7 @@ export default {
 
 .twc-quickreply-message__item.twc-selected,
 .twc-quickreply-message:not(.twc-expired) .twc-quickreply-message__item:hover {
-  background: var(--quickreply-fg-color, #4e8cff);
+  background: var(--quickreply-fg-color, #2f286e);
   color: var(--quickreply-bg-color, #ffffff);
   width: 70%;
 }

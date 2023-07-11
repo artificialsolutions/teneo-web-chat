@@ -7,7 +7,7 @@
         ref="backBtn"
         >&#171;</button>
 
-      <span class="twc-carousel-ctrl-dots-container">
+        <span class="twc-carousel-ctrl-dots-container">
       <button class="twc-carousel-ctrl-dots"
               v-for="(btnIndex) in carouselItemCount"
               @click="skipToSlide(btnIndex)"
@@ -165,6 +165,11 @@ export default {
     },
     isActiveSlide(idx) {
       return idx === this.activeSlide;
+    },
+
+    skipToSlide(idx) {
+      this.activeSlide = idx - 1;
+      this.moveSlideElements();
     },
 
     slideToIndex(idx) {
