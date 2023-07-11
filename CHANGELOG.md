@@ -1,3 +1,11 @@
+# v3.7.8
+## July-2023
+* Bug Fixes
+    * Message does not scroll down automatically.
+    * Carousel Scrolling Bug with Arrows.
+    * Carousel Bug when Switching Cards.
+    * ASR microphone button behaving erratically.
+    * Hiding User input when upload panel is displayed.
 # v3.7.7
 ## June-2023
 * Features

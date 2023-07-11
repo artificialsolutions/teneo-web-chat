@@ -158,7 +158,7 @@ _:-ms-fullscreen, :root .twc-message.twc-bot .twc-text-message-wrapper {
 }
 
 .twc-message.twc-user .twc-typing-message {
-  background: var(--user-typing-indicator-bg-color, #4e8cff);
+  background: var(--user-typing-indicator-bg-color, #2f286e);
   word-wrap: break-word;
   border-bottom-right-radius: 0px;
 }

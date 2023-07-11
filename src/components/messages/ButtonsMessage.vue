@@ -102,7 +102,7 @@ export default {
   /** General button configuration */
   .twc-btn {
     border: none;
-    background: var(--button-bg-color, #4e8cff);
+    background: var(--button-bg-color, #2f286e);
     color: var(--button-fg-color, #ffffff);
     cursor: pointer;
     font-weight: 400;
@@ -146,14 +146,14 @@ export default {
   /** The user hasn't selected anything yet */
   .twc-btn.twc-selected,
   .twc-btn:not(.twc-expired):hover {
-    color: var(--button-bg-color, #4e8cff);
+    color: var(--button-bg-color, #2f286e);
     background: var(--button-fg-color, #ffffff);
     box-shadow: 0 1px 2px 0 rgba(85, 87, 85, 0.7);
   }
 
   .twc-buttons.twc-selected,
   .twc-buttons:not(.twc-expired) .twc-btn:hover {
-    color: var(--button-bg-color, #4e8cff);
+    color: var(--button-bg-color, #2f286e);
     background: var(--button-fg-color, #ffffff);
     box-shadow: 0 4px 8px 0 rgba(85, 87, 85, 0.7);
     font-size: 0.9rem;
@@ -194,8 +194,8 @@ export default {
 
   /** Primary button: don't know yet if it's necessary */
   .twc-btn.twc-primary {
-    border: 1px solid var(--button-bg-color, #4e8cff);
-    background: var(--button-bg-color, #4e8cff);
+    border: 1px solid var(--button-bg-color, #2f286e);
+    background: var(--button-bg-color, #2f286e);
   }
 
   .twc-buttons:not(.twc-expired) .twc-btn.twc-primary:hover {
