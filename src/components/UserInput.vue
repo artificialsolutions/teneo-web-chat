@@ -168,18 +168,7 @@ import RecordingEndedBeep from '../sounds/recordingEndedBeep.vue'
 import RecordingCancelledBeep from '../sounds/recordingCancelledBeep.vue'
 import DOMPurify from 'isomorphic-dompurify';
 
-import {
-  getMSTokenFromRegion,
-  getMSTokenFromCustomUrl,
-  processAudioToText,
-  processTextToAudio,
-  generateText,
-  stopAsrRecording,
-  stopTTSAudio
-} from '../utils/ms-asr-tts'
 import {PARTICIPANT_USER} from '../utils/constants.js';
-import {API_GET_CHAT_HISTORY} from '../utils/api-function-names';
-import {BUBBLE_DELAY} from '../utils/constants';
 import {
   API_ON_ASR_BUTTON_CLICK,
   API_ON_INPUT_SUBMITTED,
@@ -194,49 +183,6 @@ import basePayload from '../utils/base-payload.js';
 import detectMobile from '../utils/detect-mobile.js';
 import {mapState} from 'vuex';
 import {store} from "../store/store";
-
-
-const isProvidedWithInput = m => {
-    if (m) {
-        var x = m.type;
-        if (x && (x === 'buttons' || x === 'clickablelist' || x === 'quickreply' || x === 'form')) return true;
-        if (Array.isArray(m)) {
-            x = m.length;
-            while (--x >= 0) {
-                if (isProvidedWithInput(m[x])) return true;
-            }
-        } else if ('object' === typeof m) {
-            for (x in m) {
-                if (m.hasOwnProperty(x) && (x === 'postback' || x === 'parameters' || isProvidedWithInput(m[x]))) return true;
-            }
-        }
-    }
-    return false;
-},
-
-
-isLikelyCtaMessage = m => m && m.author !== PARTICIPANT_USER && m.type !== 'system' && m.type !== 'text' && isProvidedWithInput(m),
-
-
-addSystemMessage = s => {
-  var h = window.TeneoWebChat.get(API_GET_CHAT_HISTORY);
-  h = h[h.length - 1];
-
-  EventBus.$emit(events.ADD_MESSAGE, {
-    'type': 'system',
-    'data': {
-      'text': s
-    },
-    'placeInQueue': 1,
-    'queueLength': 1
-  });
-  if (isLikelyCtaMessage(h)) {
-      // Repeat the last message if it contains CTAs
-      h = Object.assign({}, h);
-      h._skipTts = true;
-      setTimeout(() => EventBus.$emit(events.ADD_MESSAGE, h), BUBBLE_DELAY);
-  }
-};
 
 
 Vue.use(vueDebounce);
@@ -302,35 +248,6 @@ export default {
 
     EventBus.$on(events.MESSAGE_SENT, () => this.stopAsr());
 
-
-    EventBus.$on(events.BOT_MESSAGE_RECEIVED, async (message) => {
-      if (!this.ttsActive || message._skipTts) return;
-      stopTTSAudio();
-      if (!message.placeInQueue || message.placeInQueue === 1) {
-        this.ttsCumulativeText = generateText(message.data);
-      } else {
-        this.ttsCumulativeText += '\n' + generateText(message.data);
-      }
-      if (message.placeInQueue === message.queueLength) {
-        const cumulativeText = this.ttsCumulativeText;
-        this.ttsCumulativeText = '';
-        this.msAuthCheck(false).then(m => {
-          m.locale = store.getters.locale;
-          m.voice = store.getters.msVoice;
-          m.textToRead = cumulativeText;
-          processTextToAudio(m).catch(e => {
-            console.error('Error converting text to audio', e);
-            this.ttsDisabled = true;
-            this.ttsBroken = true;
-          });
-        }).catch(e => {
-          console.error('Error getting authentication token for TTS', e);
-          this.ttsDisabled = true;
-          this.ttsBroken = true;
-        })
-      }
-    });
-
     EventBus.$on(events.DISABLE_UPLOAD, () => {
       if (this.showUploadButton) {
         if (this.$refs.uploadButton) {
@@ -376,7 +293,6 @@ export default {
     EventBus.$on(events.ASR_INACTIVE, () => {
       if (this.showAsrButton && this.$refs.asrButton) {
         this.asrActive = false;
-        stopAsrRecording();
         this.$refs.recordingCancelledBeep.$el.play()
       }
     });
@@ -510,208 +426,23 @@ export default {
     },
 
 
-    msAuthCheck(bAsr) {
-      const m = {};
-      var bSpecific, x = bAsr ? store.getters.msCognitiveAsrSubscriptionKey : store.getters.msCognitiveTtsSubscriptionKey;
-      if (x) bSpecific = true;
-      else x = store.getters.msCognitiveSubscriptionKey;
-      if (x != null) m.subscriptionKey = x;
-
-      x = bAsr ? store.getters.msCognitiveAsrRegion : store.getters.msCognitiveTtsRegion;
-      if (x) bSpecific = true;
-      else x = store.getters.msCognitiveRegion;
-      if (x) m.region = x;
-
-      x = bAsr ? store.getters.msCognitiveAsrSubscriptionOnly : store.getters.msCognitiveTtsSubscriptionOnly;
-      if (x === undefined) x = store.getters.msCognitiveSubscriptionOnly;
-      if (x) {
-        return m.subscriptionKey ? Promise.resolve(m) : Promise.reject('Missing subscription key for direct subscription');
-      }
-
-      x = bAsr ? store.getters.msCognitiveAsrEndpoint : store.getters.msCognitiveTtsEndpoint;
-      if (x) bSpecific = true;
-      else x = store.getters.msCognitiveEndpoint;
-      if (x) {
-        try {
-          m.endpointURL = new URL(x);
-        } catch(err) {
-          return Promise.reject('Bad cognitive endpoint [' + x + ']');
-        }
-      }
-
-      x = bAsr ? store.getters.msCognitiveAsrHost : store.getters.msCognitiveTtsHost;
-      if (x) bSpecific = true;
-      else x = store.getters.msCognitiveHost;
-      if (x) {
-        try {
-          m.hostURL = new URL(x);
-        } catch(err) {
-          return Promise.reject('Bad cognitive host [' + x + ']');
-        }
-      }
-
-      if (bAsr) {
-        x = store.getters.msCognitiveAsrToken;
-        if (x) {
-          if (Date.now() - store.getters.msCognitiveAsrTokenTimeStamp < 540000) m.token = x;
-          else store.commit('msCognitiveAsrToken', '');
-        }
-      } else {
-        x = store.getters.msCognitiveTtsToken;
-        if (x) {
-          if (Date.now() - store.getters.msCognitiveTtsTokenTimeStamp < 540000) m.token = x;
-          else store.commit('msCognitiveTtsToken', '');
-        }
-      }
-      // Here, x means a specific token exists
-      if (x) bSpecific = true;
-      else if (store.getters.msCognitiveToken) {
-        if (Date.now() - store.getters.msCognitiveTokenTimeStamp < 540000) {
-          // No specific token exists, but a general token does, and it is still valid
-          m.token = store.getters.msCognitiveToken;
-        } else {
-          store.commit('msCognitiveToken', '');
-        }
-      }
-      // Here, !m.token means no token or token expired
-
-      if (!m.token) {
-        if (bAsr) {
-          x = store.getters.msCognitiveAsrCustomAuthTokenUrl;
-          if (x) x = getMSTokenFromCustomUrl(x, m.subscriptionKey);
-          else {
-            x = store.getters.msCognitiveAsrRegion;
-            if (x) x = getMSTokenFromRegion(x, m.subscriptionKey);
-          }
-        } else {
-          x = store.getters.msCognitiveTtsCustomAuthTokenUrl;
-          if (x) x = getMSTokenFromCustomUrl(x, m.subscriptionKey);
-          else {
-            x = store.getters.msCognitiveTtsRegion;
-            if (x) x = getMSTokenFromRegion(x, m.subscriptionKey);
-          }
-        }
-        // Here, !x means no specific token was used
-        if (x) bSpecific = true;
-        else {
-          x = store.getters.msCognitiveCustomAuthTokenUrl;
-          if (x) x = getMSTokenFromCustomUrl(x, m.subscriptionKey);
-          else {
-            x = store.getters.msCognitiveRegion;
-            if (x) x = getMSTokenFromRegion(x, m.subscriptionKey);
-          }
-        }
-        if (x) {
-          // A token is used
-          return x.then(token => {
-            store.commit(bSpecific ? (bAsr ? 'msCognitiveAsrToken' : 'msCognitiveTtsToken') : 'msCognitiveToken', token);
-            m.token = token;
-            return m;
-          });
-        }
-      }
-      return Promise.resolve(m);
-    },
-
-
     stopAsr() {
       this.asrActive = false;
-      stopAsrRecording();
     },
 
 
     async asrButtonClicked(e) {
-      // Check if any extensions are set up to handle them.
-      // If not, use default functionality with Azure.
-      if (await handleExtension(API_ON_ASR_BUTTON_CLICK, e)) return;
-
-      if (!window.isSecureContext) {
-        console.log('Insecure Context, use of ASR requires an SSL-enabled location.');
-        if (window.location.protocol !== 'https:') {
-          console.log('Page is on HTTPS, but the certificate is not accepted. You may need to change certificates or force your browser to accept the context as secure.')
-        }
-        this.asrDisabled = true;
-        return;
-      }
-
-      if (this.asrActive) {
-        // Listening mode is on, so here it is toggled to off and the recording is stopped
-        e.dataset.cancelled = "true";
-        this.$refs.recordingCancelledBeep.$el.play();
-        this.stopAsr();
-        return;
-      }
-
-      // Send system message with instructions on first click,
-      // mark button as used so it won't repeat
-      var firstClick;
-      if (e.dataset.used !== "true") {
-        e.dataset.used = "true";
-        firstClick = true;
-
-        addSystemMessage(this.$t('message.first_use_asr_system_message'));
-      }
-      this.asrActive = true;
-
-      new Promise(resolve => {
-        if (firstClick) {
-          setTimeout(() => {
-            if (this.ttsActive && window.twcTmp.twcAudioPlayer) {
-              // Let first the 'message.first_use_asr_system_message'
-              // announcement play to th end
-              window.twcTmp.twcAudioPlayer.onAudioEnd = resolve;
-            } else {
-              resolve();
-            }
-          }, 200);
-        } else {
-          resolve();
-        }
-      }).then(() => {
-        if (!this.asrActive) return;
-        this.$refs.recordingStartedBeep.$el.play();
-        this.msAuthCheck(true).then(m => {
-          if (!this.asrActive) return;
-          m.locale = store.getters.locale;
-          processAudioToText(m).then(async (processedText) => {
-            if (!this.asrActive) return;
-            this.asrActive = false;
-            if (typeof processedText === 'string') {
-              this.$refs.userInput.value = processedText;
-              this.$refs.recordingEndedBeep.$el.play();
-              await this._submitText();
-            } else {
-              console.warn('ASR recognition failed');
-              addSystemMessage('Automatic speech recognition error 1');
-            }
-          }, e => {
-            if (!this.asrActive) return;
-            this.asrActive = false;
-            this.asrBroken = true;
-            this.asrDisabled = true;
-            console.warn('Error processing audio to text', e);
-            addSystemMessage('Automatic speech recognition error 2');
-          });
-        }).catch(e => {
-          console.error('Error getting authentication token for ASR', e);
-          addSystemMessage('Automatic speech recognition error 3');
-          this.asrActive = false;
-          this.asrDisabled = true;
-          this.asrBroken = true;
-        });
-      });
+      await handleExtension(API_ON_ASR_BUTTON_CLICK, e);
     },
+
 
     stopTts() {
       this.ttsActive = false;
       this.ttsCumulativeText = '';
-      stopTTSAudio();
     },
 
     async ttsButtonClicked(e) {
-      if (await handleExtension(API_ON_TTS_BUTTON_CLICK, e)) return;
-      if (this.ttsActive) this.stopTts();
-      else this.ttsActive = true;
+      await handleExtension(API_ON_TTS_BUTTON_CLICK, e);
     },
 
     async _submitText() {
