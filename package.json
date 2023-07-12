@@ -6,7 +6,7 @@
     "analyze": "NODE_ENV=production webpack --config webpack.prod.js --profile --json > stats-prod.json && webpack-bundle-analyzer stats-prod.json dist/",
     "build": "NODE_ENV=production webpack --config webpack.prod.js",
     "start": "node server.js",
-    "start:dev": "webpack-dev-server --config webpack.dev.js",
+    "start:dev": "webpack-dev-server --https --config webpack.dev.js",
     "test:unit": "vue-cli-service test:unit",
     "test:only": "vue-cli-service test:unit -f teneoWebChatComponentsTest -t 'Assert FormMessage JSON'",
     "heroku-postbuild": "NODE_ENV=production webpack -p --config ./webpack.prod.js --progress"
