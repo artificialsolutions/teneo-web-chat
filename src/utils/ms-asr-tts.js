@@ -104,6 +104,7 @@ function processTextToAudio(m) {
         //speechConfig.speechSynthesisLanguage = locale.replaceAll('_', '-');
         if (m.voice) speechConfig.speechSynthesisVoiceName = m.voice;
         window.twcTmp.twcAudioPlayer = new SpeakerAudioDestination();
+        if (m.onAudioEnd) window.twcTmp.twcAudioPlayer.onAudioEnd = m.onAudioEnd;
         const audioConfig = AudioConfig.fromSpeakerOutput(window.twcTmp.twcAudioPlayer);
         const synthesizer = new SpeechSynthesizer(speechConfig, audioConfig);
 

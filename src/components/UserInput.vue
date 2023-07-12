@@ -218,11 +218,16 @@ const isProvidedWithInput = m => {
 isLikelyCtaMessage = m => m && m.author !== PARTICIPANT_USER && m.type !== 'system' && m.type !== 'text' && isProvidedWithInput(m),
 
 
-addSystemMessage = s => {
+addSystemMessage = (s, onAudioEnd) => {
   var h = window.TeneoWebChat.get(API_GET_CHAT_HISTORY);
   h = h[h.length - 1];
 
   EventBus.$emit(events.ADD_MESSAGE, {
+    // TODO
+    //_skipTts: true,
+
+    '_onAudioEnd': onAudioEnd,
+
     'type': 'system',
     'data': {
       'text': s
@@ -314,17 +319,34 @@ export default {
       if (message.placeInQueue === message.queueLength) {
         const cumulativeText = this.ttsCumulativeText;
         this.ttsCumulativeText = '';
+        //TODO
+        //addSystemMessage('Before msAuthCheck');
+
         this.msAuthCheck(false).then(m => {
+          //TODO
+          //addSystemMessage('msAuthCheck then: ' + JSON.stringify(m));
+
           m.locale = store.getters.locale;
           m.voice = store.getters.msVoice;
           m.textToRead = cumulativeText;
-          processTextToAudio(m).catch(e => {
+          m.onAudioEnd = message._onAudioEnd;
+
+          processTextToAudio(m).then(x => {
+            //TODO
+            //addSystemMessage('processTextToAudio then: ' + JSON.stringify(x));
+          }).catch(e => {
             console.error('Error converting text to audio', e);
+            //TODO
+            //addSystemMessage('Error converting text to audio: ' + e);
+
             this.ttsDisabled = true;
             this.ttsBroken = true;
           });
         }).catch(e => {
           console.error('Error getting authentication token for TTS', e);
+          //TODO
+          //addSystemMessage('Error getting authentication token for TTS: ' + e);
+
           this.ttsDisabled = true;
           this.ttsBroken = true;
         })
@@ -620,10 +642,51 @@ export default {
     },
 
 
+    async doAsr() {
+      if (!this.asrActive) return;
+      this.$refs.recordingStartedBeep.$el.play();
+      this.msAuthCheck(true).then(m => {
+        if (!this.asrActive) return;
+        m.locale = store.getters.locale;
+        processAudioToText(m).then(async (processedText) => {
+          //TODO
+          //addSystemMessage('asrButtonClicked 3 asrActive: ' + this.asrActive + ', processedText' + processedText);
+
+          if (!this.asrActive) return;
+          this.asrActive = false;
+          if (typeof processedText === 'string') {
+            this.$refs.userInput.value = processedText;
+            this.$refs.recordingEndedBeep.$el.play();
+            await this._submitText();
+          } else {
+            console.warn('ASR recognition failed');
+            addSystemMessage('Automatic speech recognition error 1');
+          }
+        }, e => {
+          if (!this.asrActive) return;
+          this.asrActive = false;
+          this.asrBroken = true;
+          this.asrDisabled = true;
+          console.warn('Error processing audio to text', e);
+          addSystemMessage('Automatic speech recognition error 2');
+        });
+      }).catch(e => {
+        console.error('Error getting authentication token for ASR', e);
+        addSystemMessage('Automatic speech recognition error 3');
+        this.asrActive = false;
+        this.asrDisabled = true;
+        this.asrBroken = true;
+      });
+    },
+
+
     async asrButtonClicked(e) {
       // Check if any extensions are set up to handle them.
       // If not, use default functionality with Azure.
       if (await handleExtension(API_ON_ASR_BUTTON_CLICK, e)) return;
+
+      //TODO
+      //addSystemMessage('asrButtonClicked, isSecureContext: ' + window.isSecureContext + ', asrDisabled: ' + this.asrDisabled + ', asrActive: ' + this.asrActive);
 
       if (!window.isSecureContext) {
         console.log('Insecure Context, use of ASR requires an SSL-enabled location.');
@@ -642,64 +705,22 @@ export default {
         return;
       }
 
-      // Send system message with instructions on first click,
-      // mark button as used so it won't repeat
-      var firstClick;
-      if (e.dataset.used !== "true") {
-        e.dataset.used = "true";
-        firstClick = true;
-
-        addSystemMessage(this.$t('message.first_use_asr_system_message'));
-      }
       this.asrActive = true;
 
-      new Promise(resolve => {
-        if (firstClick) {
-          setTimeout(() => {
-            if (this.ttsActive && window.twcTmp.twcAudioPlayer) {
-              // Let first the 'message.first_use_asr_system_message'
-              // announcement play to th end
-              window.twcTmp.twcAudioPlayer.onAudioEnd = resolve;
-            } else {
-              resolve();
-            }
-          }, 200);
-        } else {
-          resolve();
-        }
-      }).then(() => {
-        if (!this.asrActive) return;
-        this.$refs.recordingStartedBeep.$el.play();
-        this.msAuthCheck(true).then(m => {
-          if (!this.asrActive) return;
-          m.locale = store.getters.locale;
-          processAudioToText(m).then(async (processedText) => {
-            if (!this.asrActive) return;
-            this.asrActive = false;
-            if (typeof processedText === 'string') {
-              this.$refs.userInput.value = processedText;
-              this.$refs.recordingEndedBeep.$el.play();
-              await this._submitText();
-            } else {
-              console.warn('ASR recognition failed');
-              addSystemMessage('Automatic speech recognition error 1');
-            }
-          }, e => {
-            if (!this.asrActive) return;
-            this.asrActive = false;
-            this.asrBroken = true;
-            this.asrDisabled = true;
-            console.warn('Error processing audio to text', e);
-            addSystemMessage('Automatic speech recognition error 2');
-          });
-        }).catch(e => {
-          console.error('Error getting authentication token for ASR', e);
-          addSystemMessage('Automatic speech recognition error 3');
-          this.asrActive = false;
-          this.asrDisabled = true;
-          this.asrBroken = true;
-        });
-      });
+      // Send system message with instructions on first click,
+      // mark button as used so it won't repeat
+      var sAsrFirstUseMsg;
+
+      if (e.dataset.used !== "true") {
+        e.dataset.used = "true";
+        sAsrFirstUseMsg = this.$t('message.first_use_asr_system_message');
+      }
+
+      //TODO
+      sAsrFirstUseMsg = null;
+
+      if (sAsrFirstUseMsg) addSystemMessage(sAsrFirstUseMsg, () => this.doAsr());
+      else this.doAsr();
     },
 
     stopTts() {
