@@ -93,7 +93,7 @@ export default {
 </script>
 <style scoped>
 .twc-launch-button {
-  background-color: var(--launch-button-bg-color, #4e8cff);
+  background-color: var(--launch-button-bg-color, #2f286e);
   width: 60px;
   height: 60px;
   background-position: center;

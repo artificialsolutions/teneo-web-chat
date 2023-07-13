@@ -462,8 +462,8 @@ select option:active {
 
 .twc-form-control.twc-form-submit:not([disabled]) {
   border: none;
-  background: var(--form-submit-background-color, #4e8cff);
-  border: 1px solid var(--form-sumbit-background-color, #4e8cff);
+  background: var(--form-submit-background-color, #2f286e);
+  border: 1px solid var(--form-sumbit-background-color, #2f286e);
   color: var(--button-fg-color, #ffffff);
   cursor: pointer;
   font-weight: 400;
@@ -497,8 +497,8 @@ select option:active {
 
 .twc-form-control.twc-form-cancel:not([disabled]) {
   border: none;
-  background: var(--form-cancel-background-color, #4e8cff);
-  border: 1px solid var(--form-cancel-background-color, #4e8cff);
+  background: var(--form-cancel-background-color, #2f286e);
+  border: 1px solid var(--form-cancel-background-color, #2f286e);
   color: var(--button-fg-color, #ffffff);
   cursor: pointer;
   font-weight: 400;
@@ -570,8 +570,8 @@ select option:active {
 
 .twc-form-input[type=button] {
   border: none;
-  background: var(--button-bg-color, #4e8cff);
-  border: 1px solid var(--button-bg-color, #4e8cff);
+  background: var(--button-bg-color, #2f286e);
+  border: 1px solid var(--button-bg-color, #2f286e);
   color: var(--button-fg-color, #ffffff);
   cursor: pointer;
   font-weight: 400;
@@ -609,7 +609,7 @@ select option:active {
 
 .twc-form-input[type=reset]:not([disabled]) {
   border: none;
-  background: var(--form-reset-background-color, #4e8cff);
+  background: var(--form-reset-background-color, #2f286e);
   color: var(--button-fg-color, #ffffff);
   cursor: pointer;
   font-weight: 400;

@@ -60,7 +60,7 @@ export default {
 
 <style scoped>
 .twc-header {
-  background: var(--header-bg-color, #4e8cff);
+  background: var(--header-bg-color, #2f286e);
   min-height: 64px;
   border-top-left-radius: 9px;
   border-top-right-radius: 9px;
