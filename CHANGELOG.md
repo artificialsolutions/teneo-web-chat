@@ -10,8 +10,7 @@
 ## June-2023
 * Features
     * Attachment Messages.
-    * Rating Messages.
-    * [MCS integration](docs/features/TWC+MCS%20integration.md).
+    * Rating Messages.    
     
 
 * Bug Fixes
