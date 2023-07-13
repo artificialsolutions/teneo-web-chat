@@ -1,5 +1,9 @@
 <template>
-  <div class="twc-carousel" :class="{ 'twc-expired': replySent || isExpired}">
+  <div class="twc-carousel" :class="{ 'twc-expired': replySent || isExpired}"
+    @touchstart="handleTouchStart"
+    @touchmove="handleTouchMove"
+    @touchend="handleTouchEnd"
+  >
     <div class="twc-carousel-ctrl">
       <button class="twc-carousel-bck twc-carousel-ctrl-arrows"
         @click="slideToIndex(activeSlide - 1)"
@@ -125,7 +129,9 @@ export default {
     return {
       activeSlide: 0,
       isFirstSlide: true,
-      isLastSlide: false
+      isLastSlide: false,
+      touchStartX: 0,
+      touchEndX: 0
     };
   },
   computed: {
@@ -210,8 +216,25 @@ export default {
         let spacer = card.getElementsByClassName('twc-card-spacer')[0];
         spacer.style.height = (maxCardHeight - card.clientHeight) + 'px';
       }
-    }
+    },
+    handleTouchStart(event) {
+      this.touchStartX = event.touches[0].clientX;
+    },
 
+    handleTouchMove(event) {
+      this.touchEndX = event.touches[0].clientX;
+    },
+
+    handleTouchEnd() {
+      const touchDiff = this.touchStartX - this.touchEndX;
+      const sensitivity = 50; // Adjust the value as per your needs
+
+      if (touchDiff > sensitivity) {
+        this.slideToIndex(this.activeSlide + 1); // Slide forward
+      } else if (touchDiff < -sensitivity) {
+        this.slideToIndex(this.activeSlide - 1); // Slide back
+      }
+    }
   },
   mounted() {
     this.additionalCardProcessing();
