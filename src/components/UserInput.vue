@@ -431,44 +431,6 @@ export default {
     },
 
 
-    async doAsr() {
-      if (!this.asrActive) return;
-      this.$refs.recordingStartedBeep.$el.play();
-      this.msAuthCheck(true).then(m => {
-        if (!this.asrActive) return;
-        m.locale = store.getters.locale;
-        processAudioToText(m).then(async (processedText) => {
-          //TODO
-          //addSystemMessage('asrButtonClicked 3 asrActive: ' + this.asrActive + ', processedText' + processedText);
-
-          if (!this.asrActive) return;
-          this.asrActive = false;
-          if (typeof processedText === 'string') {
-            this.$refs.userInput.value = processedText;
-            this.$refs.recordingEndedBeep.$el.play();
-            await this._submitText();
-          } else {
-            console.warn('ASR recognition failed');
-            addSystemMessage('Automatic speech recognition error 1');
-          }
-        }, e => {
-          if (!this.asrActive) return;
-          this.asrActive = false;
-          this.asrBroken = true;
-          this.asrDisabled = true;
-          console.warn('Error processing audio to text', e);
-          addSystemMessage('Automatic speech recognition error 2');
-        });
-      }).catch(e => {
-        console.error('Error getting authentication token for ASR', e);
-        addSystemMessage('Automatic speech recognition error 3');
-        this.asrActive = false;
-        this.asrDisabled = true;
-        this.asrBroken = true;
-      });
-    },
-
-
     async asrButtonClicked(e) {
       await handleExtension(API_ON_ASR_BUTTON_CLICK, e);
     },
