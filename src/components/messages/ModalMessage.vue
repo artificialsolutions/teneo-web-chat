@@ -123,9 +123,11 @@ export default {
     },
 
     closeModal() {
-      var modal = document.getElementsByClassName("twc-modal");
+      let modal = document.getElementsByClassName("twc-modal")[0];
       modal.style.display = "none";
+      this.hideModal();
     }
+
   },
 };
 
@@ -211,6 +213,20 @@ export default {
     margin-top: 0.6rem;
     margin-bottom: 0.6rem;
     text-align: left;
+}
+.twc-modal-content .close {
+  position: absolute;
+  top: 0px;
+  right: 0px;
+  width: 100%;
+  font-size: 20px;
+  color: white;
+  background-color: #2f286e;
+  border: none;
+  cursor: pointer;
+  display: flex;
+  justify-content: right;
+  align-items: right;
 }
 
 .twc-modal-content .twc-buttons {
