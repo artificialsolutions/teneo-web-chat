@@ -16,7 +16,10 @@ Additional Features:
  * [Rating Message](docs/features/Rating%20Message.md).
  * [Upload files](docs/features/upload.md).
 
-NOTE: This readme contains high-level information about running Teneo Web Chat. For full documentation, please refer to the [Teneo Web Chat Documentation](https://developers.artificial-solutions.com/engine/teneo-web-chat) on the Teneo Developers website.
+## NOTES: 
+* __There are currently some issues with ASR that have been identified, and these features will not be available in this release. They will be reintroduced in the next release V.3.7.9.__
+
+* This readme contains high-level information about running Teneo Web Chat. For full documentation, please refer to the [Teneo Web Chat Documentation](https://developers.artificial-solutions.com/engine/teneo-web-chat) on the Teneo Developers website.
 
 ## Prerequisites
 * Your bot needs to be published and you need to know the engine URL.
