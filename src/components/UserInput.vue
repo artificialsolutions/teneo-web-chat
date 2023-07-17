@@ -218,16 +218,13 @@ const isProvidedWithInput = m => {
 isLikelyCtaMessage = m => m && m.author !== PARTICIPANT_USER && m.type !== 'system' && m.type !== 'text' && isProvidedWithInput(m),
 
 
-addSystemMessage = (s, onAudioEnd) => {
+addSystemMessage = (s, bSkipTts, onMessageEnd) => {
   var h = window.TeneoWebChat.get(API_GET_CHAT_HISTORY);
   h = h[h.length - 1];
-
   EventBus.$emit(events.ADD_MESSAGE, {
     // TODO
-    //_skipTts: true,
-
-    '_onAudioEnd': onAudioEnd,
-
+    '_bSkipTts': bSkipTts,
+    '_onMessageEnd': onMessageEnd,
     'type': 'system',
     'data': {
       'text': s
@@ -238,7 +235,7 @@ addSystemMessage = (s, onAudioEnd) => {
   if (isLikelyCtaMessage(h)) {
       // Repeat the last message if it contains CTAs
       h = Object.assign({}, h);
-      h._skipTts = true;
+      h._bSkipTts = true;
       setTimeout(() => EventBus.$emit(events.ADD_MESSAGE, h), BUBBLE_DELAY);
   }
 };
@@ -309,7 +306,7 @@ export default {
 
 
     EventBus.$on(events.BOT_MESSAGE_RECEIVED, async (message) => {
-      if (!this.ttsActive || message._skipTts) return;
+      if (this.ttsDisabled || this.ttsBroken || message._bSkipTts) return;
       stopTTSAudio();
       if (!message.placeInQueue || message.placeInQueue === 1) {
         this.ttsCumulativeText = generateText(message.data);
@@ -319,37 +316,39 @@ export default {
       if (message.placeInQueue === message.queueLength) {
         const cumulativeText = this.ttsCumulativeText;
         this.ttsCumulativeText = '';
-        //TODO
-        //addSystemMessage('Before msAuthCheck');
-
-        this.msAuthCheck(false).then(m => {
+        if (this.ttsActive) {
           //TODO
-          //addSystemMessage('msAuthCheck then: ' + JSON.stringify(m));
+          //addSystemMessage('Before msAuthCheck', true);
 
-          m.locale = store.getters.locale;
-          m.voice = store.getters.msVoice;
-          m.textToRead = cumulativeText;
-          m.onAudioEnd = message._onAudioEnd;
-
-          processTextToAudio(m).then(x => {
+          this.msAuthCheck(false).then(m => {
             //TODO
-            //addSystemMessage('processTextToAudio then: ' + JSON.stringify(x));
+            //addSystemMessage('msAuthCheck then: ' + JSON.stringify(m), true);
+
+            m.locale = store.getters.locale;
+            m.voice = store.getters.msVoice;
+            m.textToRead = cumulativeText;
+            m.onAudioEnd = message._onMessageEnd;
+
+            processTextToAudio(m).then(x => {
+              //TODO
+              //addSystemMessage('processTextToAudio then: ' + JSON.stringify(x), true);
+            }).catch(e => {
+              console.error('Error converting text to audio', e);
+              //TODO
+              addSystemMessage('Error converting text to audio: ' + e, true);
+              this.ttsDisabled = true;
+              this.ttsBroken = true;
+            });
           }).catch(e => {
-            console.error('Error converting text to audio', e);
+            console.error('Error getting authentication token for TTS', e);
             //TODO
-            //addSystemMessage('Error converting text to audio: ' + e);
-
+            addSystemMessage('Error getting authentication token for TTS: ' + e, true);
             this.ttsDisabled = true;
             this.ttsBroken = true;
           });
-        }).catch(e => {
-          console.error('Error getting authentication token for TTS', e);
-          //TODO
-          //addSystemMessage('Error getting authentication token for TTS: ' + e);
-
-          this.ttsDisabled = true;
-          this.ttsBroken = true;
-        })
+        } else {
+          if (message._onMessageEnd) message._onMessageEnd();
+        }
       }
     });
 
@@ -650,7 +649,7 @@ export default {
         m.locale = store.getters.locale;
         processAudioToText(m).then(async (processedText) => {
           //TODO
-          //addSystemMessage('asrButtonClicked 3 asrActive: ' + this.asrActive + ', processedText' + processedText);
+          //addSystemMessage('asrButtonClicked 3 asrActive: ' + this.asrActive + ', processedText' + processedText, true);
 
           if (!this.asrActive) return;
           this.asrActive = false;
@@ -686,7 +685,7 @@ export default {
       if (await handleExtension(API_ON_ASR_BUTTON_CLICK, e)) return;
 
       //TODO
-      //addSystemMessage('asrButtonClicked, isSecureContext: ' + window.isSecureContext + ', asrDisabled: ' + this.asrDisabled + ', asrActive: ' + this.asrActive);
+      //addSystemMessage('asrButtonClicked, isSecureContext: ' + window.isSecureContext + ', asrDisabled: ' + this.asrDisabled + ', asrActive: ' + this.asrActive, true);
 
       if (!window.isSecureContext) {
         console.log('Insecure Context, use of ASR requires an SSL-enabled location.');
@@ -717,9 +716,9 @@ export default {
       }
 
       //TODO
-      sAsrFirstUseMsg = null;
+      //sAsrFirstUseMsg = null;
 
-      if (sAsrFirstUseMsg) addSystemMessage(sAsrFirstUseMsg, () => this.doAsr());
+      if (sAsrFirstUseMsg) addSystemMessage(sAsrFirstUseMsg, false, () => this.doAsr());
       else this.doAsr();
     },
 

@@ -60,15 +60,15 @@ function processAudioToText(m) {
         window.twcTmp.twcRecognizer = new SpeechRecognizer(speechConfig, audioConfig);
         window.twcTmp.twcRecognizer.recognizeOnceAsync(
             result => {
-                if (result && result.text && !result.errorDetails) resolve(result.text);
+                if (result && result.text && !result.errorDetails && !result.privErrorDetails) resolve(result.text);
                 else {
-                    if (result != null && typeof result === 'object') reject('result: ' + JSON.stringify(result));
-                    else reject('result: ' + result);
+                    if (result != null && typeof result === 'object') reject('ASR result: ' + JSON.stringify(result));
+                    else reject('ASR result: ' + result);
                 }
                 delete window.twcTmp.twcRecognizer;
             },
             error => {
-                reject('error: ' + error);
+                reject('ASR error: ' + error);
                 delete window.twcTmp.twcRecognizer;
             }
         );
@@ -87,6 +87,7 @@ function stopAsrRecording() {
 function stopTTSAudio() {
     if (window.twcTmp.twcAudioPlayer) {
         window.twcTmp.twcAudioPlayer.pause();
+        window.twcTmp.twcAudioPlayer.close();
         delete window.twcTmp.twcAudioPlayer;
     }
 }
@@ -108,15 +109,27 @@ function processTextToAudio(m) {
         const audioConfig = AudioConfig.fromSpeakerOutput(window.twcTmp.twcAudioPlayer);
         const synthesizer = new SpeechSynthesizer(speechConfig, audioConfig);
 
+        //TODO
+        //alert(JSON.stringify(window.twcTmp.twcAudioPlayer));
+
         synthesizer.speakTextAsync(m.textToRead,
             result => {
-                if (result.audioData && !result.errorDetails) resolve(result);
-                else reject(result.errorDetails)
-                synthesizer.close();
+                if (result.audioData && !result.errorDetails && !result.privErrorDetails) resolve(result);
+                else {
+                    if (result != null && typeof result === 'object') reject('TTS result: ' + JSON.stringify(result));
+                    else reject('ASR result: ' + result);
+                }
+                //synthesizer.close();
+                //window.twcTmp.twcAudioPlayer.close();
+                //delete window.twcTmp.twcAudioPlayer;
+                //stopTTSAudio();
             },
             error => {
-                reject(error);
+                reject('TTS error: ' + error);
                 synthesizer.close();
+                window.twcTmp.twcAudioPlayer.close();
+                //delete window.twcTmp.twcAudioPlayer;
+                //stopTTSAudio();
             }
         );
     });
