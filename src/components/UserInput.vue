@@ -305,8 +305,35 @@ export default {
     EventBus.$on(events.MESSAGE_SENT, () => this.stopAsr());
 
 
+    if (typeof (AudioContext) !== "undefined" || (typeof (window) !== "undefined" && typeof (window.webkitAudioContext) !== "undefined")) {
+      if (typeof (MediaSource) === "undefined") {
+        this.ttsDisabled = true;
+        this.ttsBroken = true;
+        console.info('TTS would not be possible because MediaSource is not defined');
+      } else if (MediaSource.isTypeSupported('audio/mpeg')) {
+        // Microsoft conginitve library in its currect version doesn't allow you
+        // to detect TTS failure via code. So a rough approximation is made that
+        // MediaSource should support the 'audio/mpeg' MIME type (along with some
+        // other conditions) for TTS to be operative. This liece of code might
+        // have to to be changes with future library releases.
+        this.ttsBroken = false;
+      } else {
+        this.ttsDisabled = true;
+        this.ttsBroken = true;
+        console.info('TTS would not be possible because the "audio/mpeg" MIME type is not supported');
+      }
+    } else {
+      this.ttsDisabled = true;
+      this.ttsBroken = true;
+      console.info('TTS would not be possible');
+    }
+
+
     EventBus.$on(events.BOT_MESSAGE_RECEIVED, async (message) => {
-      if (this.ttsDisabled || this.ttsBroken || message._bSkipTts) return;
+      if (this.ttsDisabled || this.ttsBroken || message._bSkipTts) {
+        if (message._onMessageEnd) message._onMessageEnd();
+        return;
+      }
       stopTTSAudio();
       if (!message.placeInQueue || message.placeInQueue === 1) {
         this.ttsCumulativeText = generateText(message.data);
@@ -327,11 +354,15 @@ export default {
             m.locale = store.getters.locale;
             m.voice = store.getters.msVoice;
             m.textToRead = cumulativeText;
-            m.onAudioEnd = message._onMessageEnd;
+
+            //TODO
+            //m.onAudioEnd = message._onMessageEnd;
+            if (message._onMessageEnd) message._onMessageEnd();
 
             processTextToAudio(m).then(x => {
               //TODO
               //addSystemMessage('processTextToAudio then: ' + JSON.stringify(x), true);
+              console.log('processTextToAudio then:', JSON.stringify(x));
             }).catch(e => {
               console.error('Error converting text to audio', e);
               //TODO
@@ -345,6 +376,7 @@ export default {
             addSystemMessage('Error getting authentication token for TTS: ' + e, true);
             this.ttsDisabled = true;
             this.ttsBroken = true;
+            if (message._onMessageEnd) message._onMessageEnd();
           });
         } else {
           if (message._onMessageEnd) message._onMessageEnd();
