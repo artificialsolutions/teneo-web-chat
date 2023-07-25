@@ -222,7 +222,6 @@ addSystemMessage = (s, bSkipTts, onMessageEnd) => {
   var h = window.TeneoWebChat.get(API_GET_CHAT_HISTORY);
   h = h[h.length - 1];
   EventBus.$emit(events.ADD_MESSAGE, {
-    // TODO
     '_bSkipTts': bSkipTts,
     '_onMessageEnd': onMessageEnd,
     'type': 'system',
@@ -344,36 +343,22 @@ export default {
         const cumulativeText = this.ttsCumulativeText;
         this.ttsCumulativeText = '';
         if (this.ttsActive) {
-          //TODO
-          //addSystemMessage('Before msAuthCheck', true);
-
           this.msAuthCheck(false).then(m => {
-            //TODO
-            //addSystemMessage('msAuthCheck then: ' + JSON.stringify(m), true);
-
             m.locale = store.getters.locale;
             m.voice = store.getters.msVoice;
             m.textToRead = cumulativeText;
 
-            //TODO
-            //m.onAudioEnd = message._onMessageEnd;
+            // Don't use m.onAudioEnd = message._onMessageEnd as it will not work if TTS
+            // fails in the browser since no explicit error is generated in this case:
             if (message._onMessageEnd) message._onMessageEnd();
 
-            processTextToAudio(m).then(x => {
-              //TODO
-              //addSystemMessage('processTextToAudio then: ' + JSON.stringify(x), true);
-              console.log('processTextToAudio then:', JSON.stringify(x));
-            }).catch(e => {
+            processTextToAudio(m).catch(e => {
               console.error('Error converting text to audio', e);
-              //TODO
-              addSystemMessage('Error converting text to audio: ' + e, true);
               this.ttsDisabled = true;
               this.ttsBroken = true;
             });
           }).catch(e => {
             console.error('Error getting authentication token for TTS', e);
-            //TODO
-            addSystemMessage('Error getting authentication token for TTS: ' + e, true);
             this.ttsDisabled = true;
             this.ttsBroken = true;
             if (message._onMessageEnd) message._onMessageEnd();
@@ -680,9 +665,6 @@ export default {
         if (!this.asrActive) return;
         m.locale = store.getters.locale;
         processAudioToText(m).then(async (processedText) => {
-          //TODO
-          //addSystemMessage('asrButtonClicked 3 asrActive: ' + this.asrActive + ', processedText' + processedText, true);
-
           if (!this.asrActive) return;
           this.asrActive = false;
           if (typeof processedText === 'string') {
@@ -715,10 +697,6 @@ export default {
       // Check if any extensions are set up to handle them.
       // If not, use default functionality with Azure.
       if (await handleExtension(API_ON_ASR_BUTTON_CLICK, e)) return;
-
-      //TODO
-      //addSystemMessage('asrButtonClicked, isSecureContext: ' + window.isSecureContext + ', asrDisabled: ' + this.asrDisabled + ', asrActive: ' + this.asrActive, true);
-
       if (!window.isSecureContext) {
         console.log('Insecure Context, use of ASR requires an SSL-enabled location.');
         if (window.location.protocol !== 'https:') {
@@ -746,10 +724,6 @@ export default {
         e.dataset.used = "true";
         sAsrFirstUseMsg = this.$t('message.first_use_asr_system_message');
       }
-
-      //TODO
-      //sAsrFirstUseMsg = null;
-
       if (sAsrFirstUseMsg) addSystemMessage(sAsrFirstUseMsg, false, () => this.doAsr());
       else this.doAsr();
     },

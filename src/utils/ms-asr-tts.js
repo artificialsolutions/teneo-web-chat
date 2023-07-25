@@ -108,40 +108,13 @@ function processTextToAudio(m) {
         if (m.onAudioEnd) window.twcTmp.twcAudioPlayer.onAudioEnd = m.onAudioEnd;
         const audioConfig = AudioConfig.fromSpeakerOutput(window.twcTmp.twcAudioPlayer);
         const synthesizer = new SpeechSynthesizer(speechConfig, audioConfig);
-
-        /*
-        //TODO
-        try{
-            alert('SpeakerAudioDestination: ' + JSON.stringify(window.twcTmp.twcAudioPlayer));
-        } catch (err) {
-            alert('SpeakerAudioDestination: ' + Object.entries(window.twcTmp.twcAudioPlayer));
-        }
-        try{
-            alert('AudioConfig: ' + JSON.stringify(audioConfig));
-        } catch (err) {
-            alert('AudioConfig: ' + Object.entries(audioConfig));
-        }
-        //TODO
-        try{
-            alert('SpeechSynthesizer: ' + JSON.stringify(synthesizer));
-        } catch (err) {
-            alert('SpeechSynthesizer: ' + Object.entries(synthesizer));
-        }
-        */
-
         synthesizer.speakTextAsync(m.textToRead,
             result => {
-                //TODO
-                //alert('synthesizer result: ' + JSON.stringify(result));
-
                 if (result.audioData && !result.errorDetails && !result.privErrorDetails) resolve(result);
                 else {
                     if (result != null && typeof result === 'object') reject('TTS result: ' + JSON.stringify(result));
-                    else reject('ASR result: ' + result);
+                    else reject('TTS result: ' + result);
                 }
-                //synthesizer.close();
-                //window.twcTmp.twcAudioPlayer.close();
-                //delete window.twcTmp.twcAudioPlayer;
                 //stopTTSAudio();
             },
             error => {
@@ -149,7 +122,6 @@ function processTextToAudio(m) {
                 reject('TTS error: ' + error);
                 synthesizer.close();
                 window.twcTmp.twcAudioPlayer.close();
-                //delete window.twcTmp.twcAudioPlayer;
                 //stopTTSAudio();
             }
         );
