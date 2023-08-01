@@ -17,7 +17,7 @@ Additional Features:
  * [Upload files](docs/features/upload.md).
 
 ## NOTES: 
-* __There are currently some issues with ASR that have been identified, and these features will not be available in this release. They will be reintroduced in the next release V.3.7.9.__
+* __There are currently some issues with ASR that have been identified, and these features will not be available in this release. We will continue to evaluate and consider bringing them back in future updates.__
 
 * This readme contains high-level information about running Teneo Web Chat. For full documentation, please refer to the [Teneo Web Chat Documentation](https://developers.artificial-solutions.com/engine/teneo-web-chat) on the Teneo Developers website.
 
