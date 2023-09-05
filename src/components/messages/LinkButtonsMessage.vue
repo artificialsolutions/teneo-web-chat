@@ -6,7 +6,7 @@
         v-for="(button, idx) in linkbuttons"
         :key="idx"
         :href="button.url"
-        :target='_blank'
+        target="_blank"
         :rel="button.target === '_blank' ? 'noopener': false"
         class="twc-linkbutton"
         @click="onClick(button, $event)"

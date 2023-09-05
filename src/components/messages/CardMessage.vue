@@ -2,10 +2,9 @@
   <div class="twc-card" role="group" :aria-label="cardTitle">
     <div class="twc-card-img" v-if="imageUrl">
       <img :src="imageUrl" :alt="altText" />
-      <div class = "tags">
+      <div v-if="this.message.data.tags" class = "tags">
         <ul>
-          <li id = "one">thisIsTag1</li>
-          <li id = "two">thisIsTag2</li>
+          <li v-for="tag in this.message.data.tags" :id="tag.id">{{ tag.innerContent }}</li>
         </ul>
       </div>
       
