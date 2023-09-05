@@ -62,16 +62,6 @@
 </template>
 
 
-<script>
-export default {
-  computed: {
-    showDropMessage() {
-      return itemsCount === 0;
-    },
-  },
-}
-</script>
-
 
 <style scoped>
 
@@ -453,6 +443,13 @@ export default {
     if (bDebug) console.log(sName, 'unmounted');
     EventBus.$off(events.SHOW_UPLOAD_PANEL);
     EventBus.$off(events.HIDE_UPLOAD_PANEL);
+  },
+
+
+  computed: {
+    showDropMessage() {
+      return itemsCount === 0;
+    }
   },
 
 
