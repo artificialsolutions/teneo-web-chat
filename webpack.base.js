@@ -1,9 +1,4 @@
-const Plugin = require('vue-loader/dist/plugin').default;
-//import Plugin from './node_modules/vue-loader/dist/plugin.js';
-
-console.info('Plugin:', Plugin);
-console.info('typeof Plugin:', typeof Plugin);
-console.info('new Plugin():', new Plugin());
+const VueLoaderPlugin = require('vue-loader/lib/plugin');
 
 module.exports = {
     module: {
@@ -53,9 +48,8 @@ module.exports = {
             },
         ],
     },
-    plugins: [new Plugin()],
+    plugins: [new VueLoaderPlugin()],
     watchOptions: {
         ignored: /node_modules/
     }
 };
-
