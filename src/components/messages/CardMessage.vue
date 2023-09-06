@@ -4,7 +4,11 @@
       <img :src="imageUrl" :alt="altText" />
       <div v-if="this.message.data.tags" class = "tags">
         <ul>
-          <li v-for="tag in this.message.data.tags" :id="tag.id">{{ tag.innerContent }}</li>
+          <li
+            v-for="(tag, idx) in this.message.data.tags"
+            :key="idx"
+            :id="tag.id || false"
+          >{{ tag.innerContent }}</li>
         </ul>
       </div>
       

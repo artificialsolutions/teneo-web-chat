@@ -12,6 +12,7 @@
 <script>
 import Message from './Message.vue';
 import { EventBus, events } from '../utils/event-bus';
+import {mapState} from 'vuex';
 
 export default {
   components: {
@@ -25,8 +26,7 @@ export default {
   },
   data() {
     return {
-      showScrollDownButton: false,
-      mutationObserver: null,
+      mutationObserver: null
     };
   },
   mounted() {
@@ -44,6 +44,9 @@ export default {
   beforeDestroy() {
     // Stop observing changes and disconnect MutationObserver
     this.mutationObserver.disconnect();
+  },
+  computed: {
+    ...mapState(['showScrollDownButton'])
   },
   methods: {
     scrollDown() {

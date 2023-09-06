@@ -32,6 +32,8 @@ export const store = new Vuex.Store({
         uploadIconUrl: '',
         showUploadButton: false,
 
+        showScrollDownButton: false,
+
         asrIconUrl: '',
         ttsIconUrl: '',
         showAsrButton: false,
@@ -184,6 +186,11 @@ export const store = new Vuex.Store({
         showUploadButton(state, showButtonBool) {
             if (typeof showButtonBool === 'boolean') {
                 state.showUploadButton = showButtonBool;
+            }
+        },
+        showScrollDownButton(state, showButtonBool) {
+            if (typeof showButtonBool === 'boolean') {
+                state.showScrollDownButton = showButtonBool;
             }
         },
 
@@ -364,6 +371,7 @@ export const store = new Vuex.Store({
             return state.initialUploadIconUrl;
         },
         showUploadButton: (state) => state.showUploadButton,
+        showScrollDownButton: (state) => state.showScrollDownButton,
         asrIconUrl: (state) => {
             if (state.asrIconUrl) {
                 return state.asrIconUrl;

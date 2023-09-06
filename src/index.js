@@ -93,6 +93,9 @@ window.TeneoWebChat = {
       store.commit('showUploadButton', true);
     }
 
+    if (twcProps.showScrollDownButton === true || twcProps.showScrollDownButton === "true") {
+      store.commit('showScrollDownButton', true);
+    }
 
     if (twcProps.msCognitiveAsrSubscriptionKey) {
       store.commit('msCognitiveAsrSubscriptionKey', twcProps.msCognitiveAsrSubscriptionKey);
