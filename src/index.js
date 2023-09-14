@@ -97,6 +97,31 @@ window.TeneoWebChat = {
       store.commit('showScrollDownButton', true);
     }
 
+    if (twcProps.fileUploadSymbolFailed) {
+      store.commit('fileUploadSymbolFailed', twcProps.fileUploadSymbolFailed);
+    }
+    if (twcProps.fileUploadSymbolInterrupted) {
+      store.commit('fileUploadSymbolInterrupted', twcProps.fileUploadSymbolInterrupted);
+    }
+    if (twcProps.fileUploadSymbolDelete) {
+      store.commit('fileUploadSymbolDelete', twcProps.fileUploadSymbolDelete);
+    }
+    if (twcProps.fileUploadSymbolStop) {
+      store.commit('fileUploadSymbolStop', twcProps.fileUploadSymbolStop);
+    }
+    if (twcProps.fileUploadSymbolRestart) {
+      store.commit('fileUploadSymbolRestart', twcProps.fileUploadSymbolRestart);
+    }
+    if (twcProps.fileUploadSymbolRetry) {
+      store.commit('fileUploadSymbolRetry', twcProps.fileUploadSymbolRetry);
+    }
+    if (twcProps.fileUploadSymbolProgressBackgroundColor) {
+      store.commit('fileUploadSymbolProgressBackgroundColor', twcProps.fileUploadSymbolProgressBackgroundColor);
+    }
+    if (twcProps.fileUploadSymbolProgressBarColor) {
+      store.commit('fileUploadSymbolProgressBarColor', twcProps.fileUploadSymbolProgressBarColor);
+    }
+
     if (twcProps.msCognitiveAsrSubscriptionKey) {
       store.commit('msCognitiveAsrSubscriptionKey', twcProps.msCognitiveAsrSubscriptionKey);
     }

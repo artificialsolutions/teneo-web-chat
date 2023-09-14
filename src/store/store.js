@@ -34,6 +34,15 @@ export const store = new Vuex.Store({
 
         showScrollDownButton: false,
 
+        fileUploadSymbolFailed: '',
+        fileUploadSymbolInterrupted: '',
+        fileUploadSymbolDelete: '',
+        fileUploadSymbolStop: '',
+        fileUploadSymbolRestart: '',
+        fileUploadSymbolRetry: '',
+        fileUploadSymbolProgressBackgroundColor: '',
+        fileUploadSymbolProgressBarColor: '',
+
         asrIconUrl: '',
         ttsIconUrl: '',
         showAsrButton: false,
@@ -192,6 +201,31 @@ export const store = new Vuex.Store({
             if (typeof showButtonBool === 'boolean') {
                 state.showScrollDownButton = showButtonBool;
             }
+        },
+
+        fileUploadSymbolFailed(state, s) {
+            state.fileUploadSymbolFailed = s;
+        },
+        fileUploadSymbolInterrupted(state, s) {
+            state.fileUploadSymbolInterrupted = s;
+        },
+        fileUploadSymbolDelete(state, s) {
+            state.fileUploadSymbolDelete = s;
+        },
+        fileUploadSymbolStop(state, s) {
+            state.fileUploadSymbolStop = s;
+        },
+        fileUploadSymbolRestart(state, s) {
+            state.fileUploadSymbolRestart = s;
+        },
+        fileUploadSymbolRetry(state, s) {
+            state.fileUploadSymbolRetry = s;
+        },
+        fileUploadSymbolProgressBackgroundColor(state, s) {
+            state.fileUploadSymbolProgressBackgroundColor = s;
+        },
+        fileUploadSymbolProgressBarColor(state, s) {
+            state.fileUploadSymbolProgressBarColor = s;
         },
 
         initialAsrIconUrl(state, newUrl) {
@@ -372,6 +406,16 @@ export const store = new Vuex.Store({
         },
         showUploadButton: (state) => state.showUploadButton,
         showScrollDownButton: (state) => state.showScrollDownButton,
+
+        fileUploadSymbolFailed: (state) => state.fileUploadSymbolFailed,
+        fileUploadSymbolInterrupted: (state) => state.fileUploadSymbolInterrupted,
+        fileUploadSymbolDelete: (state) => state.fileUploadSymbolDelete,
+        fileUploadSymbolStop: (state) => state.fileUploadSymbolStop,
+        fileUploadSymbolRestart: (state) => state.fileUploadSymbolRestart,
+        fileUploadSymbolRetry: (state) => state.fileUploadSymbolRetry,
+        fileUploadSymbolProgressBackgroundColor: (state) => state.fileUploadSymbolProgressBackgroundColor,
+        fileUploadSymbolProgressBarColor: (state) => state.fileUploadSymbolProgressBarColor,
+
         asrIconUrl: (state) => {
             if (state.asrIconUrl) {
                 return state.asrIconUrl;

@@ -396,7 +396,16 @@ const teneoProps = {
     'msVoice': '<%= process.env.MS_VOICE %>',
     'locale': '<%= process.env.LOCALE %>',
 
-    'autoRedirect': '<%= process.env.AUTO_OUTPUT_LINK_REDIRECT %>'
+    'autoRedirect': '<%= process.env.AUTO_OUTPUT_LINK_REDIRECT %>',
+
+    'fileUploadSymbolFailed': '<%= process.env.FILE_UPLOAD_SYMBOL_FAILED %>',
+    'fileUploadSymbolInterrupted': '<%= process.env.FILE_UPLOAD_SYMBOL_INTERRUPTED %>',
+    'fileUploadSymbolDelete': '<%= process.env.FILE_UPLOAD_SYMBOL_DELETE %>',
+    'fileUploadSymbolStop': '<%= process.env.FILE_UPLOAD_SYMBOL_STOP %>',
+    'fileUploadSymbolRestart': '<%= process.env.FILE_UPLOAD_SYMBOL_RESTART %>',
+    'fileUploadSymbolRetry': '<%= process.env.FILE_UPLOAD_SYMBOL_RETRY %>',
+    'fileUploadSymbolProgressBackgroundColor': '<%= process.env.FILE_UPLOAD_SYMBOL_PROGRESS_BACKGROUND_COLOR %>',
+    'fileUploadSymbolProgressBarColor': '<%= process.env.FILE_UPLOAD_SYMBOL_PROGRESS_BAR_COLOR %>'
 };
 
 window.TeneoWebChat.initialize(element, teneoProps);

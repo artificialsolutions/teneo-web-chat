@@ -3,35 +3,40 @@
     <div class="twc-upload-file-visualization">
 
       <img v-if="imageUrl" :src="imageUrl" ref="fileImageElement" class="twc-upload-file-representation twc-upload-file-representation-image" :alt="message.data.fileName"/>
-      <span v-else class="twc-upload-file-representation twc-upload-file-representation-symbol">{{status === 'INTERRUPTED' ? '&#9888;': status === 'Failed' ? '&#x27f3;': (message.data.fileSymbol || message.data.fileName || '#') }} </span>
-
+      <span v-else class="twc-upload-file-representation twc-upload-file-representation-symbol">
+        {{status === 'INTERRUPTED' ? (fileUploadSymbolInterrupted || '&#9888;') : status === 'Failed' ? (fileUploadSymbolFailed || '&#x27f3;') : (message.data.fileSymbol || message.data.fileName || '#') }}
+      </span>
 
       <template v-if="status === 'SUCCEEDED'">
-        <a v-if="controlAllowed" role="button" @click="deleteFile" class="twc-upload-file-cta twc-upload-file-action-delete" :title="$t('message.upload_file_delete')"><span style="font-size: 1.0em">&#x1F5D1;</span></a>
+        <a v-if="controlAllowed" role="button" @click="deleteFile" class="twc-upload-file-cta twc-upload-file-action-delete" :title="$t('message.upload_file_delete')">
+          {{ fileUploadSymbolDelete || '&#x1F5D1;' }}
+        </a>
       </template>
       <template v-else-if="status === 'IN_PROGRESS'">
         <span ref="spinner" class="twc-upload-file-progress-spinner"></span>
-        <a v-if="controlAllowed" role="button" @click="stopUpload" class="twc-upload-file-cta twc-upload-file-middle-circle twc-upload-file-stop" :title="$t('message.upload_file_stop')">&#x23F3;</a>
+        <a v-if="controlAllowed" role="button" @click="stopUpload" class="twc-upload-file-cta twc-upload-file-middle-circle twc-upload-file-stop" :title="$t('message.upload_file_stop')">
+          {{ fileUploadSymbolStop || '&#x23F3;' }}
+        </a>
         <span v-else class="twc-upload-file-middle-circle"></span>
-              </template>
+      </template>
       <template v-else-if="status === 'INTERRUPTED'">
         <template v-if="controlAllowed">
           <span ref="spinner" class="twc-upload-file-progress-spinner"></span>
-          <a @click="restartUpload" role="button" class="twc-upload-file-cta twc-upload-file-middle-circle twc-upload-file-restart" :title="$t('message.upload_file_restart')">&#9888;</a>
+          <a @click="restartUpload" role="button" class="twc-upload-file-cta twc-upload-file-middle-circle twc-upload-file-restart" :title="$t('message.upload_file_restart')">
+            {{ fileUploadSymbolRestart || '&#9888;' }}
+          </a>
         </template>
-        
       </template>
       <template v-else-if="status === 'FAILED'">
         <template v-if="controlAllowed">
           <span ref="spinner" class="twc-upload-file-progress-spinner"></span>
-          <a @click="restartUpload" role="button" class="twc-upload-file-cta twc-upload-file-middle-circle twc-upload-file-restart" :title="$t('message.upload_file_retry')">&#x27f3;</a>
+          <a @click="restartUpload" role="button" class="twc-upload-file-cta twc-upload-file-middle-circle twc-upload-file-restart" :title="$t('message.upload_file_retry')">
+            {{ fileUploadSymbolRetry || '&#x27f3;' }}
+          </a>
         </template>
-        
       </template>
       <template v-else-if="status === 'DELETED'">
-        <template v-if="controlAllowed">        
-        </template>
-        
+        <template v-if="controlAllowed"></template>
       </template>
     </div>
 
@@ -146,6 +151,7 @@
   border: thin solid #eceff1;
   padding: 0.05rem;
   margin: 0.05rem;
+  font-size: 1.0em;
 }
 
 .twc-upload-file-status {
@@ -165,6 +171,7 @@
 <script>
 /* <![CDATA[ */
 
+import { mapState } from 'vuex';
 import { EventBus, events } from '../../utils/event-bus.js';
 import basePayload from '../../utils/base-payload.js';
 import handleExtension from '../../utils/handle-extension.js';
@@ -265,6 +272,9 @@ export default {
 
 
   mounted() {
+    console.info('fileUploadSymbolProgressBackgroundColor', this.fileUploadSymbolProgressBackgroundColor);
+    console.info('fileUploadSymbolProgressBarColor', this.fileUploadSymbolProgressBarColor);
+
     if (bDebug) console.log(sName, 'mounted with message', this.message);
     if (this.nUploadPercentage == null) {
       // nUploadPercentage has not been set explicitly.
@@ -295,6 +305,17 @@ export default {
 
 
   computed: {
+    ...mapState([
+      'fileUploadSymbolFailed',
+      'fileUploadSymbolInterrupted',
+      'fileUploadSymbolDelete',
+      'fileUploadSymbolStop',
+      'fileUploadSymbolRestart',
+      'fileUploadSymbolRetry',
+      'fileUploadSymbolProgressBackgroundColor',
+      'fileUploadSymbolProgressBarColor'
+    ]),
+
     status() {
       return this.reStatus !== undefined ? this.reStatus : (this.message.data.initialUploadState?.status || null);
     },
@@ -355,7 +376,10 @@ export default {
     assignSpinnerValue(n) {
       if (this.$refs.spinner) {
         if (n == null) n = 0;
-        this.$refs.spinner.style.background = 'conic-gradient(blue ' + n + '%, lightgrey ' + n + '%)';
+        //this.$refs.spinner.style.background = 'conic-gradient(blue ' + n + '%, lightgrey ' + n + '%)';
+        this.$refs.spinner.style.background =
+          'conic-gradient(' + (this.fileUploadSymbolProgressBarColor||'blue') + ' ' + n +
+          '%, ' + (this.fileUploadSymbolProgressBackgroundColor||'lightgrey') + ' ' + n + '%)';
         if (bDebug) console.log(sName, 'Setting upload percentage', n);
       } else {
         if (bDebug) console.log(sName, '!$refs.spinner, reStatus:', this.reStatus, ', mesaage:', this.message);
