@@ -122,6 +122,10 @@ window.TeneoWebChat = {
       store.commit('fileUploadSymbolProgressBarColor', twcProps.fileUploadSymbolProgressBarColor);
     }
 
+    if (twcProps.uploadPanelAddFilesSymbol) {
+      store.commit('uploadPanelAddFilesSymbol', twcProps.uploadPanelAddFilesSymbol);
+    }
+
     if (twcProps.msCognitiveAsrSubscriptionKey) {
       store.commit('msCognitiveAsrSubscriptionKey', twcProps.msCognitiveAsrSubscriptionKey);
     }

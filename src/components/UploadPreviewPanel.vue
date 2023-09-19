@@ -25,6 +25,7 @@
           :key="item.id"
           :title="item.file.name"
         >
+          <!--
           <svg
             xmlns="http://www.w3.org/2000/svg"
             width="12"
@@ -41,18 +42,20 @@
             <line x1="10" y1="1" x2="1" y2="10"></line>
             <line x1="1" y1="1" x2="10" y2="10"></line>
           </svg>
+          -->
+          <div class="twc-upload-item-close" @click.stop.prevent="clickRemoveItem(item)"></div>
           <canvas :id="('twc-upload-item-canvas' + item.id)" class="twc-upload-item-canvas"></canvas>
           <div class="twc-file-name">{{item.file.name}}</div>
         </div>
       </div>
 
-      <input type="file" ref="fileInputElement" multiple="multiple" @click.stop="e=>{e.currentTarget.value=null}" @change="addFilesFromInput" style="opacity:0"/>
+      <input type="file" ref="fileInputElement" multiple="multiple" @click.stop="e=>{e.currentTarget.value=null}" @change="addFilesFromInput" style="opacity:0;display:none" />
     </div>
 
     <textarea v-if="comment != null" :disabled="processing" v-model="comment" class="twc-upload-comment"></textarea>
-    
+
     <div class="twc-upload-buttons">
-      <button type="button" @click.stop.prevent="clickOpenFileInput" :disabled="processing" :title="$t('message.upload_panel_add_files')">&#10010;</button>
+      <button type="button" @click.stop.prevent="clickOpenFileInput" :disabled="processing" :title="$t('message.upload_panel_add_files')">{{ (uploadPanelAddFilesSymbol || '&#10010;') }}</button>
       <button v-if="!hideClearAllButton" type="button" @click.stop.prevent="clearAll" :disabled="processing || !itemsCount">{{ $t('message.upload_panel_clear_all') }}</button>
       <button v-if="!hideSubmitButton" type="button" @click.stop.prevent="clickSubmit" :disabled="processing || !itemsCount">{{ $t('message.upload_panel_submit') }}</button>
       <button v-if="!hideCancelButton" type="button" @click.stop.prevent="clickCancel" :disabled="processing">{{ $t('message.upload_panel_cancel') }}</button>
@@ -61,16 +64,6 @@
   </div>
 </template>
 
-
-<script>
-export default {
-  computed: {
-    showDropMessage() {
-      return itemsCount === 0;
-    },
-  },
-}
-</script>
 
 
 <style scoped>
@@ -215,7 +208,33 @@ input[type = "file"]:hover {
   display: inline-block;
 }
 
+/*
 .twc-upload-item-close {
+  position: absolute;
+  z-index: 50;
+  top: -8%;
+  right: -8%;
+  border-radius: 50%;
+  border: none;
+  background-color: red;
+  stroke: white;
+  padding: 4px;
+  box-shadow: 0px 4px 6px 0px rgba(201, 201, 201, 0.8);
+}
+*/
+
+/*
+data:image/svg+xml,<svg xmlns="http://www.w3.org/2000/svg" width="12" height="12" viewBox="0 0 10 10" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="10" y1="1" x2="1" y2="10"></line><line x1="1" y1="1" x2="10" y2="10"></line></svg>
+*/
+
+.twc-upload-item-close {
+  width: 12px;
+  height: 12px;
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='12' viewBox='0 0 10 10' fill='none' stroke='currentColor' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3E%3Cline x1='10' y1='1' x2='1' y2='10'%3E%3C/line%3E%3Cline x1='1' y1='1' x2='10' y2='10'%3E%3C/line%3E%3C/svg%3E");
+  background-size: 50%;
+  background-repeat: no-repeat;
+  background-position: center;
+  display: inline-block;
   position: absolute;
   z-index: 50;
   top: -8%;
@@ -306,10 +325,12 @@ button:nth-child(4){
 <script>
 /* <![CDATA[ */
 
+import { mapState } from 'vuex';
 import { EventBus, events } from '../utils/event-bus.js';
 import { API_ON_UPLOAD_PANEL_SUBMIT, API_ON_UPLOAD_PANEL_CANCEL } from '../utils/api-function-names.js';
 import basePayload from '../utils/base-payload.js';
 import handleExtension from '../utils/handle-extension.js';
+
 
 /**
  * Mapping from item ID to the extra data for that item. This extra data is not kept in the item itself
@@ -410,6 +431,7 @@ getFileExtension = file => {
 };
 
 
+
 export default {
 
   data() {
@@ -453,6 +475,16 @@ export default {
     if (bDebug) console.log(sName, 'unmounted');
     EventBus.$off(events.SHOW_UPLOAD_PANEL);
     EventBus.$off(events.HIDE_UPLOAD_PANEL);
+  },
+
+
+  computed: {
+    ...mapState([
+      'uploadPanelAddFilesSymbol'
+    ]),
+    showDropMessage() {
+      return itemsCount === 0;
+    }
   },
 
 

@@ -43,6 +43,8 @@ export const store = new Vuex.Store({
         fileUploadSymbolProgressBackgroundColor: '',
         fileUploadSymbolProgressBarColor: '',
 
+        uploadPanelAddFilesSymbol: '',
+
         asrIconUrl: '',
         ttsIconUrl: '',
         showAsrButton: false,
@@ -226,6 +228,10 @@ export const store = new Vuex.Store({
         },
         fileUploadSymbolProgressBarColor(state, s) {
             state.fileUploadSymbolProgressBarColor = s;
+        },
+
+        uploadPanelAddFilesSymbol(state, s) {
+            state.uploadPanelAddFilesSymbol = s;
         },
 
         initialAsrIconUrl(state, newUrl) {
@@ -415,6 +421,8 @@ export const store = new Vuex.Store({
         fileUploadSymbolRetry: (state) => state.fileUploadSymbolRetry,
         fileUploadSymbolProgressBackgroundColor: (state) => state.fileUploadSymbolProgressBackgroundColor,
         fileUploadSymbolProgressBarColor: (state) => state.fileUploadSymbolProgressBarColor,
+
+        uploadPanelAddFilesSymbol: (state) => state.uploadPanelAddFilesSymbol,
 
         asrIconUrl: (state) => {
             if (state.asrIconUrl) {
