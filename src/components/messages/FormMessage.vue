@@ -2,24 +2,27 @@
   <form class="twc-form" v-on:submit.prevent="handleFormSubmit" id="twcActiveForm">
     <!--@formatter:off-->
     
-    <component v-for="(element, idx) in formElements"
-            :key="idx"
-            :is="elementTag(element.type)"
-            v-bind="elementAttributes(element)"
-            v-on="elementListeners(element)"
-            :id="elementId(element, idx)"
-            :name="elementName(element, idx)"
-    >{{elementText(element.text)}}<template v-if="element.type==='select'"><option
-          v-for="(option, key) in element.options"
-          v-bind="elementAttributes(option)"
-          :key="key"
-      >{{ option.text }}</option
-    ></template><label
-        v-if="element.hasOwnProperty('label')"
-        :for="elementId(element, idx)"
-        :class="labelClasses(element)"
-    >{{ labelText(element) }}</label>
-    </component>
+  <component v-for="(element, idx) in formElements"
+              :key="idx"
+              :is="elementTag(element.type)"
+              v-bind="elementAttributes(element)"
+              v-on="elementListeners(element)"
+              :id="elementId(element, idx)"
+              :name="elementName(element, idx)"
+      >   
+      <template v-if="element.type === 'select'">
+            <option v-for="(option, key) in element.options" :key="key">
+              {{ option.text }}
+            </option>
+          </template>
+          <label
+            v-if="element.hasOwnProperty('label')"
+            :for="elementId(element, idx)"
+            :class="labelClasses(element)"
+          >
+            {{ labelText(element) }}
+          </label>
+        </component>
     
     <!--@formatter:on-->
   </form>
@@ -285,28 +288,28 @@ export default {
             currentElement.attributes.id = 'twc-form-expired-element';
 
 
-            switch (currentElement.type) {
-              case 'input':
-                switch (currentElement.attributes.type) {
-                  case 'text':
-                  case 'date':
-                  case 'time':
-                  case 'datetime-local':
-                  case 'color':
-                  case 'range':
-                  case 'checkbox':
-                  case 'radio':
-                    currentElement.attributes.checked = node.checked;
-                }
-                break;
-              case 'select':
-              case 'textarea':
-                currentElement.attributes.value = node.value;
+              switch (currentElement.type) {
+                case 'input':
+                  switch (currentElement.attributes.type) {
+                    case 'text':
+                    case 'date':
+                    case 'time':
+                    case 'datetime-local':
+                    case 'color':
+                    case 'range':
+                    case 'checkbox':
+                    case 'radio':
+                      currentElement.attributes.checked = node.checked;
+                  }
+                  break;
+                case 'select':
+                case 'textarea':
+                  currentElement.attributes.value = node.value;
+              }
             }
+            elementIndex++;
           }
-          elementIndex++;
-        }
-      })
+        })
 
       form.setAttribute('disabled', true);
 
