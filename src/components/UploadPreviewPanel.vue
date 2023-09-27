@@ -1,9 +1,7 @@
 <template>
   <div v-if="keyToItem != null"
     class="twc-upload-preview-panel"
-    contenteditable="true"
-    style="caret-color:transparent"
-    onbeforeinput="return false"
+    contenteditable="false"
 
     @dragenter="onDragEnter"
     @dragleave="onDragLeave"
@@ -25,31 +23,14 @@
           :key="item.id"
           :title="item.file.name"
         >
-          <!--
-          <svg
-            xmlns="http://www.w3.org/2000/svg"
-            width="12"
-            height="12"
-            viewBox="0 0 10 10"
-            fill="none"
-            stroke="currentColor"
-            stroke-width="2"
-            stroke-linecap="round"
-            stroke-linejoin="round"
-            class="twc-upload-item-close"
-            @click.stop.prevent="clickRemoveItem(item)"
-          >
-            <line x1="10" y1="1" x2="1" y2="10"></line>
-            <line x1="1" y1="1" x2="10" y2="10"></line>
-          </svg>
-          -->
           <div class="twc-upload-item-close" @click.stop.prevent="clickRemoveItem(item)"></div>
           <canvas :id="('twc-upload-item-canvas' + item.id)" class="twc-upload-item-canvas"></canvas>
           <div class="twc-file-name">{{item.file.name}}</div>
         </div>
       </div>
 
-      <input type="file" ref="fileInputElement" multiple="multiple" @click.stop="e=>{e.currentTarget.value=null}" @change="addFilesFromInput" style="opacity:0;display:none" />
+      <!-- input type="file" ref="fileInputElement" multiple="multiple" style="opacity:0" @click.stop="e=>{e.currentTarget.value=null}" @change="addFilesFromInput"/ -->
+      <input type="file" ref="fileInputElement" multiple="multiple" style="opacity:0;width:0;height:0" @click.stop="e=>{e.currentTarget.value=null}" @change="addFilesFromInput"/>
     </div>
 
     <textarea v-if="comment != null" :disabled="processing" v-model="comment" class="twc-upload-comment"></textarea>
@@ -221,10 +202,6 @@ input[type = "file"]:hover {
   padding: 4px;
   box-shadow: 0px 4px 6px 0px rgba(201, 201, 201, 0.8);
 }
-*/
-
-/*
-data:image/svg+xml,<svg xmlns="http://www.w3.org/2000/svg" width="12" height="12" viewBox="0 0 10 10" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="10" y1="1" x2="1" y2="10"></line><line x1="1" y1="1" x2="10" y2="10"></line></svg>
 */
 
 .twc-upload-item-close {
