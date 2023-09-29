@@ -1,8 +1,9 @@
 <template>
-  <div v-if="keyToItem != null"
+   <div v-if="keyToItem != null"
     class="twc-upload-preview-panel"
     contenteditable="true"
     style="caret-color:transparent"
+    @touchstart="disableTouchKeyboard"
     onbeforeinput="return false"
 
     @dragenter="onDragEnter"
@@ -84,7 +85,6 @@
   padding-bottom: 20%;
   padding-top: 0px;
 }
-
 /* Parent: hall panel */
 .twc-upload-preview-panel {
   box-sizing: border-box;
@@ -490,6 +490,10 @@ export default {
 
   methods: {
 
+    disableTouchKeyboard(event) {      
+      event.preventDefault();
+    },
+    
     onDragOver(evt) {
       if (bDebug) console.log(sName, 'onDragOver(), processing:', this.processing);
       if (this.processing) return;
