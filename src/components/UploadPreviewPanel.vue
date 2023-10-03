@@ -343,14 +343,14 @@ sName = 'UploadPreviewPanel',
  * 
  * @const {number}
  */
-MAX_IMG_PREVIEW_WIDTH = 32,
+MAX_IMG_PREVIEW_WIDTH = 50,
 
 /**
  * Max image height in preview, in pixels.
  * 
  * @const {number}
  */
-MAX_IMG_PREVIEW_HEIGHT = 32,
+MAX_IMG_PREVIEW_HEIGHT = 50,
 
 
 newId = () => {
@@ -679,7 +679,7 @@ export default {
       canvasElement.height = MAX_IMG_PREVIEW_HEIGHT;
       if (ctx == null) ctx = canvasElement.getContext("2d");
       if (ctx) {
-    
+        
         /*const captionText = getPreuploadCaption(item.file);*/
 
         const captionText = getFileExtension(item.file);
@@ -777,6 +777,8 @@ export default {
             }
             if (bDebug) console.log(sName, 'insertImage(), img.onload, drawImage, extraData:', extraData);
             try {
+              ctx.imageSmoothingEnabled = true;
+              ctx.imageSmoothingQuality = 'high';              
               ctx.drawImage(img, 0, 0, extraData.width, extraData.height);
             } catch (err) {
               extraData.imageFailure = 'insertImage(), failure drawing image [' + item.file.name + '] in preload preview canvas';
