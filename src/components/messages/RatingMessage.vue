@@ -98,24 +98,23 @@ export default {
     },
 
     selectStar(star) {
-  if (!this.disabled) {
-    this.selectedStar = this.stars - star + 1;
-    console.log('Selected stars:', this.selectedStar); // Display selected star count in the console
-  }
-},
+      if (!this.disabled) {
+        this.selectedStar = this.stars - star + 1;
+        console.log('Selected stars:', this.selectedStar); // Display selected star count in the console
+      }
+    },
 
     highlightStar(star) {
-  if (!this.disabled) {
-    this.hoveredStar = star;
-  }
-},
+      if (!this.disabled) {
+        this.hoveredStar = star;
+      }
+    },
 
-resetStars() {
-  if (!this.disabled) {
-    this.hoveredStar = -1;
-  }
-}
-
+    resetStars() {
+      if (!this.disabled) {
+        this.hoveredStar = -1;
+      }
+    }
   }
 };
 </script>
@@ -127,7 +126,7 @@ resetStars() {
   height: 2rem;
   display: flex;
   flex-direction: row;
-  justify-content: flex-start;
+  justify-content: space-between;
 }
 .twc-star-cb-group {
   /* remove inline-block whitespace */
@@ -240,6 +239,7 @@ fieldset {
   line-height: 1.4;
   -webkit-font-smoothing: subpixel-antialiased;
   margin: 0.5rem 0;
+  text-align: center;
 }
 
 .star {
@@ -247,6 +247,9 @@ fieldset {
   font-size: 24px;
   color: #aaa;
   transition: color 0.2s;
+  flex: 1;
+  display: flex;
+  justify-content: center;
 }
 
 .filled {

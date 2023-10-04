@@ -10,9 +10,16 @@
 ## June-2023
 * Features
     * Attachment Messages.
-    * Rating Messages.    
-    
+    * Rating Messages.
 
+* CSS Refactoring    
+    * Attachment panel CSS 
+    * Uploading buttons CSS and new Colors
+    * Card Message CSS
+    * Carousel CSS
+    * Upload Panel CSS
+    
+    
 * Bug Fixes
     * Attach from Camera in iOS closes FrontEnd.
     * Output is read simultaneously twice.

@@ -286,28 +286,28 @@ export default {
             currentElement.attributes.id = 'twc-form-expired-element';
 
 
-            switch (currentElement.type) {
-              case 'input':
-                switch (currentElement.attributes.type) {
-                  case 'text':
-                  case 'date':
-                  case 'time':
-                  case 'datetime-local':
-                  case 'color':
-                  case 'range':
-                  case 'checkbox':
-                  case 'radio':
-                    currentElement.attributes.checked = node.checked;
-                }
-                break;
-              case 'select':
-              case 'textarea':
-                currentElement.attributes.value = node.value;
+              switch (currentElement.type) {
+                case 'input':
+                  switch (currentElement.attributes.type) {
+                    case 'text':
+                    case 'date':
+                    case 'time':
+                    case 'datetime-local':
+                    case 'color':
+                    case 'range':
+                    case 'checkbox':
+                    case 'radio':
+                      currentElement.attributes.checked = node.checked;
+                  }
+                  break;
+                case 'select':
+                case 'textarea':
+                  currentElement.attributes.value = node.value;
+              }
             }
+            elementIndex++;
           }
-          elementIndex++;
-        }
-      })
+        })
 
       form.setAttribute('disabled', true);
 
