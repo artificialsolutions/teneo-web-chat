@@ -662,7 +662,7 @@ export const formMessageJSON = {
             },
             {
                 'type': 'textarea',
-                'text': 'Prepopulated text in textarea.',
+                'placeholder': 'Prepopulated text in textarea.',
                 'label': 'Text Area Example'
             },
             {
