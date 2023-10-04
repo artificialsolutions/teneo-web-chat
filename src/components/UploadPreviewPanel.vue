@@ -267,7 +267,7 @@ button:nth-child(1){
   border: 1px solid  var(--success-color, #28a745);
   padding: 0.275rem 0.275rem;
   align-self: flex-start;
-  
+
   text-align: center;
   justify-content: center;
 }

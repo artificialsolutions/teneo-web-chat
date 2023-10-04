@@ -9,6 +9,7 @@
             v-on="elementListeners(element)"
             :id="elementId(element, idx)"
             :name="elementName(element, idx)"
+            :placeholder="elementText(element.placeholder)"
     >{{elementText(element.text)}}<template v-if="element.type==='select'"><option
           v-for="(option, key) in element.options"
           v-bind="elementAttributes(option)"
