@@ -163,6 +163,7 @@ export default {
       }
     },
     async minimize() {
+      //TODO handle upload issues here
       if (this.$store.getters.visibility === API_STATE_MAXIMIZED) {
         this.$store.commit('visibility', API_STATE_MINIMIZED);
         this.isChatOpen = false;
@@ -174,6 +175,7 @@ export default {
         }
 
         await this.apiOnVisibilityChange();
+        EventBus.$emit(events.ACTUAL_MINIMIZE);
       }
     },
     async maximize() {
@@ -188,7 +190,7 @@ export default {
 
           disableBodyScroll(targetElement);
         }
-
+        EventBus.$emit(events.ACTUAL_MAXIMIZE);
       }
     },
     async resetChat() {
@@ -205,6 +207,7 @@ export default {
         this.clearHistory();
         this.isChatMinimized = false;
         this.isChatClosed = true;
+        EventBus.$emit(events.ACTUAL_RESET);
       }
     },
     clearHistory() {

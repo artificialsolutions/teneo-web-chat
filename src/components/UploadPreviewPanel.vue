@@ -189,21 +189,6 @@ input[type = "file"]:hover {
   display: inline-block;
 }
 
-/*
-.twc-upload-item-close {
-  position: absolute;
-  z-index: 50;
-  top: -8%;
-  right: -8%;
-  border-radius: 50%;
-  border: none;
-  background-color: red;
-  stroke: white;
-  padding: 4px;
-  box-shadow: 0px 4px 6px 0px rgba(201, 201, 201, 0.8);
-}
-*/
-
 .twc-upload-item-close {
   width: 12px;
   height: 12px;
@@ -309,18 +294,18 @@ import basePayload from '../utils/base-payload.js';
 import handleExtension from '../utils/handle-extension.js';
 
 
-/**
- * Mapping from item ID to the extra data for that item. This extra data is not kept in the item itself
- * to avoid reactive effects. It can include the size of the image, its data URL and eventual visualization
- * errors.
- * 
- * @type {(object|null|undefined)}
- */
-var idToExtraData = null,
+var numIdBase = 0,
+//numIdBase = 4294967294,
 
+keyToItemSaved = null,
+idToExtraDataSaved = null,
+itemsCountSaved = 0,
+commentSaved = null,
+hideSubmitButtonSaved = false,
+hideCancelButtonSaved = false,
+hideClearAllButtonSaved = false,
+processingSaved = false;
 
-//numIdBase = 4294967294;
-numIdBase = 0;
 
 
 /**
@@ -328,7 +313,7 @@ numIdBase = 0;
  * 
  * @const {boolean}
  */
-const bDebug = false,
+const bDebug = true,
 
 
 /**
@@ -351,15 +336,6 @@ MAX_IMG_PREVIEW_WIDTH = 32,
  * @const {number}
  */
 MAX_IMG_PREVIEW_HEIGHT = 32,
-
-
-newId = () => {
-  const s = Math.random().toString(36);
-  // Adding a leading non-digit and non-letter to guarantee the key cannot be
-  // interpreted as a number, to prevent number-induced ordering of the entries
-  // in the object:
-  return ':' + Date.now().toString(36) + s.substring(s.indexOf('.') + 1);
-},
 
 
 isImageFile = file => (file.type || '').toLowerCase().startsWith('image/'),
@@ -414,6 +390,7 @@ export default {
   data() {
     return {
       keyToItem: null,
+      idToExtraData: null,
       itemsCount: 0,
       comment: null,
       hideSubmitButton: false,
@@ -428,6 +405,11 @@ export default {
     if (bDebug) console.log(sName, 'mounted');
     EventBus.$on(events.SHOW_UPLOAD_PANEL, payload => this.open(payload));
     EventBus.$on(events.HIDE_UPLOAD_PANEL, () => this.close());
+
+    EventBus.$on(events.ACTUAL_RESET, () => this.close());
+
+    EventBus.$on(events.ACTUAL_MINIMIZE, () => this.storeData());
+    EventBus.$on(events.ACTUAL_MAXIMIZE, () => this.restoreData());
   },
 
 
@@ -466,6 +448,40 @@ export default {
 
 
   methods: {
+
+    storeData() {
+      keyToItemSaved = this.keyToItem;
+      idToExtraDataSaved = this.idToExtraData;
+      itemsCountSaved = this.itemsCount;
+      commentSaved = this.comment;
+      hideSubmitButtonSaved = this.hideSubmitButton;
+      hideCancelButtonSaved = this.hideCancelButton;
+      hideClearAllButtonSaved = this.hideClearAllButton;
+      processingSaved = this.processing;
+    },
+
+    restoreData() {
+      if (keyToItemSaved) EventBus.$emit(events.UPLOAD_PANEL_OPENED);
+      this.keyToItem = keyToItemSaved;
+      this.idToExtraData = idToExtraDataSaved;
+      this.itemsCount = itemsCountSaved;
+      this.comment = commentSaved;
+      this.hideSubmitButton = hideSubmitButtonSaved;
+      this.hideCancelButton = hideCancelButtonSaved;
+      this.hideClearAllButton = hideClearAllButtonSaved;
+      this.processing = processingSaved;
+    },
+
+    deleteData() {
+      this.keyToItem = keyToItemSaved = null;
+      this.idToExtraData = idToExtraDataSaved = null;
+      this.itemsCount = itemsCountSaved = 0;
+      this.comment = commentSaved = null;
+      this.hideSubmitButton = hideSubmitButtonSaved = false;
+      this.hideCancelButton = hideCancelButtonSaved = false;
+      this.hideClearAllButton = hideClearAllButtonSaved = false;
+      this.processing = processingSaved = false;
+    },
 
     onDragOver(evt) {
       if (bDebug) console.log(sName, 'onDragOver(), processing:', this.processing);
@@ -527,6 +543,7 @@ export default {
         asImage: isImageFile(file)
       };
       if (bDebug) console.log(sName, 'addFile(), adding file [' + file.name + '] of type [' + file.type + '] and size [' + file.size + '] with id [' + id + ']');
+      this.storeData();
     },
 
 
@@ -562,8 +579,8 @@ export default {
       if (payload && payload.items != null) {
         throw new Error('payload.items may not be used in open()');
       }
-      idToExtraData = {};
       this.keyToItem = {};
+      this.idToExtraData = {};
       this.itemsCount = 0;
       this.processing = false;
       if (payload == null) {
@@ -590,19 +607,13 @@ export default {
       }
       EventBus.$emit(events.UPLOAD_PANEL_OPENED);
       if (bDebug) console.log(sName, 'open() end, comment [' + this.comment + '], itemsCount [' + this.itemsCount + '], keyToItem:', getPrintableDebugObject(this.keyToItem));
+      this.storeData();
     },
 
 
     close() {
       if (bDebug) console.log(sName, 'close()');
-      idToExtraData = null;
-      this.keyToItem = null;
-      this.itemsCount = 0;
-      this.comment = null;
-      this.hideSubmitButton = false;
-      this.hideCancelButton = false;
-      this.hideClearAllButton = false;
-      this.processing = false;
+      this.deleteData();
       EventBus.$emit(events.UPLOAD_PANEL_CLOSED);
     },
 
@@ -610,11 +621,12 @@ export default {
     clearAll() {
       if (bDebug) console.log(sName, 'clearAll(), processing:', this.processing);
       if (this.processing) return;
-      if (idToExtraData != null) idToExtraData = {};
       if (this.keyToItem != null) this.keyToItem = {};
+      if (this.idToExtraData != null) this.idToExtraData = {};
       this.itemsCount = 0;
       if (this.comment != null) this.comment = '';
       this.processing = false;
+      this.storeData();
     },
 
 
@@ -647,7 +659,7 @@ export default {
         let i, itemCopy, extraData;
         for (i = 0; i < items.length; i++) {
           itemCopy = Object.assign({}, items[i]);
-          extraData = idToExtraData && idToExtraData.hasOwnProperty(itemCopy.id) ? idToExtraData[itemCopy.id] : null;
+          extraData = this.idToExtraData && this.idToExtraData.hasOwnProperty(itemCopy.id) ? this.idToExtraData[itemCopy.id] : null;
           if (extraData && extraData.imageUrl) itemCopy.imageUrl = extraData.imageUrl;
           payload.items.push(itemCopy);
         }
@@ -736,8 +748,8 @@ export default {
         setTimeout(() => this.removeItem(item),0);
         return;
       }
-      var extraData = idToExtraData[item.id];
-      if (extraData == null) idToExtraData[item.id] = extraData = {};
+      var extraData = this.idToExtraData[item.id];
+      if (extraData == null) this.idToExtraData[item.id] = extraData = {};
       else {
         if (extraData.imageFailure) {
           this.insertTextCaption(canvasElement, item, ctx);
@@ -846,7 +858,7 @@ export default {
         console.error(sName, 'removeItem(): bad item id for item', item);
         return;
       }
-      delete idToExtraData[item.id];
+      delete this.idToExtraData[item.id];
       k = item.id.substring(1, k);
       if (this.keyToItem.hasOwnProperty(k)) {
         delete this.keyToItem[k];
@@ -854,6 +866,7 @@ export default {
       } else {
         console.error(sName, 'removeItem(): item does not exist', item);
       }
+      this.storeData();
     }
   }
 };

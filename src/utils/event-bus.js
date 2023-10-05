@@ -50,7 +50,62 @@ export const events = {
     SHOW_UPLOAD_PANEL: 'show_upload_panel',
     SET_UPLOAD_STATE: 'set_upload_state',
     UPLOAD_PANEL_CLOSED: 'upload_panel_closed',
-    UPLOAD_PANEL_OPENED: 'upload_panel_opened'
+    UPLOAD_PANEL_OPENED: 'upload_panel_opened',
+
+    ACTUAL_RESET: 'actual_reset',
+    ACTUAL_MINIMIZE: 'actual_minimize',
+    ACTUAL_MAXIMIZE: 'actual_maximize'
 };
 
 export const EventBus = new Vue();
+
+/*
+class EB {
+
+    #bDebug = true;
+
+    #eventNameToListeners = new Map();
+
+    $on(eventName, f) {
+        if ('function' !== typeof f) throw new Error('Bad listener for event [' + eventName + ']');
+        const ff = this.#eventNameToListeners.get(eventName);
+        if (ff == null) this.#eventNameToListeners.set(eventName, [ f ]);
+        else if (ff.includes(f)) {
+            console.warn('Blocking adding multiple copies of the same callback for the event [' + eventName + ']');
+        } else {
+            if (this.#bDebug && ff.length !== 0) {
+                console.debug('Adding extra callback nr', ff.length, 'for event [' + eventName + ']');
+            }
+            ff.push(f);
+        }
+    }
+
+
+    $off(eventName, f) {
+        var ff;
+        if (f != null && (ff = this.#eventNameToListeners.get(eventName)) != null) {
+            let n = ff.length;
+            while (--n !== -1 && (n = ff.lastIndexOf(f, n)) !== -1) ff.splice(n, 1);
+            if (ff.length === 0) ff = null;
+        }
+        if (ff == null) this.#eventNameToListeners.delete(eventName);
+    }
+
+
+    $emit(eventName, ...args) {
+        const ff = this.#eventNameToListeners.get(eventName);
+        if (ff == null) return;
+        var i = 0;
+        do {
+            try {
+                ff[i].apply(null, args);
+            } catch (err) {
+                console.warn('Error in callback nr', i, 'for event', eventName, ':', err);
+            }
+        } while (++i < ff.length);
+    }
+}
+
+
+export const EventBus = new EB();
+*/
