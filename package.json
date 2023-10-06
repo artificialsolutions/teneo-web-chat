@@ -1,6 +1,6 @@
 {
   "name": "teneo-web-chat",
-  "version": "3.7.8",
+  "version": "3.7.9",
   "description": "Teneo Web Chat widget that can be embedded in websites.",
   "scripts": {
     "analyze": "NODE_ENV=production webpack --config webpack.prod.js --profile --json > stats-prod.json && webpack-bundle-analyzer stats-prod.json dist/",
