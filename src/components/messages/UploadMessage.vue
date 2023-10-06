@@ -235,7 +235,7 @@ export default {
           return false;
         }
         if (data.initialUploadState?.imageUrl) {
-          console.error(sName, 'data.initialUploadState.imageUrl is not allowed in messages (itemID ' + data.itemId + '). Use "set_upload_state" to set the image URL instead!');
+          console.error(sName, 'data.initialUploadState.imageUrl is not allowed in messages (itemID ' + data.itemId + '). Use "' + events.API_ON_SET_UPLOAD_STATE + '" to set the image URL instead!');
           return false;
         }
         if (!data.itemId) {
@@ -302,9 +302,8 @@ export default {
   },
 
 
-  beforeUnmount() {
-    if (bDebug) console.log(sName, 'beforeUnmount with message', this.message);
-    EventBus.$off(events.SET_UPLOAD_STATE);
+  unmounted() {
+    if (bDebug) console.log(sName, 'unmounted with message', this.message);
   },
 
 

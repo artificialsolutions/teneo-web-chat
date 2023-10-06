@@ -432,8 +432,6 @@ export default {
 
   unmounted() {
     if (bDebug) console.log(sName, 'unmounted');
-    EventBus.$off(events.SHOW_UPLOAD_PANEL);
-    EventBus.$off(events.HIDE_UPLOAD_PANEL);
   },
 
 
