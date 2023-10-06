@@ -9,7 +9,7 @@
       <div class="twc-bounce3" aria-hidden="true"></div>
     </div>
 
-    <UploadPreviewPanel />    
+    <UploadPreviewPanel />
     <UserInput :on-submit="sendMessage" />
 
     <div v-if="isImageZoomed" href="#" class="twc-lightbox" @click="zoomOut">
@@ -31,7 +31,6 @@ import UploadPreviewPanel from './UploadPreviewPanel.vue';
 import { EventBus, events } from '../utils/event-bus.js';
 import { API_CALL_SEND_INPUT } from '../utils/constants';
 import detectIosSafari from '../utils/detect-ios-safari';
-
 export default {
   components: {	
     UploadPreviewPanel, 	

@@ -1,3 +1,18 @@
+# v3.7.9
+## October-2023
+* Bug Fixes
+    * Auto-scroll not working if a bubble without additional parameters.
+    * Hardcoded elements for upload file feature now configurable.
+    * Scroll reset button as default.
+    * Upload Panel Feature
+        * Spellcheck in upload panel text.
+        * Keyboard visibility issue on mobile.
+        * Upload elements lose state after minimize.
+        * Upload button outside drop area.
+    * Target blank attributes added to link buttons.
+    * Rating Message doesn't appear centered and distributed.
+    * Placeholder property for textarea added.
+
 # v3.7.8
 ## July-2023
 * Bug Fixes

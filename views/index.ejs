@@ -202,6 +202,20 @@ uploadFile = item => {
         onInterrupted: () => setUploadState(item.id, { status: 'INTERRUPTED', uploadPercentage: 0 }),
         onUploadPersentageChanged: uploadPercentage => setUploadState(item.id, { uploadPercentage: uploadPercentage })
     });
+},
+
+
+assignAllMessageStates = () => {
+    if (itemIdToUploadState == null) return;
+    Object.entries(itemIdToUploadState).forEach(e => {
+        TeneoWebChat.call('set_upload_state', {
+            itemId: e[0],
+            uploadState: {
+                status: e[1].status,
+                controlAllowed: e[1].controlAllowed
+            }
+        });
+    });
 };
 
 
@@ -239,19 +253,13 @@ TeneoWebChat.on('ready', () => {
     if (bChanged) {
         TeneoWebChat.get('storage').setItem('twc_itemIdToUploadState', JSON.stringify(itemIdToUploadState));
     }
-    setTimeout(() => {
-        Object.entries(itemIdToUploadState).forEach(e => {
-            TeneoWebChat.call('set_upload_state', {
-                itemId: e[0],
-                uploadState: {
-                    status: e[1].status,
-                    controlAllowed: e[1].controlAllowed
-                }
-            });
-        });
-    });
+    setTimeout(assignAllMessageStates, 100);
 });
 
+
+TeneoWebChat.on('visibility_changed', payload => {
+    if (payload.visibility === 'maximized') setTimeout(assignAllMessageStates, 100);
+});
 
 
 TeneoWebChat.on('upload_panel_submit', payload => {
@@ -266,16 +274,16 @@ TeneoWebChat.on('upload_panel_submit', payload => {
             type: 'upload',
             author: 'user',
             data: {
-                itemId: item.id,
-                fileName: item.file.name,
-                fileSymbol: item.file.name.substring(item.file.name.lastIndexOf('.') + 1),
                 initialUploadState: {
-                    // To prevent storing huge URLs in the browser storage,
+                    // To prevent storing huge data URLs in the browser storage,
                     // imageUrl may not be used here. It is set at a next step
                     // via an object which is not stored.
                     status: 'IN_PROGRESS',
                     controlAllowed: true
-                }
+                },
+                itemId: item.id,
+                fileName: item.file.name,
+                fileSymbol: item.file.name.substring(item.file.name.lastIndexOf('.') + 1)
             }
         });
         uploadFile(item);
@@ -363,7 +371,9 @@ TeneoWebChat.on('ready', () => {
     }
 });
 
+
 TeneoWebChat.on('visibility_changed', payload => TeneoWebChat.get('storage').setItem('twc_last_state', payload.visibility));
+
 
 TeneoWebChat.on('reset', () => TeneoWebChat.get('storage').removeItem('twc_last_state'));
 

@@ -183,7 +183,7 @@ import {
 
 
 
-const bDebug = false, sName = 'UploadMessage';
+const bDebug = false, sName = 'UploadMessage', itemIdToDataSaved = {};
 
 
 export default {
@@ -235,7 +235,7 @@ export default {
           return false;
         }
         if (data.initialUploadState?.imageUrl) {
-          console.error(sName, 'data.initialUploadState.imageUrl is not allowed in messages (itemID ' + data.itemId + '). Use "set_upload_state" to set the image URL instead!');
+          console.error(sName, 'data.initialUploadState.imageUrl is not allowed in messages (itemID ' + data.itemId + '). Use "' + events.API_ON_SET_UPLOAD_STATE + '" to set the image URL instead!');
           return false;
         }
         if (!data.itemId) {
@@ -272,19 +272,23 @@ export default {
 
 
   mounted() {
-    console.info('fileUploadSymbolProgressBackgroundColor', this.fileUploadSymbolProgressBackgroundColor);
-    console.info('fileUploadSymbolProgressBarColor', this.fileUploadSymbolProgressBarColor);
+    if (bDebug) console.log(sName, 'mounted with message', this.message, 'and nUploadPercentage', this.nUploadPercentage);
 
-    if (bDebug) console.log(sName, 'mounted with message', this.message);
+    EventBus.$on(events.ACTUAL_RESET, () => this.deleteData());
+    EventBus.$on(events.ACTUAL_MINIMIZE, () => this.storeData());
+    EventBus.$on(events.ACTUAL_MAXIMIZE, () => this.restoreData());
+
     if (this.nUploadPercentage == null) {
       // nUploadPercentage has not been set explicitly.
-      // Reading it from the message:
+      // Reading it from the saved or, if absent, from the message:
       let x = this.message.data.initialUploadState;
-      if (x && (x = x.uploadPercentage) !== undefined) {
+      if (x !== undefined && (x = x.uploadPercentage) !== undefined) {
         if (Number.isNaN(x = Number(x))) {
           console.error(sName, 'Wrong initialUploadState.uploadPercentage value [ ' + this.message.data.initialUploadState.uploadPercentage + ' ], should be a number between 0 and 100');
         } else {
           this.nUploadPercentage = x < 0 ? 0 : x > 100 ? 100 : x;
+          this.storeData();
+          if (bDebug) console.log(sName, 'Setting nUploadPercentage on mount', this.nUploadPercentage);
         }
       }
     }
@@ -298,9 +302,8 @@ export default {
   },
 
 
-  beforeUnmount() {
-    if (bDebug) console.log(sName, 'beforeUnmount with message', this.message);
-    EventBus.$off(events.SET_UPLOAD_STATE);
+  unmounted() {
+    if (bDebug) console.log(sName, 'unmounted with message', this.message);
   },
 
 
@@ -326,6 +329,35 @@ export default {
 
 
   methods: {
+
+    storeData() {
+      let x = itemIdToDataSaved[this.message.data.itemId];
+      if (x == null) itemIdToDataSaved[this.message.data.itemId] = x = {};
+      x.imageUrl = this.imageUrl;
+      x.reStatus = this.reStatus;
+      x.reControlAllowed = this.reControlAllowed;
+      x.nUploadPercentage = this.nUploadPercentage;
+      x.bProcessing = this.bProcessing;
+    },
+
+    restoreData() {
+      const x = itemIdToDataSaved[this.message.data.itemId];
+      if (x == null) return;
+      this.imageUrl = x.imageUrl;
+      this.reStatus = x.reStatus;
+      this.reControlAllowed = x.reControlAllowed;
+      this.nUploadPercentage = x.nUploadPercentage;
+      this.bProcessing = x.bProcessing;
+    },
+
+    deleteData() {
+      delete itemIdToDataSaved[this.message.data.itemId];
+      this.imageUrl = undefined;
+      this.reStatus = undefined;
+      this.reControlAllowed = undefined;
+      this.nUploadPercentage = undefined;
+      this.bProcessing = false;
+    },
 
     async stopUpload() {
       if (this.bProcessing) {
@@ -376,7 +408,6 @@ export default {
     assignSpinnerValue(n) {
       if (this.$refs.spinner) {
         if (n == null) n = 0;
-        //this.$refs.spinner.style.background = 'conic-gradient(blue ' + n + '%, lightgrey ' + n + '%)';
         this.$refs.spinner.style.background =
           'conic-gradient(' + (this.fileUploadSymbolProgressBarColor||'blue') + ' ' + n +
           '%, ' + (this.fileUploadSymbolProgressBackgroundColor||'lightgrey') + ' ' + n + '%)';
@@ -426,6 +457,7 @@ export default {
           this.assignSpinnerValue(this.nUploadPercentage);
         }
       }
+      this.storeData();
     },
 
 
