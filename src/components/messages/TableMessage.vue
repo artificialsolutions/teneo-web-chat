@@ -98,7 +98,7 @@ computed: {
 };
 </script>
 
-<style>
+<style scoped>
 
 .twc-table {
 border-spacing: 0 5px; 
