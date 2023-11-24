@@ -12,7 +12,7 @@
 <script>
 import Message from './Message.vue';
 import { EventBus, events } from '../utils/event-bus';
-import {mapState} from 'vuex';
+import { mapState } from 'vuex';
 
 export default {
   components: {
@@ -26,50 +26,33 @@ export default {
   },
   data() {
     return {
-      mutationObserver: null
+      mutationObserver: null,
     };
   },
   mounted() {
-    // Used MutationObserver to detect changes in the messageList or new messages are added
     this.mutationObserver = new MutationObserver(this.handleMutation);
 
-    // Start observing changes in the scrollList
     this.mutationObserver.observe(this.$refs.scrollList, {
       childList: true,
     });
 
-    // Scroll to the last message when component is mounted
     this.$nextTick(this.scrollDown);
   },
   beforeDestroy() {
-    // Stop observing changes and disconnect MutationObserver
     this.mutationObserver.disconnect();
   },
   computed: {
-    ...mapState(['showScrollDownButton'])
+    ...mapState(['showScrollDownButton']),
   },
   methods: {
     scrollDown() {
       const scrollList = this.$refs.scrollList;
 
-      if (!scrollList) {
-        return;
+      if (scrollList) {
+        scrollList.scrollTop = scrollList.scrollHeight;
       }
-
-      this.$nextTick(() => {
-        const latestMessage = scrollList.querySelector('.twc-message:last-child');
-
-        if (latestMessage && typeof latestMessage.scrollIntoView === 'function') {
-          latestMessage.scrollIntoView({
-            behavior: 'smooth',
-            block: 'end',
-            inline: 'nearest',
-          });
-        } else {
-          scrollList.scrollTop = scrollList.scrollHeight;
-        }
-      });
     },
+
     handleMutation() {
       this.$nextTick(this.scrollDown);
     },
@@ -79,6 +62,7 @@ export default {
   },
 };
 </script>
+
 
 <style scoped>
   :root {
