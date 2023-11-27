@@ -91,7 +91,7 @@ export default {
 };
 </script>
 
-<style>
+<style scoped>
 .twc-link-preview {
   max-width: 90%;
   text-decoration: none;

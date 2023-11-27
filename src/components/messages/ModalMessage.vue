@@ -133,7 +133,7 @@ export default {
 
 </script>
 
-<style>
+<style scoped>
 .twc-modal {
   position: fixed;
   z-index: 2700; /* Sit on top */

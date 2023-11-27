@@ -250,7 +250,7 @@ export default {
 
 </script>
 
-<style>
+<style scoped>
 .twc-carousel {
   background: none;
   display: flex;

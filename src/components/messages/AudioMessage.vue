@@ -34,7 +34,7 @@ export default {
 };
 </script>
 
-<style>
+<style scoped>
 .twc-audio-message {
   width: 100%;
   margin-right: 40px;

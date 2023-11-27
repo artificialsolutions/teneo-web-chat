@@ -35,7 +35,7 @@ export default {
 };
 </script>
 
-<style>
+<style scoped>
 .twc-system-message {
   font-weight: 400;
   font-size: 0.9em;

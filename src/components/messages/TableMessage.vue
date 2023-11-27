@@ -98,7 +98,7 @@ computed: {
 };
 </script>
 
-<style scoped>
+<style>
 
 .twc-table {
 border-spacing: 0 5px; 
@@ -181,8 +181,10 @@ background: rgb(231, 231, 231);
 padding: 2px;
 text-align: center;
 }
+</style>
 
-td {
-text-align: center;
-}
+<style scoped>
+.td {
+  text-align: center;
+  }
 </style>
