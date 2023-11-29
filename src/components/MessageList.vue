@@ -35,11 +35,15 @@ export default {
     this.mutationObserver.observe(this.$refs.scrollList, {
       childList: true,
     });
-
     this.$nextTick(this.scrollDown);
+    // Add event listener for when the message contains images.
+    this.$refs.scrollList.addEventListener('load', this.handleImageLoad, true);
+
   },
   beforeDestroy() {
     this.mutationObserver.disconnect();
+    // Remove event listener when component is destroyed
+    this.$refs.scrollList.removeEventListener('load', this.handleImageLoad, true);
   },
   computed: {
     ...mapState(['showScrollDownButton']),
@@ -59,6 +63,11 @@ export default {
     scrollDownDirectly() {
       this.scrollDown();
     },
+    handleImageLoad() {
+      // Will trigger scroll down when image is loaded.
+      this.$nextTick(this.scrollDown);
+    },
+
   },
 };
 </script>
