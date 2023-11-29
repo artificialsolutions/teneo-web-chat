@@ -74,7 +74,7 @@ export default {
 };
 </script>
 
-<style scoped>
+<style >
 .twc-image-message {
   display:flex;
   width: auto;
