@@ -172,7 +172,16 @@ export default function teneoApiPlugin(teneoApiUrl) {
 
             }).catch(
                 (error) => {
-                    EventBus.$emit(events.START_SPINNER);
+                    if (error instanceof SyntaxError) {
+                        console.error("Invalid JSON format. Please check your solution output.");
+                        EventBus.$emit(events.ADD_MESSAGE, {
+                            'type': 'system',
+                            'data': {
+                                'text': tmpVue.$t('message.unable_to_open_hyperlink')
+                            }                            
+                        });
+                    } else {
+                        EventBus.$emit(events.START_SPINNER);
                         let retryMessage = tmpVue.$t('message.connection_error_retry_message');
                         let finalMessage = tmpVue.$t('message.connection_error_final_message');
                         retries++;
@@ -206,6 +215,8 @@ export default function teneoApiPlugin(teneoApiUrl) {
                             }, 5000);
 
                         }
+                    }
+                    
 
                     return false
                 }

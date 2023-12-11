@@ -25,8 +25,8 @@ export var translatedMessages = {
             preview_description_not_available: "Ingen beskrivelse tilgængelig",
             connection_error_retry_message: "Der er problemer med forbindelsen til serveren. Vent venligst.",
             connection_error_final_message: "Kunne ikke oprette forbindelse til serveren. Forsøg venligst igen senere.",
-            upload_panel_add_files: "Træk og slip eller indsæt filer her"
-
+            upload_panel_add_files: "Træk og slip eller indsæt filer her",
+            unable_to_open_hyperlink: "Kunne ikke åbne linket"
         }
     },
     de: {
@@ -55,7 +55,8 @@ export var translatedMessages = {
             preview_description_not_available: "Keine Beschreibung verfügbar",
             connection_error_retry_message: "There is a problem communicating with the server. Please wait.",
             connection_error_final_message: "Could not establish connection to server. Please try again later.",
-            upload_panel_add_files:"Dateien hier ablegen oder einfügen"
+            upload_panel_add_files:"Dateien hier ablegen oder einfügen",
+            unable_to_open_hyperlink: "Link konnte nicht geöffnet werden"
         }
     },
     en: {
@@ -84,6 +85,7 @@ export var translatedMessages = {
             preview_description_not_available: "No Description Available",
             connection_error_retry_message: "There is a problem communicating with the server. Please wait.",
             connection_error_final_message: "Could not establish connection to server. Please try again later.",
+            unable_to_open_hyperlink: "Unable to open link",
 
             upload_file_delete: "Delete uploaded file",
             upload_file_stop: "Stop file upload",
@@ -127,7 +129,8 @@ export var translatedMessages = {
             preview_description_not_available: "No Description Available",
             connection_error_retry_message: "There is a problem communicating with the server. Please wait.",
             connection_error_final_message: "Could not establish connection to server. Please try again later.",
-            upload_panel_add_files:"Drop or paste files here"
+            upload_panel_add_files:"Drop or paste files here",
+            unable_to_open_hyperlink: "Unable to open link"
         }
     },
     es: {
@@ -156,7 +159,8 @@ export var translatedMessages = {
             preview_description_not_available: "Descripción no disponible",
             connection_error_retry_message: "Ha habido un problema comunicándose con el servidor. Por favor espere.",
             connection_error_final_message: "No se ha podido establecer una conexión con el servidar. Por favor, inténtelo más tarde.",
-            upload_panel_add_files:"Arrastra o pega archivos aquí"
+            upload_panel_add_files:"Arrastra o pega archivos aquí",
+            unable_to_open_hyperlink: "No se puede abrir el enlace"
         }
     },
     fr: {
@@ -185,7 +189,8 @@ export var translatedMessages = {
             preview_description_not_available: "Aucune description disponible",
             connection_error_retry_message: "There is a problem communicating with the server. Please wait.",
             connection_error_final_message: "Could not establish connection to server. Please try again later.",
-            upload_panel_add_files:"Déposez ou collez les fichiers ici"
+            upload_panel_add_files:"Déposez ou collez les fichiers ici",
+            unable_to_open_hyperlink: "Impossible d'ouvrir le lien"
         }
     },
     id: {
@@ -214,7 +219,8 @@ export var translatedMessages = {
             preview_description_not_available: "Deskripsi tidak tersedia",
             connection_error_retry_message: "Ada masalah saat berkomunikasi dengan server. Mohon tunggu.",
             connection_error_final_message: "Tidak dapat membuat sambungan ke server. Silakan coba lagi nanti.",
-            upload_panel_add_files:"Seret atau tempel file di sini"
+            upload_panel_add_files:"Seret atau tempel file di sini",
+            unable_to_open_hyperlink: "Tidak dapat membuka tautan"
         }
     },
     it: {
@@ -243,7 +249,8 @@ export var translatedMessages = {
             preview_description_not_available: "Descrizione non disponibile",
             connection_error_retry_message: "Attendere prego, abbiamo rilevato un problema di comunicazione con il server.",
             connection_error_final_message: "Non è possibile stabilire una connessione con il server. Si prega di riprovare più tardi.",
-            upload_panel_add_files:"Trascina o incolla i file qui"
+            upload_panel_add_files:"Trascina o incolla i file qui",
+            unable_to_open_hyperlink: "Impossibile aprire il link"
         }
     },
     ja: {
@@ -272,7 +279,8 @@ export var translatedMessages = {
             preview_description_not_available: "説明なし",
             connection_error_retry_message: "There is a problem communicating with the server. Please wait.",
             connection_error_final_message: "Could not establish connection to server. Please try again later.",
-            upload_panel_add_files:"ファイルをここにドロップまたは貼り付けてください"
+            upload_panel_add_files:"ファイルをここにドロップまたは貼り付けてください",
+            unable_to_open_hyperlink: "リンクを開けません"
         }
     },
     ms: {
@@ -301,7 +309,8 @@ export var translatedMessages = {
             preview_description_not_available: "Tidak ada keterangan",
             connection_error_retry_message: "Terdapat masalah untuk berkomunikasi dengan pelayan. Sila tunggu.",
             connection_error_final_message: "Tidak dapat membuat sambungan ke pelayan. Sila cuba sebentar lagi.",
-            upload_panel_add_files:"Jatuhkan atau tampal fail di sini"
+            upload_panel_add_files:"Jatuhkan atau tampal fail di sini",
+            unable_to_open_hyperlink: "Tidak dapat membuka pautan"
         }
     },
     nl: {
@@ -330,7 +339,8 @@ export var translatedMessages = {
             preview_description_not_available: "Geen beschrijving beschikbaar",
             connection_error_retry_message: "There is a problem communicating with the server. Please wait.",
             connection_error_final_message: "Could not establish connection to server. Please try again later.",
-            upload_panel_add_files:"Sleep of plak bestanden hier"
+            upload_panel_add_files:"Sleep of plak bestanden hier",
+            unable_to_open_hyperlink: "Kan de link niet openen"
         }
     },
     pt: {
@@ -359,7 +369,8 @@ export var translatedMessages = {
             preview_description_not_available: "Descrição não disponível",
             connection_error_retry_message: "Há um problema de comunicação com o servidor. Por favor, aguarde.",
             connection_error_final_message: "Não foi possível estabelecer conexão com o servidor. Por favor, tente novamente mais tarde.",
-            upload_panel_add_files:"Arraste e solte ou cole os arquivos aqui"
+            upload_panel_add_files:"Arraste e solte ou cole os arquivos aqui",
+            unable_to_open_hyperlink: "Não é possível abrir o link"
         }
     },
     sv: {
@@ -388,7 +399,8 @@ export var translatedMessages = {
             preview_description_not_available: "Beskrivning saknas",
             connection_error_retry_message: "There is a problem communicating with the server. Please wait.",
             connection_error_final_message: "Could not establish connection to server. Please try again later.",
-            upload_panel_add_files: "Dra och släpp eller klistra in filer här"
+            upload_panel_add_files: "Dra och släpp eller klistra in filer här",
+            unable_to_open_hyperlink: "Kan inte öppna länken"
         }
     },
     tr: {
@@ -417,7 +429,8 @@ export var translatedMessages = {
             preview_description_not_available: "Açıklama Yok",
             connection_error_retry_message: "There is a problem communicating with the server. Please wait.",
             connection_error_final_message: "Could not establish connection to server. Please try again later.",
-            upload_panel_add_files:"Dosyaları buraya bırakın veya yapıştırın"
+            upload_panel_add_files:"Dosyaları buraya bırakın veya yapıştırın",
+            unable_to_open_hyperlink: "Bağlantı açılamıyor"
         }
     },
     zh: {
@@ -446,7 +459,8 @@ export var translatedMessages = {
             preview_description_not_available: "無可用描述",
             connection_error_retry_message: "There is a problem communicating with the server. Please wait.",
             connection_error_final_message: "Could not establish connection to server. Please try again later.",
-            upload_panel_add_files:"拖放或粘贴文件到此处"
+            upload_panel_add_files:"拖放或粘贴文件到此处",
+            unable_to_open_hyperlink: "无法打开链接"
         }
     },
     'zh-CN': {
@@ -475,7 +489,8 @@ export var translatedMessages = {
             preview_description_not_available: "没有可用的描述",
             connection_error_retry_message: "There is a problem communicating with the server. Please wait.",
             connection_error_final_message: "Could not establish connection to server. Please try again later.",
-            upload_panel_add_files:"拖放或粘贴文件到此处"
+            upload_panel_add_files:"拖放或粘贴文件到此处",
+            unable_to_open_hyperlink: "无法打开链接"
         }
     }
 }
