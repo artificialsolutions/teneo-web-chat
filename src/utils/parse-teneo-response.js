@@ -100,29 +100,23 @@ export default async function parseTeneoResponse(teneoResponse) {
     }
 
     if (link) {
-        try {            
-            let parsedLink = JSON.parse(link);
-            if (store.getters.autoRedirect) {
-                window.location.href = parsedLink.url;
-            } else {                
+        let parsedLink;
+        try {                    
+             parsedLink = JSON.parse(link);        
+        } catch (jsonError) {
+            console.log('Unable to parse link as JSON :', jsonError);
+        }
+
+        if (store.getters.autoRedirect) {
+                window.location.href = parsedLink ? parsedLink.url : link;
+            } else {
                 messages.push({
                     author: PARTICIPANT_BOT,
-                    type: 'linkpreview',
-                    data: parsedLink
-                });
-            }
-        } catch (jsonError) {
-            try {
-                if (store.getters.autoRedirect) {
-                    window.location.href = link;
-                } else {
-                    console.log('Unable to parse link as JSON :', jsonError);
-                }
-            } catch (urlError) {
-                console.log('Unable to parse link as JSON or URL:', urlError);
-            }
-        } 
+                    type: parsedLink ? 'linkpreview' : 'system',
+                    data: parsedLink || { text: tmpVue.$t('message.unable_to_open_hyperlink') }
+                });     
     }
+}
 
     var ind = 0;
     while (ind < messages.length) {
