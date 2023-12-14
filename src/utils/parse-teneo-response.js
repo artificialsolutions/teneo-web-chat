@@ -100,7 +100,11 @@ export default async function parseTeneoResponse(teneoResponse) {
     }
 
     if (link) {
+        console.log('Autoredirect value:', store.getters.autoRedirect);
         let parsedLink;
+        let messageData;
+        let messageType;
+
         try {                    
              parsedLink = JSON.parse(link);        
         } catch (jsonError) {
@@ -110,10 +114,12 @@ export default async function parseTeneoResponse(teneoResponse) {
         if (store.getters.autoRedirect) {
                 window.location.href = parsedLink ? parsedLink.url : link;
             } else {
-                messages.push({
-                    author: PARTICIPANT_BOT,
-                    type: parsedLink ? 'linkpreview' : 'system',
-                    data: parsedLink || { text: tmpVue.$t('message.unable_to_open_hyperlink') }
+                messageType = parsedLink ? 'linkpreview' : 'system';
+                messageData = parsedLink ? parsedLink : {'text': 'Unable to open hyperlink'};
+            messages.push({
+                author: PARTICIPANT_BOT,
+                type: messageType,
+                data: messageData
                 });     
     }
 }

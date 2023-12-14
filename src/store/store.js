@@ -82,7 +82,7 @@ export const store = new Vuex.Store({
         msVoice: '',
         locale: FALLBACK_LOCALE,
         storage: window.sessionStorage,
-        autoRedirect: true
+        autoRedirect: false
     },
 
     // TODO: Throw error if any of the urls are invalid
