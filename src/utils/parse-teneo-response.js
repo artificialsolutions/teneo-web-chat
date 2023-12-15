@@ -100,29 +100,36 @@ export default async function parseTeneoResponse(teneoResponse) {
     }
 
     if (link) {
-        console.log('Autoredirect value:', store.getters.autoRedirect);
         let parsedLink;
         let messageData;
         let messageType;
-
+    
         try {                    
-             parsedLink = JSON.parse(link);        
+            parsedLink = JSON.parse(link);        
         } catch (jsonError) {
-            console.log('Unable to parse link as JSON :', jsonError);
+            if (!store.getters.autoRedirect) {
+                console.log('Unable to parse link as JSON :', jsonError);
+            }
+            messageType = 'system';
+            messageData = {'text': 'Unable to open hyperlink'};
         }
-
+    
         if (store.getters.autoRedirect) {
-                window.location.href = parsedLink ? parsedLink.url : link;
-            } else {
-                messageType = parsedLink ? 'linkpreview' : 'system';
-                messageData = parsedLink ? parsedLink : {'text': 'Unable to open hyperlink'};
+            window.location.href = parsedLink ? parsedLink.url : link;
+        } else if (!parsedLink) {
             messages.push({
                 author: PARTICIPANT_BOT,
                 type: messageType,
                 data: messageData
-                });     
+            });     
+        } else {
+            messages.push({
+                author: PARTICIPANT_BOT,
+                type: 'linkpreview',
+                data: parsedLink
+            });
+        }
     }
-}
 
     var ind = 0;
     while (ind < messages.length) {
