@@ -1,11 +1,11 @@
 <template>
   <div ref="scrollList" class="twc-message-list" aria-live="polite">
+    <button id="twc-scrollDownButton" v-show="showScrollDownButton" @click="scrollDownDirectly"></button>
     <Message
       v-for="(message, idx) in messageList"
       :key="idx"
       :message="message"
     />
-    <button id="twc-scrollDownButton" v-show="showScrollDownButton" @click="scrollDownDirectly"></button>
   </div>
 </template>
 
@@ -36,6 +36,7 @@ export default {
     // Start observing changes in the scrollList
     this.mutationObserver.observe(this.$refs.scrollList, {
       childList: true,
+      subtree: true,
     });
 
     // Scroll to the last message when component is mounted
@@ -67,7 +68,7 @@ export default {
         if (latestMessage && typeof latestMessage.scrollIntoView === 'function') {
           latestMessage.scrollIntoView({
             behavior: 'smooth',
-            block: 'end',
+            block: 'start',
             inline: 'nearest',
           });
         } else {
