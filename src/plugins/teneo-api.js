@@ -172,7 +172,8 @@ export default function teneoApiPlugin(teneoApiUrl) {
 
             }).catch(
                 (error) => {
-                    EventBus.$emit(events.START_SPINNER);
+                    
+                        EventBus.$emit(events.START_SPINNER);
                         let retryMessage = tmpVue.$t('message.connection_error_retry_message');
                         let finalMessage = tmpVue.$t('message.connection_error_final_message');
                         retries++;
@@ -206,7 +207,6 @@ export default function teneoApiPlugin(teneoApiUrl) {
                             }, 5000);
 
                         }
-
                     return false
                 }
             );
