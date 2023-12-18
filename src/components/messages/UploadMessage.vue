@@ -45,7 +45,7 @@
 </template>
 
 
-<style>
+<style scoped>
 
 
 @keyframes twc-upload-file-progress-spin {

@@ -79,7 +79,7 @@ export default {
  */
 </script>
 
-<style>
+<style scoped>
 
   .modal-backdrop {
     height: 80%;

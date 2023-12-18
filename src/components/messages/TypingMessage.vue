@@ -70,7 +70,7 @@ export default {
 };
 </script>
 
-<style>
+<style scoped>
 .twc-typing-message .twc-spinner {
   margin: 4px 0 8px 0;
   width: 28px;

@@ -66,7 +66,7 @@ export default {
 };
 </script>
 
-<style>
+<style scoped>
 .twc-quickreply-message {
   width: 100%;
   margin-right: 0px;

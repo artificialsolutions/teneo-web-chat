@@ -31,7 +31,7 @@ export default {
 };
 </script>
 
-<style>
+<style scoped>
 .twc-file-video {
   width: 100%;
   margin-right: 40px;

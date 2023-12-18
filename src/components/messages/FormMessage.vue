@@ -324,7 +324,7 @@ export default {
 };
 </script>
 
-<style>
+<style scoped>
 
 .teneo-web-chat {
   --form-background-color: white;

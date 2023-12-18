@@ -33,7 +33,7 @@ export default {
 };
 </script>
 
-<style>
+<style scoped>
 .twc-vimeo-video {
   width: 260px;
   height: 150px;
