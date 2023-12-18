@@ -1,3 +1,24 @@
+# v3.7.10
+## December-2023
+* Bug Fixes
+    * Auto-scroll not working not scrolling all the way to the last message.
+    * Replaced the scope of the following components
+        * AudioMessage
+        * Carousel Message
+        * File Video Message
+        * Form Message
+        * Link Preview Message
+        * Modal File
+        * Modal Message
+        * Quick Reply Message
+        * System Message
+        * Table Message
+        * Typing Message
+        * Upload Message
+        * Vimeo Video Message
+        * Youtube Video Message
+
+    * Handle Output Hyperlink field for the Teneo response.
 # v3.7.9
 ## October-2023
 * Bug Fixes
