@@ -7,7 +7,10 @@ import {
 } from './constants.js';
 import {EventBus, events} from '../utils/event-bus';
 import {store} from '../store/store';
+import { messageSchema } from './schema.js';
 
+import Ajv from 'ajv';
+import addFormats from 'ajv-formats';
 
 const defaultMessageType = 'text';
 
@@ -40,11 +43,28 @@ export default async function parseTeneoResponse(teneoResponse) {
     try {
         if (messageParams) {
             data = JSON.parse(messageParams);
+            
+            try {
+                const ajv = new Ajv();
+                addFormats(ajv);
+                const validate = ajv.compile(messageSchema);
+                const valid = validate(data);
+                if (!valid) {
+                    messages.push({
+                        author: PARTICIPANT_BOT,
+                        type: 'system',
+                        data: { 'text': 'Invalid message format' }
+                    });
+                    const errors = validate.errors;
+                    console.error({data, errors});
+                }
+            } catch (err) {
+                console.error(err);
+            }
         }
     } catch (err) {
         console.error('Error: Unable to parse JSON string')
     }
-
 
     if (outputTextSegmentIndexes && Array.isArray(outputTextSegmentIndexes) && text) {
 
