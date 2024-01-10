@@ -1,7 +1,6 @@
 <template>
   <div class="twc-clickablelist" :class="{ 'twc-expired': replySent || isExpired }">
-    <h5 class="twc-clickablelist-title">Message types</h5>
-    <!--<h5 class="twc-clickablelist-title" v-if="clickablelistTitle">{{ clickablelistTitle }}</h5>-->
+    <h5 class="twc-clickablelist-title" v-if="clickablelistTitle">{{ clickablelistTitle }}</h5>
     <ul class="twc-clickablelist-message" :class="{ replied: replySent}">
       <li
         :tabindex="replySent || isExpired ? -1 : 0"
@@ -118,7 +117,7 @@ export default {
 }
 
 .twc-clickablelist-message li {
- background-color: white;
+ background-color: var(--chat-window-bg-color, #ffffff);
  border: 1px solid #e2e2e2;
  margin: 4px 0px;
  box-shadow: 0 2px 4px 0 rgba(85, 87, 85, 0.3);
@@ -126,9 +125,9 @@ export default {
 }
 
 .twc-clickablelist-message__item  span{
-  /**border-bottom: 1px solid var(--light-border-color, #c9c9c9);
+  border-bottom: 1px solid var(--light-border-color, #c9c9c9);
   border-right: 1px solid var(--light-border-color, #c9c9c9);
-  border-left: 1px solid var(--light-border-color, #c9c9c9);**/
+  border-left: 1px solid var(--light-border-color, #c9c9c9);
   border: none;
   padding: 8px 4px;
   color: var(--clickablelist-fg-color, #263238);
@@ -179,10 +178,10 @@ export default {
 }
 
 li.twc-selected,
-.twc-clickablelist-message:not(.replied) li:hover {
-  background-color: rgba(47, 40, 110,0.2);
+.twc-clickablelist-message:not(.replied) li:hover {  
+  background-color: var(--clickablelist-selected-bg-color, #eceff1);
   box-shadow: 0 1px 2px 0 rgba(85, 87, 85, 0.2);
-  color: black;
+  color: var(--form-focus-text, #000000);
   padding: 2px;
   margin: 2px;
   border-radius: 5px;
@@ -207,8 +206,8 @@ li.twc-selected,
 .twc-clickablelist.twc-expired .twc-clickablelist-message__item.twc-selected,
 .twc-clickablelist.twc-expired .twc-clickablelist-message__item.twc-selected:hover { 
   cursor: default;
-  background-color: #c2c2c2;
-  color: #616060;
+  background-color: var(--clickablelist-selected-bg-color, #c2c2c2);
+  color: var(--expired-color, #616060);
 }
 
 .twc-clickablelist.twc-expired .twc-clickablelist-message__item:hover span:after {

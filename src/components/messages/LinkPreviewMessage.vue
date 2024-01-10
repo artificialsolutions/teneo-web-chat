@@ -117,7 +117,7 @@ export default {
   display:flex;
   flex-direction: column;
   margin: 0;
-  background-color: white;
+  background-color: var(--light-fg-color,#FFFFFF);
   border-top-right-radius: 10px;
   border-bottom-right-radius: 10px;
   float: left;

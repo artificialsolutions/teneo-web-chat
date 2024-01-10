@@ -1,3 +1,8 @@
+# v3.7.11
+
+## January 2024
+* CSS refactoring
+    * Review of hardocded values and substitution for variables.
 # v3.7.10
 ## December-2023
 * Bug Fixes

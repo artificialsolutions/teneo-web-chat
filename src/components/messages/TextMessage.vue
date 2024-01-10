@@ -114,7 +114,7 @@ _:-ms-fullscreen, :root .twc-message.twc-user .twc-text-message-wrapper  {
 }
 .twc-message.twc-bot .twc-text-message {
   color: var(--bot-message-fg-color, #263238);
-  background-color: var(--bot-message-bg-color);
+  background-color: var(--bot-message-bg-color, #eceff1);
   margin-right: 40px;
   border-bottom-left-radius: 0px;
 }
