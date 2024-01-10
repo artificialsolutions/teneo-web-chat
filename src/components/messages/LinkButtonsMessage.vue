@@ -124,6 +124,6 @@ export default {
 
 .twc-linkbutton a svg {
   display: block;
-  color: red;
+  color: var(--danger-color,#FF0000);
 }
 </style>

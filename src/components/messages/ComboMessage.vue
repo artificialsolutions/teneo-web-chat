@@ -382,7 +382,7 @@ export default {
   border-radius: 5px;
   background-color: var(--primary-color) !important;
   border:none;
-  color:white;
+  color:var(--chat-window-bg-color, #ffffff);
   margin: 0;
   margin: 2px;
   padding: 0;
@@ -402,7 +402,7 @@ export default {
   padding: 0;
   padding-top: 3px;
   padding-bottom: 3px;
-  color: white;
+  color: var(--chat-window-bg-color, #ffffff);
   font-size: 0.9rem;
   outline:none;
 }
