@@ -1,89 +1,27 @@
 <template>
-  <div v-if="showUserInput">
-    <form
-        class="twc-user-input"
-        :class="{ 'twc-active': inputActive, 'twc-disabled': inputDisabled }"
-    >
-      <div v-if="showAsrButton" class="twc-user-input__button" :class="{ 'twc-disabled': asrDisabled }">
-        <button
-            role="button"
-            tabindex="0"
-            ref="asrButton"
-            :aria-label="$t('message.input_area_asr_button_aria_label')"
-            :title="$t('message.input_area_asr_button_title')"
-            class="twc-user-input__asr-icon-wrapper"
-            :class="{ 'twc-active': asrActive,  'twc-broken-service-icon': asrBroken}"
-            :aria-disabled="asrDisabled"
-            :disabled="asrDisabled ? true : false"
-            @click.prevent=""
-            @click="asrButtonClicked($refs.asrButton)"
-            data-used="false"
-            data-cancelled="false"
-        >
-          <img
-              v-if="asrIconUrl"
-              id="twc-user-input__asr-icon-img"
-              class="twc-user-input__asr-icon"
-              :src="asrIconUrl"
-              aria-hidden="true"
-              alt=""
-          />
-          <AsrIcon
-              v-else
-              id="twc-user-input__asr-icon"
-              class="twc-user-input__asr-icon"
-              aria-hidden="true"
-          />
-        </button>
-      </div>
-      <div v-if="showTtsButton" class="twc-user-input__button" :class="{ 'twc-disabled': ttsDisabled }">
-        <button
-            role="button"
-            tabindex="0"
-            ref="ttsButton"
-            :aria-label="$t('message.input_area_tts_button_aria_label')"
-            :title="$t('message.input_area_tts_button_title')"
-            class="twc-user-input__tts-icon-wrapper"
-            :class="{ 'twc-active': ttsActive, 'twc-broken-service-icon': ttsBroken}"
-            :aria-disabled="ttsDisabled"
-            :disabled="ttsDisabled ? true : false"
-            @click.prevent=""
-            @click="ttsButtonClicked($refs.ttsButton)"
-        >
-          <img
-              v-if="ttsIconUrl"
-              id="twc-user-input__tts-icon-img"
-              class="twc-user-input__tts-icon"
-              :src="ttsIconUrl"
-              aria-hidden="true"
-              alt=""
-          />
-          <TtsIcon
-              v-else
-              id="twc-user-input__tts-icon"
-              class="twc-user-input__tts-icon"
-              aria-hidden="true"
-          />
-        </button>
+  <div>
+    <form class="twc-user-input" :class="{ 'twc-active': inputActive, 'twc-disabled': inputDisabled }">
+      <div>
+        <live-transcript @transcription="handleTranscription"></live-transcript>
       </div>
       <textarea
-          id="twc-user-input-field"
-          ref="userInput"
-          v-debounce:250="userTyping"
-          rows="1"
-          class="twc-user-input__text"
-          role="textbox"
-          tabIndex="0"
-          :aria-label="$t('message.input_area_userinput_field_aria_label')"
-          :aria-placeholder="$t('message.input_area_userinput_field_placeholder')"
-          :placeholder="$t('message.input_area_userinput_field_placeholder')"
-          :debounce-events="['input']"
-          :aria-disabled="inputDisabled"
-          :disabled="inputDisabled ? true : false"
-          @focus="setInputActive(true)"
-          @blur="setInputActive(false)"
-          @keydown="handleReturnKey"
-          @input="autoTextareaHeight"
+        id="twc-user-input-field"
+        ref="userInput"
+        v-debounce:250="userTyping"
+        rows="1"
+        class="twc-user-input__text"
+        role="textbox"
+        tabIndex="0"
+        :aria-label="$t('message.input_area_userinput_field_aria_label')"
+        :aria-placeholder="$t('message.input_area_userinput_field_placeholder')"
+        :placeholder="$t('message.input_area_userinput_field_placeholder')"
+        :debounce-events="['input']"
+        :aria-disabled="inputDisabled"
+        :disabled="inputDisabled ? true : false"
+        @focus="setInputActive(true)"
+        @blur="setInputActive(false)"
+        @keydown="handleReturnKey"
+        @input="autoTextareaHeight"
       ></textarea>
       <div v-if="showUploadButton" class="twc-user-input__button" :class="{ 'twc-disabled': uploadDisabled }">
         <button
@@ -183,6 +121,7 @@ import basePayload from '../utils/base-payload.js';
 import detectMobile from '../utils/detect-mobile.js';
 import {mapState} from 'vuex';
 import {store} from "../store/store";
+import LiveTranscript from './SpeechRec.vue'; 
 
 
 Vue.use(vueDebounce);
@@ -195,7 +134,8 @@ export default {
     TtsIcon,
     RecordingStartedBeep,
     RecordingEndedBeep,
-    RecordingCancelledBeep
+    RecordingCancelledBeep,
+    LiveTranscript
   },
   props: {
     onSubmit: {
@@ -378,6 +318,11 @@ export default {
   },
 
   methods: {
+    handleTranscription(transcription) {
+      // Update the content of the user input field directly
+      const userInputField = document.getElementById('twc-user-input-field');
+      userInputField.value = DOMPurify.sanitize(transcription);
+    },
     setInputActive(onoff) {
       this.inputActive = onoff;
       if (onoff === true) {
