@@ -2,7 +2,7 @@
   <div>
     <form class="twc-user-input" :class="{ 'twc-active': inputActive, 'twc-disabled': inputDisabled }">
       <div>
-        <live-transcript @transcription="handleTranscription"></live-transcript>
+        <live-transcript @transcribing="handleTranscribing" @transcription="handleTranscription"></live-transcript>
       </div>
       <textarea
         id="twc-user-input-field"
@@ -17,7 +17,7 @@
         :placeholder="$t('message.input_area_userinput_field_placeholder')"
         :debounce-events="['input']"
         :aria-disabled="inputDisabled"
-        :disabled="inputDisabled ? true : false"
+        :disabled= "isDisabled"
         @focus="setInputActive(true)"
         @blur="setInputActive(false)"
         @keydown="handleReturnKey"
@@ -32,7 +32,7 @@
             :title="$t('message.input_area_upload_button_title')"
             class="twc-user-input__upload-icon-wrapper"
             :aria-disabled="inputDisabled"
-            :disabled="inputDisabled ? true : false"
+            :disabled=isDisabled
             @click.prevent=""
             @focus="setInputActive(true)"
             @blur="setInputActive(false)"
@@ -64,7 +64,7 @@
             :title="$t('message.input_area_send_button_title')"
             class="twc-user-input__send-icon-wrapper"
             :aria-disabled="inputDisabled"
-            :disabled="inputDisabled ? true : false"
+            :disabled=isDisabled
             @click.prevent=""
             @focus="setInputActive(true)"
             @blur="setInputActive(false)"
@@ -163,7 +163,8 @@ export default {
       ttsActive: store.getters.ttsActive,
       ttsCumulativeText: '',
       isCancellation: false,
-      showUserInput: true
+      showUserInput: true,
+      isDisabled:false
     };
   },
 
@@ -319,9 +320,12 @@ export default {
 
   methods: {
     handleTranscription(transcription) {
-      // Update the content of the user input field directly
       const userInputField = document.getElementById('twc-user-input-field');
       userInputField.value = DOMPurify.sanitize(transcription);
+    },
+    handleTranscribing(value) {
+      this.isDisabled=value
+      console.log('Transcribing event emitted with value:', value);
     },
     setInputActive(onoff) {
       this.inputActive = onoff;

@@ -1,22 +1,11 @@
 <template>
     <div>
-      <button
-        id="start"
-        @click="startTranscription"
-        :disabled="transcribing"
-      >
-        Start
-      </button>
-      <button
-        id="pause"
-        @click="pauseTranscription"
-        :disabled="!transcribing || !recognition"
-      >
-        Pause
-      </button>
-      <div id="transcript-window">
-        <!-- No need to display the transcription results in this component -->
-      </div>
+      <button @click="startTranscription" :disabled="transcribing">
+      &#127897;
+    </button>
+    <button @click="pauseTranscription" :disabled="!transcribing || !recognition">
+      &#9940;
+    </button>
     </div>
   </template>
   
@@ -45,11 +34,13 @@
         this.recognition.addEventListener('result', (event) => this.resultHandler(event));
         this.recognition.start();
         this.transcribing = true;
+        this.$emit('transcribing', this.transcribing);
       },
       pauseTranscription() {
         if (this.recognition) {
           this.recognition.stop();
           this.transcribing = false;
+          this.$emit('transcribing', this.transcribing);
         }
       },
       resultHandler(event) {
