@@ -24,7 +24,7 @@
       startTranscription() {
         const SpeechRecognition = window.SpeechRecognition || window.webkitSpeechRecognition;
         if (typeof SpeechRecognition === "undefined") {
-          alert("This browser doesn't support the SpeechRecognition API. Try Google Chrome, Microsoft Edge, or another supported browser.");
+          alert("This browser doesn't support the SpeechRecognition API.");
           return;
         }
   
