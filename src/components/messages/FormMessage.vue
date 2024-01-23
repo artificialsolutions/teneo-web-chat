@@ -327,21 +327,21 @@ export default {
 <style scoped>
 
 .teneo-web-chat {
-  --form-background-color: white;
+  --form-background-color: var(--light-fg-color);
   --form-title-text-color:var(--primary-color);
-  --form-subtitle-text-color:rgba(50,62,72,0.9);
-  --form-caption-text-color: rgba(50,62,72,0.9);
-  --form-label-text-color:rgba(50,62,72,0.9);
-  --form-input-background-color:white;
+  --form-subtitle-text-color:var(--success-color,rgba(50,62,72,0.9));
+  --form-caption-text-color: var(--success-color,rgba(50,62,72,0.9));
+  --form-label-text-color:var(--success-color,rgba(50,62,72,0.9));
+  --form-input-background-color:var(--light-fg-color);
 
-  --form-border-color: #919191;
+  --form-border-color: var(--light-border-color,#919191);
   
-  --form-submit-text-color:white;
+  --form-submit-text-color:var(--light-fg-color);
   --form-submit-background-color:var(--primary-color);
 
-  --form-cancel-text-color:white;
-  --form-cancel-background-color:rgb(255, 76, 91);
-  --form-reset-text-color: white;
+  --form-cancel-text-color:var(--light-fg-color);
+  --form-cancel-background-color:var(--danger-color,rgb(255, 76, 91));
+  --form-reset-text-color: var(--light-fg-color);
   --form-reset-background-color:var(--secondary-color);
 }
 

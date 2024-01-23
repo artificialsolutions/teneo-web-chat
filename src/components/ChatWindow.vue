@@ -140,7 +140,7 @@ We need to change the corner from it's resizable-->
   bottom: 25px;
   box-sizing: border-box;
   box-shadow: 0 2px 10px 0 rgba(0, 0, 0, 0.15);
-  background: white;
+  background: var(--chat-window-bg-color, #ffffff);
   display: flex;
   flex-direction: column;
   justify-content: space-between;

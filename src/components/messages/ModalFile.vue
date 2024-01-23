@@ -87,7 +87,7 @@ export default {
     overflow-x: hidden;
     background-size: 100%;
     padding: 20px 0px;
-    background-color: rgba(0, 0, 0, 0.6);
+    background-color: var( --modal-bg-color,rgba(0, 0, 0, 0.6));
     display: flex;
     justify-content: center;
     align-items: center;
@@ -111,7 +111,7 @@ export default {
   .modal-header {
     position: relative;
     border-bottom: 1px solid #eeeeee;
-    color: #4AAE9B;
+    color: var(--header-bg-color, #4AAE9B);
     justify-content: space-between;
   }
 
@@ -139,14 +139,14 @@ export default {
     padding: 10px;
     cursor: pointer;
     font-weight: bold;
-    color: #4AAE9B;
+    color: var(--callout-close-button-fg-color,#4AAE9B);
     background: transparent;
   }
 
   .btn-green {
-    color: white;
-    background: #4AAE9B;
-    border: 1px solid #4AAE9B;
+    color: var(--light-fg-color,#FFFFFF);
+    background: var(--success-color, #4AAE9B);
+    border: 1px solid var(--success-color, #4AAE9B);
     border-radius: 2px;
   }
 
