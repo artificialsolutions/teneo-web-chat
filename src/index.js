@@ -213,8 +213,7 @@ window.TeneoWebChat = {
       store.commit('showAsrButton', true);
     }
     if (twcProps.asrActive === true || twcProps.asrActive === "true") {
-      //Always set to false regardless - ASR on start is a silly proposal.
-      store.commit('asrActive', false);
+      store.commit('asrActive', true);
     }
     if (twcProps.ttsIconUrl) {
       store.commit('initialTtsIconUrl', twcProps.ttsIconUrl);

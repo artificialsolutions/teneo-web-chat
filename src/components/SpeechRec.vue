@@ -1,11 +1,7 @@
 <template>
     <div>
-      <button @click="startTranscription" :disabled="transcribing">
-      &#127897;
-    </button>
-    <button @click="pauseTranscription" :disabled="!transcribing || !recognition">
-      &#9940;
-    </button>
+      <button @click="startTranscription" :disabled="transcribing" v-html="recordIcon"/>            
+     <button @click="pauseTranscription" :disabled="!transcribing || !recognition" v-html="pauseIcon"/>
     </div>
   </template>
   
@@ -18,13 +14,14 @@
       return {
         transcribing: false,
         recognition: null,
+        alertMessage: this.$t('message.webspeech_not_soported')
       };
     },
     methods: {
       startTranscription() {
         const SpeechRecognition = window.SpeechRecognition || window.webkitSpeechRecognition;
         if (typeof SpeechRecognition === "undefined") {
-          alert("This browser doesn't support the SpeechRecognition API.");
+          alert(this.alertMessage);
           return;
         }
   
@@ -36,17 +33,37 @@
         this.transcribing = true;
         this.$emit('transcribing', this.transcribing);
       },
+      
+      readTranscription(text) {
+        const utterance = new SpeechSynthesisUtterance(text);
+        window.speechSynthesis.speak(utterance);
+      },
+
       pauseTranscription() {
         if (this.recognition) {
           this.recognition.stop();
           this.transcribing = false;
+          this.readTranscription(this.lastResult);
           this.$emit('transcribing', this.transcribing);
+          this.$emit('transcription', this.lastResult);
+
         }
-      },
+      },      
+
       resultHandler(event) {
-        const lastResult = event.results[event.results.length - 1][0].transcript;
-        this.$emit('transcription', lastResult);
+        this.lastResult = event.results[event.results.length - 1][0].transcript;
+        this.$emit('transcription', this.lastResult);
       },
+    },
+    computed: {
+      recordIcon() {
+        return this.process && this.process.env ? this.process.env.ASR_RECORD_SYMBOL : '&#127897;';
+      },
+      pauseIcon() {
+        return this.process && this.process.env ? this.process.env.ASR_PAUSE_SYMBOL : '&#9940;';
+      },
+
+
     },
   };
   </script>

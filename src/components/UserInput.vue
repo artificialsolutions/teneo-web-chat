@@ -1,8 +1,8 @@
 <template>
   <div>
     <form class="twc-user-input" :class="{ 'twc-active': inputActive, 'twc-disabled': inputDisabled }">
-      <div>
-        <live-transcript @transcribing="handleTranscribing" @transcription="handleTranscription"></live-transcript>
+      <div v-if="shouldDisplayLiveTranscript">
+        <live-transcript ref="liveTranscriptRef" @transcribing="handleTranscribing" @transcription="handleTranscription"></live-transcript>
       </div>
       <textarea
         id="twc-user-input-field"
@@ -147,18 +147,12 @@ export default {
       default: 'Please type here...',
     },
   },
-  computed: {
-    ...mapState(['sendIconUrl', 'showUploadButton', 'uploadIconUrl', 'showAsrButton', 'asrIconUrl', 'showTtsButton', 'ttsIconUrl']),
-  },
+
   data() {
     return {
       inputActive: false,
       inputDisabled: false,
-      uploadDisabled: false,
-      asrDisabled: false,
-      ttsDisabled: false,
-      asrBroken: false,
-      ttsBroken: false,
+      uploadDisabled: false,      
       asrActive: store.getters.asrActive,
       ttsActive: store.getters.ttsActive,
       ttsCumulativeText: '',
@@ -167,27 +161,24 @@ export default {
       isDisabled:false
     };
   },
-
+  computed: {
+    ...mapState(['sendIconUrl', 'showUploadButton', 'uploadIconUrl', 'showAsrButton', 'asrIconUrl', 'showTtsButton', 'ttsIconUrl']),
+    shouldDisplayLiveTranscript() {   
+      console.log("value of asrActive: ", this.asrActive); 
+      return this.asrActive;
+    },
+  },
   mounted() {
-    EventBus.$on(events.STOP_ASR_TTS, () => {
-      this.stopAsr();
-      this.stopTts();
-    });
-
 
     EventBus.$on(events.UPLOAD_PANEL_OPENED, () => {
-      this.showUserInput = false;
-      this.stopAsr();
+      this.showUserInput = false;      
     });
 
 
     EventBus.$on(events.UPLOAD_PANEL_CLOSED, () => {
-      this.showUserInput = true;
-      this.stopAsr();
+      this.showUserInput = true;      
     });
 
-
-    EventBus.$on(events.MESSAGE_SENT, () => this.stopAsr());
 
     EventBus.$on(events.DISABLE_UPLOAD, () => {
       if (this.showUploadButton) {
@@ -205,66 +196,6 @@ export default {
         }
         this.uploadDisabled = false;
       }
-    });
-
-    EventBus.$on(events.DISABLE_ASR, () => {
-      if (this.showAsrButton) {
-        if (this.$refs.asrButton) {
-          this.$refs.asrButton.setAttribute('disabled', 'true');
-        }
-        this.asrDisabled = true;
-      }
-    });
-
-    EventBus.$on(events.ENABLE_ASR, () => {
-      if (this.showAsrButton) {
-        if (this.$refs.asrButton) {
-          this.$refs.asrButton.removeAttribute('disabled');
-        }
-        this.asrDisabled = false;
-      }
-    });
-
-    EventBus.$on(events.ASR_ACTIVE, () => {
-      if (this.showAsrButton && this.$refs.asrButton) {
-        this.asrButtonClicked(this.$refs.asrButton)
-      }
-    });
-
-    EventBus.$on(events.ASR_INACTIVE, () => {
-      if (this.showAsrButton && this.$refs.asrButton) {
-        this.asrActive = false;
-        this.$refs.recordingCancelledBeep.$el.play()
-      }
-    });
-
-    EventBus.$on(events.DISABLE_TTS, () => {
-      if (this.showTtsButton) {
-        if (this.$refs.ttsButton) {
-          this.$refs.ttsButton.setAttribute('disabled', 'true');
-        }
-        this.ttsDisabled = true;
-        this.ttsCumulativeText = '';
-      }
-    });
-
-    EventBus.$on(events.ENABLE_TTS, () => {
-      if (this.showTtsButton) {
-        if (this.$refs.ttsButton) {
-          this.$refs.ttsButton.removeAttribute('disabled');
-        }
-        this.ttsDisabled = false;
-      }
-    });
-
-    EventBus.$on(events.TTS_ACTIVE, () => {
-      if (this.showTtsButton && this.$refs.ttsButton) {
-        this.ttsActive = true;
-      }
-    });
-
-    EventBus.$on(events.TTS_INACTIVE, () => {
-      if (this.showTtsButton && this.$refs.ttsButton) this.stopTts();
     });
 
     EventBus.$on(events.DISABLE_INPUT, () => {
@@ -285,6 +216,11 @@ export default {
             .focus();
       }
     });
+    EventBus.$on(events.BOT_MESSAGE_RECEIVED, (message) => {    
+      console.log("Message: ",message.data.text);
+      this.$refs.liveTranscriptRef.readTranscription(message.data.text);
+    });
+
 
     // Detect changes and focus and emit event. This will be listened by ChatWindow to adapt to iOS Safari
     const userInput = document.getElementById('twc-user-input-field');
@@ -373,26 +309,7 @@ export default {
     async uploadButtonClicked() {
       await handleExtension(API_ON_UPLOAD_BUTTON_CLICK);
     },
-
-
-    stopAsr() {
-      this.asrActive = false;
-    },
-
-
-    async asrButtonClicked(e) {
-      await handleExtension(API_ON_ASR_BUTTON_CLICK, e);
-    },
-
-
-    stopTts() {
-      this.ttsActive = false;
-      this.ttsCumulativeText = '';
-    },
-
-    async ttsButtonClicked(e) {
-      await handleExtension(API_ON_TTS_BUTTON_CLICK, e);
-    },
+    
 
     async _submitText() {
       // Create payload object
