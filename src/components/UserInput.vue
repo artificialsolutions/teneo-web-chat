@@ -1,27 +1,30 @@
 <template>
-  <div>
-    <form class="twc-user-input" :class="{ 'twc-active': inputActive, 'twc-disabled': inputDisabled }">
-      <div v-if="shouldDisplayLiveTranscript">
+  <div v-if="showUserInput">
+    <form
+        class="twc-user-input"
+        :class="{ 'twc-active': inputActive, 'twc-disabled': inputDisabled }"
+    >   
+      <div>
         <live-transcript ref="liveTranscriptRef" @transcribing="handleTranscribing" @transcription="handleTranscription"></live-transcript>
       </div>
       <textarea
-        id="twc-user-input-field"
-        ref="userInput"
-        v-debounce:250="userTyping"
-        rows="1"
-        class="twc-user-input__text"
-        role="textbox"
-        tabIndex="0"
-        :aria-label="$t('message.input_area_userinput_field_aria_label')"
-        :aria-placeholder="$t('message.input_area_userinput_field_placeholder')"
-        :placeholder="$t('message.input_area_userinput_field_placeholder')"
-        :debounce-events="['input']"
-        :aria-disabled="inputDisabled"
-        :disabled= "isDisabled"
-        @focus="setInputActive(true)"
-        @blur="setInputActive(false)"
-        @keydown="handleReturnKey"
-        @input="autoTextareaHeight"
+          id="twc-user-input-field"
+          ref="userInput"
+          v-debounce:250="userTyping"
+          rows="1"
+          class="twc-user-input__text"
+          role="textbox"
+          tabIndex="0"
+          :aria-label="$t('message.input_area_userinput_field_aria_label')"
+          :aria-placeholder="$t('message.input_area_userinput_field_placeholder')"
+          :placeholder="$t('message.input_area_userinput_field_placeholder')"
+          :debounce-events="['input']"
+          :aria-disabled="inputDisabled"
+          :disabled="inputDisabled ? true : false"
+          @focus="setInputActive(true)"
+          @blur="setInputActive(false)"
+          @keydown="handleReturnKey"
+          @input="autoTextareaHeight"
       ></textarea>
       <div v-if="showUploadButton" class="twc-user-input__button" :class="{ 'twc-disabled': uploadDisabled }">
         <button
@@ -32,7 +35,7 @@
             :title="$t('message.input_area_upload_button_title')"
             class="twc-user-input__upload-icon-wrapper"
             :aria-disabled="inputDisabled"
-            :disabled=isDisabled
+            :disabled="inputDisabled ? true : false"
             @click.prevent=""
             @focus="setInputActive(true)"
             @blur="setInputActive(false)"
@@ -55,7 +58,6 @@
         </button>
       </div>
 
-
       <div class="twc-user-input__button">
         <button
             role="button"
@@ -64,7 +66,7 @@
             :title="$t('message.input_area_send_button_title')"
             class="twc-user-input__send-icon-wrapper"
             :aria-disabled="inputDisabled"
-            :disabled=isDisabled
+            :disabled="inputDisabled ? true : false"
             @click.prevent=""
             @focus="setInputActive(true)"
             @blur="setInputActive(false)"
@@ -88,41 +90,31 @@
       </div>
     </form>
     <a v-if="isMobile()" id="twc-focus-fix" href="#1" aria-hidden="true"></a>
-    <RecordingStartedBeep ref="recordingStartedBeep"/>
-    <RecordingEndedBeep ref="recordingEndedBeep"/>
-    <RecordingCancelledBeep ref="recordingCancelledBeep"/>
   </div>
 </template>
+
 
 <script>
 import Vue from 'vue';
 import vueDebounce from 'vue-debounce';
 import SendIcon from '../icons/send.vue';
 import UploadIcon from '../icons/upload.vue';
-import AsrIcon from '../icons/asr.vue';
-import TtsIcon from '../icons/tts.vue';
-import RecordingStartedBeep from '../sounds/recordingStartedBeep.vue'
-import RecordingEndedBeep from '../sounds/recordingEndedBeep.vue'
-import RecordingCancelledBeep from '../sounds/recordingCancelledBeep.vue'
 import DOMPurify from 'isomorphic-dompurify';
 
-import {PARTICIPANT_USER} from '../utils/constants.js';
+import { PARTICIPANT_USER } from '../utils/constants.js';
 import {
-  API_ON_ASR_BUTTON_CLICK,
   API_ON_INPUT_SUBMITTED,
   API_ON_SEND_BUTTON_CLICK,
-  API_ON_TTS_BUTTON_CLICK,
   API_ON_UPLOAD_BUTTON_CLICK,
   API_ON_USER_TYPING
 } from '../utils/api-function-names.js';
-import {EventBus, events} from '../utils/event-bus.js';
+import { EventBus, events } from '../utils/event-bus.js';
 import handleExtension from '../utils/handle-extension.js';
 import basePayload from '../utils/base-payload.js';
 import detectMobile from '../utils/detect-mobile.js';
-import {mapState} from 'vuex';
-import {store} from "../store/store";
+import { mapState } from 'vuex';
+import { store } from "../store/store";
 import LiveTranscript from './SpeechRec.vue'; 
-
 
 Vue.use(vueDebounce);
 
@@ -130,11 +122,6 @@ export default {
   components: {
     SendIcon,
     UploadIcon,
-    AsrIcon,
-    TtsIcon,
-    RecordingStartedBeep,
-    RecordingEndedBeep,
-    RecordingCancelledBeep,
     LiveTranscript
   },
   props: {
@@ -147,29 +134,20 @@ export default {
       default: 'Please type here...',
     },
   },
-
+  computed: {
+    ...mapState(['sendIconUrl', 'showUploadButton', 'uploadIconUrl']),
+  },
   data() {
     return {
       inputActive: false,
       inputDisabled: false,
-      uploadDisabled: false,      
-      asrActive: store.getters.asrActive,
-      ttsActive: store.getters.ttsActive,
-      ttsCumulativeText: '',
-      isCancellation: false,
-      showUserInput: true,
-      isDisabled:false
+      uploadDisabled: false,
+      showUserInput: true
     };
   },
-  computed: {
-    ...mapState(['sendIconUrl', 'showUploadButton', 'uploadIconUrl', 'showAsrButton', 'asrIconUrl', 'showTtsButton', 'ttsIconUrl']),
-    shouldDisplayLiveTranscript() {   
-      console.log("value of asrActive: ", this.asrActive); 
-      return this.asrActive;
-    },
-  },
-  mounted() {
 
+  mounted() {
+    
     EventBus.$on(events.UPLOAD_PANEL_OPENED, () => {
       this.showUserInput = false;      
     });
@@ -178,7 +156,6 @@ export default {
     EventBus.$on(events.UPLOAD_PANEL_CLOSED, () => {
       this.showUserInput = true;      
     });
-
 
     EventBus.$on(events.DISABLE_UPLOAD, () => {
       if (this.showUploadButton) {
@@ -196,8 +173,7 @@ export default {
         }
         this.uploadDisabled = false;
       }
-    });
-
+    });    
     EventBus.$on(events.DISABLE_INPUT, () => {
       this.setInputActive(false);
       this.inputDisabled = true;
@@ -216,11 +192,11 @@ export default {
             .focus();
       }
     });
+
     EventBus.$on(events.BOT_MESSAGE_RECEIVED, (message) => {    
       console.log("Message: ",message.data.text);
       this.$refs.liveTranscriptRef.readTranscription(message.data.text);
     });
-
 
     // Detect changes and focus and emit event. This will be listened by ChatWindow to adapt to iOS Safari
     const userInput = document.getElementById('twc-user-input-field');
@@ -250,8 +226,7 @@ export default {
   },
 
   beforeDestroy() {
-    EventBus.$off(events.BOT_MESSAGE_RECEIVED);
-    EventBus.$off(events.STOP_ASR_TTS);
+    EventBus.$off(events.BOT_MESSAGE_RECEIVED);    
   },
 
   methods: {
@@ -259,9 +234,8 @@ export default {
       const userInputField = document.getElementById('twc-user-input-field');
       userInputField.value = DOMPurify.sanitize(transcription);
     },
-    handleTranscribing(value) {
-      this.isDisabled=value
-      console.log('Transcribing event emitted with value:', value);
+    handleTranscribing(value) {      
+      this.transcribing = value
     },
     setInputActive(onoff) {
       this.inputActive = onoff;
@@ -293,6 +267,7 @@ export default {
     },
 
     async sendButtonClicked() {
+      this.$refs.liveTranscriptRef.stopTTS();
       const payload = basePayload();
 
       await handleExtension(API_ON_SEND_BUTTON_CLICK, payload);
@@ -309,9 +284,7 @@ export default {
     async uploadButtonClicked() {
       await handleExtension(API_ON_UPLOAD_BUTTON_CLICK);
     },
-    
-
-    async _submitText() {
+      async _submitText() {
       // Create payload object
       const payload = basePayload();
 
@@ -392,22 +365,7 @@ export default {
 }
 
 .twc-user-input.twc-disabled .twc-user-input__text,
-.twc-user-input.twc-disabled .twc-user-input__button,
-.twc-user-input.twc-disabled .twc-user-input__send-icon,
-.twc-user-input.twc-disabled .twc-user-input__upload-icon,
-.twc-user-input.twc-disabled .twc-user-input__asr-icon,
-.twc-user-input.twc-disabled .twc-user-input__tts-icon {
-  filter: grayscale(100%);
-  opacity: 0.4;
-}
-
-/*
-When the upload, asr or tts buttons are disabled and then the input box is disabled as well
-We should not dim it twice, so we check: .twc-user-input:not(.twc-disabled)
-*/
-.twc-user-input:not(.twc-disabled) .twc-user-input__button.twc-disabled .twc-user-input__upload-icon-wrapper,
-.twc-user-input:not(.twc-disabled) .twc-user-input__button.twc-disabled .twc-user-input__asr-icon-wrapper,
-.twc-user-input:not(.twc-disabled) .twc-user-input__button.twc-disabled .twc-user-input__tts-icon-wrapper {
+.twc-user-input.twc-disabled .twc-user-input__button {
   filter: grayscale(100%);
   opacity: 0.4;
 }
@@ -488,9 +446,7 @@ We should not dim it twice, so we check: .twc-user-input:not(.twc-disabled)
 }
 
 
-.twc-user-input__upload-icon-wrapper,
-.twc-user-input__asr-icon-wrapper,
-.twc-user-input__tts-icon-wrapper {
+.twc-user-input__upload-icon-wrapper {
   background: none;
   border: none;
   padding: 0;
@@ -504,10 +460,6 @@ We should not dim it twice, so we check: .twc-user-input:not(.twc-disabled)
   color: var(--uploadicon-fg-color, #263238);
 }
 
-.twc-user-input__asr-icon-wrapper {
-  color: var(--asricon-fg-color, #263238);
-}
-
 .twc-broken-service-icon::before {
   position: absolute;
   top: 25%;
@@ -519,34 +471,13 @@ We should not dim it twice, so we check: .twc-user-input:not(.twc-disabled)
 }
 
 
-.twc-user-input__tts-icon-wrapper {
-  color: var(--ttsicon-fg-color, #263238);
-}
-
-
 .twc-user-input__send-icon,
-.twc-user-input__upload-icon,
-.twc-user-input__asr-icon,
-.twc-user-input__tts-icon {
+.twc-user-input__upload-icon
+{
   height: 20px;
   width: 20px;
   align-self: center;
 }
-
-.twc-user-input__asr-icon-wrapper.twc-active {
-  fill: var(--asricon-active-color, darkred);
-  stroke: var(--asricon-active-color, red);
-  filter: grayscale(0);
-  opacity: 100%;
-}
-
-.twc-user-input__tts-icon-wrapper.twc-active {
-  fill: var(--ttsicon-active-color, darkred);
-  stroke: var(--ttsicon-active-color, red);
-  filter: grayscale(0);
-  opacity: 100%;
-}
-
 
 .twc-user-input__button.twc-disabled,
 .twc-user-input__button.twc-disabled button {
@@ -575,9 +506,8 @@ We should not dim it twice, so we check: .twc-user-input:not(.twc-disabled)
 /* Increase tap target on mobile */
 @media (max-width: 450px) {
   .twc-user-input__send-icon-wrapper,
-  .twc-user-input__upload-icon-wrapper,
-  .twc-user-input__asr-icon-wrapper,
-  .twc-user-input__tts-icon-wrapper {
+  .twc-user-input__upload-icon-wrapper
+  {
     width: 44px;
   }
 
