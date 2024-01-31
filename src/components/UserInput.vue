@@ -4,7 +4,7 @@
         class="twc-user-input"
         :class="{ 'twc-active': inputActive, 'twc-disabled': inputDisabled }"
     >   
-      <div>
+      <div v-if="shouldDisplaySpeechRec">
         <live-transcript ref="liveTranscriptRef" @transcribing="handleTranscribing" @transcription="handleTranscription"></live-transcript>
       </div>
       <textarea
@@ -136,13 +136,18 @@ export default {
   },
   computed: {
     ...mapState(['sendIconUrl', 'showUploadButton', 'uploadIconUrl']),
+    shouldDisplaySpeechRec() {         
+      return this.asrActive || this.ttsActive;
+     },
   },
   data() {
     return {
       inputActive: false,
       inputDisabled: false,
       uploadDisabled: false,
-      showUserInput: true
+      showUserInput: true,
+      asrActive: store.getters.asrActive,
+      ttsActive: store.getters.ttsActive,
     };
   },
 
@@ -193,10 +198,11 @@ export default {
       }
     });
 
-    EventBus.$on(events.BOT_MESSAGE_RECEIVED, (message) => {    
-      console.log("Message: ",message.data.text);
-      this.$refs.liveTranscriptRef.readTranscription(message.data.text);
-    });
+    if (this.ttsActive){
+      EventBus.$on(events.BOT_MESSAGE_RECEIVED, (message) => {    
+        this.$refs.liveTranscriptRef.readTranscription(message.data.text);
+      });
+    }
 
     // Detect changes and focus and emit event. This will be listened by ChatWindow to adapt to iOS Safari
     const userInput = document.getElementById('twc-user-input-field');
@@ -337,179 +343,179 @@ export default {
 </script>
 
 <style scoped>
-.twc-user-input {
-  min-height: 56px;
-  margin: 0px;
-  position: relative;
-  bottom: 0;
-  display: flex;
-  justify-content: space-between;
-  background-color: var(--user-input-bg-color, #f4f7f9);
-  border-bottom-left-radius: 10px;
-  border-bottom-right-radius: 10px;
-  transition: background-color 0.2s ease, box-shadow 0.2s ease;
-  pointer-events: initial;
-  padding: 0 5px;
-}
-
-/* See above, we use a dummy <a> tag to fix a keyboard focus issue on safari */
-/* This style makes the dummy tag invisible but we can still give it focus */
-#twc-focus-fix {
-  outline: none;
-  position: absolute;
-  margin-left: -9999px;
-}
-
-.twc-user-input.twc-disabled {
-  pointer-events: none;
-}
-
-.twc-user-input.twc-disabled .twc-user-input__text,
-.twc-user-input.twc-disabled .twc-user-input__button {
-  filter: grayscale(100%);
-  opacity: 0.4;
-}
-
-.twc-user-input__text {
-  width: 100%;
-  resize: none;
-  border: none;
-  outline: none;
-  box-sizing: border-box;
-  margin: 4px 4px 4px 4px;
-  padding: 12px;
-  font-size: 0.95em;
-  font-weight: 400;
-  line-height: 1.6;
-  white-space: pre-wrap;
-  word-wrap: break-word;
-  color: var(--user-input-fg-color, #565867);
-  background-color: transparent;
-  -webkit-font-smoothing: antialiased;
-  max-height: 200px;
-  min-height: 56px;
-  overflow: scroll;
-  bottom: 0;
-  overflow-y: auto;
-  overflow-x: hidden;
-  -webkit-overflow-scrolling: touch;
-  font-family: inherit;
-}
-
-.twc-user-input__text::placeholder {
-  color: var(--secondary-color, #6c757d);
-}
-
-/* fix placeholder issue on Edge browsers */
-@supports (-ms-ime-align: auto) {
-  [placeholder]:empty:focus::before {
-    content: '';
-    margin-top: 14px;
-  }
-}
-
-/* fix placeholder issue on IE11 browsers */
-@media all and (-ms-high-contrast: none) {
-  [placeholder]:empty:focus::before {
-    content: '';
-    margin-bottom: 0px;
+  .twc-user-input {
+    min-height: 56px;
+    margin: 0px;
+    position: relative;
+    bottom: 0;
+    display: flex;
+    justify-content: space-between;
+    background-color: var(--user-input-bg-color, #f4f7f9);
+    border-bottom-left-radius: 10px;
+    border-bottom-right-radius: 10px;
+    transition: background-color 0.2s ease, box-shadow 0.2s ease;
+    pointer-events: initial;
+    padding: 0 5px;
   }
 
-  [placeholder]:empty.twc-user-input__text::before {
-    height: 0px;
-  }
-}
-
-.twc-user-input__button {
-  max-height: 200px;
-  margin-left: 2px;
-  margin-right: 2px;
-  display: flex;
-  flex-direction: column;
-  justify-content: center;
-  cursor: pointer;
-}
-
-.twc-user-input.twc-active {
-  background-color: var(--light-fg-color, #ffffff);
-  box-shadow: 0px -4px 15px 0px rgba(201, 201, 201, 0.3);
-}
-
-.twc-user-input__send-icon-wrapper {
-  background: none;
-  border: none;
-  padding: 0px;
-  color: var(--sendicon-fg-color, #263238);
-  width: 24px;
-  height: 44px;
-  cursor: pointer;
-}
-
-
-.twc-user-input__upload-icon-wrapper {
-  background: none;
-  border: none;
-  padding: 0;
-  width: 24px;
-  height: 44px;
-  cursor: pointer;
-  outline: none;
-}
-
-.twc-user-input__upload-icon-wrapper {
-  color: var(--uploadicon-fg-color, #263238);
-}
-
-.twc-broken-service-icon::before {
-  position: absolute;
-  top: 25%;
-  left: 0;
-  content: '🚫';
-  opacity: 0.4;
-  font-size: 1.5em;
-  line-height: 100%;
-}
-
-
-.twc-user-input__send-icon,
-.twc-user-input__upload-icon
-{
-  height: 20px;
-  width: 20px;
-  align-self: center;
-}
-
-.twc-user-input__button.twc-disabled,
-.twc-user-input__button.twc-disabled button {
-  cursor: default;
-}
-
-.twc-user-input__text::-webkit-scrollbar {
-  width: 3px;
-}
-
-/* Track */
-.twc-user-input__text::-webkit-scrollbar-track {
-  background: none; 
-  border-radius: 10px;
-  margin-top: 2px;
-  margin-bottom: 2px;
-  box-shadow: none;
-}
- 
-/* Handle */
-.twc-user-input__text::-webkit-scrollbar-thumb {
-  background: rgb(196, 196, 196); 
-  border-radius: 10px;
+  /* See above, we use a dummy <a> tag to fix a keyboard focus issue on safari */
+  /* This style makes the dummy tag invisible but we can still give it focus */
+  #twc-focus-fix {
+    outline: none;
+    position: absolute;
+    margin-left: -9999px;
   }
 
-/* Increase tap target on mobile */
-@media (max-width: 450px) {
-  .twc-user-input__send-icon-wrapper,
-  .twc-user-input__upload-icon-wrapper
+  .twc-user-input.twc-disabled {
+    pointer-events: none;
+  }
+
+  .twc-user-input.twc-disabled .twc-user-input__text,
+  .twc-user-input.twc-disabled .twc-user-input__button {
+    filter: grayscale(100%);
+    opacity: 0.4;
+  }
+
+  .twc-user-input__text {
+    width: 100%;
+    resize: none;
+    border: none;
+    outline: none;
+    box-sizing: border-box;
+    margin: 4px 4px 4px 4px;
+    padding: 12px;
+    font-size: 0.95em;
+    font-weight: 400;
+    line-height: 1.6;
+    white-space: pre-wrap;
+    word-wrap: break-word;
+    color: var(--user-input-fg-color, #565867);
+    background-color: transparent;
+    -webkit-font-smoothing: antialiased;
+    max-height: 200px;
+    min-height: 56px;
+    overflow: scroll;
+    bottom: 0;
+    overflow-y: auto;
+    overflow-x: hidden;
+    -webkit-overflow-scrolling: touch;
+    font-family: inherit;
+  }
+
+  .twc-user-input__text::placeholder {
+    color: var(--secondary-color, #6c757d);
+  }
+
+  /* fix placeholder issue on Edge browsers */
+  @supports (-ms-ime-align: auto) {
+    [placeholder]:empty:focus::before {
+      content: '';
+      margin-top: 14px;
+    }
+  }
+
+  /* fix placeholder issue on IE11 browsers */
+  @media all and (-ms-high-contrast: none) {
+    [placeholder]:empty:focus::before {
+      content: '';
+      margin-bottom: 0px;
+    }
+
+    [placeholder]:empty.twc-user-input__text::before {
+      height: 0px;
+    }
+  }
+
+  .twc-user-input__button {
+    max-height: 200px;
+    margin-left: 2px;
+    margin-right: 2px;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    cursor: pointer;
+  }
+
+  .twc-user-input.twc-active {
+    background-color: var(--light-fg-color, #ffffff);
+    box-shadow: 0px -4px 15px 0px rgba(201, 201, 201, 0.3);
+  }
+
+  .twc-user-input__send-icon-wrapper {
+    background: none;
+    border: none;
+    padding: 0px;
+    color: var(--sendicon-fg-color, #263238);
+    width: 24px;
+    height: 44px;
+    cursor: pointer;
+  }
+
+
+  .twc-user-input__upload-icon-wrapper {
+    background: none;
+    border: none;
+    padding: 0;
+    width: 24px;
+    height: 44px;
+    cursor: pointer;
+    outline: none;
+  }
+
+  .twc-user-input__upload-icon-wrapper {
+    color: var(--uploadicon-fg-color, #263238);
+  }
+
+  .twc-broken-service-icon::before {
+    position: absolute;
+    top: 25%;
+    left: 0;
+    content: '🚫';
+    opacity: 0.4;
+    font-size: 1.5em;
+    line-height: 100%;
+  }
+
+
+  .twc-user-input__send-icon,
+  .twc-user-input__upload-icon
   {
-    width: 44px;
+    height: 20px;
+    width: 20px;
+    align-self: center;
   }
 
-}
+  .twc-user-input__button.twc-disabled,
+  .twc-user-input__button.twc-disabled button {
+    cursor: default;
+  }
+
+  .twc-user-input__text::-webkit-scrollbar {
+    width: 3px;
+  }
+
+  /* Track */
+  .twc-user-input__text::-webkit-scrollbar-track {
+    background: none; 
+    border-radius: 10px;
+    margin-top: 2px;
+    margin-bottom: 2px;
+    box-shadow: none;
+  }
+  
+  /* Handle */
+  .twc-user-input__text::-webkit-scrollbar-thumb {
+    background: rgb(196, 196, 196); 
+    border-radius: 10px;
+    }
+
+  /* Increase tap target on mobile */
+  @media (max-width: 450px) {
+    .twc-user-input__send-icon-wrapper,
+    .twc-user-input__upload-icon-wrapper
+    {
+      width: 44px;
+    }
+
+  }
 </style>

@@ -1,100 +1,107 @@
 <template>
     <div>
-      <button :key="transcribing" @click="toggleTranscription" v-html="recordIcon" />
-      <button @click="stopTTS" v-html="muteIcon" />
+      <button v-if= asrActive :key="transcribing" @click="toggleTranscription" v-html="recordIcon" />
+      <button v-if= ttsActive @click="stopTTS" v-html="muteIcon" type="button"/>
 
-    <!-- <button @click="pauseTranscription" :disabled="!transcribing || !recognition" v-html="pauseIcon"/> -->
     </div>
   </template>
   
   <script>
-  export default {
-    props: {
-      userInputFieldId: String,
-    },
-    data() {
-      return {
-        transcribing: false,
-        recognition: null,
-        alertMessage: this.$t('message.webspeech_not_soported')
-      };
-    },
-    methods: {
-      toggleTranscription() {
-            if (this.transcribing) {
-                this.pauseTranscription();
-            } else {
-                this.startTranscription();
-            }
-        },
-      startTranscription() {
-        const SpeechRecognition = window.SpeechRecognition || window.webkitSpeechRecognition;
-        if (typeof SpeechRecognition === "undefined") {
-          alert(this.alertMessage);
-          return;
-        }
-  
-        this.recognition = new SpeechRecognition();
-        this.recognition.continuous = true;
-        this.recognition.interimResults = true;
-        this.recognition.addEventListener('result', (event) => this.resultHandler(event));
-        this.recognition.start();                
-        this.$set(this, 'transcribing', true);
-        this.$emit('transcribing', this.transcribing);
-        this.$forceUpdate();
+    import { store } from "../store/store";
 
-      },
-      
-      readTranscription(text) {
-        const utterance = new SpeechSynthesisUtterance(text);
-        window.speechSynthesis.speak(utterance);
-        this.$forceUpdate();
+    export default {
+      props: {
+        userInputFieldId: String,
       },
 
-      pauseTranscription() {
-        if (this.recognition) {
-          this.recognition.stop();
-          this.$set(this, 'transcribing', false);
-          this.readTranscription(this.lastResult);
-          this.$emit('transcribing', this.transcribing);
-          this.$emit('transcription', this.lastResult);
-          this.$forceUpdate();
-        }
-      },      
+      data() {
+        return {
+          transcribing: false,
+          recognition: null,
+          alertMessage: this.$t('message.webspeech_not_soported'),
+          asrActive: store.getters.asrActive,
+          ttsActive: store.getters.ttsActive,
+        };
+      },
+
+      methods: {
+
+        toggleTranscription() {
+              if (this.transcribing) {
+                  this.pauseTranscription();
+              } else {
+                  this.startTranscription();
+              }
+          },
+
+        startTranscription() {
+          const SpeechRecognition = window.SpeechRecognition || window.webkitSpeechRecognition;
+          if (typeof SpeechRecognition === "undefined") {
+            alert(this.alertMessage);
+            return;
+          }
     
-      stopTTS() {
-        window.speechSynthesis.cancel();
-        console.log("TTS stopped");
-      },
+          this.recognition = new SpeechRecognition();
+          this.recognition.continuous = true;
+          this.recognition.interimResults = true;
+          this.recognition.addEventListener('result', (event) => this.resultHandler(event));
+          this.recognition.start();                
+          this.$set(this, 'transcribing', true);
+          this.$emit('transcribing', this.transcribing);
+
+        },
+        
+        readTranscription(text) {
+          const utterance = new SpeechSynthesisUtterance(text);
+          window.speechSynthesis.speak(utterance);
+        },
+
+        pauseTranscription() {
+          if (this.recognition) {
+            this.recognition.stop();
+            this.$set(this, 'transcribing', false);
+            if (this.ttsActive){
+              this.readTranscription(this.lastResult);            
+            }
+            this.$emit('transcribing', this.transcribing);
+            this.$emit('transcription', this.lastResult);
+          }
+        },      
       
-      resultHandler(event) {
-        this.lastResult = event.results[event.results.length - 1][0].transcript;
-        this.$emit('transcription', this.lastResult);
-      },  
+        stopTTS() {
+          window.speechSynthesis.cancel();
+          console.log("TTS stopped");
+        },
+        
+        resultHandler(event) {
+          this.lastResult = event.results[event.results.length - 1][0].transcript;
+          this.$emit('transcription', this.lastResult);
+        },  
+      },
+
+      computed: {
+        recordIcon() {
+          const recordSymbol = this.process && this.process.env ? this.process.env.ASR_RECORD_SYMBOL : '&#127897;'; 
+          const stopSymbol = this.process && this.process.env ? this.process.env.TTS_STOP_SYMBOL : '&#9940;'; 
+          return this.transcribing ? stopSymbol : recordSymbol;
+          return this.process && this.process.env ? this.process.env.ASR_RECORD_SYMBOL : '&#127897;';
+        },
+
+        pauseIcon() {
+          return this.process && this.process.env ? this.process.env.ASR_PAUSE_SYMBOL : '&#9940;';
+        },
+
+        muteIcon() {
+          return this.process && this.process.env ? this.process.env.ASR_PAUSE_SYMBOL : '&#128263;';
+        },
+
+      },
+      watch: {
+      transcribing(newValue) {
+          console.log("Transcribing state changed to:", newValue);  
+      }
     },
-    computed: {
-      recordIcon() {
-        const recordSymbol = this.process && this.process.env ? this.process.env.ASR_RECORD_SYMBOL : '&#127897;'; // Default record icon
-        const stopSymbol = this.process && this.process.env ? this.process.env.ASR_STOP_SYMBOL : '&#9940;'; // Default stop icon   
-        return this.transcribing ? stopSymbol : recordSymbol;
-        return this.process && this.process.env ? this.process.env.ASR_RECORD_SYMBOL : '&#127897;';
-      },
-
-
-      pauseIcon() {
-        return this.process && this.process.env ? this.process.env.ASR_PAUSE_SYMBOL : '&#9940;';
-      },
-      muteIcon() {
-        return this.process && this.process.env ? this.process.env.ASR_PAUSE_SYMBOL : '&#128263;';
-      },
-
-    },
-    watch: {
-    transcribing(newValue) {
-        console.log("Transcribing state changed to:", newValue);  
-    }
-},
-  };
+    };
   </script>
   
   <style scoped>
