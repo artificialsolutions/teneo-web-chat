@@ -8,6 +8,7 @@
   
   <script>
     import { store } from "../store/store";
+    import { mapState } from 'vuex';
 
     export default {
       props: {
@@ -21,6 +22,7 @@
           alertMessage: this.$t('message.webspeech_not_soported'),
           asrActive: store.getters.asrActive,
           ttsActive: store.getters.ttsActive,
+          lastResult:''
         };
       },
 
@@ -80,19 +82,19 @@
       },
 
       computed: {
+        ...mapState(['asrRecordSymbol', 'ttsStopSymbol','asrPauseSymbol']),
         recordIcon() {
-          const recordSymbol = this.process && this.process.env ? this.process.env.ASR_RECORD_SYMBOL : '&#127897;'; 
-          const stopSymbol = this.process && this.process.env ? this.process.env.TTS_STOP_SYMBOL : '&#9940;'; 
+          const recordSymbol = this.asrRecordSymbol || '&#127897;'; 
+          const stopSymbol = this.asrPauseSymbol || '&#9940;'; 
           return this.transcribing ? stopSymbol : recordSymbol;
-          return this.process && this.process.env ? this.process.env.ASR_RECORD_SYMBOL : '&#127897;';
         },
 
         pauseIcon() {
-          return this.process && this.process.env ? this.process.env.ASR_PAUSE_SYMBOL : '&#9940;';
+          return this.asrPauseSymbol || '&#9940;';
         },
 
-        muteIcon() {
-          return this.process && this.process.env ? this.process.env.ASR_PAUSE_SYMBOL : '&#128263;';
+        muteIcon() {          
+          return this.ttsStopSymbol || '&#128263;';
         },
 
       },
