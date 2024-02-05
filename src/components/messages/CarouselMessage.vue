@@ -1,38 +1,32 @@
 <template>
-  <div class="twc-carousel" :class="{ 'twc-expired': replySent || isExpired}"
+  <div class="twc-carousel" :class="{ 'twc-expired': replySent || isExpired }"
     @touchstart="handleTouchStart"
     @touchmove="handleTouchMove"
-    @touchend="handleTouchEnd"
-  >
+    @touchend="handleTouchEnd">
+    
     <div class="twc-carousel-ctrl">
       <button class="twc-carousel-bck twc-carousel-ctrl-arrows"
-        @click="slideToIndex(activeSlide - 1)"
-        v-bind:disabled="isFirstSlide"
-        ref="backBtn"
-        >&#171;</button>
+        @click="slide(-1)"
+        :disabled="isFirstSlide">&#171;</button>
 
-        <span class="twc-carousel-ctrl-dots-container">
-      <button class="twc-carousel-ctrl-dots"
-              v-for="(btnIndex) in carouselItemCount"
-              @click="skipToSlide(btnIndex)"
-              v-bind:class="{'twc-carousel-ctrl-dots-active': isActiveSlide(btnIndex-1)}"
-              :ref="'skipTo' + btnIndex"
-      >
-      </button>
+      <span class="twc-carousel-ctrl-dots-container">
+        <button class="twc-carousel-ctrl-dots"
+          v-for="btnIndex in carouselItemCount"
+          @click="skipToSlide(btnIndex)"
+          :class="{'twc-carousel-ctrl-dots-active': isActiveSlide(btnIndex-1)}"
+          :key="'dot' + btnIndex">&#8226;</button>
       </span>
+
       <button class="twc-carousel-fwd twc-carousel-ctrl-arrows"
-        @click="slideToIndex(activeSlide + 1)"
-        v-bind:disabled="isLastSlide"
-        :ref="'fwdBtn'"
-        >&#187;</button>
+        @click="slide(1)"
+        :disabled="isLastSlide">&#187;</button>
     </div>
 
     <ul class="twc-carousel-list">
       <li v-for="(message, idx) in carouselItems"
           class="twc-carousel-list-item"
-          :key="idx + 'Slide'"
-          v-bind:data-slide="idx"
-          ref="cards">
+          :key="`slide-${idx}`"
+          :style="getItemStyle(idx)">
 
         <div class="twc-card" v-if="message.type==='card'">
           <div class="twc-card-img" v-if="message.image">
@@ -114,22 +108,12 @@ export default {
     message: {
       type: Object,
       required: true,
-      validator: (message) => {
-        return (
-            message &&
-            message.type === 'carousel' &&
-            message.data &&
-            message.data.carousel_items &&
-            message.data.carousel_items.length > 0
-        );
-      },
+      validator: (msg) => msg?.type === 'carousel' && Array.isArray(msg.data?.carousel_items) && msg.data.carousel_items.length > 0,
     }
   },
   data() {
     return {
-      activeSlide: 0,
-      isFirstSlide: true,
-      isLastSlide: false,
+      activeSlide: 0,      
       touchStartX: 0,
       touchEndX: -1
     };
@@ -139,25 +123,42 @@ export default {
       return this.message.data.carousel_items;
     },
     carouselItemCount() {
-      return this.message.data.carousel_items.length;
+      return this.carouselItems.length;
     },
-    linkitems() {
-      return this.message.data.link_items;
+    isFirstSlide() {
+      return this.activeSlide === 0;
+    },
+    isLastSlide() {
+      return this.activeSlide === this.carouselItemCount - 1;
     },
     replySent() {
-      return !!this.message.selected || this.message.selected === 0;
-    },
-    selected() {
-      return this.message.selected;
+      return this.message.selected !== undefined;
     },
     isExpired() {
-      const { messageList } = this.$teneoApi;
-      const latestMessage = messageList[messageList.length - 1];
-
+      const latestMessage = this.$teneoApi.messageList.at(-1);
       return latestMessage && latestMessage !== this.message;
-    }
+    },
   },
   methods: {
+
+    slide(direction) {
+      const newIndex = this.activeSlide + direction;
+      if (newIndex >= 0 && newIndex < this.carouselItemCount) {
+        this.activeSlide = newIndex;
+      }
+    },
+    skipToSlide(idx) {
+      this.activeSlide = idx - 1;
+    },
+    isActiveSlide(idx) {
+      return idx === this.activeSlide;
+    },
+    getItemStyle(idx) {
+      const translateX = (this.activeSlide * -100) + 4;
+      return {
+        transform: `translateX(${translateX}%)`
+      };
+    },
     moveSlideElements() {
 
       this.isFirstSlide = this.activeSlide === 0;
@@ -168,15 +169,7 @@ export default {
         slide.style.transform = 'translateX(' + ((this.activeSlide * -100) + 4) + '%)';
       }
 
-    },
-    isActiveSlide(idx) {
-      return idx === this.activeSlide;
-    },
-
-    skipToSlide(idx) {
-      this.activeSlide = idx - 1;
-      this.moveSlideElements();
-    },
+    },   
 
     slideToIndex(idx) {
       if (idx >= 0 && idx < this.message.data.carousel_items.length) {
