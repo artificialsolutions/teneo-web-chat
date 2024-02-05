@@ -131,7 +131,7 @@ export default {
       isFirstSlide: true,
       isLastSlide: false,
       touchStartX: 0,
-      touchEndX: 0
+      touchEndX: -1
     };
   },
   computed: {
@@ -223,9 +223,13 @@ export default {
 
     handleTouchMove(event) {
       this.touchEndX = event.touches[0].clientX;
+
     },
 
     handleTouchEnd() {
+      if (this.touchEndX === -1) {
+        return;
+    }
       const touchDiff = this.touchStartX - this.touchEndX;
       const sensitivity = 50; // Adjust the value as per your needs
 
@@ -237,13 +241,7 @@ export default {
     }
   },
   mounted() {
-    this.additionalCardProcessing();
-    this.$el.addEventListener('touchstart', function (evt) {
-      window.twcTmp.touchstartX = evt.changedTouches[0].screenX;
-    });
-    this.$el.addEventListener('touchend', function (evt) {
-      (window.twcTmp.touchstartX < evt.changedTouches[0].screenX) ? this.slideBack() : this.slideForward();
-    }.bind(this));
+    this.additionalCardProcessing(); 
   },
 
 };
