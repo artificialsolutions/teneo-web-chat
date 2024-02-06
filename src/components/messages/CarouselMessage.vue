@@ -212,6 +212,7 @@ export default {
     },
     handleTouchStart(event) {
       this.touchStartX = event.touches[0].clientX;
+      this.touchEndX= -1 // Reset touchEndX on new drag start
     },
 
     handleTouchMove(event) {
@@ -231,6 +232,7 @@ export default {
       } else if (touchDiff < -sensitivity) {
         this.slideToIndex(this.activeSlide - 1); // Slide back
       }
+      this.touchEndX= -1 // Reset touchEndX after handling the touch end
     }
   },
   mounted() {
