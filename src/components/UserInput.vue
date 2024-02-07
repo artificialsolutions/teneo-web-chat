@@ -5,7 +5,8 @@
         :class="{ 'twc-active': inputActive, 'twc-disabled': inputDisabled }"
     >   
       <div v-if="shouldDisplaySpeechRec">
-        <live-transcript ref="liveTranscriptRef" @transcribing="handleTranscribing" @transcription="handleTranscription"></live-transcript>
+        <live-transcript ref="liveTranscriptRef" @transcribing="handleTranscribing" @transcription="handleTranscription" @transcriptionComplete="handleTranscriptionComplete"></live-transcript>        
+
       </div>
       <textarea
           id="twc-user-input-field"
@@ -236,6 +237,11 @@ export default {
   },
 
   methods: {
+    handleTranscriptionComplete(transcribedText) {   
+      this.sendButtonClicked(transcribedText).then(() => {
+        this.clearTextarea();
+      });
+  },
     handleTranscription(transcription) {
       const userInputField = document.getElementById('twc-user-input-field');
       userInputField.value = DOMPurify.sanitize(transcription);
@@ -272,9 +278,10 @@ export default {
       return detectMobile();
     },
 
-    async sendButtonClicked() {
+    async sendButtonClicked(transcribedText = null) {
       this.$refs.liveTranscriptRef.stopTTS();
       const payload = basePayload();
+      const textToSend = transcribedText || this.$refs.userInput.value;
 
       await handleExtension(API_ON_SEND_BUTTON_CLICK, payload);
 
@@ -326,13 +333,20 @@ export default {
           },
         });
       }
+      this.$refs.userInput.value = '';
 
       // Don't give user input focus on mobile devices, keyboard blocks the view too much
       if (!detectMobile()) {
         this.$refs.userInput.focus();
       }
     },
-
+ 
+    clearTextarea() {
+      if (this.$refs.userInput) {
+        this.$refs.userInput.value = ''; 
+        this.autoTextareaHeight(); 
+      }
+    },
     autoTextareaHeight() {
       const userInput = document.getElementById('twc-user-input-field');
       userInput.style.height = '1px';
