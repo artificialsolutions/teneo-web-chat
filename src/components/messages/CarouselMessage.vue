@@ -14,7 +14,7 @@
           v-for="btnIndex in carouselItemCount"
           @click="skipToSlide(btnIndex)"
           :class="{'twc-carousel-ctrl-dots-active': isActiveSlide(btnIndex-1)}"
-          :key="'dot' + btnIndex">&#8226;</button>
+          :key="'dot' + btnIndex"></button>
       </span>
 
       <button class="twc-carousel-fwd twc-carousel-ctrl-arrows"
