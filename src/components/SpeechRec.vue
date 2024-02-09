@@ -1,5 +1,5 @@
 <template>
-  <div>
+    <div class="button-container">
     <button v-if="asrActive"
             @mousedown="startTranscription"
             @mouseup="stopASR"
@@ -7,8 +7,15 @@
             @touchend.prevent="stopASR"
             @mouseleave="handleMouseLeave"
             v-html="recordIcon"
-            type="button"></button>
-    <button v-if="ttsActive" @click="stopTTS" v-html="muteIcon" type="button"></button>
+            type="button"
+            class="asr-button custom-icon"
+            ></button>
+    <button v-if="ttsActive" 
+    @click="stopTTS" 
+    v-html="muteIcon" 
+    type="button" 
+    class="tts-button custom-icon"
+    ></button>
   </div>
 </template>
 
@@ -64,15 +71,13 @@ export default {
     },
 
     stopASR() {
-      if (this.recognition && this.transcribing) {
+      if (this.recognition) {
         this.recognition.stop();
-        this.transcribing = false;
-        if (this.ttsActive && this.lastResult) {
-          this.readTranscription(this.lastResult);
-        }
+      }
+      this.transcribing = false;
+      this.$emit('transcribing', this.transcribing);
+      if (!this.lastResult) {        
         this.$emit('transcriptionComplete', this.lastResult);
-        this.$emit('transcribing', this.transcribing);
-        this.$emit('transcription', this.lastResult);
       }
     },
 
@@ -94,16 +99,62 @@ export default {
 
     resultHandler(event) {
       this.lastResult = event.results[event.results.length - 1][0].transcript;
+      if (event.results[event.results.length - 1].isFinal) {
+        this.transcribing = false;
+        this.$emit('transcribing', this.transcribing);
+        this.$emit('transcriptionComplete', this.lastResult);
+        
+      }
       this.$emit('transcription', this.lastResult);
-    },
+    },  
   },
 };
 </script>
 
   
-  <style scoped>
-    .stop {
-      background-color: red;
-    }
-  </style>
+<style scoped>
+.button-container {
+  display: flex;
+  flex-direction: column;
+  align-items: center; 
+  justify-content: space-around; 
+  height: 100%; 
+  padding: 2.5px 0;
+}
+
+.asr-button, .tts-button {
+  flex: 0 0 auto; 
+  display: flex;
+  flex-direction: row; 
+  justify-content: center;
+  align-items: center; 
+  cursor: pointer;
+  background: none;
+  border: none;
+  padding: 10px;
+  margin: 5px 0; 
+  width: 44px; 
+  height: 44px; 
+  outline: none;
+}
+
+.custom-icon {  
+  height: 20px;
+  width: 20px;
+}
+
+/* Increase tap target on mobile for better accessibility */
+@media (max-width: 450px) {
+  .asr-button, .tts-button {
+    width: 44px;
+    height: 44px; 
+    padding: 15px;
+    margin: 10px 0;
+  }
+}
+
+.asr-button:hover, .tts-button:hover {
+  background-color: var(--hover-bg-color, #eceff1);
+}
+</style>
   
