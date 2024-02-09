@@ -79,15 +79,6 @@
                 @click="onLinkbuttonClick(button, $event)"
             >{{ button.title }}</a>
           </div>
-          <!-- link item in cards are deprecated, please use linkbuttons instead -->
-          <div class="twc-links" v-if="linkitems">
-            <a
-                v-for="(link, idx) in linkitems"
-                :href="link.url"
-                :key="idx"
-            >{{ link.title }}</a>
-          </div>
-          
         </div>
       </li>
     </ul>
@@ -200,16 +191,22 @@ export default {
       return sanitizeHtml(text);
     },
     additionalCardProcessing() {
-      let maxCardHeight = 0;
-      for (let card of this.$refs.cards) {
-        maxCardHeight = card.clientHeight > maxCardHeight ? card.clientHeight : maxCardHeight;
-      }
+  let maxCardHeight = 0;
+    const cards = Array.isArray(this.$refs.cards) ? this.$refs.cards : [this.$refs.cards].filter(c => c !== undefined);
 
-      for (let card of this.$refs.cards) {
-        let spacer = card.getElementsByClassName('twc-card-spacer')[0];
-        spacer.style.height = (maxCardHeight - card.clientHeight) + 'px';
+    for (let card of cards) {
+      maxCardHeight = Math.max(card.clientHeight, maxCardHeight);
+    }
+
+    for (let card of cards) {
+      let spacer = card.getElementsByClassName('twc-card-spacer')[0];
+      if (spacer) {
+        spacer.style.height = `${maxCardHeight - card.clientHeight}px`;
       }
-    },
+    }
+  },
+
+
     handleTouchStart(event) {
       this.touchStartX = event.touches[0].clientX;
       this.touchEndX= -1 // Reset touchEndX on new drag start
