@@ -1,37 +1,48 @@
 <template>
-    <div class="button-container">
+  <div class="button-container">
     <button v-if="asrActive"
             @mousedown="startTranscription"
             @mouseup="stopASR"
             @touchstart.prevent="startTranscription"
             @touchend.prevent="stopASR"
             @mouseleave="handleMouseLeave"
-            v-html="recordIcon"
             type="button"
-            class="asr-button custom-icon"
-            ></button>
+            class="asr-button custom-icon">
+      <span v-if="!transcribing && asrRecordSymbol" v-html="asrRecordSymbol"></span>
+      <AsrIcon v-else-if="!buttonPressed" class="custom-icon" aria-hidden="true" />
+      <AsrMuteIcon v-else class="custom-icon" aria-hidden="true" />
+    </button>
     <button v-if="ttsActive" 
-    @click="stopTTS" 
-    v-html="muteIcon" 
-    type="button" 
-    class="tts-button custom-icon"
-    ></button>
+            @click="stopTTS"     
+            type="button" 
+            class="tts-button custom-icon">
+      <span v-if="ttsStopSymbol" v-html="ttsStopSymbol"></span>
+      <ttsIcon v-else class="custom-icon" aria-hidden="true"/>
+    </button>
   </div>
 </template>
 
 <script>
 import { mapState, mapGetters } from 'vuex';
+import AsrIcon from '../icons/asr.vue';
+import AsrMuteIcon from '../icons/asr-mute.vue';
+import ttsIcon from '../icons/tts.vue';
 
 export default {
+  components: {
+    AsrIcon,
+    AsrMuteIcon,
+    ttsIcon
+  },
   props: {
     userInputFieldId: String,
   },
-
   data() {
     return {
       transcribing: false,
+      buttonPressed: false,
       recognition: null,
-      alertMessage: this.$t('message.webspeech_not_soported'),
+      alertMessage: this.$t('message.webspeech_not_supported'),
       lastResult: ''
     };
   },
@@ -42,18 +53,12 @@ export default {
       asrActive: 'asrActive',
       ttsActive: 'ttsActive'
     }),
-    recordIcon() {
-      const recordSymbol = this.asrRecordSymbol || '&#127897;';
-      const stopSymbol = this.asrPauseSymbol || '&#9940;';
-      return this.transcribing ? stopSymbol : recordSymbol;
-    },
-    muteIcon() {
-      return this.ttsStopSymbol || '&#128263;';
-    },
+    
   },
 
   methods: {
     startTranscription() {
+      this.buttonPressed = true;
       const SpeechRecognition = window.SpeechRecognition || window.webkitSpeechRecognition;
       if (typeof SpeechRecognition === "undefined") {
         alert(this.alertMessage);
@@ -71,6 +76,7 @@ export default {
     },
 
     stopASR() {
+      this.buttonPressed = false;
       if (this.recognition) {
         this.recognition.stop();
       }
@@ -129,8 +135,9 @@ export default {
   justify-content: center;
   align-items: center; 
   cursor: pointer;
-  background: none;
+  background-color: #f0f0f0; 
   border: none;
+  border-radius: 4px;
   padding: 10px;
   margin: 5px 0; 
   width: 44px; 
@@ -138,12 +145,16 @@ export default {
   outline: none;
 }
 
-.custom-icon {  
-  height: 20px;
+.custom-icon {
+  background: none;
+  border: none;
+  padding: 0px;
+  color: var(--sendicon-fg-color, #263238);
   width: 20px;
+  height: 20px;
+  cursor: pointer;  
 }
 
-/* Increase tap target on mobile for better accessibility */
 @media (max-width: 450px) {
   .asr-button, .tts-button {
     width: 44px;
@@ -157,4 +168,5 @@ export default {
   background-color: var(--hover-bg-color, #eceff1);
 }
 </style>
+
   
