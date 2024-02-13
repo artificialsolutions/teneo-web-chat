@@ -1,9 +1,16 @@
 # TTS/ASR Feature.
 Teneo Web Chat (TWC) incorporates a visual element enabling users to utilize their microphone for transcribing interactions with our chatbot, leveraging the capabilities of the WebspeechAPI. This functionality includes a designated button that initiates or halts the transcription process. Upon clicking the button, the transcription service is activated or deactivated, converting the user's spoken words into text.
 
-## Key Component Component: TranscriptionButton
+## Key Component Component: 
+TranscriptionButton
 
-This component displays a button that allows users to start and stop transcription. The button is disabled when transcription is already in progress, and it emits an event when transcription is started or stopped.
+* Provides a visual interface for starting and stopping speech-to-text transcription.
+* Changes appearance/state to indicate the active status of transcription.
+* Emits events to signal status updates to other parts of the application.
+
+## Web Speech API Integration:
+
+* Leverages the browser's built-in Web Speech API for both speech recognition (ASR) and text-to-speech (TTS) capabilities.
 
 ### Props:
 `userInputFieldId (String): ` The ID of the text area where the 
@@ -46,6 +53,12 @@ To ensure the ASR and TTS functionalities work seamlessly in your application, y
     ASR_ACTIVE= true
     TTS_ACTIVE= true
     ```
+
+### Component Integration:
+
+* Import and include the TTS/ASR component within your Teneo Web Chat application.
+* Ensure its placement aligns with your desired user interface layout.
+
  # How to Use Voice Features
 
 ## Automatic Speech Recognition ASR(Recording Your Voice)
@@ -61,5 +74,3 @@ To ensure the ASR and TTS functionalities work seamlessly in your application, y
 * Speak Clearly: For best transcription results, speak clearly and at a moderate pace.
 * Avoid Background Noise: Try to minimize background noise when using the speech-to-text feature to improve accuracy.
 * Check Volume: Make sure your device's volume is turned up when using the text-to-speech feature to hear the playback clearly.
-
-By following these simple steps, you can effortlessly interact with the application using your voice for input and receive auditory feedback. Enjoy a hands-free and accessible experience!
