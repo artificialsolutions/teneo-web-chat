@@ -81,10 +81,7 @@ export default {
         this.recognition.stop();
       }
       this.transcribing = false;
-      this.$emit('transcribing', this.transcribing);
-      if (!this.lastResult) {        
-        this.$emit('transcriptionComplete', this.lastResult);
-      }
+      this.$emit('transcribing', this.transcribing);      
     },
 
     readTranscription(text) {
@@ -104,15 +101,17 @@ export default {
     },
 
     resultHandler(event) {
-      this.lastResult = event.results[event.results.length - 1][0].transcript;
+      this.$emit('transcription', event.results[event.results.length - 1][0].transcript);      
       if (event.results[event.results.length - 1].isFinal) {
-        this.transcribing = false;
-        this.$emit('transcribing', this.transcribing);
-        this.$emit('transcriptionComplete', this.lastResult);
-        
+        this.$emit('transcriptionComplete', event.results);
       }
-      this.$emit('transcription', this.lastResult);
-    },  
+    },
+      
+    endHandler() {
+      this.transcribing = false; 
+      this.$emit('transcribing', this.transcribing);
+    }
+
   },
 };
 </script>

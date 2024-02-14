@@ -281,7 +281,6 @@ export default {
     async sendButtonClicked(transcribedText = null) {
       this.$refs.liveTranscriptRef.stopTTS();
       const payload = basePayload();
-      const textToSend = transcribedText || this.$refs.userInput.value;
 
       await handleExtension(API_ON_SEND_BUTTON_CLICK, payload);
 
