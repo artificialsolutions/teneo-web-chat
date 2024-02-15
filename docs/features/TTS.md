@@ -1,5 +1,5 @@
 # TTS/ASR Feature.
-Teneo Web Chat (TWC) incorporates a visual element enabling users to utilize their microphone for transcribing interactions with our chatbot, leveraging the capabilities of the WebspeechAPI. This functionality includes a designated button that initiates or halts the transcription process. Upon clicking the button, the transcription service is activated or deactivated, converting the user's spoken words into text.
+Text-to-Speech (TTS) and Automatic Speech Recognition (ASR) are incorporated as a visual element into Teneo Web Chat (TWC) enabling users to utilize their microphone for transcribing interactions with our chatbot, leveraging the capabilities of the WebspeechAPI. This functionality includes a designated button that initiates or halts the transcription process. Upon clicking the button, the transcription service is activated or deactivated, converting the user's spoken words into text.
 
 ## Key Component Component: 
 TranscriptionButton
