@@ -7,10 +7,13 @@
             @touchend.prevent="stopASR"
             @mouseleave="handleMouseLeave"
             type="button"
-            class="asr-button custom-icon">
+            class="asr-button custom-icon"> 
       <span v-if="!transcribing && asrRecordSymbol" v-html="asrRecordSymbol"></span>
-      <AsrIcon v-else-if="!buttonPressed" class="custom-icon" aria-hidden="true" />
-      <AsrMuteIcon v-else class="custom-icon" aria-hidden="true" />
+    <span v-if="buttonPressed && ttsStopSymbol" v-html="ttsStopSymbol"></span>
+    <AsrMuteIcon v-else-if="buttonPressed" class="custom-icon" aria-hidden="true" />
+    <AsrIcon v-else class="custom-icon" aria-hidden="true" />
+
+      
     </button>
     <button v-if="ttsActive" 
             @click="stopTTS"     
@@ -59,7 +62,14 @@ export default {
   methods: {
     startTranscription() {
       this.buttonPressed = true;
+      
+      // Before creating a new SpeechRecognition cleanup
+      if (this.recognition) {
+        this.recognition.stop(); 
+        this.recognition = null; 
+      }      
       const SpeechRecognition = window.SpeechRecognition || window.webkitSpeechRecognition;
+
       if (typeof SpeechRecognition === "undefined") {
         alert(this.alertMessage);
         return;
@@ -69,6 +79,7 @@ export default {
         this.recognition.continuous = true;
         this.recognition.interimResults = true;
         this.recognition.addEventListener('result', this.resultHandler);
+        this.recognition.addEventListener('end', this.endHandler);
         this.recognition.start();
         this.transcribing = true;
         this.$emit('transcribing', this.transcribing);
