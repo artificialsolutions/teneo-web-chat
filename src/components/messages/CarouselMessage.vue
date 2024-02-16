@@ -190,22 +190,6 @@ export default {
     sanitizedHtmlText(text) {
       return sanitizeHtml(text);
     },
-    additionalCardProcessing() {
-  let maxCardHeight = 0;
-    const cards = Array.isArray(this.$refs.cards) ? this.$refs.cards : [this.$refs.cards].filter(c => c !== undefined);
-
-    for (let card of cards) {
-      maxCardHeight = Math.max(card.clientHeight, maxCardHeight);
-    }
-
-    for (let card of cards) {
-      let spacer = card.getElementsByClassName('twc-card-spacer')[0];
-      if (spacer) {
-        spacer.style.height = `${maxCardHeight - card.clientHeight}px`;
-      }
-    }
-  },
-
 
     handleTouchStart(event) {
       this.touchStartX = event.touches[0].clientX;
@@ -231,10 +215,7 @@ export default {
       }
       this.touchEndX= -1 // Reset touchEndX after handling the touch end
     }
-  },
-  mounted() {
-    this.additionalCardProcessing(); 
-  },
+  },  
 
 };
 
