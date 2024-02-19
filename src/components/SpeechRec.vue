@@ -77,7 +77,8 @@ export default {
       if (!this.transcribing) {
         this.recognition = new SpeechRecognition();
         this.recognition.continuous = true;
-        this.recognition.interimResults = true;
+        const isMobile = /Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(navigator.userAgent);
+        this.recognition.interimResults = !isMobile;
         this.recognition.addEventListener('result', this.resultHandler);
         this.recognition.addEventListener('end', this.endHandler);
         this.recognition.start();
