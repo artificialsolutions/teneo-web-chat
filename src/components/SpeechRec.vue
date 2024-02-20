@@ -8,10 +8,10 @@
             @mouseleave="handleMouseLeave"
             type="button"
             class="asr-button custom-icon"> 
-      <span v-if="!transcribing && asrRecordSymbol" v-html="asrRecordSymbol"></span>
-    <span v-if="buttonPressed && ttsStopSymbol" v-html="ttsStopSymbol"></span>
-    <AsrMuteIcon v-else-if="buttonPressed" class="custom-icon" aria-hidden="true" />
-    <AsrIcon v-else class="custom-icon" aria-hidden="true" />
+       <span v-if="!transcribing && asrRecordSymbol" v-html="asrRecordSymbol"></span>
+      <span v-if="buttonPressed && !transcribing && ttsStopSymbol" v-html="ttsStopSymbol"></span>
+      <AsrMuteIcon v-if="buttonPressed && transcribing" class="custom-icon" aria-hidden="true" />
+      <AsrIcon v-else class="custom-icon" aria-hidden="true" />
 
       
     </button>
