@@ -115,7 +115,9 @@ export default {
     resultHandler(event) {
       this.$emit('transcription', event.results[event.results.length - 1][0].transcript);      
       if (event.results[event.results.length - 1].isFinal) {
-        this.$emit('transcriptionComplete', event.results);
+        //Transcript as String
+        const transcriptString = event.results[event.results.length - 1][0].transcript;
+        this.$emit('transcriptionComplete', transcriptString);
       }
     },
       
