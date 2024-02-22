@@ -191,6 +191,13 @@ export default {
       return sanitizeHtml(text);
     },
 
+    additionalCardProcessing() {
+      let maxCardHeight = 0;
+      for (let card of this.$refs.cards) {
+        maxCardHeight = card.clientHeight > maxCardHeight ? card.clientHeight : maxCardHeight;
+    }
+  },
+
     handleTouchStart(event) {
       this.touchStartX = event.touches[0].clientX;
       this.touchEndX= -1 // Reset touchEndX on new drag start
@@ -216,7 +223,9 @@ export default {
       this.touchEndX= -1 // Reset touchEndX after handling the touch end
     }
   },  
-
+  mounted() {
+    this.additionalCardProcessing();
+  }  
 };
 
 </script>
