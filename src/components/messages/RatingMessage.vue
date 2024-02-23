@@ -16,7 +16,7 @@
   @mouseout="resetRatingItem"
   :disabled="disabled"
 >
-  &#9733;
+{{ getRatingSymbol }}
 </span>
 
       </fieldset>
@@ -36,6 +36,7 @@
 </template>
 
 <script>
+import { mapState} from 'vuex';
 export default {
   name: 'RatingMessage',
   data() {
@@ -63,12 +64,18 @@ export default {
     }
   },
   computed: {
+    ...mapState(['ratingSymbol']),
+  
+    getRatingSymbol() {
+      return this.ratingSymbol || '★';
+    },
+
     ratingText() {
       return this.message.data.title;
     },
 
     maxRating() {      
-      return this.message.data.maxValue || 0; 
+      return this.message.data.maxValue || 5; 
     },
   },
   methods: {

@@ -5,7 +5,7 @@
     * Review of hardocded values and substitution for variables.
 
 * Bug Fixes
-  * Rating message refactoring.
+  * Rating message refactoring. Using maxValue message prop.
 # v3.7.10
 ## December-2023
 * Bug Fixes

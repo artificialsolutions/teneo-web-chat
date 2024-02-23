@@ -397,10 +397,8 @@ export default {
 /**Rating message */
 --scale-color-default: #888;
 --scale-message-color: #ffca28;
---scale-shadow: 0 0 1px #333333;
---scale-color-highlight: #e52;
---scale-size: 30px;
---scale-rep: "☆";
+
+
 }
 
 @supports (-webkit-touch-callout: none) {
