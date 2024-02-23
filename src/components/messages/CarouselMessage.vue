@@ -26,9 +26,11 @@
       <li v-for="(message, idx) in carouselItems"
           class="twc-carousel-list-item"
           :key="`slide-${idx}`"
-          :style="getItemStyle(idx)">
+          :style="getItemStyle(idx)"
+          ref="cards"
+          >
 
-        <div class="twc-card" v-if="message.type==='card'" ref="cards">
+        <div class="twc-card" v-if="message.type==='card'" >
           <div class="twc-card-img" v-if="message.image">
             <img :src="message.image.image_url" :alt="message.image.alt"/>
           </div>
