@@ -397,7 +397,7 @@ export default {
 /**Rating message */
 --scale-color-default: #888;
 --scale-message-color: #ffca28;
---scale-message-highlight-color: #ffca28;
+--scale-message-highlight-color: #ffc107;
 
 
 }

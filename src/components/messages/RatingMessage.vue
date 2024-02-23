@@ -204,6 +204,6 @@ fieldset {
 }
 
 .highlighted {
-  color: var(--scale-message-highlight-color,#ffca28);
+  color: var(--scale-message-highlight-color,#ffc107);
 }
 </style>
