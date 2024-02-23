@@ -129,6 +129,10 @@ window.TeneoWebChat = {
     if (twcProps.msCognitiveAsrSubscriptionKey) {
       store.commit('msCognitiveAsrSubscriptionKey', twcProps.msCognitiveAsrSubscriptionKey);
     }
+    
+    if (twcProps.ratingSymbol) {
+      store.commit('ratingSymbol', twcProps.ratingSymbol);
+    }
 
     if (twcProps.msCognitiveAsrRegion) {
       store.commit('msCognitiveAsrRegion', twcProps.msCognitiveAsrRegion);

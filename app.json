@@ -90,6 +90,10 @@
           "description": "Microsoft Cognitive serivces host for both ASR and TTS. Format is 'protocol://host:port' where ':port' is optional. Standard resource path will be assumed.",
           "required": false
         },
+        "RATING_SYMBOL": {
+          "description": "Symbol used to represent a rating unit on the rating message component.",
+          "required": false
+        },
 
         "SHOW_TTS_BUTTON": {
           "description": "Show TTS button",
