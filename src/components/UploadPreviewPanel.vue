@@ -116,7 +116,7 @@
 
 /* Track */
 .twc-upload-items::-webkit-scrollbar-track {
-  background: var(--user-input-bg-color); 
+  background: var(--user-input-bg-color);
   border-radius: 10px;
   margin-top: 2px;
   margin-bottom: 2px;
@@ -125,7 +125,7 @@
  
 /* Handle */
 .twc-upload-items::-webkit-scrollbar-thumb {
-  background: grey; 
+  background: var(--user-input-bg-color);
   border-radius: 10px;
   box-shadow: none;
   width: 2px;
@@ -151,7 +151,7 @@ input[type = "file"]:hover {
 }
 
 .twc-upload-item {
-  background-color: white;
+  background-color: var(--light-fg-color,#ffffff);
   border: 1px solid var(--light-border-color, #c9c9c9);
   border-radius: 10px;
   min-width: 3.5rem;
@@ -203,8 +203,8 @@ input[type = "file"]:hover {
   right: -8%;
   border-radius: 50%;
   border: none;
-  background-color: red;
-  stroke: white;
+  background-color: var(--callout-close-button-fg-color,#FF0000);
+  stroke: var(--light-fg-color,#FFFFFF);
   padding: 4px;
   box-shadow: 0px 4px 6px 0px rgba(201, 201, 201, 0.8);
 }

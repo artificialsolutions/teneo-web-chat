@@ -125,8 +125,8 @@ computed: {
   }
 
   .twc-table-header-cell {
-    color: black;
-    background: rgb(231, 231, 231);
+    color: var(--table-header-text-color);
+    background: var(--table-header-background-color, rgb(231, 231, 231));
     padding: 5px;
     height: 35px;
     text-align: center;
@@ -156,8 +156,8 @@ computed: {
   }
 
   .twc-table-body-row:hover {
-    background-color: rgba(47, 40, 110, 0.8);
-    color: white;
+    background-color: var(--header-fg-color, rgba(47, 40, 110, 0.8));
+    color: var(--light-bg-color,#ffffff);
   }
 
   .twc-table-body-row:nth-child(even) .twc-table-body-cell,
@@ -186,7 +186,7 @@ computed: {
 
   .twc-table-footer-cell {
     color: var(--table-footer-text-color);
-    background: rgb(231, 231, 231);
+    background: var(--table-footer-background-color, rgb(231, 231, 231));
     padding: 2px;
     text-align: center;
   }

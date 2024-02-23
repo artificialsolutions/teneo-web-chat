@@ -44,7 +44,6 @@ export const API_CALL_DISABLE_USERINPUT = 'disable_user_input';
 export const API_SET_LOCALE = 'set_locale';
 export const API_SET_ENGINE_PARAMS = 'set_engine_params';
 
-
 // Add dedicated add typing indicator method
 export const API_CALL_HIDE_TYPING_INDICATOR = 'hide_typing_indicator';
 export const API_CALL_SHOW_TYPING_INDICATOR = 'show_typing_indicator';
