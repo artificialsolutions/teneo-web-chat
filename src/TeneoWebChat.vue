@@ -388,9 +388,19 @@ export default {
   --form-cancel-background-color: var(--danger-color);
   --form-reset-text-color: var(--dark-fg-color);
   --form-reset-background-color: var(--warning-color);
+  --form-focus-text: #000000;
 
   /**Font */
+  --font-color: #000000;
   --primary-font: 'Helvetica Neue', Helvetica, Arial, sans-serif;
+
+/**Rating message */
+--scale-color-default: #888;
+--scale-message-color: #ffca28;
+--scale-shadow: 0 0 1px #333333;
+--scale-color-highlight: #e52;
+--scale-size: 30px;
+--scale-rep: "☆";
 }
 
 @supports (-webkit-touch-callout: none) {

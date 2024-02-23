@@ -4,8 +4,7 @@
 * CSS refactoring
     * Review of hardocded values and substitution for variables.
 * Carousel Bug:
-  * Touch scrolling in Carousel.
-  
+  * Touch scrolling in Carousel.  
  * Features:
     * TTS/ASR with WebspeechAPI integration.
 # v3.7.10

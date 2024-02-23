@@ -129,13 +129,11 @@ export default {
   justify-content: space-between;
 }
 .twc-star-cb-group {
-  /* remove inline-block whitespace */
   font-size: 0px;
-  /* flip the order so we can use the + and ~ combinators */
   unicode-bidi: bidi-override;
   direction: rtl;
-  /* the hidden clearer */
 }
+
 .twc-star-cb-group * {
   font-size: 2rem;
 }
@@ -154,17 +152,17 @@ export default {
 .twc-star-cb-group > input + label:before {
   display: inline-block;
   text-indent: -9999px;
-  content: "☆";
-  color: #888;
-  font-size: 30px;
+  content: var(--scale-rep,"☆");
+  color: var(--scale-color-default,#888);
+  font-size: var(--scale-size,30px);
 }
 .twc-star-cb-group > input:checked ~ label:before,
 .twc-star-cb-group > input + label:hover ~ label:before,
 .twc-star-cb-group > input + label:hover:before {
-  content: "★";
-  color: #e52;
-  text-shadow: 0 0 1px #333;
-  font-size: 30px;
+  content: var(--scale-rep,"☆");
+  color: var(--scale-color-highlight, #e52);
+  text-shadow: var(--scale-shadow, 0 0 1px #333);
+  font-size: var(--scale-size,30px);
 }
 .twc-star-cb-group > .star-cb-clear + label {
   text-indent: -9999px;
@@ -175,17 +173,17 @@ export default {
   width: 0.5em;
 }
 .twc-star-cb-group:hover > input + label:before {
-  content: "☆";
-  color: #888;
+  content: var(--scale-rep,"☆");
+  color: var(--scale-color-default,#888);
   text-shadow: none;
-  font-size: 30px;
+  font-size: var(--scale-size,30px);
 }
 .twc-star-cb-group:hover > input + label:hover ~ label:before,
 .twc-star-cb-group:hover > input + label:hover:before {
-  content: "★";
-  color: #e52;
-  text-shadow: 0 0 1px #333;
-  font-size: 30px;
+  content: var(--scale-rep,"☆");
+  color: var(--scale-color-highlight,#e52);
+  text-shadow: var(--scale-shadow, 0 0 1px #333);
+  font-size: var(--scale-size,30px);
 }
 fieldset {
   border: none;
@@ -193,7 +191,7 @@ fieldset {
 
 #twc-ratingsection {
   border: none;
-  background: #f3f3f3;
+  background: var(--user-input-bg-color,#f3f3f3);
   width: auto;
   border-radius: 10px;
   padding: 0.5em 0.5em;
@@ -205,7 +203,7 @@ fieldset {
   width: 250px;
   height: 50px;
   border: none;
-  color: grey;
+  color: var(--user-input-bg-color,#f3f3f3);
   margin-bottom: 10px;
   text-align: start;
   resize: none;
@@ -214,8 +212,8 @@ fieldset {
 
 .twc-feedback-comment:focus {
   outline: 0;
-  border: 1px solid rgb(47, 40, 110, 0.5);
-  color: black;
+  border: 1px solid var(--primary-color, rgb(47, 40, 110, 0.5));
+  color: var(--font-color);
 }
 
 .twc-submit-section {
@@ -226,7 +224,7 @@ fieldset {
 
 #twc-rating-submit-button {
   border: none;
-  color: white;
+  color: var(--light-fg-color, #ffffff);
   background-color: var(--primary-color);
   padding: 5px;
   border-radius: 5px;
@@ -245,7 +243,7 @@ fieldset {
 .star {
   cursor: pointer;
   font-size: 24px;
-  color: #aaa;
+  color: var(--scale-color-default,#aaa);
   transition: color 0.2s;
   flex: 1;
   display: flex;
@@ -253,10 +251,10 @@ fieldset {
 }
 
 .filled {
-  color: #ffca28;
+  color: var(--scale-message-color,#ffca28);
 }
 
 .highlighted {
-  color: #ffc107;
+  color: var(--scale-message-color,#ffc107);
 }
 </style>
