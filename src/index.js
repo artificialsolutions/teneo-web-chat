@@ -106,6 +106,15 @@ window.TeneoWebChat = {
     if (twcProps.fileUploadSymbolDelete) {
       store.commit('fileUploadSymbolDelete', twcProps.fileUploadSymbolDelete);
     }
+    if (twcProps.asrRecordSymbol) {
+      store.commit('asrRecordSymbol', twcProps.asrRecordSymbol);
+    }
+    if (twcProps.ttsStopSymbol) {
+      store.commit('ttsStopSymbol', twcProps.ttsStopSymbol);
+    }
+    if (twcProps.asrPauseSymbol) {
+      store.commit('asrPauseSymbol', twcProps.asrPauseSymbol);
+    }
     if (twcProps.fileUploadSymbolStop) {
       store.commit('fileUploadSymbolStop', twcProps.fileUploadSymbolStop);
     }
@@ -134,8 +143,7 @@ window.TeneoWebChat = {
       store.commit('showAsrButton', true);
     }
     if (twcProps.asrActive === true || twcProps.asrActive === "true") {
-      //Always set to false regardless - ASR on start is a silly proposal.
-      store.commit('asrActive', false);
+      store.commit('asrActive', true);
     }
     if (twcProps.ttsIconUrl) {
       store.commit('initialTtsIconUrl', twcProps.ttsIconUrl);

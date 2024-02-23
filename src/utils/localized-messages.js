@@ -26,7 +26,8 @@ export var translatedMessages = {
             connection_error_retry_message: "Der er problemer med forbindelsen til serveren. Vent venligst.",
             connection_error_final_message: "Kunne ikke oprette forbindelse til serveren. Forsøg venligst igen senere.",
             upload_panel_add_files: "Træk og slip eller indsæt filer her",
-            unable_to_open_hyperlink: "Kunne ikke åbne linket"
+            unable_to_open_hyperlink: "Kunne ikke åbne linket",
+            webspeech_not_soported: "Denne browser understøtter ikke SpeechRecognition-API'et."
         }
     },
     de: {
@@ -56,7 +57,8 @@ export var translatedMessages = {
             connection_error_retry_message: "There is a problem communicating with the server. Please wait.",
             connection_error_final_message: "Could not establish connection to server. Please try again later.",
             upload_panel_add_files:"Dateien hier ablegen oder einfügen",
-            unable_to_open_hyperlink: "Link konnte nicht geöffnet werden"
+            unable_to_open_hyperlink: "Link konnte nicht geöffnet werden",
+            webspeech_not_soported: "Dieser Browser unterstützt die SpeechRecognition-API nicht."
         }
     },
     en: {
@@ -101,6 +103,7 @@ export var translatedMessages = {
             upload_panel_clear_all: "Clear all",
             upload_panel_submit: "Submit",
             upload_panel_cancel: "Cancel",
+            webspeech_not_soported: "This browser doesn't support the SpeechRecognition API."
         }
     },
     'en-GB': {
@@ -130,7 +133,8 @@ export var translatedMessages = {
             connection_error_retry_message: "There is a problem communicating with the server. Please wait.",
             connection_error_final_message: "Could not establish connection to server. Please try again later.",
             upload_panel_add_files:"Drop or paste files here",
-            unable_to_open_hyperlink: "Unable to open link"
+            unable_to_open_hyperlink: "Unable to open link",
+            webspeech_not_soported: "This browser doesn't support the SpeechRecognition API."
         }
     },
     es: {
@@ -160,7 +164,8 @@ export var translatedMessages = {
             connection_error_retry_message: "Ha habido un problema comunicándose con el servidor. Por favor espere.",
             connection_error_final_message: "No se ha podido establecer una conexión con el servidar. Por favor, inténtelo más tarde.",
             upload_panel_add_files:"Arrastra o pega archivos aquí",
-            unable_to_open_hyperlink: "No se puede abrir el enlace"
+            unable_to_open_hyperlink: "No se puede abrir el enlace",
+            webspeech_not_soported: "Este navegador no admite la API de reconocimiento de voz."
         }
     },
     fr: {
@@ -190,7 +195,8 @@ export var translatedMessages = {
             connection_error_retry_message: "There is a problem communicating with the server. Please wait.",
             connection_error_final_message: "Could not establish connection to server. Please try again later.",
             upload_panel_add_files:"Déposez ou collez les fichiers ici",
-            unable_to_open_hyperlink: "Impossible d'ouvrir le lien"
+            unable_to_open_hyperlink: "Impossible d'ouvrir le lien",
+            webspeech_not_soported: "Ce navigateur ne prend pas en charge l'API de reconnaissance vocale."
         }
     },
     id: {
@@ -220,7 +226,8 @@ export var translatedMessages = {
             connection_error_retry_message: "Ada masalah saat berkomunikasi dengan server. Mohon tunggu.",
             connection_error_final_message: "Tidak dapat membuat sambungan ke server. Silakan coba lagi nanti.",
             upload_panel_add_files:"Seret atau tempel file di sini",
-            unable_to_open_hyperlink: "Tidak dapat membuka tautan"
+            unable_to_open_hyperlink: "Tidak dapat membuka tautan",
+            webspeech_not_soported: "Peramban ini tidak mendukung API SpeechRecognition."
         }
     },
     it: {
@@ -250,7 +257,8 @@ export var translatedMessages = {
             connection_error_retry_message: "Attendere prego, abbiamo rilevato un problema di comunicazione con il server.",
             connection_error_final_message: "Non è possibile stabilire una connessione con il server. Si prega di riprovare più tardi.",
             upload_panel_add_files:"Trascina o incolla i file qui",
-            unable_to_open_hyperlink: "Impossibile aprire il link"
+            unable_to_open_hyperlink: "Impossibile aprire il link",
+            webspeech_not_soported: "Questo browser non supporta l'API SpeechRecognition."
         }
     },
     ja: {
@@ -280,7 +288,8 @@ export var translatedMessages = {
             connection_error_retry_message: "There is a problem communicating with the server. Please wait.",
             connection_error_final_message: "Could not establish connection to server. Please try again later.",
             upload_panel_add_files:"ファイルをここにドロップまたは貼り付けてください",
-            unable_to_open_hyperlink: "リンクを開けません"
+            unable_to_open_hyperlink: "リンクを開けません",
+            webspeech_not_soported: "このブラウザーはSpeechRecognition APIをサポートしていません。"
         }
     },
     ms: {
@@ -310,7 +319,8 @@ export var translatedMessages = {
             connection_error_retry_message: "Terdapat masalah untuk berkomunikasi dengan pelayan. Sila tunggu.",
             connection_error_final_message: "Tidak dapat membuat sambungan ke pelayan. Sila cuba sebentar lagi.",
             upload_panel_add_files:"Jatuhkan atau tampal fail di sini",
-            unable_to_open_hyperlink: "Tidak dapat membuka pautan"
+            unable_to_open_hyperlink: "Tidak dapat membuka pautan",
+            webspeech_not_soported: " Pelayar ini tidak menyokong API Penyahtiannyataan Suara."
         }
     },
     nl: {
@@ -340,7 +350,8 @@ export var translatedMessages = {
             connection_error_retry_message: "There is a problem communicating with the server. Please wait.",
             connection_error_final_message: "Could not establish connection to server. Please try again later.",
             upload_panel_add_files:"Sleep of plak bestanden hier",
-            unable_to_open_hyperlink: "Kan de link niet openen"
+            unable_to_open_hyperlink: "Kan de link niet openen",
+            webspeech_not_soported: "Deze browser ondersteunt de SpeechRecognition-API niet."
         }
     },
     pt: {
@@ -370,7 +381,8 @@ export var translatedMessages = {
             connection_error_retry_message: "Há um problema de comunicação com o servidor. Por favor, aguarde.",
             connection_error_final_message: "Não foi possível estabelecer conexão com o servidor. Por favor, tente novamente mais tarde.",
             upload_panel_add_files:"Arraste e solte ou cole os arquivos aqui",
-            unable_to_open_hyperlink: "Não é possível abrir o link"
+            unable_to_open_hyperlink: "Não é possível abrir o link",
+            webspeech_not_soported: "Este navegador não suporta a API SpeechRecognition."
         }
     },
     sv: {
@@ -400,7 +412,8 @@ export var translatedMessages = {
             connection_error_retry_message: "There is a problem communicating with the server. Please wait.",
             connection_error_final_message: "Could not establish connection to server. Please try again later.",
             upload_panel_add_files: "Dra och släpp eller klistra in filer här",
-            unable_to_open_hyperlink: "Kan inte öppna länken"
+            unable_to_open_hyperlink: "Kan inte öppna länken",
+            webspeech_not_soported: "Den här webbläsaren stöder inte SpeechRecognition API."
         }
     },
     tr: {
@@ -430,7 +443,8 @@ export var translatedMessages = {
             connection_error_retry_message: "There is a problem communicating with the server. Please wait.",
             connection_error_final_message: "Could not establish connection to server. Please try again later.",
             upload_panel_add_files:"Dosyaları buraya bırakın veya yapıştırın",
-            unable_to_open_hyperlink: "Bağlantı açılamıyor"
+            unable_to_open_hyperlink: "Bağlantı açılamıyor",
+            webspeech_not_soported: "Bu tarayıcı SpeechRecognition API'sini desteklemiyor."
         }
     },
     zh: {
@@ -460,7 +474,8 @@ export var translatedMessages = {
             connection_error_retry_message: "There is a problem communicating with the server. Please wait.",
             connection_error_final_message: "Could not establish connection to server. Please try again later.",
             upload_panel_add_files:"拖放或粘贴文件到此处",
-            unable_to_open_hyperlink: "无法打开链接"
+            unable_to_open_hyperlink: "无法打开链接",
+            webspeech_not_soported: "此浏览器不支持 SpeechRecognition API。"
         }
     },
     'zh-CN': {
@@ -490,7 +505,8 @@ export var translatedMessages = {
             connection_error_retry_message: "There is a problem communicating with the server. Please wait.",
             connection_error_final_message: "Could not establish connection to server. Please try again later.",
             upload_panel_add_files:"拖放或粘贴文件到此处",
-            unable_to_open_hyperlink: "无法打开链接"
+            unable_to_open_hyperlink: "无法打开链接",
+            webspeech_not_soported: "此浏览器不支持 SpeechRecognition API。"
         }
     }
 }

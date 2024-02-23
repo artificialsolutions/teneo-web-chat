@@ -14,8 +14,29 @@
         "LOCALE": {
             "description": "Optional language code. Used for things like the placeholder text in the input box. Defaults to 'en' if left blank.",
             "required":false
-        },        
-
+        },
+        "TTS_ACTIVE": {
+          "description": "Optional value to indicate if TTS service is activated",
+          "required": false
+        },
+        "ASR_ACTIVE": {
+          "description": "Optional value to indicate if ASR service is activated",
+          "required": false
+        },
+        "TTS_STOP_SYMBOL": {
+          "description": "Symbol to represent TTS stop when using TTS service",
+          "required": false
+        },
+        "ASR_PAUSE_SYMBOL": {
+          "description": "Symbol to represent ASR pause action when using ASR",
+          "required": false
+        },
+        
+        "ASR_RECORD_SYMBOL": {
+          "description": "Symbol to represent ASR recording action when using ASR",
+          "required": false
+        },
+        
         "SHOW_TTS_BUTTON": {
           "description": "Show TTS button",
           "required": false

@@ -3,68 +3,10 @@
     <form
         class="twc-user-input"
         :class="{ 'twc-active': inputActive, 'twc-disabled': inputDisabled }"
-    >
-      <div v-if="showAsrButton" class="twc-user-input__button" :class="{ 'twc-disabled': asrDisabled }">
-        <button
-            role="button"
-            tabindex="0"
-            ref="asrButton"
-            :aria-label="$t('message.input_area_asr_button_aria_label')"
-            :title="$t('message.input_area_asr_button_title')"
-            class="twc-user-input__asr-icon-wrapper"
-            :class="{ 'twc-active': asrActive,  'twc-broken-service-icon': asrBroken}"
-            :aria-disabled="asrDisabled"
-            :disabled="asrDisabled ? true : false"
-            @click.prevent=""
-            @click="asrButtonClicked($refs.asrButton)"
-            data-used="false"
-            data-cancelled="false"
-        >
-          <img
-              v-if="asrIconUrl"
-              id="twc-user-input__asr-icon-img"
-              class="twc-user-input__asr-icon"
-              :src="asrIconUrl"
-              aria-hidden="true"
-              alt=""
-          />
-          <AsrIcon
-              v-else
-              id="twc-user-input__asr-icon"
-              class="twc-user-input__asr-icon"
-              aria-hidden="true"
-          />
-        </button>
-      </div>
-      <div v-if="showTtsButton" class="twc-user-input__button" :class="{ 'twc-disabled': ttsDisabled }">
-        <button
-            role="button"
-            tabindex="0"
-            ref="ttsButton"
-            :aria-label="$t('message.input_area_tts_button_aria_label')"
-            :title="$t('message.input_area_tts_button_title')"
-            class="twc-user-input__tts-icon-wrapper"
-            :class="{ 'twc-active': ttsActive, 'twc-broken-service-icon': ttsBroken}"
-            :aria-disabled="ttsDisabled"
-            :disabled="ttsDisabled ? true : false"
-            @click.prevent=""
-            @click="ttsButtonClicked($refs.ttsButton)"
-        >
-          <img
-              v-if="ttsIconUrl"
-              id="twc-user-input__tts-icon-img"
-              class="twc-user-input__tts-icon"
-              :src="ttsIconUrl"
-              aria-hidden="true"
-              alt=""
-          />
-          <TtsIcon
-              v-else
-              id="twc-user-input__tts-icon"
-              class="twc-user-input__tts-icon"
-              aria-hidden="true"
-          />
-        </button>
+    >   
+      <div v-if="shouldDisplaySpeechRec">
+        <live-transcript ref="liveTranscriptRef" @transcribing="handleTranscribing" @transcription="handleTranscription" @transcriptionComplete="handleTranscriptionComplete"></live-transcript>        
+
       </div>
       <textarea
           id="twc-user-input-field"
@@ -117,7 +59,6 @@
         </button>
       </div>
 
-
       <div class="twc-user-input__button">
         <button
             role="button"
@@ -150,40 +91,31 @@
       </div>
     </form>
     <a v-if="isMobile()" id="twc-focus-fix" href="#1" aria-hidden="true"></a>
-    <RecordingStartedBeep ref="recordingStartedBeep"/>
-    <RecordingEndedBeep ref="recordingEndedBeep"/>
-    <RecordingCancelledBeep ref="recordingCancelledBeep"/>
   </div>
 </template>
+
 
 <script>
 import Vue from 'vue';
 import vueDebounce from 'vue-debounce';
 import SendIcon from '../icons/send.vue';
 import UploadIcon from '../icons/upload.vue';
-import AsrIcon from '../icons/asr.vue';
-import TtsIcon from '../icons/tts.vue';
-import RecordingStartedBeep from '../sounds/recordingStartedBeep.vue'
-import RecordingEndedBeep from '../sounds/recordingEndedBeep.vue'
-import RecordingCancelledBeep from '../sounds/recordingCancelledBeep.vue'
 import DOMPurify from 'isomorphic-dompurify';
 
-import {PARTICIPANT_USER} from '../utils/constants.js';
+import { PARTICIPANT_USER } from '../utils/constants.js';
 import {
-  API_ON_ASR_BUTTON_CLICK,
   API_ON_INPUT_SUBMITTED,
   API_ON_SEND_BUTTON_CLICK,
-  API_ON_TTS_BUTTON_CLICK,
   API_ON_UPLOAD_BUTTON_CLICK,
   API_ON_USER_TYPING
 } from '../utils/api-function-names.js';
-import {EventBus, events} from '../utils/event-bus.js';
+import { EventBus, events } from '../utils/event-bus.js';
 import handleExtension from '../utils/handle-extension.js';
 import basePayload from '../utils/base-payload.js';
 import detectMobile from '../utils/detect-mobile.js';
-import {mapState} from 'vuex';
-import {store} from "../store/store";
-
+import { mapState } from 'vuex';
+import { store } from "../store/store";
+import LiveTranscript from './SpeechRec.vue'; 
 
 Vue.use(vueDebounce);
 
@@ -191,11 +123,7 @@ export default {
   components: {
     SendIcon,
     UploadIcon,
-    AsrIcon,
-    TtsIcon,
-    RecordingStartedBeep,
-    RecordingEndedBeep,
-    RecordingCancelledBeep
+    LiveTranscript
   },
   props: {
     onSubmit: {
@@ -208,45 +136,32 @@ export default {
     },
   },
   computed: {
-    ...mapState(['sendIconUrl', 'showUploadButton', 'uploadIconUrl', 'showAsrButton', 'asrIconUrl', 'showTtsButton', 'ttsIconUrl']),
+    ...mapState(['sendIconUrl', 'showUploadButton', 'uploadIconUrl']),
+    shouldDisplaySpeechRec() {         
+      return this.asrActive || this.ttsActive;
+     },
   },
   data() {
     return {
       inputActive: false,
       inputDisabled: false,
       uploadDisabled: false,
-      asrDisabled: false,
-      ttsDisabled: false,
-      asrBroken: false,
-      ttsBroken: false,
+      showUserInput: true,
       asrActive: store.getters.asrActive,
       ttsActive: store.getters.ttsActive,
-      ttsCumulativeText: '',
-      isCancellation: false,
-      showUserInput: true
     };
   },
 
   mounted() {
-    EventBus.$on(events.STOP_ASR_TTS, () => {
-      this.stopAsr();
-      this.stopTts();
-    });
-
-
+    
     EventBus.$on(events.UPLOAD_PANEL_OPENED, () => {
-      this.showUserInput = false;
-      this.stopAsr();
+      this.showUserInput = false;      
     });
 
 
     EventBus.$on(events.UPLOAD_PANEL_CLOSED, () => {
-      this.showUserInput = true;
-      this.stopAsr();
+      this.showUserInput = true;      
     });
-
-
-    EventBus.$on(events.MESSAGE_SENT, () => this.stopAsr());
 
     EventBus.$on(events.DISABLE_UPLOAD, () => {
       if (this.showUploadButton) {
@@ -264,68 +179,7 @@ export default {
         }
         this.uploadDisabled = false;
       }
-    });
-
-    EventBus.$on(events.DISABLE_ASR, () => {
-      if (this.showAsrButton) {
-        if (this.$refs.asrButton) {
-          this.$refs.asrButton.setAttribute('disabled', 'true');
-        }
-        this.asrDisabled = true;
-      }
-    });
-
-    EventBus.$on(events.ENABLE_ASR, () => {
-      if (this.showAsrButton) {
-        if (this.$refs.asrButton) {
-          this.$refs.asrButton.removeAttribute('disabled');
-        }
-        this.asrDisabled = false;
-      }
-    });
-
-    EventBus.$on(events.ASR_ACTIVE, () => {
-      if (this.showAsrButton && this.$refs.asrButton) {
-        this.asrButtonClicked(this.$refs.asrButton)
-      }
-    });
-
-    EventBus.$on(events.ASR_INACTIVE, () => {
-      if (this.showAsrButton && this.$refs.asrButton) {
-        this.asrActive = false;
-        this.$refs.recordingCancelledBeep.$el.play()
-      }
-    });
-
-    EventBus.$on(events.DISABLE_TTS, () => {
-      if (this.showTtsButton) {
-        if (this.$refs.ttsButton) {
-          this.$refs.ttsButton.setAttribute('disabled', 'true');
-        }
-        this.ttsDisabled = true;
-        this.ttsCumulativeText = '';
-      }
-    });
-
-    EventBus.$on(events.ENABLE_TTS, () => {
-      if (this.showTtsButton) {
-        if (this.$refs.ttsButton) {
-          this.$refs.ttsButton.removeAttribute('disabled');
-        }
-        this.ttsDisabled = false;
-      }
-    });
-
-    EventBus.$on(events.TTS_ACTIVE, () => {
-      if (this.showTtsButton && this.$refs.ttsButton) {
-        this.ttsActive = true;
-      }
-    });
-
-    EventBus.$on(events.TTS_INACTIVE, () => {
-      if (this.showTtsButton && this.$refs.ttsButton) this.stopTts();
-    });
-
+    });    
     EventBus.$on(events.DISABLE_INPUT, () => {
       this.setInputActive(false);
       this.inputDisabled = true;
@@ -344,6 +198,12 @@ export default {
             .focus();
       }
     });
+
+    if (this.ttsActive){
+      EventBus.$on(events.BOT_MESSAGE_RECEIVED, (message) => {    
+        this.$refs.liveTranscriptRef.readTranscription(message.data.text);
+      });
+    }
 
     // Detect changes and focus and emit event. This will be listened by ChatWindow to adapt to iOS Safari
     const userInput = document.getElementById('twc-user-input-field');
@@ -373,11 +233,22 @@ export default {
   },
 
   beforeDestroy() {
-    EventBus.$off(events.BOT_MESSAGE_RECEIVED);
-    EventBus.$off(events.STOP_ASR_TTS);
+    EventBus.$off(events.BOT_MESSAGE_RECEIVED);    
   },
 
   methods: {
+    handleTranscriptionComplete(transcribedText) {   
+      this.sendButtonClicked(transcribedText).then(() => {
+        this.clearTextarea();
+      });
+  },
+    handleTranscription(transcription) {
+      const userInputField = document.getElementById('twc-user-input-field');
+      userInputField.value = DOMPurify.sanitize(transcription);
+    },
+    handleTranscribing(value) {      
+      this.transcribing = value
+    },
     setInputActive(onoff) {
       this.inputActive = onoff;
       if (onoff === true) {
@@ -407,7 +278,8 @@ export default {
       return detectMobile();
     },
 
-    async sendButtonClicked() {
+    async sendButtonClicked(transcribedText = null) {
+      this.$refs.liveTranscriptRef.stopTTS();
       const payload = basePayload();
 
       await handleExtension(API_ON_SEND_BUTTON_CLICK, payload);
@@ -424,28 +296,7 @@ export default {
     async uploadButtonClicked() {
       await handleExtension(API_ON_UPLOAD_BUTTON_CLICK);
     },
-
-
-    stopAsr() {
-      this.asrActive = false;
-    },
-
-
-    async asrButtonClicked(e) {
-      await handleExtension(API_ON_ASR_BUTTON_CLICK, e);
-    },
-
-
-    stopTts() {
-      this.ttsActive = false;
-      this.ttsCumulativeText = '';
-    },
-
-    async ttsButtonClicked(e) {
-      await handleExtension(API_ON_TTS_BUTTON_CLICK, e);
-    },
-
-    async _submitText() {
+      async _submitText() {
       // Create payload object
       const payload = basePayload();
 
@@ -481,13 +332,20 @@ export default {
           },
         });
       }
+      this.$refs.userInput.value = '';
 
       // Don't give user input focus on mobile devices, keyboard blocks the view too much
       if (!detectMobile()) {
         this.$refs.userInput.focus();
       }
     },
-
+ 
+    clearTextarea() {
+      if (this.$refs.userInput) {
+        this.$refs.userInput.value = ''; 
+        this.autoTextareaHeight(); 
+      }
+    },
     autoTextareaHeight() {
       const userInput = document.getElementById('twc-user-input-field');
       userInput.style.height = '1px';
@@ -498,222 +356,179 @@ export default {
 </script>
 
 <style scoped>
-.twc-user-input {
-  min-height: 56px;
-  margin: 0px;
-  position: relative;
-  bottom: 0;
-  display: flex;
-  justify-content: space-between;
-  background-color: var(--user-input-bg-color, #f4f7f9);
-  border-bottom-left-radius: 10px;
-  border-bottom-right-radius: 10px;
-  transition: background-color 0.2s ease, box-shadow 0.2s ease;
-  pointer-events: initial;
-  padding: 0 5px;
-}
-
-/* See above, we use a dummy <a> tag to fix a keyboard focus issue on safari */
-/* This style makes the dummy tag invisible but we can still give it focus */
-#twc-focus-fix {
-  outline: none;
-  position: absolute;
-  margin-left: -9999px;
-}
-
-.twc-user-input.twc-disabled {
-  pointer-events: none;
-}
-
-.twc-user-input.twc-disabled .twc-user-input__text,
-.twc-user-input.twc-disabled .twc-user-input__button,
-.twc-user-input.twc-disabled .twc-user-input__send-icon,
-.twc-user-input.twc-disabled .twc-user-input__upload-icon,
-.twc-user-input.twc-disabled .twc-user-input__asr-icon,
-.twc-user-input.twc-disabled .twc-user-input__tts-icon {
-  filter: grayscale(100%);
-  opacity: 0.4;
-}
-
-/*
-When the upload, asr or tts buttons are disabled and then the input box is disabled as well
-We should not dim it twice, so we check: .twc-user-input:not(.twc-disabled)
-*/
-.twc-user-input:not(.twc-disabled) .twc-user-input__button.twc-disabled .twc-user-input__upload-icon-wrapper,
-.twc-user-input:not(.twc-disabled) .twc-user-input__button.twc-disabled .twc-user-input__asr-icon-wrapper,
-.twc-user-input:not(.twc-disabled) .twc-user-input__button.twc-disabled .twc-user-input__tts-icon-wrapper {
-  filter: grayscale(100%);
-  opacity: 0.4;
-}
-
-.twc-user-input__text {
-  width: 100%;
-  resize: none;
-  border: none;
-  outline: none;
-  box-sizing: border-box;
-  margin: 4px 4px 4px 4px;
-  padding: 12px;
-  font-size: 0.95em;
-  font-weight: 400;
-  line-height: 1.6;
-  white-space: pre-wrap;
-  word-wrap: break-word;
-  color: var(--user-input-fg-color, #565867);
-  background-color: transparent;
-  -webkit-font-smoothing: antialiased;
-  max-height: 200px;
-  min-height: 56px;
-  overflow: scroll;
-  bottom: 0;
-  overflow-y: auto;
-  overflow-x: hidden;
-  -webkit-overflow-scrolling: touch;
-  font-family: inherit;
-}
-
-.twc-user-input__text::placeholder {
-  color: var(--secondary-color, #6c757d);
-}
-
-/* fix placeholder issue on Edge browsers */
-@supports (-ms-ime-align: auto) {
-  [placeholder]:empty:focus::before {
-    content: '';
-    margin-top: 14px;
-  }
-}
-
-/* fix placeholder issue on IE11 browsers */
-@media all and (-ms-high-contrast: none) {
-  [placeholder]:empty:focus::before {
-    content: '';
-    margin-bottom: 0px;
+  .twc-user-input {
+    min-height: 56px;
+    margin: 0px;
+    position: relative;
+    bottom: 0;
+    display: flex;
+    justify-content: space-between;
+    background-color: var(--user-input-bg-color, #f4f7f9);
+    border-bottom-left-radius: 10px;
+    border-bottom-right-radius: 10px;
+    transition: background-color 0.2s ease, box-shadow 0.2s ease;
+    pointer-events: initial;
+    padding: 0 5px;
   }
 
-  [placeholder]:empty.twc-user-input__text::before {
-    height: 0px;
-  }
-}
-
-.twc-user-input__button {
-  max-height: 200px;
-  margin-left: 2px;
-  margin-right: 2px;
-  display: flex;
-  flex-direction: column;
-  justify-content: center;
-  cursor: pointer;
-}
-
-.twc-user-input.twc-active {
-  background-color: var(--light-fg-color, #ffffff);
-  box-shadow: 0px -4px 15px 0px rgba(201, 201, 201, 0.3);
-}
-
-.twc-user-input__send-icon-wrapper {
-  background: none;
-  border: none;
-  padding: 0px;
-  color: var(--sendicon-fg-color, #263238);
-  width: 24px;
-  height: 44px;
-  cursor: pointer;
-}
-
-
-.twc-user-input__upload-icon-wrapper,
-.twc-user-input__asr-icon-wrapper,
-.twc-user-input__tts-icon-wrapper {
-  background: none;
-  border: none;
-  padding: 0;
-  width: 24px;
-  height: 44px;
-  cursor: pointer;
-  outline: none;
-}
-
-.twc-user-input__upload-icon-wrapper {
-  color: var(--uploadicon-fg-color, #263238);
-}
-
-.twc-user-input__asr-icon-wrapper {
-  color: var(--asricon-fg-color, #263238);
-}
-
-.twc-broken-service-icon::before {
-  position: absolute;
-  top: 25%;
-  left: 0;
-  content: '🚫';
-  opacity: 0.4;
-  font-size: 1.5em;
-  line-height: 100%;
-}
-
-
-.twc-user-input__tts-icon-wrapper {
-  color: var(--ttsicon-fg-color, #263238);
-}
-
-
-.twc-user-input__send-icon,
-.twc-user-input__upload-icon,
-.twc-user-input__asr-icon,
-.twc-user-input__tts-icon {
-  height: 20px;
-  width: 20px;
-  align-self: center;
-}
-
-.twc-user-input__asr-icon-wrapper.twc-active {
-  fill: var(--asricon-active-color, darkred);
-  stroke: var(--asricon-active-color, red);
-  filter: grayscale(0);
-  opacity: 100%;
-}
-
-.twc-user-input__tts-icon-wrapper.twc-active {
-  fill: var(--ttsicon-active-color, darkred);
-  stroke: var(--ttsicon-active-color, red);
-  filter: grayscale(0);
-  opacity: 100%;
-}
-
-
-.twc-user-input__button.twc-disabled,
-.twc-user-input__button.twc-disabled button {
-  cursor: default;
-}
-
-.twc-user-input__text::-webkit-scrollbar {
-  width: 3px;
-}
-
-/* Track */
-.twc-user-input__text::-webkit-scrollbar-track {
-  background: none; 
-  border-radius: 10px;
-  margin-top: 2px;
-  margin-bottom: 2px;
-  box-shadow: none;
-}
- 
-/* Handle */
-.twc-user-input__text::-webkit-scrollbar-thumb {
-  background: rgb(196, 196, 196); 
-  border-radius: 10px;
+  /* See above, we use a dummy <a> tag to fix a keyboard focus issue on safari */
+  /* This style makes the dummy tag invisible but we can still give it focus */
+  #twc-focus-fix {
+    outline: none;
+    position: absolute;
+    margin-left: -9999px;
   }
 
-/* Increase tap target on mobile */
-@media (max-width: 450px) {
-  .twc-user-input__send-icon-wrapper,
-  .twc-user-input__upload-icon-wrapper,
-  .twc-user-input__asr-icon-wrapper,
-  .twc-user-input__tts-icon-wrapper {
-    width: 44px;
+  .twc-user-input.twc-disabled {
+    pointer-events: none;
   }
 
-}
+  .twc-user-input.twc-disabled .twc-user-input__text,
+  .twc-user-input.twc-disabled .twc-user-input__button {
+    filter: grayscale(100%);
+    opacity: 0.4;
+  }
+
+  .twc-user-input__text {
+    width: 100%;
+    resize: none;
+    border: none;
+    outline: none;
+    box-sizing: border-box;
+    margin: 4px 4px 4px 4px;
+    padding: 12px;
+    font-size: 0.95em;
+    font-weight: 400;
+    line-height: 1.6;
+    white-space: pre-wrap;
+    word-wrap: break-word;
+    color: var(--user-input-fg-color, #565867);
+    background-color: transparent;
+    -webkit-font-smoothing: antialiased;
+    max-height: 200px;
+    min-height: 56px;
+    overflow: scroll;
+    bottom: 0;
+    overflow-y: auto;
+    overflow-x: hidden;
+    -webkit-overflow-scrolling: touch;
+    font-family: inherit;
+  }
+
+  .twc-user-input__text::placeholder {
+    color: var(--secondary-color, #6c757d);
+  }
+
+  /* fix placeholder issue on Edge browsers */
+  @supports (-ms-ime-align: auto) {
+    [placeholder]:empty:focus::before {
+      content: '';
+      margin-top: 14px;
+    }
+  }
+
+  /* fix placeholder issue on IE11 browsers */
+  @media all and (-ms-high-contrast: none) {
+    [placeholder]:empty:focus::before {
+      content: '';
+      margin-bottom: 0px;
+    }
+
+    [placeholder]:empty.twc-user-input__text::before {
+      height: 0px;
+    }
+  }
+
+  .twc-user-input__button {
+    max-height: 200px;
+    margin-left: 2px;
+    margin-right: 2px;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    cursor: pointer;
+  }
+
+  .twc-user-input.twc-active {
+    background-color: var(--light-fg-color, #ffffff);
+    box-shadow: 0px -4px 15px 0px rgba(201, 201, 201, 0.3);
+  }
+
+  .twc-user-input__send-icon-wrapper {
+    background: none;
+    border: none;
+    padding: 0px;
+    color: var(--sendicon-fg-color, #263238);
+    width: 24px;
+    height: 44px;
+    cursor: pointer;
+  }
+
+
+  .twc-user-input__upload-icon-wrapper {
+    background: none;
+    border: none;
+    padding: 0;
+    width: 24px;
+    height: 44px;
+    cursor: pointer;
+    outline: none;
+  }
+
+  .twc-user-input__upload-icon-wrapper {
+    color: var(--uploadicon-fg-color, #263238);
+  }
+
+  .twc-broken-service-icon::before {
+    position: absolute;
+    top: 25%;
+    left: 0;
+    content: '🚫';
+    opacity: 0.4;
+    font-size: 1.5em;
+    line-height: 100%;
+  }
+
+
+  .twc-user-input__send-icon,
+  .twc-user-input__upload-icon
+  {
+    height: 20px;
+    width: 20px;
+    align-self: center;
+  }
+
+  .twc-user-input__button.twc-disabled,
+  .twc-user-input__button.twc-disabled button {
+    cursor: default;
+  }
+
+  .twc-user-input__text::-webkit-scrollbar {
+    width: 3px;
+  }
+
+  /* Track */
+  .twc-user-input__text::-webkit-scrollbar-track {
+    background: none; 
+    border-radius: 10px;
+    margin-top: 2px;
+    margin-bottom: 2px;
+    box-shadow: none;
+  }
+  
+  /* Handle */
+  .twc-user-input__text::-webkit-scrollbar-thumb {
+    background: rgb(196, 196, 196); 
+    border-radius: 10px;
+    }
+
+  /* Increase tap target on mobile */
+  @media (max-width: 450px) {
+    .twc-user-input__send-icon-wrapper,
+    .twc-user-input__upload-icon-wrapper
+    {
+      width: 44px;
+    }
+
+  }
 </style>
