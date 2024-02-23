@@ -15,7 +15,20 @@
             "description": "Optional language code. Used for things like the placeholder text in the input box. Defaults to 'en' if left blank.",
             "required":false
         },
-
+        
+        "TTS_STOP_SYMBOL": {
+          "description": "Symbol to represent TTS stop when using TTS service",
+          "required": false
+        },
+        "ASR_PAUSE_SYMBOL": {
+          "description": "Symbol to represent ASR pause action when using ASR",
+          "required": false
+        },
+        
+        "ASR_RECORD_SYMBOL": {
+          "description": "Symbol to represent ASR recording action when using ASR",
+          "required": false
+        },
         "MS_COGNITIVE_ASR_SUBSCRIPTION_KEY": {
           "description": "Subscription key for ASR of Microsoft Cognitive services",
           "required": false
