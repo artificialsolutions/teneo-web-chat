@@ -51,6 +51,7 @@ export const store = new Vuex.Store({
         showTtsButton: false,
         asrActive: false,
         ttsActive: false,
+        ratingSymbol:'',
 
         msCognitiveAsrSubscriptionKey: '',
         msCognitiveAsrRegion: '',
@@ -278,7 +279,10 @@ export const store = new Vuex.Store({
                 state.ttsActive = activeBool;
             }
         },
-
+        
+        ratingSymbol(state, s) {
+            state.ratingSymbol = s;
+        },
 
         msCognitiveAsrRegion(state, s) {
             if (typeof s === 'string') state.msCognitiveAsrRegion = s;
