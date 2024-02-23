@@ -1,3 +1,7 @@
+# v3.7.11
+## February 2024
+* Bug Fixes
+  * Rating message refactoring.
 # v3.7.10
 ## December-2023
 * Bug Fixes
