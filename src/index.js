@@ -309,13 +309,7 @@ return filteredMessageList;
         // TODO: throw error if payload is invalid or if store throws error
         store.commit('teneoEngineParams', payload);
         EventBus.$emit(events.SET_ENGINE_PARAMS, store.getters.teneoEngineParams);
-        break;
-
-        case apiConstants.API_SET_MS_VOICE:
-        // TODO: throw error if payload is invalid or if store throws error
-        store.commit('msVoice', payload);
-        EventBus.$emit(events.SET_MS_VOICE, store.getters.msVoice);
-        break;
+        break;     
 
       case apiConstants.API_CALL_MAXIMIZE:
         EventBus.$emit(events.MAXIMIZE_WINDOW);
