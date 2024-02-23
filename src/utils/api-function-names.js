@@ -55,7 +55,7 @@ export const API_GET_ENGINE_URL = 'engine_url';
 export const API_GET_STORAGE = 'storage';
 export const API_GET_LOCALE = 'locale';
 export const API_GET_ENGINE_PARAMS = 'engine_params';
-export const API_GET_MS_VOICE = 'ms_voice';
+
 
 
 // Api callbacks

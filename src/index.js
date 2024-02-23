@@ -135,85 +135,6 @@ window.TeneoWebChat = {
       store.commit('uploadPanelAddFilesSymbol', twcProps.uploadPanelAddFilesSymbol);
     }
 
-    if (twcProps.msCognitiveAsrSubscriptionKey) {
-      store.commit('msCognitiveAsrSubscriptionKey', twcProps.msCognitiveAsrSubscriptionKey);
-    }
-
-    if (twcProps.msCognitiveAsrRegion) {
-      store.commit('msCognitiveAsrRegion', twcProps.msCognitiveAsrRegion);
-    }
-
-    if (twcProps.msCognitiveAsrSubscriptionOnly) {
-      store.commit('msCognitiveAsrSubscriptionOnly', twcProps.msCognitiveAsrSubscriptionOnly);
-    }
-
-    if (twcProps.msCognitiveAsrCustomAuthTokenUrl) {
-      store.commit('msCognitiveAsrCustomAuthTokenUrl', twcProps.msCognitiveAsrCustomAuthTokenUrl);
-    }
-
-    if (twcProps.msCognitiveAsrEndpoint) {
-      store.commit('msCognitiveAsrEndpoint', twcProps.msCognitiveAsrEndpoint);
-    }
-
-    if (twcProps.msCognitiveAsrHost) {
-      store.commit('msCognitiveAsrHost', twcProps.msCognitiveAsrHost);
-    }
-
-
-    if (twcProps.msCognitiveTtsSubscriptionKey) {
-      store.commit('msCognitiveTtsSubscriptionKey', twcProps.msCognitiveTtsSubscriptionKey);
-    }
-
-    if (twcProps.msCognitiveTtsRegion) {
-      store.commit('msCognitiveTtsRegion', twcProps.msCognitiveTtsRegion);
-    }
-
-    if (twcProps.msCognitiveTtsSubscriptionOnly) {
-      store.commit('msCognitiveTtsSubscriptionOnly', twcProps.msCognitiveTtsSubscriptionOnly);
-    }
-
-    if (twcProps.msCognitiveTtsCustomAuthTokenUrl) {
-      store.commit('msCognitiveTtsCustomAuthTokenUrl', twcProps.msCognitiveTtsCustomAuthTokenUrl);
-    }
-
-    if (twcProps.msCognitiveTtsEndpoint) {
-      store.commit('msCognitiveTtsEndpoint', twcProps.msCognitiveTtsEndpoint);
-    }
-
-    if (twcProps.msCognitiveTtsHost) {
-      store.commit('msCognitiveTtsHost', twcProps.msCognitiveTtsHost);
-    }
-
-
-    if (twcProps.msCognitiveSubscriptionKey) {
-      store.commit('msCognitiveSubscriptionKey', twcProps.msCognitiveSubscriptionKey);
-    }
-
-    if (twcProps.msCognitiveRegion) {
-      store.commit('msCognitiveRegion', twcProps.msCognitiveRegion);
-    }
-
-    if (twcProps.msCognitiveSubscriptionOnly) {
-      store.commit('msCognitiveSubscriptionOnly', twcProps.msCognitiveSubscriptionOnly);
-    }
-
-    if (twcProps.msCognitiveCustomAuthTokenUrl) {
-      store.commit('msCognitiveCustomAuthTokenUrl', twcProps.msCognitiveCustomAuthTokenUrl);
-    }
-
-    if (twcProps.msCognitiveEndpoint) {
-      store.commit('msCognitiveEndpoint', twcProps.msCognitiveEndpoint);
-    }
-
-    if (twcProps.msCognitiveHost) {
-      store.commit('msCognitiveHost', twcProps.msCognitiveHost);
-    }
-
-
-    if (twcProps.msVoice) {
-      store.commit('msVoice', twcProps.msVoice);
-    }
-
     if (twcProps.asrIconUrl) {
       store.commit('initialAsrIconUrl', twcProps.asrIconUrl);
     }
@@ -365,10 +286,7 @@ return filteredMessageList;
         return store.getters.storage;
 
       case apiConstants.API_GET_LOCALE:
-        return store.getters.localeObj;
-
-        case apiConstants.API_GET_MS_VOICE:
-        return store.getters.msVoice;
+        return store.getters.localeObj;        
 
       case apiConstants.API_GET_ENGINE_PARAMS:
         return store.getters.teneoEngineParams

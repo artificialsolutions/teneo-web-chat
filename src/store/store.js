@@ -54,36 +54,8 @@ export const store = new Vuex.Store({
         showAsrButton: false,
         showTtsButton: false,
         asrActive: false,
-        ttsActive: false,
-
-        msCognitiveAsrSubscriptionKey: '',
-        msCognitiveAsrRegion: '',
-        msCognitiveAsrSubscriptionOnly: undefined,
-        msCognitiveAsrToken: '',
-        msCognitiveAsrCustomAuthTokenUrl: '',
-        msCognitiveAsrEndpoint: '',
-        msCognitiveAsrHost: '',
-        msCognitiveAsrTokenTimeStamp: 0,
-
-        msCognitiveTtsSubscriptionKey: '',
-        msCognitiveTtsRegion: '',
-        msCognitiveTtsSubscriptionOnly: undefined,
-        msCognitiveTtsToken: '',
-        msCognitiveTtsCustomAuthTokenUrl: '',
-        msCognitiveTtsEndpoint: '',
-        msCognitiveTtsHost: '',
-        msCognitiveTtsTokenTimeStamp: 0,
-
-        msCognitiveSubscriptionKey: '',
-        msCognitiveRegion: '',
-        msCognitiveSubscriptionOnly: undefined,
-        msCognitiveToken: '',
-        msCognitiveCustomAuthTokenUrl: '',
-        msCognitiveEndpoint: '',
-        msCognitiveHost: '',
-        msCognitiveTokenTimeStamp: 0,
-
-        msVoice: '',
+        ttsActive: false,                
+        ratingSymbol:'',        
         locale: FALLBACK_LOCALE,
         storage: window.sessionStorage,
         autoRedirect: true
@@ -294,85 +266,11 @@ export const store = new Vuex.Store({
                 state.ttsActive = activeBool;
             }
         },
-
-
-        msCognitiveAsrRegion(state, s) {
-            if (typeof s === 'string') state.msCognitiveAsrRegion = s;
-        },
-        msCognitiveAsrSubscriptionKey(state, s) {
-            if (typeof s === 'string') state.msCognitiveAsrSubscriptionKey = s;
-        },
-        msCognitiveAsrSubscriptionOnly(state, b) {
-            if (typeof b === 'boolean') state.msCognitiveAsrSubscriptionOnly = b;
-        },
-        msCognitiveAsrToken(state, token) {
-            state.msCognitiveAsrTokenTimeStamp = Date.now();
-            state.msCognitiveAsrToken = token;
-        },
-        msCognitiveAsrCustomAuthTokenUrl(state, s) {
-            if (typeof s === 'string') state.msCognitiveAsrCustomAuthTokenUrl = s;
-        },
-        msCognitiveAsrEndpoint(state, s) {
-            if (typeof s === 'string') state.msCognitiveAsrEndpoint = s;
-        },
-        msCognitiveAsrHost(state, s) {
-            if (typeof s === 'string') state.msCognitiveAsrHost = s;
+        
+        ratingSymbol(state, s) {
+            state.ratingSymbol = s;
         },
 
-
-        msCognitiveTtsRegion(state, s) {
-            if (typeof s === 'string') state.msCognitiveTtsRegion = s;
-        },
-        msCognitiveTtsSubscriptionKey(state, s) {
-            if (typeof s === 'string') state.msCognitiveTtsSubscriptionKey = s;
-        },
-        msCognitiveTtsSubscriptionOnly(state, b) {
-            if (typeof b === 'boolean') state.msCognitiveTtsSubscriptionOnly = b;
-        },
-        msCognitiveTtsToken(state, token) {
-            state.msCognitiveTtsTokenTimeStamp = Date.now();
-            state.msCognitiveTtsToken = token;
-        },
-        msCognitiveTtsCustomAuthTokenUrl(state, s) {
-            if (typeof s === 'string') state.msCognitiveTtsCustomAuthTokenUrl = s;
-        },
-        msCognitiveTtsEndpoint(state, s) {
-            if (typeof s === 'string') state.msCognitiveTtsEndpoint = s;
-        },
-        msCognitiveTtsHost(state, s) {
-            if (typeof s === 'string') state.msCognitiveTtsHost = s;
-        },
-
-
-        msCognitiveRegion(state, s) {
-            if (typeof s === 'string') state.msCognitiveRegion = s;
-        },
-        msCognitiveSubscriptionKey(state, s) {
-            if (typeof s === 'string') state.msCognitiveSubscriptionKey = s;
-        },
-        msCognitiveSubscriptionOnly(state, b) {
-            if (typeof b === 'boolean') state.msCognitiveSubscriptionOnly = b;
-        },
-        msCognitiveToken(state, token) {
-            state.msCognitiveTokenTimeStamp = Date.now();
-            state.msCognitiveToken = token;
-        },
-        msCognitiveCustomAuthTokenUrl(state, s) {
-            if (typeof s === 'string') state.msCognitiveCustomAuthTokenUrl = s;
-        },
-        msCognitiveEndpoint(state, s) {
-            if (typeof s === 'string') state.msCognitiveEndpoint = s;
-        },
-        msCognitiveHost(state, s) {
-            if (typeof s === 'string') state.msCognitiveHost = s;
-        },
-
-
-        msVoice(state, voiceName) {
-            if (typeof voiceName === 'string') {
-                state.msVoice = voiceName;
-            }
-        },
         autoRedirect(state, autoRedirectBool) {
             if (typeof autoRedirectBool === 'boolean') {
                 state.autoRedirect = autoRedirectBool;
@@ -458,37 +356,7 @@ export const store = new Vuex.Store({
         },
         showTtsButton: (state) => state.showTtsButton,
         ttsActive: (state) => state.ttsActive,
-
-        msCognitiveSubscriptionKey: (state) => state.msCognitiveSubscriptionKey,
-        msCognitiveRegion: (state) => state.msCognitiveRegion,
-        msCognitiveSubscriptionOnly: (state) => state.msCognitiveSubscriptionOnly,
-        msCognitiveToken: (state) => state.msCognitiveToken,
-        msCognitiveTokenTimeStamp: (state) => state.msCognitiveTokenTimeStamp,
-        msCognitiveCustomAuthTokenUrl: (state) => state.msCognitiveCustomAuthTokenUrl,
-        msCognitiveEndpoint: (state) => state.msCognitiveEndpoint,
-        msCognitiveHost: (state) => state.msCognitiveHost,
-
-        msCognitiveAsrSubscriptionKey: (state) => state.msCognitiveAsrSubscriptionKey,
-        msCognitiveAsrRegion: (state) => state.msCognitiveAsrRegion,
-        msCognitiveAsrSubscriptionOnly: (state) => state.msCognitiveAsrSubscriptionOnly,
-        msCognitiveAsrToken: (state) => state.msCognitiveAsrToken,
-        msCognitiveAsrTokenTimeStamp: (state) => state.msCognitiveAsrTokenTimeStamp,
-        msCognitiveAsrCustomAuthTokenUrl: (state) => state.msCognitiveAsrCustomAuthTokenUrl,
-        msCognitiveAsrEndpoint: (state) => state.msCognitiveAsrEndpoint,
-        msCognitiveAsrHost: (state) => state.msCognitiveAsrHost,
-
-        msCognitiveTtsSubscriptionKey: (state) => state.msCognitiveTtsSubscriptionKey,
-        msCognitiveTtsRegion: (state) => state.msCognitiveTtsRegion,
-        msCognitiveTtsSubscriptionOnly: (state) => state.msCognitiveTtsSubscriptionOnly,
-        msCognitiveTtsToken: (state) => state.msCognitiveTtsToken,
-        msCognitiveTtsTokenTimeStamp: (state) => state.msCognitiveTtsTokenTimeStamp,
-        msCognitiveTtsCustomAuthTokenUrl: (state) => state.msCognitiveTtsCustomAuthTokenUrl,
-        msCognitiveTtsEndpoint: (state) => state.msCognitiveTtsEndpoint,
-        msCognitiveTtsHost: (state) => state.msCognitiveTtsHost,
-
-        msVoice: (state) => {
-            return state.msVoice;
-        },
+        
         locale: (state) => state.locale,
         autoRedirect: (state) => state.autoRedirect,
         localeObj: (state) => {
