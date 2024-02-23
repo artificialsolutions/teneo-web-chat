@@ -2,8 +2,11 @@
 
 ## February 2024
 * CSS refactoring
-    * Review of hardocoded values and substitution for variables.
-
+    * Review of hardocded values and substitution for variables.
+* Carousel Bug:
+  * Touch scrolling in Carousel.  
+ * Features:
+    * TTS/ASR with WebspeechAPI integration.
 * Bug Fixes
   * Rating message refactoring. Using maxValue message prop.
 # v3.7.10
