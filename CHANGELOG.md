@@ -2,7 +2,7 @@
 
 ## February 2024
 * CSS refactoring
-    * Review of hardocded values and substitution for variables.
+    * Review of hardocoded values and substitution for variables.
 
 * Bug Fixes
   * Rating message refactoring. Using maxValue message prop.

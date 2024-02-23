@@ -134,6 +134,63 @@ export default {
   flex-direction: row;
   justify-content: space-between;
 }
+.twc-star-cb-group {
+  font-size: 0px;
+  unicode-bidi: bidi-override;
+  direction: rtl;
+}
+
+.twc-star-cb-group * {
+  font-size: 2rem;
+}
+.twc-star-cb-group > input {
+  display: none;
+}
+.twc-star-cb-group > input + label {
+  /* only enough room for the star */
+  display: inline-block;
+  overflow: hidden;
+  text-indent: 9999px;
+  width: 0.9em;
+  white-space: nowrap;
+  cursor: pointer;
+}
+.twc-star-cb-group > input + label:before {
+  display: inline-block;
+  text-indent: -9999px;
+  content: var(--scale-rep,"☆");
+  color: var(--scale-color-default,#888);
+  font-size: var(--scale-size,30px);
+}
+.twc-star-cb-group > input:checked ~ label:before,
+.twc-star-cb-group > input + label:hover ~ label:before,
+.twc-star-cb-group > input + label:hover:before {
+  content: var(--scale-rep,"☆");
+  color: var(--scale-color-highlight, #e52);
+  text-shadow: var(--scale-shadow, 0 0 1px #333);
+  font-size: var(--scale-size,30px);
+}
+.twc-star-cb-group > .star-cb-clear + label {
+  text-indent: -9999px;
+  width: 0.5em;
+  margin-left: -0.5em;
+}
+.twc-star-cb-group > .star-cb-clear + label:before {
+  width: 0.5em;
+}
+.twc-star-cb-group:hover > input + label:before {
+  content: var(--scale-rep,"☆");
+  color: var(--scale-color-default,#888);
+  text-shadow: none;
+  font-size: var(--scale-size,30px);
+}
+.twc-star-cb-group:hover > input + label:hover ~ label:before,
+.twc-star-cb-group:hover > input + label:hover:before {
+  content: var(--scale-rep,"☆");
+  color: var(--scale-color-highlight,#e52);
+  text-shadow: var(--scale-shadow, 0 0 1px #333);
+  font-size: var(--scale-size,30px);
+}
 fieldset {
   border: none;
 }
