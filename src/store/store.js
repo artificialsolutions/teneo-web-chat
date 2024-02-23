@@ -50,7 +50,8 @@ export const store = new Vuex.Store({
         showAsrButton: false,
         showTtsButton: false,
         asrActive: false,
-        ttsActive: false,        
+        ttsActive: false,                
+        ratingSymbol:'',        
         locale: FALLBACK_LOCALE,
         storage: window.sessionStorage,
         autoRedirect: true
@@ -249,7 +250,11 @@ export const store = new Vuex.Store({
                 state.ttsActive = activeBool;
             }
         },
-       
+        
+        ratingSymbol(state, s) {
+            state.ratingSymbol = s;
+        },
+
         autoRedirect(state, autoRedirectBool) {
             if (typeof autoRedirectBool === 'boolean') {
                 state.autoRedirect = autoRedirectBool;
