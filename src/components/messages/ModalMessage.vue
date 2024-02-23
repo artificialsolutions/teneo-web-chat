@@ -220,8 +220,8 @@ export default {
   right: 0px;
   width: 100%;
   font-size: 20px;
-  color: white;
-  background-color: #2f286e;
+  color: var(--light-fg-color,#ffffff);
+  background-color: var(--primary-color,#2f286e);
   border: none;
   cursor: pointer;
   display: flex;

@@ -53,7 +53,7 @@
   100% { transform: rotate(360deg); }
 }
 .twc-upload-file-deleted .twc-upload-file-representation-symbol {
-  color: #eceff1;
+  color: var(--light-bg-color,#eceff1);
   text-decoration: line-through;
   filter: blur(0);
 }
@@ -63,13 +63,13 @@
 }
 
 .bg-grey {
-  background-color: #eceff1;
+  background-color: var(--light-bg-color,#eceff1);
 }
 
 .twc-upload-file,
 .twc-upload-file-name {
   position: relative;
-  background-color: #2f286e;
+  background-color: var(--primary-color,#2f286e);
   padding: 5px;
   border-radius: 10px;
   width: 150px;
@@ -79,7 +79,7 @@
 }
 
 .twc-upload-file-name {
-  color: #eceff1;
+  color: var(--light-bg-color,#eceff1);
   text-align: center;
   padding: 2px 1px;
   margin: 1px 0 0;
@@ -93,7 +93,7 @@
   align-items: center;
   align-content: center;
   justify-content: center;
-  background-color: #2f286e;
+  background-color: var(--primary-color,#2f286e);
   padding: 10px;
   right: 0;
   max-width: 100%;
@@ -128,7 +128,7 @@
 .twc-upload-file-middle-circle {
   height: 3rem;
   width: 3rem;
-  background-color: lightgrey;
+  background-color: var(--light-bg-color,#eceff1);
 }
 
 .twc-upload-file.twc-upload-file-succeeded .twc-upload-file-representation-image {
@@ -147,8 +147,8 @@
   position: absolute;
   bottom: 0;
   left: 0;
-  color: black;  
-  border: thin solid #eceff1;
+  color: var(--dark-bg-color,#000000);  
+  border: thin solid var(--light-bg-color,#eceff1);
   padding: 0.05rem;
   margin: 0.05rem;
   font-size: 1.0em;
@@ -161,7 +161,7 @@
   color: black;
   padding: 0.1rem;
   margin: 0.1rem;
-  background-color:#eceff1;
+  background-color:var(--light-bg-color,#eceff1);
 }
 
 </style>
