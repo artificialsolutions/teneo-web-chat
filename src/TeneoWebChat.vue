@@ -275,6 +275,7 @@ export default {
   --warning-fg-text-color: #d19d00;
   --info-color: #17a2b8;
   --info-color-dark: #0e798a;
+  --recording-color: #FF0000;
 
   --expired-color: #a9a9a9;
   --expired-bg-color: #f0f0f0;

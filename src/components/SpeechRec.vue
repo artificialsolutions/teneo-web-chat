@@ -7,13 +7,10 @@
             @touchend.prevent="stopASR"
             @mouseleave="handleMouseLeave"
             type="button"
-            class="asr-button custom-icon"> 
+            :class="{ 'asr-button': true, 'custom-icon': true, 'recording': buttonPressed && transcribing }">            
        <span v-if="!transcribing && asrRecordSymbol" v-html="asrRecordSymbol"></span>
       <span v-if="buttonPressed && !transcribing && ttsStopSymbol" v-html="ttsStopSymbol"></span>
-      <AsrMuteIcon v-if="buttonPressed && transcribing" class="custom-icon" aria-hidden="true" />
-      <AsrIcon v-else class="custom-icon" aria-hidden="true" />
-
-      
+      <AsrIcon v-else class="custom-icon" aria-hidden="true" />      
     </button>
     <button v-if="ttsActive" 
             @click="stopTTS"     
@@ -134,7 +131,7 @@ export default {
 <style scoped>
 .button-container {
   display: flex;
-  flex-direction: column;
+  flex-direction: row;
   align-items: center; 
   justify-content: space-around; 
   height: 100%; 
@@ -179,6 +176,10 @@ export default {
 
 .asr-button:hover, .tts-button:hover {
   background-color: var(--hover-bg-color, #eceff1);
+}
+
+.asr-button.recording {
+  background-color: var(--recording-color,#FF0000); 
 }
 </style>
 
