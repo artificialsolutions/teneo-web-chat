@@ -283,8 +283,7 @@ export default {
       return detectMobile();
     },
 
-    async sendButtonClicked(transcribedText = null) {
-      this.$refs.liveTranscriptRef.stopTTS();
+    async sendButtonClicked(transcribedText = null) {      
       const payload = basePayload();
 
       await handleExtension(API_ON_SEND_BUTTON_CLICK, payload);

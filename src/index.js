@@ -109,6 +109,9 @@ window.TeneoWebChat = {
     if (twcProps.asrRecordSymbol) {
       store.commit('asrRecordSymbol', twcProps.asrRecordSymbol);
     }
+    if (twcProps.ttsSymbol) {
+      store.commit('ttsSymbol', twcProps.ttsSymbol);
+    }
     if (twcProps.ttsStopSymbol) {
       store.commit('ttsStopSymbol', twcProps.ttsStopSymbol);
     }
