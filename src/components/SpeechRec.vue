@@ -1,5 +1,5 @@
 <template>
-  <div class="button-container">
+  <div class="button-container">    
     <button v-if="asrActive"
             @mousedown="startTranscription"
             @mouseup="stopASR"
@@ -7,17 +7,18 @@
             @touchend.prevent="stopASR"
             @mouseleave="handleMouseLeave"
             type="button"
-            :class="{ 'asr-button': true, 'custom-icon': true, 'recording': buttonPressed && transcribing }">            
+            :class="buttonClass">            
        <span v-if="!transcribing && asrRecordSymbol" v-html="asrRecordSymbol"></span>
-      <span v-if="buttonPressed && !transcribing && ttsStopSymbol" v-html="ttsStopSymbol"></span>
-      <AsrIcon v-else class="custom-icon" aria-hidden="true" />      
+      <span v-if="buttonPressed && !transcribing  && asrRecordSymbol" v-html="asrRecordSymbol"></span>
+      <AsrIcon v-else-if="!asrRecordSymbol" class="custom-icon" aria-hidden="true" />      
     </button>
     <button v-if="ttsActive" 
             @click="toggleTTS"     
             type="button" 
             class="tts-button custom-icon">
-      <span v-if="ttsStopSymbol && readIncomingMessages" v-html="ttsStopSymbol"></span>
-      <MuteIcon v-else-if="!readIncomingMessages" class="custom-icon" aria-hidden="true"/>
+      <span v-if="ttsSymbol && readIncomingMessages" v-html="ttsSymbol"></span>
+      <span v-else-if="ttsStopSymbol && !readIncomingMessages" v-html="ttsStopSymbol"></span> 
+      <MuteIcon v-else-if="!ttsStopSymbol && !readIncomingMessages" class="custom-icon" aria-hidden="true"/>
       <ttsIcon v-else class="custom-icon" aria-hidden="true"/>
     </button>    
   </div>
@@ -52,11 +53,18 @@ export default {
   },
 
   computed: {
-    ...mapState(['asrRecordSymbol', 'ttsStopSymbol', 'asrPauseSymbol']),
+    ...mapState(['asrRecordSymbol', 'ttsSymbol','ttsStopSymbol', 'asrPauseSymbol']),
     ...mapGetters({
       asrActive: 'asrActive',
       ttsActive: 'ttsActive'
     }),
+    buttonClass() {
+      return {
+        'asr-button': true,
+        'custom-icon': true,
+        'recording': this.buttonPressed
+      };
+    }
     
   },
 
@@ -188,7 +196,8 @@ export default {
   background-color: var(--hover-bg-color, #eceff1);
 }
 
-.asr-button.recording {
+.asr-button.recording 
+{
   background-color: var(--recording-color,#FF0000); 
 }
 </style>
