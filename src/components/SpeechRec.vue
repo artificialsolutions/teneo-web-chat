@@ -13,25 +13,27 @@
       <AsrIcon v-else class="custom-icon" aria-hidden="true" />      
     </button>
     <button v-if="ttsActive" 
-            @click="stopTTS"     
+            @click="toggleTTS"     
             type="button" 
             class="tts-button custom-icon">
-      <span v-if="ttsStopSymbol" v-html="ttsStopSymbol"></span>
+      <span v-if="ttsStopSymbol && readIncomingMessages" v-html="ttsStopSymbol"></span>
+      <MuteIcon v-else-if="!readIncomingMessages" class="custom-icon" aria-hidden="true"/>
       <ttsIcon v-else class="custom-icon" aria-hidden="true"/>
-    </button>
+    </button>    
   </div>
 </template>
 
 <script>
+import { EventBus, events } from '../utils/event-bus.js';
 import { mapState, mapGetters } from 'vuex';
 import AsrIcon from '../icons/asr.vue';
-import AsrMuteIcon from '../icons/asr-mute.vue';
+import MuteIcon from '../icons/mute.vue';
 import ttsIcon from '../icons/tts.vue';
 
 export default {
   components: {
     AsrIcon,
-    AsrMuteIcon,
+    MuteIcon,
     ttsIcon
   },
   props: {
@@ -43,7 +45,9 @@ export default {
       buttonPressed: false,
       recognition: null,
       alertMessage: this.$t('message.webspeech_not_supported'),
-      lastResult: ''
+      lastResult: '',
+      readIncomingMessages: true
+
     };
   },
 
@@ -105,8 +109,11 @@ export default {
       }
     },
 
-    stopTTS() {
+    toggleTTS() {
       window.speechSynthesis.cancel();
+       this.readIncomingMessages = !this.readIncomingMessages;       
+       EventBus.$emit('tts-state-change', this.readIncomingMessages); 
+
     },
 
     resultHandler(event) {
@@ -123,6 +130,9 @@ export default {
       this.$emit('transcribing', this.transcribing);
     }
 
+  },
+  mounted(){
+    EventBus.$emit('tts-state-change', this.readIncomingMessages); 
   },
 };
 </script>
