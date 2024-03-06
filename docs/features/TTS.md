@@ -27,7 +27,7 @@ transcription results will be displayed.
 
 ```readTranscription(text):``` Reads aloud the provided text using TTS.
 
-```stopTTS():``` Stops any ongoing text-to-speech playback.
+```toggleTTS():``` Stops any ongoing text-to-speech playback.
 
 ```resultHandler(event):``` Handles speech recognition results.
 
@@ -56,6 +56,7 @@ To ensure the ASR and TTS functionalities work seamlessly in your application, y
 ## Text-to-Speech TTS (Listening to Text)
 * To Hear Text Out Loud: If text-to-speech is active, the application will read aloud the latest message in TWC.
 * To Stop Listening: Click the speaker icon again while the text is being read to you to stop the playback immediately.
+* To Hear Text Out Loud Again: Click the speaker icon again,the application will read aloud the latest message in TWC.
 ## Tips for Best Experience
 
 * Speak Clearly: For best transcription results, speak clearly and at a moderate pace.
