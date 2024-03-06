@@ -180,6 +180,7 @@ export default {
   background: none;
   border: none;
   padding: 0px;
+  padding-bottom: 5px;
   color: var(--sendicon-fg-color, #263238);
   width: 24px;
   height: 44px;
