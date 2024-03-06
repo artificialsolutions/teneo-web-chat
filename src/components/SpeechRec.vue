@@ -148,6 +148,9 @@ export default {
   
 <style scoped>
 .button-container {
+  max-height: 200px;
+  margin-left: 2px;
+  margin-right: 2px;
   display: flex;
   flex-direction: row;
   align-items: center; 
@@ -178,8 +181,8 @@ export default {
   border: none;
   padding: 0px;
   color: var(--sendicon-fg-color, #263238);
-  width: 20px;
-  height: 20px;
+  width: 24px;
+  height: 44px;
   cursor: pointer;  
 }
 
