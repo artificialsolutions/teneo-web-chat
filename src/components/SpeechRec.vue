@@ -1,5 +1,5 @@
 <template>
-  <div class="button-container">    
+  <div class="button-container">
     <button v-if="asrActive"
             @mousedown="startTranscription"
             @mouseup="stopASR"
@@ -189,7 +189,7 @@ export default {
   background: none;
   border: none;
   padding: 0px;
-  padding-bottom: 5px;
+  padding-bottom: 10px;
   width: 24px;
   height: 44px;
   cursor: pointer;  

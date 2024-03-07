@@ -137,8 +137,7 @@ _:-ms-fullscreen, :root .twc-message.twc-user .twc-text-message-wrapper  {
 .twc-text-message__text {
   margin-top: 0.4em;
   margin-bottom: 0.4em;
-  font-weight: 400;
-  word-wrap: break-word;
+  font-weight: 400;  
   overflow-wrap: break-word; 
   hyphens: auto;
 }
