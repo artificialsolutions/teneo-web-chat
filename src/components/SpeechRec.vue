@@ -7,19 +7,19 @@
             @touchend.prevent="stopASR"
             @mouseleave="handleMouseLeave"
             type="button"
-            :class="buttonClass">            
+            :class="asrButtonClass">            
        <span v-if="!transcribing && asrRecordSymbol" v-html="asrRecordSymbol"></span>
       <span v-if="buttonPressed && !transcribing  && asrRecordSymbol" v-html="asrRecordSymbol"></span>
-      <AsrIcon v-else-if="!asrRecordSymbol" class="custom-icon" aria-hidden="true" />      
+      <AsrIcon v-else-if="!asrRecordSymbol" aria-hidden="true" />      
     </button>
     <button v-if="ttsActive" 
             @click="toggleTTS"     
             type="button" 
-            class="tts-button custom-icon">
+            :class="ttsButtonClass">
       <span v-if="ttsSymbol && readIncomingMessages" v-html="ttsSymbol"></span>
       <span v-else-if="ttsStopSymbol && !readIncomingMessages" v-html="ttsStopSymbol"></span> 
-      <MuteIcon v-else-if="!ttsStopSymbol && !readIncomingMessages" class="custom-icon" aria-hidden="true"/>
-      <ttsIcon v-else class="custom-icon" aria-hidden="true"/>
+      <MuteIcon v-else-if="!ttsStopSymbol && !readIncomingMessages"  aria-hidden="true"/>
+      <ttsIcon v-else  aria-hidden="true"/>
     </button>    
   </div>
 </template>
@@ -58,11 +58,20 @@ export default {
       asrActive: 'asrActive',
       ttsActive: 'ttsActive'
     }),
-    buttonClass() {
+    asrButtonClass() {
       return {
         'asr-button': true,
         'custom-icon': true,
-        'recording': this.buttonPressed
+        'recording': this.buttonPressed,
+        'asr-idle': !this.buttonPressed
+      };
+    },
+    ttsButtonClass() {
+      return {
+        'tts-button': true,
+        'custom-icon': true,
+        'tts-enabled': this.readIncomingMessages,
+        'tts-disabled': !this.readIncomingMessages
       };
     }
     
@@ -181,10 +190,15 @@ export default {
   border: none;
   padding: 0px;
   padding-bottom: 5px;
-  color: var(--sendicon-fg-color, #263238);
   width: 24px;
   height: 44px;
   cursor: pointer;  
+}
+
+.custom-icon.asr-idle
+.custom-icon.tts-enabled
+ {
+  color: var(--sendicon-fg-color,#263238); 
 }
 
 @media (max-width: 450px) {
@@ -199,10 +213,14 @@ export default {
 .asr-button:hover, .tts-button:hover {
   background-color: var(--hover-bg-color, #eceff1);
 }
+.custom-icon.tts-disabled
+ {
+  color: var(--expired-color,#263238); 
+}
 
-.asr-button.recording 
+.custom-icon.recording 
 {
-  background-color: var(--recording-color,#FF0000); 
+  color: var(--recording-color,#FF0000); 
 }
 </style>
 
