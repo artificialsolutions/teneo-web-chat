@@ -209,10 +209,6 @@ export default {
     margin: 10px 0;
   }
 }
-
-.asr-button:hover, .tts-button:hover {
-  background-color: var(--hover-bg-color, #eceff1);
-}
 .custom-icon.tts-disabled
  {
   color: var(--expired-color,#263238); 
