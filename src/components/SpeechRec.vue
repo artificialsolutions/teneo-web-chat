@@ -187,7 +187,8 @@ export default {
 .custom-icon {
   background: none;
   border: none;
-  padding: 0px;
+  padding: 2px;
+  padding-top: 10px;
   padding-bottom: 10px;
   width: 24px;
   height: 44px;
