@@ -19,7 +19,7 @@
       <span v-if="ttsSymbol && readIncomingMessages" v-html="ttsSymbol"></span>
       <span v-else-if="ttsStopSymbol && !readIncomingMessages" v-html="ttsStopSymbol"></span> 
       <MuteIcon v-else-if="!ttsStopSymbol && !readIncomingMessages"  aria-hidden="true"/>
-      <ttsIcon v-else  aria-hidden="true"/>
+      <TtsIcon v-else  aria-hidden="true"/>
     </button>    
   </div>
 </template>
@@ -29,13 +29,13 @@ import { EventBus, events } from '../utils/event-bus.js';
 import { mapState, mapGetters } from 'vuex';
 import AsrIcon from '../icons/asr.vue';
 import MuteIcon from '../icons/mute.vue';
-import ttsIcon from '../icons/tts.vue';
+import TtsIcon from '../icons/tts.vue';
 
 export default {
   components: {
     AsrIcon,
     MuteIcon,
-    ttsIcon
+    TtsIcon
   },
   props: {
     userInputFieldId: String,
@@ -163,9 +163,7 @@ export default {
   display: flex;
   flex-direction: row;
   align-items: center; 
-  justify-content: space-around; 
-  height: 100%; 
-  padding: 2.5px 0;
+  justify-content: center;   
 }
 
 .asr-button, .tts-button {
@@ -183,6 +181,7 @@ export default {
   width: 44px; 
   height: 44px; 
   outline: none;
+  color: var(--sendicon-fg-color,#263238); 
 }
 
 .custom-icon {
