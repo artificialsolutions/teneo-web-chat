@@ -188,7 +188,7 @@ export default {
   background: none;
   border: none;
   padding: 2px;
-  padding-top: 10px;
+  padding-top: 15px;
   padding-bottom: 10px;
   width: 24px;
   height: 44px;
