@@ -80,17 +80,6 @@ export default {
   position: relative;
 }
 
-/* workaround to fix wicth of text message box on IE11 */
-_:-ms-fullscreen, :root .twc-message.twc-bot .twc-text-message-wrapper, :root .twc-message.twc-agent .twc-text-message-wrapper {
-  max-width: calc(100% - 1px);
-}
-
-_:-ms-fullscreen, :root .twc-message.twc-user .twc-text-message-wrapper  {
-  max-width: calc(100% - 86px);
-  margin-left: 85px
-}
-/* End of workaround */
-
 .twc-dateline {
   font-weight: 400;
   font-size: 0.7em;
@@ -111,6 +100,9 @@ _:-ms-fullscreen, :root .twc-message.twc-user .twc-text-message-wrapper  {
   line-height: 1.4;
   -webkit-font-smoothing: subpixel-antialiased;
   box-shadow: 0 2px 4px 0 rgba(85, 87, 85, 0.5);
+  overflow-wrap: break-word;    
+  overflow-wrap: break-all; 
+  hyphens: auto; 
 }
 .twc-message.twc-bot .twc-text-message {
   color: var(--bot-message-fg-color, #263238);
