@@ -99,8 +99,7 @@ export default {
   font-size: 0.9em;
   line-height: 1.4;
   -webkit-font-smoothing: subpixel-antialiased;
-  box-shadow: 0 2px 4px 0 rgba(85, 87, 85, 0.5);
-  overflow-wrap: break-word;    
+  box-shadow: 0 2px 4px 0 rgba(85, 87, 85, 0.5);  
   overflow-wrap: break-all; 
   hyphens: auto; 
 }
