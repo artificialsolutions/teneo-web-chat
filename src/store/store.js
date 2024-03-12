@@ -37,7 +37,7 @@ export const store = new Vuex.Store({
         asrRecordSymbol:'',
         ttsSymbol:'',
         ttsStopSymbol:'',
-        asrPauseSymbol:'',
+        asrRecordingSymbol:'',
         
         fileUploadSymbolFailed: '',
         fileUploadSymbolInterrupted: '',
@@ -192,8 +192,8 @@ export const store = new Vuex.Store({
         ttsSymbol(state, s) {
             state.ttsSymbol = s;
         },
-        asrPauseSymbol(state, s) {
-            state.asrPauseSymbol = s;
+        asrRecordingSymbol(state, s) {
+            state.asrRecordingSymbol = s;
         },
 
 

@@ -7,17 +7,17 @@
             @touchend.prevent="stopASR"
             @mouseleave="handleMouseLeave"
             type="button"
-            :class="asrButtonClass">            
-       <span v-if="!transcribing && asrRecordSymbol" v-html="asrRecordSymbol"></span>
-      <span v-if="buttonPressed && !transcribing  && asrRecordSymbol" v-html="asrRecordSymbol"></span>
-      <AsrIcon v-else-if="!asrRecordSymbol" aria-hidden="true" />      
+            :class="asrButtonClass"> 
+            <span v-if="asrRecordingSymbol && buttonPressed ">{{ asrRecordingSymbol }}</span>
+            <span v-else-if="asrRecordSymbol && !buttonPressed && !transcribing">{{ asrRecordSymbol }}</span>
+            <AsrIcon v-else aria-hidden="true" />
     </button>
     <button v-if="ttsActive" 
             @click="toggleTTS"     
             type="button" 
             :class="ttsButtonClass">
-      <span v-if="ttsSymbol && readIncomingMessages" v-html="ttsSymbol"></span>
-      <span v-else-if="ttsStopSymbol && !readIncomingMessages" v-html="ttsStopSymbol"></span> 
+      <span v-if="ttsSymbol && readIncomingMessages">{{ ttsSymbol }}</span>
+      <span v-else-if="ttsStopSymbol && !readIncomingMessages">{{ ttsStopSymbol }}</span> 
       <MuteIcon v-else-if="!ttsStopSymbol && !readIncomingMessages"  aria-hidden="true"/>
       <TtsIcon v-else  aria-hidden="true"/>
     </button>    
@@ -53,7 +53,7 @@ export default {
   },
 
   computed: {
-    ...mapState(['asrRecordSymbol', 'ttsSymbol','ttsStopSymbol', 'asrPauseSymbol']),
+    ...mapState(['asrRecordSymbol', 'ttsSymbol','ttsStopSymbol', 'asrRecordingSymbol']),
     ...mapGetters({
       asrActive: 'asrActive',
       ttsActive: 'ttsActive'
