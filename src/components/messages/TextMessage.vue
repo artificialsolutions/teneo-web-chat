@@ -75,7 +75,7 @@ export default {
 
 <style>
 .twc-message.twc-user .twc-text-message-wrapper {
-  max-width: calc(100% - 40px);
+  /* max-width: calc(100% - 40px); */
   position: relative;
 }
 
@@ -101,7 +101,7 @@ export default {
   box-shadow: 0 2px 4px 0 rgba(85, 87, 85, 0.5);
   overflow-wrap: break-word;
   hyphens: auto;
-  word-break: break-word;
+  max-width: 252px;
 }
 .twc-message.twc-bot .twc-text-message {
   color: var(--bot-message-fg-color, #263238);
@@ -116,6 +116,7 @@ export default {
   background-color: var(--agent-message-bg-color, #47b2fd);
   margin-right: 40px;
   border-bottom-left-radius: 0px;
+  width: 100%;
 }
 
 .twc-message.twc-user .twc-text-message {
