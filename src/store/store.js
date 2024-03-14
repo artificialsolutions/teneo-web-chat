@@ -35,8 +35,9 @@ export const store = new Vuex.Store({
         showScrollDownButton: false,
 
         asrRecordSymbol:'',
+        ttsSymbol:'',
         ttsStopSymbol:'',
-        asrPauseSymbol:'',
+        asrRecordingSymbol:'',
         
         fileUploadSymbolFailed: '',
         fileUploadSymbolInterrupted: '',
@@ -188,8 +189,11 @@ export const store = new Vuex.Store({
         ttsStopSymbol(state, s) {
             state.ttsStopSymbol = s;
         },
-        asrPauseSymbol(state, s) {
-            state.asrPauseSymbol = s;
+        ttsSymbol(state, s) {
+            state.ttsSymbol = s;
+        },
+        asrRecordingSymbol(state, s) {
+            state.asrRecordingSymbol = s;
         },
 
 

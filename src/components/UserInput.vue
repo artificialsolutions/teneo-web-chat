@@ -149,6 +149,7 @@ export default {
       showUserInput: true,
       asrActive: store.getters.asrActive,
       ttsActive: store.getters.ttsActive,
+      readIncomingMessages:store.getters.ttsActive
     };
   },
 
@@ -199,12 +200,16 @@ export default {
       }
     });
 
-    if (this.ttsActive){
-      EventBus.$on(events.BOT_MESSAGE_RECEIVED, (message) => {    
+    EventBus.$on('tts-state-change', (readIncomingMessages) => {      
+      this.readIncomingMessages = readIncomingMessages;    
+    });
+    
+    EventBus.$on(events.BOT_MESSAGE_RECEIVED, (message) => {    
+      if (this.ttsActive && this.readIncomingMessages) {         
         this.$refs.liveTranscriptRef.readTranscription(message.data.text);
-      });
-    }
-
+      }
+    });     
+    
     // Detect changes and focus and emit event. This will be listened by ChatWindow to adapt to iOS Safari
     const userInput = document.getElementById('twc-user-input-field');
 
@@ -278,8 +283,7 @@ export default {
       return detectMobile();
     },
 
-    async sendButtonClicked(transcribedText = null) {
-      this.$refs.liveTranscriptRef.stopTTS();
+    async sendButtonClicked(transcribedText = null) {      
       const payload = basePayload();
 
       await handleExtension(API_ON_SEND_BUTTON_CLICK, payload);
