@@ -209,7 +209,7 @@ fieldset {
   width: 250px;
   height: 50px;
   border: none;
-  color: var(--user-input-bg-color,#f3f3f3);
+  color: var(--dark-bg-color,#7b7b7b);
   margin-bottom: 10px;
   text-align: start;
   resize: none;
