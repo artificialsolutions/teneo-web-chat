@@ -131,7 +131,7 @@ export default {
 .twc-text-message__text {
   margin-top: 0.4em;
   margin-bottom: 0.4em;
-  font-weight: 400;  
+  font-weight: 400;
 }
 
 .twc-text-message a {

@@ -1,91 +1,90 @@
 <template>
   <div v-if="showUserInput">
     <form
-        class="twc-user-input"
-        :class="{ 'twc-active': inputActive, 'twc-disabled': inputDisabled }"
-    >   
+      class="twc-user-input"
+      :class="{ 'twc-active': inputActive, 'twc-disabled': inputDisabled }"
+    >
       <div v-if="shouldDisplaySpeechRec">
-        <live-transcript ref="liveTranscriptRef" @transcribing="handleTranscribing" @transcription="handleTranscription" @transcriptionComplete="handleTranscriptionComplete"></live-transcript>        
-
+        <live-transcript ref="liveTranscriptRef" @transcribing="handleTranscribing" @transcription="handleTranscription" @transcriptionComplete="handleTranscriptionComplete"></live-transcript>
       </div>
       <textarea
-          id="twc-user-input-field"
-          ref="userInput"
-          v-debounce:250="userTyping"
-          rows="1"
-          class="twc-user-input__text"
-          role="textbox"
-          tabIndex="0"
-          :aria-label="$t('message.input_area_userinput_field_aria_label')"
-          :aria-placeholder="$t('message.input_area_userinput_field_placeholder')"
-          :placeholder="$t('message.input_area_userinput_field_placeholder')"
-          :debounce-events="['input']"
-          :aria-disabled="inputDisabled"
-          :disabled="inputDisabled ? true : false"
-          @focus="setInputActive(true)"
-          @blur="setInputActive(false)"
-          @keydown="handleReturnKey"
-          @input="autoTextareaHeight"
+        id="twc-user-input-field"
+        ref="userInput"
+        v-debounce:250="userTyping"
+        rows="1"
+        class="twc-user-input__text"
+        role="textbox"
+        tabIndex="0"
+        :aria-label="$t('message.input_area_userinput_field_aria_label')"
+        :aria-placeholder="$t('message.input_area_userinput_field_placeholder')"
+        :placeholder="$t('message.input_area_userinput_field_placeholder')"
+        :debounce-events="['input']"
+        :aria-disabled="inputDisabled"
+        :disabled="inputDisabled ? true : false"
+        @focus="setInputActive(true)"
+        @blur="setInputActive(false)"
+        @keydown="handleReturnKey"
+        @input="autoTextareaHeight"
       ></textarea>
       <div v-if="showUploadButton" class="twc-user-input__button" :class="{ 'twc-disabled': uploadDisabled }">
         <button
-            role="button"
-            tabindex="0"
-            ref="uploadButton"
-            :aria-label="$t('message.input_area_upload_button_aria_label')"
-            :title="$t('message.input_area_upload_button_title')"
-            class="twc-user-input__upload-icon-wrapper"
-            :aria-disabled="inputDisabled"
-            :disabled="inputDisabled ? true : false"
-            @click.prevent=""
-            @focus="setInputActive(true)"
-            @blur="setInputActive(false)"
-            @click="uploadButtonClicked()"
+          ref="uploadButton"
+          role="button"
+          tabindex="0"
+          :aria-label="$t('message.input_area_upload_button_aria_label')"
+          :title="$t('message.input_area_upload_button_title')"
+          class="twc-user-input__upload-icon-wrapper"
+          :aria-disabled="inputDisabled"
+          :disabled="inputDisabled ? true : false"
+          @click.prevent=""
+          @focus="setInputActive(true)"
+          @blur="setInputActive(false)"
+          @click="uploadButtonClicked()"
         >
           <img
-              v-if="uploadIconUrl"
-              id="twc-user-input__upload-icon-img"
-              class="twc-user-input__upload-icon"
-              :src="uploadIconUrl"
-              aria-hidden="true"
-              alt=""
+            v-if="uploadIconUrl"
+            id="twc-user-input__upload-icon-img"
+            class="twc-user-input__upload-icon"
+            :src="uploadIconUrl"
+            aria-hidden="true"
+            alt=""
           />
           <UploadIcon
-              v-else
-              id="twc-user-input__upload-icon"
-              class="twc-user-input__upload-icon"
-              aria-hidden="true"
+            v-else
+            id="twc-user-input__upload-icon"
+            class="twc-user-input__upload-icon"
+            aria-hidden="true"
           />
         </button>
       </div>
 
       <div class="twc-user-input__button">
         <button
-            role="button"
-            tabindex="0"
-            :aria-label="$t('message.input_area_send_button_aria_label')"
-            :title="$t('message.input_area_send_button_title')"
-            class="twc-user-input__send-icon-wrapper"
-            :aria-disabled="inputDisabled"
-            :disabled="inputDisabled ? true : false"
-            @click.prevent=""
-            @focus="setInputActive(true)"
-            @blur="setInputActive(false)"
-            @click="sendButtonClicked()"
+          role="button"
+          tabindex="0"
+          :aria-label="$t('message.input_area_send_button_aria_label')"
+          :title="$t('message.input_area_send_button_title')"
+          class="twc-user-input__send-icon-wrapper"
+          :aria-disabled="inputDisabled"
+          :disabled="inputDisabled ? true : false"
+          @click.prevent=""
+          @focus="setInputActive(true)"
+          @blur="setInputActive(false)"
+          @click="sendButtonClicked()"
         >
           <img
-              v-if="sendIconUrl"
-              id="twc-user-input__send-icon-img"
-              class="twc-user-input__send-icon"
-              :src="sendIconUrl"
-              aria-hidden="true"
-              alt=""
+            v-if="sendIconUrl"
+            id="twc-user-input__send-icon-img"
+            class="twc-user-input__send-icon"
+            :src="sendIconUrl"
+            aria-hidden="true"
+            alt=""
           />
           <SendIcon
-              v-else
-              id="twc-user-input__send-icon"
-              class="twc-user-input__send-icon"
-              aria-hidden="true"
+            v-else
+            id="twc-user-input__send-icon"
+            class="twc-user-input__send-icon"
+            aria-hidden="true"
           />
         </button>
       </div>
@@ -114,8 +113,8 @@ import handleExtension from '../utils/handle-extension.js';
 import basePayload from '../utils/base-payload.js';
 import detectMobile from '../utils/detect-mobile.js';
 import { mapState } from 'vuex';
-import { store } from "../store/store";
-import LiveTranscript from './SpeechRec.vue'; 
+import { store } from '../store/store';
+import LiveTranscript from './SpeechRec.vue';
 
 Vue.use(vueDebounce);
 
@@ -137,7 +136,7 @@ export default {
   },
   computed: {
     ...mapState(['sendIconUrl', 'showUploadButton', 'uploadIconUrl']),
-    shouldDisplaySpeechRec() {         
+    shouldDisplaySpeechRec() {
       return this.asrActive || this.ttsActive;
      },
   },
@@ -154,14 +153,14 @@ export default {
   },
 
   mounted() {
-    
+
     EventBus.$on(events.UPLOAD_PANEL_OPENED, () => {
-      this.showUserInput = false;      
+      this.showUserInput = false;
     });
 
 
     EventBus.$on(events.UPLOAD_PANEL_CLOSED, () => {
-      this.showUserInput = true;      
+      this.showUserInput = true;
     });
 
     EventBus.$on(events.DISABLE_UPLOAD, () => {
@@ -180,7 +179,7 @@ export default {
         }
         this.uploadDisabled = false;
       }
-    });    
+    });
     EventBus.$on(events.DISABLE_INPUT, () => {
       this.setInputActive(false);
       this.inputDisabled = true;
@@ -200,16 +199,16 @@ export default {
       }
     });
 
-    EventBus.$on('tts-state-change', (readIncomingMessages) => {      
-      this.readIncomingMessages = readIncomingMessages;    
+    EventBus.$on('tts-state-change', (readIncomingMessages) => {
+      this.readIncomingMessages = readIncomingMessages;
     });
-    
-    EventBus.$on(events.BOT_MESSAGE_RECEIVED, (message) => {    
-      if (this.ttsActive && this.readIncomingMessages) {         
+
+    EventBus.$on(events.BOT_MESSAGE_RECEIVED, (message) => {
+      if (this.ttsActive && this.readIncomingMessages) {
         this.$refs.liveTranscriptRef.readTranscription(message.data.text);
       }
-    });     
-    
+    });
+
     // Detect changes and focus and emit event. This will be listened by ChatWindow to adapt to iOS Safari
     const userInput = document.getElementById('twc-user-input-field');
 
@@ -238,21 +237,22 @@ export default {
   },
 
   beforeDestroy() {
-    EventBus.$off(events.BOT_MESSAGE_RECEIVED);    
+    EventBus.$off(events.BOT_MESSAGE_RECEIVED);
   },
 
   methods: {
-    handleTranscriptionComplete(transcribedText) {   
+    handleTranscriptionComplete(transcribedText) {
       this.sendButtonClicked(transcribedText).then(() => {
         this.clearTextarea();
       });
   },
     handleTranscription(transcription) {
       const userInputField = document.getElementById('twc-user-input-field');
+
       userInputField.value = DOMPurify.sanitize(transcription);
     },
-    handleTranscribing(value) {      
-      this.transcribing = value
+    handleTranscribing(value) {
+      this.transcribing = value;
     },
     setInputActive(onoff) {
       this.inputActive = onoff;
@@ -272,7 +272,7 @@ export default {
       // Check if userinput field still exists to prevent error in IE11
       if (document.getElementById('twc-user-input-field')) {
         // Create payload object
-        const payload = {text: this.$refs.userInput.value};
+        const payload = { text: this.$refs.userInput.value };
         // Check if there is an extension that want to be notified about the user typing
 
         handleExtension(API_ON_USER_TYPING, payload);
@@ -343,11 +343,11 @@ export default {
         this.$refs.userInput.focus();
       }
     },
- 
+
     clearTextarea() {
       if (this.$refs.userInput) {
-        this.$refs.userInput.value = ''; 
-        this.autoTextareaHeight(); 
+        this.$refs.userInput.value = '';
+        this.autoTextareaHeight();
       }
     },
     autoTextareaHeight() {
@@ -513,16 +513,16 @@ export default {
 
   /* Track */
   .twc-user-input__text::-webkit-scrollbar-track {
-    background: none; 
+    background: none;
     border-radius: 10px;
     margin-top: 2px;
     margin-bottom: 2px;
     box-shadow: none;
   }
-  
+
   /* Handle */
   .twc-user-input__text::-webkit-scrollbar-thumb {
-    background: rgb(196, 196, 196); 
+    background: rgb(196, 196, 196);
     border-radius: 10px;
     }
 
