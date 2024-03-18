@@ -1,7 +1,6 @@
 # v3.7.11
 
-## February 2024
-
+## March 2024
 * CSS refactoring
   * Review of hardocded values and substitution for variables.
 * Carousel Bug:

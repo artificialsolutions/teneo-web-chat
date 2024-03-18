@@ -7,35 +7,35 @@
             @touchend.prevent="stopASR"
             @mouseleave="handleMouseLeave"
             type="button"
-            class="asr-button custom-icon"> 
-       <span v-if="!transcribing && asrRecordSymbol" v-html="asrRecordSymbol"></span>
-      <span v-if="buttonPressed && !transcribing && ttsStopSymbol" v-html="ttsStopSymbol"></span>
-      <AsrMuteIcon v-if="buttonPressed && transcribing" class="custom-icon" aria-hidden="true" />
-      <AsrIcon v-else class="custom-icon" aria-hidden="true" />
-
-      
+            :class="asrButtonClass"> 
+            <span v-if="asrRecordingSymbol && buttonPressed ">{{ asrRecordingSymbol }}</span>
+            <span v-else-if="asrRecordSymbol && !buttonPressed && !transcribing">{{ asrRecordSymbol }}</span>
+            <AsrIcon v-else aria-hidden="true" />
     </button>
     <button v-if="ttsActive" 
-            @click="stopTTS"     
+            @click="toggleTTS"     
             type="button" 
-            class="tts-button custom-icon">
-      <span v-if="ttsStopSymbol" v-html="ttsStopSymbol"></span>
-      <ttsIcon v-else class="custom-icon" aria-hidden="true"/>
-    </button>
+            :class="ttsButtonClass">
+      <span v-if="ttsSymbol && readIncomingMessages">{{ ttsSymbol }}</span>
+      <span v-else-if="ttsStopSymbol && !readIncomingMessages">{{ ttsStopSymbol }}</span> 
+      <MuteIcon v-else-if="!ttsStopSymbol && !readIncomingMessages"  aria-hidden="true"/>
+      <TtsIcon v-else  aria-hidden="true"/>
+    </button>    
   </div>
 </template>
 
 <script>
+import { EventBus, events } from '../utils/event-bus.js';
 import { mapState, mapGetters } from 'vuex';
 import AsrIcon from '../icons/asr.vue';
-import AsrMuteIcon from '../icons/asr-mute.vue';
-import ttsIcon from '../icons/tts.vue';
+import MuteIcon from '../icons/mute.vue';
+import TtsIcon from '../icons/tts.vue';
 
 export default {
   components: {
     AsrIcon,
-    AsrMuteIcon,
-    ttsIcon
+    MuteIcon,
+    TtsIcon
   },
   props: {
     userInputFieldId: String,
@@ -46,16 +46,34 @@ export default {
       buttonPressed: false,
       recognition: null,
       alertMessage: this.$t('message.webspeech_not_supported'),
-      lastResult: ''
+      lastResult: '',
+      readIncomingMessages: true
+
     };
   },
 
   computed: {
-    ...mapState(['asrRecordSymbol', 'ttsStopSymbol', 'asrPauseSymbol']),
+    ...mapState(['asrRecordSymbol', 'ttsSymbol','ttsStopSymbol', 'asrRecordingSymbol']),
     ...mapGetters({
       asrActive: 'asrActive',
       ttsActive: 'ttsActive'
     }),
+    asrButtonClass() {
+      return {
+        'asr-button': true,
+        'custom-icon': true,
+        'recording': this.buttonPressed,
+        'asr-idle': !this.buttonPressed
+      };
+    },
+    ttsButtonClass() {
+      return {
+        'tts-button': true,
+        'custom-icon': true,
+        'tts-enabled': this.readIncomingMessages,
+        'tts-disabled': !this.readIncomingMessages
+      };
+    }
     
   },
 
@@ -108,8 +126,11 @@ export default {
       }
     },
 
-    stopTTS() {
+    toggleTTS() {
       window.speechSynthesis.cancel();
+       this.readIncomingMessages = !this.readIncomingMessages;       
+       EventBus.$emit('tts-state-change', this.readIncomingMessages); 
+
     },
 
     resultHandler(event) {
@@ -127,18 +148,22 @@ export default {
     }
 
   },
+  mounted(){
+    EventBus.$emit('tts-state-change', this.readIncomingMessages); 
+  },
 };
 </script>
 
   
 <style scoped>
 .button-container {
+  max-height: 200px;
+  margin-left: 2px;
+  margin-right: 2px;
   display: flex;
-  flex-direction: column;
+  flex-direction: row;
   align-items: center; 
-  justify-content: space-around; 
-  height: 100%; 
-  padding: 2.5px 0;
+  justify-content: center;   
 }
 
 .asr-button, .tts-button {
@@ -156,16 +181,24 @@ export default {
   width: 44px; 
   height: 44px; 
   outline: none;
+  color: var(--sendicon-fg-color,#263238); 
 }
 
 .custom-icon {
   background: none;
   border: none;
-  padding: 0px;
-  color: var(--sendicon-fg-color, #263238);
-  width: 20px;
-  height: 20px;
+  padding: 2px;
+  padding-top: 15px;
+  padding-bottom: 10px;
+  width: 24px;
+  height: 44px;
   cursor: pointer;  
+}
+
+.custom-icon.asr-idle
+.custom-icon.tts-enabled
+ {
+  color: var(--sendicon-fg-color,#263238); 
 }
 
 @media (max-width: 450px) {
@@ -176,9 +209,14 @@ export default {
     margin: 10px 0;
   }
 }
+.custom-icon.tts-disabled
+ {
+  color: var(--expired-color,#263238); 
+}
 
-.asr-button:hover, .tts-button:hover {
-  background-color: var(--hover-bg-color, #eceff1);
+.custom-icon.recording 
+{
+  color: var(--recording-color,#FF0000); 
 }
 </style>
 

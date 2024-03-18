@@ -23,12 +23,16 @@
           "description": "Optional value to indicate if ASR service is activated",
           "required": false
         },
+        "TTS_SYMBOL": {
+          "description": "Symbol to represent TTS service is active",
+          "required": false
+        },
         "TTS_STOP_SYMBOL": {
           "description": "Symbol to represent TTS stop when using TTS service",
           "required": false
         },
-        "ASR_PAUSE_SYMBOL": {
-          "description": "Symbol to represent ASR pause action when using ASR",
+        "ASR_RECORDING_SYMBOL": {
+          "description": "Symbol to represent ASR is recording",
           "required": false
         },
         

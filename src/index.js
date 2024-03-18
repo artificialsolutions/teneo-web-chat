@@ -109,11 +109,14 @@ window.TeneoWebChat = {
     if (twcProps.asrRecordSymbol) {
       store.commit('asrRecordSymbol', twcProps.asrRecordSymbol);
     }
+    if (twcProps.ttsSymbol) {
+      store.commit('ttsSymbol', twcProps.ttsSymbol);
+    }
     if (twcProps.ttsStopSymbol) {
       store.commit('ttsStopSymbol', twcProps.ttsStopSymbol);
     }
-    if (twcProps.asrPauseSymbol) {
-      store.commit('asrPauseSymbol', twcProps.asrPauseSymbol);
+    if (twcProps.asrRecordingSymbol) {
+      store.commit('asrRecordingSymbol', twcProps.asrRecordingSymbol);
     }
     if (twcProps.fileUploadSymbolStop) {
       store.commit('fileUploadSymbolStop', twcProps.fileUploadSymbolStop);
