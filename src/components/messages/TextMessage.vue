@@ -1,8 +1,7 @@
 <template>
-<div class="twc-text-message-wrapper">
-    
+  <div class="twc-text-message-wrapper">
     <!-- eslint-disable-next-line vue/no-v-html -->
-    <p class="twc-dateline" v-if="dateline" v-html="dateline"></p>
+    <p v-if="dateline" class="twc-dateline" v-html="dateline"></p>
     <div class="twc-avatar-text-wrapper">
       <div v-if="avatarUrl" class="twc-avatar" aria-hidden="true"><img :src="avatarUrl"></div>
       <div class="twc-text-message">
@@ -10,12 +9,10 @@
         <p class="twc-text-message__text" v-html="sanitizedHtmlText"></p>
       </div>
     </div>
-    
-</div>
+  </div>
 </template>
 
 <script>
-//TODO => Remove additional newlines from text messages
 import { PARTICIPANT_BOT } from '../../utils/constants.js';
 import sanitizeHtml from '../../utils/sanitize-html.js';
 import isValidUrl from '../../utils/validate-url';
@@ -44,9 +41,9 @@ export default {
       return this.message.data.text;
     },
     dateline() {
-      if (this.message.data && this.message.data.dateline) {
-        return sanitizeHtml(this.message.data.dateline)
-      }
+      return this.message.data && this.message.data.dateline
+         ? sanitizeHtml(this.message.data.dateline)
+         : '';
     },
     isBot() {
       return this.message.author === PARTICIPANT_BOT;
@@ -56,14 +53,16 @@ export default {
     },
     avatarUrl() {
       if (this.message.data && this.message.data.avatarUrl && isValidUrl(this.message.data.avatarUrl)) {
-        return this.message.data.avatarUrl
-      } else if (this.message.author == 'bot' && tmpVue.$store.getters.botAvatarUrl) {
-          return tmpVue.$store.getters.botAvatarUrl
-      } else if (this.message.author == 'agent' && tmpVue.$store.getters.agentAvatarUrl) {
-          return tmpVue.$store.getters.agentAvatarUrl
-      } else if (this.message.author == 'user' && tmpVue.$store.getters.userAvatarUrl) {
-          return tmpVue.$store.getters.userAvatarUrl
+        return this.message.data.avatarUrl;
+      } else if (this.message.author === 'bot' && tmpVue.$store.getters.botAvatarUrl) {
+          return tmpVue.$store.getters.botAvatarUrl;
+      } else if (this.message.author === 'agent' && tmpVue.$store.getters.agentAvatarUrl) {
+          return tmpVue.$store.getters.agentAvatarUrl;
+      } else if (this.message.author === 'user' && tmpVue.$store.getters.userAvatarUrl) {
+          return tmpVue.$store.getters.userAvatarUrl;
       }
+
+      return '';
     },
     ...mapState([
         'botAvatarUrl',
@@ -75,21 +74,14 @@ export default {
 </script>
 
 <style>
+.twc-text-message-wrapper {
+  max-width: calc(100% - 40px);
+}
+
 .twc-message.twc-user .twc-text-message-wrapper {
   max-width: calc(100% - 84px);
   position: relative;
 }
-
-/* workaround to fix wicth of text message box on IE11 */
-_:-ms-fullscreen, :root .twc-message.twc-bot .twc-text-message-wrapper, :root .twc-message.twc-agent .twc-text-message-wrapper {
-  max-width: calc(100% - 1px);
-}
-
-_:-ms-fullscreen, :root .twc-message.twc-user .twc-text-message-wrapper  {
-  max-width: calc(100% - 86px);
-  margin-left: 85px
-}
-/* End of workaround */
 
 .twc-dateline {
   font-weight: 400;
@@ -111,6 +103,9 @@ _:-ms-fullscreen, :root .twc-message.twc-user .twc-text-message-wrapper  {
   line-height: 1.4;
   -webkit-font-smoothing: subpixel-antialiased;
   box-shadow: 0 2px 4px 0 rgba(85, 87, 85, 0.5);
+  overflow-wrap: break-word;
+  hyphens: auto;
+  width: 100%;
 }
 .twc-message.twc-bot .twc-text-message {
   color: var(--bot-message-fg-color, #263238);
@@ -131,13 +126,12 @@ _:-ms-fullscreen, :root .twc-message.twc-user .twc-text-message-wrapper  {
   color: var(--user-message-fg-color, #ffffff);
   margin-left: 40px;
   border-bottom-right-radius: 0px;
-  width: 100%;
 }
 
 .twc-text-message__text {
   margin-top: 0.4em;
   margin-bottom: 0.4em;
-  font-weight: 400;  
+  font-weight: 400;
 }
 
 .twc-text-message a {
