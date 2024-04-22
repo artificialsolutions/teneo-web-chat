@@ -29,7 +29,7 @@
 </template>
 
 <script>
-import { EventBus } from '../utils/event-bus.js';
+import { EventBus, events } from '../utils/event-bus.js';
 import { mapState, mapGetters } from 'vuex';
 import AsrIcon from '../icons/asr.vue';
 import MuteIcon from '../icons/mute.vue';
@@ -49,7 +49,7 @@ export default {
       recognition: null,
       alertMessage: this.$t('message.webspeech_not_supported'),
       lastResult: '',
-      readIncomingMessages: true
+      readIncomingMessages: true,
 
     };
   },
@@ -81,6 +81,22 @@ export default {
 
   mounted() {
     EventBus.$emit('tts-state-change', this.readIncomingMessages);
+
+    EventBus.$on(events.BOT_MESSAGE_RECEIVED, (message) => {
+      if (this.ttsActive && this.readIncomingMessages) {
+        const { data } = message;
+
+        const textValues = this.extractTextValues(data);
+
+        textValues.forEach((textValue) => {
+          this.readTranscription(textValue);
+        });
+      }
+    });
+  },
+
+  beforeDestroy() {
+    EventBus.$off(events.BOT_MESSAGE_RECEIVED);
   },
 
   methods: {
@@ -121,10 +137,12 @@ export default {
     },
 
     readTranscription(text) {
-         const utterance = new SpeechSynthesisUtterance(text);
+      console.log({ text });
 
-         window.speechSynthesis.speak(utterance);
-         this.$forceUpdate();
+      const utterance = new SpeechSynthesisUtterance(text);
+
+      window.speechSynthesis.speak(utterance);
+      this.$forceUpdate();
     },
 
     handleMouseLeave() {
@@ -136,8 +154,6 @@ export default {
     toggleTTS() {
       window.speechSynthesis.cancel();
        this.readIncomingMessages = !this.readIncomingMessages;
-       EventBus.$emit('tts-state-change', this.readIncomingMessages);
-
     },
 
     resultHandler(event) {
@@ -152,8 +168,27 @@ export default {
     endHandler() {
       this.transcribing = false;
       this.$emit('transcribing', this.transcribing);
-    }
-  },
+    },
+
+    extractTextValues(messageData) {
+
+      /*
+       * This array defines the values which should be considered text
+       * and therefore which values should be read by TTS
+       * It also defines the ORDER (left to right) in which they will
+       * be read if more than one exists in a message
+       */
+      const validValues = ['title', 'subtitle', 'text', 'alt'];
+
+      return validValues
+        .filter((value) => Object.prototype.hasOwnProperty.call(messageData, value))
+        .map((value) => this.cleanHTMLFromText(messageData[value]));
+    },
+
+    cleanHTMLFromText(text) {
+      return new DOMParser().parseFromString(text, 'text/html').body.textContent || '';
+    },
+  }
 };
 </script>
 

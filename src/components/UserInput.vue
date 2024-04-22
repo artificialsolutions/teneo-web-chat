@@ -140,6 +140,7 @@ export default {
       return this.asrActive || this.ttsActive;
      },
   },
+
   data() {
     return {
       inputActive: false,
@@ -148,7 +149,6 @@ export default {
       showUserInput: true,
       asrActive: store.getters.asrActive,
       ttsActive: store.getters.ttsActive,
-      readIncomingMessages:store.getters.ttsActive
     };
   },
 
@@ -199,16 +199,6 @@ export default {
       }
     });
 
-    EventBus.$on('tts-state-change', (readIncomingMessages) => {
-      this.readIncomingMessages = readIncomingMessages;
-    });
-
-    EventBus.$on(events.BOT_MESSAGE_RECEIVED, (message) => {
-      if (this.ttsActive && this.readIncomingMessages) {
-        this.$refs.liveTranscriptRef.readTranscription(message.data.text);
-      }
-    });
-
     // Detect changes and focus and emit event. This will be listened by ChatWindow to adapt to iOS Safari
     const userInput = document.getElementById('twc-user-input-field');
 
@@ -234,10 +224,6 @@ export default {
       const dummyFocusElement = document.getElementById('twc-focus-fix');
       dummyFocusElement.focus();
     }
-  },
-
-  beforeDestroy() {
-    EventBus.$off(events.BOT_MESSAGE_RECEIVED);
   },
 
   methods: {
