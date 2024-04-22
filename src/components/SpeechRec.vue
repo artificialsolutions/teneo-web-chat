@@ -137,8 +137,6 @@ export default {
     },
 
     readTranscription(text) {
-      console.log({ text });
-
       const utterance = new SpeechSynthesisUtterance(text);
 
       window.speechSynthesis.speak(utterance);
