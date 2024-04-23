@@ -228,18 +228,23 @@ export default {
 
   methods: {
     handleTranscriptionComplete(transcribedText) {
+      this.handleTranscription(transcribedText);
+
       this.sendButtonClicked(transcribedText).then(() => {
         this.clearTextarea();
       });
-  },
+    },
+
     handleTranscription(transcription) {
       const userInputField = document.getElementById('twc-user-input-field');
 
       userInputField.value = DOMPurify.sanitize(transcription);
     },
+
     handleTranscribing(value) {
       this.transcribing = value;
     },
+
     setInputActive(onoff) {
       this.inputActive = onoff;
       if (onoff === true) {

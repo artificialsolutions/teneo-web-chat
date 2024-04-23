@@ -56,8 +56,6 @@ export const API_GET_STORAGE = 'storage';
 export const API_GET_LOCALE = 'locale';
 export const API_GET_ENGINE_PARAMS = 'engine_params';
 
-
-
 // Api callbacks
 export const API_ON_READY = 'ready';
 export const API_ON_VISIBILITY_CHANGED = 'visibility_changed';
@@ -73,8 +71,6 @@ export const API_ON_MINIMIZE_BUTTON_CLICK = 'minimize_button_clicked';
 export const API_ON_MODAL_BUTTON_CLICK = 'modal_button_clicked';
 export const API_ON_SEND_BUTTON_CLICK = 'send_button_clicked';
 export const API_ON_UPLOAD_BUTTON_CLICK = 'upload_button_clicked';
-export const API_ON_ASR_BUTTON_CLICK = 'asr_button_clicked';
-export const API_ON_TTS_BUTTON_CLICK = 'tts_button_clicked';
 export const API_ON_RESET = 'reset';
 
 export const API_CALL_HIDE_UPLOAD_PANEL = 'hide_upload_panel';
@@ -88,3 +84,9 @@ export const API_ON_SET_UPLOAD_STATE = 'set_upload_state';
 export const API_ON_UPLOAD_FILE_DELETE_CLICK = 'upload_file_delete_clicked';
 export const API_ON_UPLOAD_FILE_STOP_CLICK = 'upload_file_stop_clicked';
 export const API_ON_UPLOAD_FILE_RESTART_CLICK = 'upload_file_restart_clicked';
+
+export const STOP_ASR_TTS = 'stop_asr_tts';
+export const API_ON_ASR_ENSURE_AVAILABLE = 'asr_ensure_available';
+export const API_ON_ASR_START_RECOGNITION = 'asr_start_recognition';
+export const API_ON_ASR_CLEANUP = 'asr_cleanup';
+export const API_ON_TTS_READ_TEXT = 'tts_read_text';

@@ -4,10 +4,10 @@
       v-if="asrActive"
       type="button"
       :class="asrButtonClass"
-      @mousedown="startTranscription"
-      @mouseup="stopASR"
-      @touchstart.prevent="startTranscription"
-      @touchend.prevent="stopASR"
+      @mousedown="asrStartRecognition"
+      @mouseup="asrStop"
+      @touchstart.prevent="asrStartRecognition"
+      @touchend.prevent="asrStop"
       @mouseleave="handleMouseLeave"
     >
       <span v-if="asrRecordingSymbol && buttonPressed ">{{ asrRecordingSymbol }}</span>
@@ -34,6 +34,7 @@ import { mapState, mapGetters } from 'vuex';
 import AsrIcon from '../icons/asr.vue';
 import MuteIcon from '../icons/mute.vue';
 import TtsIcon from '../icons/tts.vue';
+import AsrTtsApi from '../utils/asr-tts-api.js';
 
 export default {
   components: {
@@ -46,16 +47,14 @@ export default {
     return {
       transcribing: false,
       buttonPressed: false,
-      recognition: null,
-      alertMessage: this.$t('message.webspeech_not_supported'),
       lastResult: '',
       readIncomingMessages: true,
-
+      asrTtsApi: new AsrTtsApi()
     };
   },
 
   computed: {
-    ...mapState(['asrRecordSymbol', 'ttsSymbol','ttsStopSymbol', 'asrRecordingSymbol']),
+    ...mapState(['asrRecordSymbol', 'ttsSymbol', 'ttsStopSymbol', 'asrRecordingSymbol']),
     ...mapGetters({
       asrActive: 'asrActive',
       ttsActive: 'ttsActive'
@@ -80,8 +79,6 @@ export default {
   },
 
   mounted() {
-    EventBus.$emit('tts-state-change', this.readIncomingMessages);
-
     EventBus.$on(events.BOT_MESSAGE_RECEIVED, (message) => {
       if (this.ttsActive && this.readIncomingMessages) {
         const { data } = message;
@@ -89,83 +86,82 @@ export default {
         const textValues = this.extractTextValues(data);
 
         textValues.forEach((textValue) => {
-          this.readTranscription(textValue);
+          this.ttsReadText(textValue, document.documentElement.lang);
         });
       }
     });
+
+    EventBus.$on(events.STOP_ASR_TTS, () => {
+      this.asrStop();
+      this.ttsStop();
+    });
+
   },
 
   beforeDestroy() {
     EventBus.$off(events.BOT_MESSAGE_RECEIVED);
+    EventBus.$off(events.STOP_ASR_TTS);
   },
 
   methods: {
-    startTranscription() {
+    async asrStartRecognition() {
       this.buttonPressed = true;
 
-      // Before creating a new SpeechRecognition cleanup
-      if (this.recognition) {
-        this.recognition.stop();
-        this.recognition = null;
-      }
-      const SpeechRecognition = window.SpeechRecognition || window.webkitSpeechRecognition;
+      const asrAvailable = await this.asrTtsApi.asrEnsureAvailable();
 
-      if (typeof SpeechRecognition === "undefined") {
-        alert(this.alertMessage);
+      if (!asrAvailable) {
+        console.error('ASR Not Available');
+
         return;
       }
+
+      this.asrTtsApi.asrCleanup();
+
       if (!this.transcribing) {
-        this.recognition = new SpeechRecognition();
-        this.recognition.continuous = true;
-        const isMobile = /Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(navigator.userAgent);
-        this.recognition.interimResults = !isMobile;
-        this.recognition.addEventListener('result', this.resultHandler);
-        this.recognition.addEventListener('end', this.endHandler);
-        this.recognition.start();
+        this.asrTtsApi.asrStartRecognition(this.asrHandleFinalResult, this.asrHandleCancel, this.asrHandleIntermediateResult);
         this.transcribing = true;
         this.$emit('transcribing', this.transcribing);
       }
     },
 
-    stopASR() {
-      this.buttonPressed = false;
-      if (this.recognition) {
-        this.recognition.stop();
-      }
+    asrHandleCancel() {
       this.transcribing = false;
       this.$emit('transcribing', this.transcribing);
     },
 
-    readTranscription(text) {
-      const utterance = new SpeechSynthesisUtterance(text);
+    asrHandleFinalResult(transcribedText) {
+      this.$emit('transcriptionComplete', transcribedText);
+    },
 
-      window.speechSynthesis.speak(utterance);
+    asrHandleIntermediateResult(transcribedText) {
+      this.$emit('transcription', transcribedText);
+    },
+
+    async asrStop() {
+      this.buttonPressed = false;
+      await this.asrTtsApi.asrCleanup();
+      this.transcribing = false;
+      this.$emit('transcribing', this.transcribing);
+    },
+
+    async ttsReadText(text, lang) {
+      await this.asrTtsApi.ttsReadText(text, lang);
       this.$forceUpdate();
+    },
+
+    async ttsStop() {
+      await this.asrTtsApi.ttsStop();
     },
 
     handleMouseLeave() {
       if (this.transcribing) {
-        this.stopASR();
+        this.asrStop();
       }
     },
 
     toggleTTS() {
-      window.speechSynthesis.cancel();
-       this.readIncomingMessages = !this.readIncomingMessages;
-    },
-
-    resultHandler(event) {
-      const transcriptString = event.results[event.results.length - 1][0].transcript;
-
-      this.$emit('transcription', transcriptString);
-      if (event.results[event.results.length - 1].isFinal) {
-        this.$emit('transcriptionComplete', transcriptString);
-      }
-    },
-
-    endHandler() {
-      this.transcribing = false;
-      this.$emit('transcribing', this.transcribing);
+      this.ttsStop();
+      this.readIncomingMessages = !this.readIncomingMessages;
     },
 
     extractTextValues(messageData) {

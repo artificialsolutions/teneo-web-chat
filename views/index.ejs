@@ -378,6 +378,23 @@ TeneoWebChat.on('visibility_changed', payload => TeneoWebChat.get('storage').set
 TeneoWebChat.on('reset', () => TeneoWebChat.get('storage').removeItem('twc_last_state'));
 
 
+
+// TeneoWebChat.on('stop_asr_tts', payload => {console.log( 'block: stop_asr_tts', { payload }); payload.handledState.handled = true });
+// TeneoWebChat.on('asr_ensure_available', payload => {console.log( 'block: asr_ensure_available', { payload }); payload.handledState.handled = true });
+// TeneoWebChat.on('asr_start_recognition', payload => {console.log( 'block: asr_start_recognition', { payload }); payload.handledState.handled = true });
+// TeneoWebChat.on('asr_cleanup', payload => {console.log( 'block: asr_cleanup', { payload }); payload.handledState.handled = true });
+// TeneoWebChat.on('tts_read_text', payload => {console.log( 'block: tts_read_text', { payload }); payload.handledState.handled = true });
+// TeneoWebChat.on('tts_stop', payload => {console.log( 'block: tts_stop', { payload }); payload.handledState.handled = true });
+
+TeneoWebChat.on('stop_asr_tts', payload => {console.log( 'log: stop_asr_tts', { payload }) });
+TeneoWebChat.on('asr_ensure_available', payload => {console.log( 'log: asr_ensure_available', { payload })});
+TeneoWebChat.on('asr_start_recognition', payload => {console.log( 'log: asr_start_recognition', { payload })});
+TeneoWebChat.on('asr_cleanup', payload => {console.log( 'log: asr_cleanup', { payload })});
+TeneoWebChat.on('tts_read_text', payload => {console.log( 'log: tts_read_text', { payload })});
+TeneoWebChat.on('tts_stop', payload => {console.log( 'log: tts_stop', { payload })});
+
+
+
 const element = document.getElementById('teneo-web-chat');
 const teneoProps = {
     'teneoEngineUrl': '<%= process.env.TENEO_ENGINE_URL %>',
