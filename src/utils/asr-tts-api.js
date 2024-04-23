@@ -27,9 +27,9 @@ class AsrTtsApi {
         }
 
         return this.webSpeech.asrEnsureAvailable();
-      }
+    }
 
-      async asrStartRecognition(handleFinalResult, handleCancel, handleIntermediateResult) {
+    async asrStartRecognition(handleFinalResult, handleCancel, handleIntermediateResult) {
         const payload = {
             ...basePayload(),
             handleFinalResult,
@@ -39,26 +39,22 @@ class AsrTtsApi {
 
         await handleExtension(API_ON_ASR_START_RECOGNITION, payload);
 
-        if (payload.handledState.handled === true) {
-          return payload.asrAvailable;
+        if (!payload.handledState.handled === true) {
+            this.webSpeech.asrStartRecognition(handleFinalResult, handleCancel, handleIntermediateResult);
         }
+    }
 
-        this.webSpeech.asrStartRecognition(handleFinalResult, handleCancel, handleIntermediateResult);
-      }
-
-      async asrCleanup() {
+    async asrCleanup() {
         const payload = basePayload();
 
         await handleExtension(API_ON_ASR_CLEANUP, payload);
 
-        if (payload.handledState.handled === true) {
-          return payload.asrAvailable;
+        if (!payload.handledState.handled === true) {
+            this.webSpeech.asrCleanup();
         }
+    }
 
-        this.webSpeech.asrCleanup();
-      }
-
-      async ttsReadText(text, lang) {
+    async ttsReadText(text, lang) {
         const payload = {
             ...basePayload(),
             text,
@@ -67,24 +63,20 @@ class AsrTtsApi {
 
         await handleExtension(API_ON_TTS_READ_TEXT, payload);
 
-        if (payload.handledState.handled === true) {
-          return payload.asrAvailable;
+        if (!payload.handledState.handled === true) {
+            this.webSpeech.ttsReadText(text, lang);
         }
+    }
 
-        this.webSpeech.ttsReadText(text, lang);
-      }
-
-      async ttsStop() {
+    async ttsStop() {
         const payload = basePayload();
 
         await handleExtension(API_ON_TTS_STOP, payload);
 
-        if (payload.handledState.handled === true) {
-          return payload.asrAvailable;
+        if (!payload.handledState.handled === true) {
+            this.webSpeech.ttsStop();
         }
-
-        this.webSpeech.ttsStop();
-      }
+    }
 }
 
 export default AsrTtsApi;
