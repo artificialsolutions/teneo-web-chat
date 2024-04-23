@@ -44,7 +44,6 @@ class WebSpeechIntegration {
     const utterance = new SpeechSynthesisUtterance(text);
 
     utterance.lang = lang;
-    console.log({ utterance });
     window.speechSynthesis.speak(utterance);
   }
 
