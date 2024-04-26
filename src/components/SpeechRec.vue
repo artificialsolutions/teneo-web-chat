@@ -25,6 +25,9 @@
       <MuteIcon v-else-if="!ttsStopSymbol && !readIncomingMessages" aria-hidden="true" />
       <TtsIcon v-else aria-hidden="true" />
     </button>
+    <RecordingStartedBeep ref="recordingStartedBeep" />
+    <RecordingEndedBeep ref="recordingEndedBeep" />
+    <RecordingCancelledBeep ref="recordingCancelledBeep" />
   </div>
 </template>
 
@@ -34,13 +37,19 @@ import { mapState, mapGetters } from 'vuex';
 import AsrIcon from '../icons/asr.vue';
 import MuteIcon from '../icons/mute.vue';
 import TtsIcon from '../icons/tts.vue';
+import RecordingStartedBeep from '../sounds/recordingStartedBeep.vue';
+import RecordingEndedBeep from '../sounds/recordingEndedBeep.vue';
+import RecordingCancelledBeep from '../sounds/recordingCancelledBeep.vue';
 import AsrTtsApi from '../utils/asr-tts-api.js';
 
 export default {
   components: {
     AsrIcon,
     MuteIcon,
-    TtsIcon
+    TtsIcon,
+    RecordingStartedBeep,
+    RecordingEndedBeep,
+    RecordingCancelledBeep
   },
 
   data() {
@@ -82,20 +91,22 @@ export default {
     EventBus.$on(events.BOT_MESSAGE_RECEIVED, (message) => {
       if (this.ttsActive && this.readIncomingMessages) {
         const { data } = message;
+        const { lang } = document.documentElement;
 
-        const textValues = this.extractTextValues(data);
+        const textValues = this.extractTextValuesRecurse(data);
 
-        textValues.forEach((textValue) => {
-          this.ttsReadText(textValue, document.documentElement.lang);
-        });
+        this.ttsReadText(textValues.join('.\n'), lang);
       }
+    });
+
+    EventBus.$on(events.MESSAGE_SENT, () => {
+      this.ttsStop();
     });
 
     EventBus.$on(events.STOP_ASR_TTS, () => {
       this.asrStop();
       this.ttsStop();
     });
-
   },
 
   beforeDestroy() {
@@ -105,8 +116,6 @@ export default {
 
   methods: {
     async asrStartRecognition() {
-      this.buttonPressed = true;
-
       const asrAvailable = await this.asrTtsApi.asrEnsureAvailable();
 
       if (!asrAvailable) {
@@ -115,10 +124,20 @@ export default {
         return;
       }
 
+      this.ttsStop();
       this.asrTtsApi.asrCleanup();
 
+      this.buttonPressed = true;
+      this.$refs.recordingStartedBeep.$el.play();
+
+      this.startTranscribing();
+    },
+
+    startTranscribing() {
       if (!this.transcribing) {
-        this.asrTtsApi.asrStartRecognition(this.asrHandleFinalResult, this.asrHandleCancel, this.asrHandleIntermediateResult);
+        const { lang } = document.documentElement;
+
+        this.asrTtsApi.asrStartRecognition(lang, this.asrHandleFinalResult, this.asrHandleCancel, this.asrHandleIntermediateResult);
         this.transcribing = true;
         this.$emit('transcribing', this.transcribing);
       }
@@ -127,10 +146,17 @@ export default {
     asrHandleCancel() {
       this.transcribing = false;
       this.$emit('transcribing', this.transcribing);
+      this.$refs.recordingCancelledBeep.$el.play();
+      this.buttonPressed = false;
     },
 
     asrHandleFinalResult(transcribedText) {
       this.$emit('transcriptionComplete', transcribedText);
+
+      this.transcribing = false;
+      this.$emit('transcribing', this.transcribing);
+      this.$refs.recordingEndedBeep.$el.play();
+      this.buttonPressed = false;
     },
 
     asrHandleIntermediateResult(transcribedText) {
@@ -138,13 +164,24 @@ export default {
     },
 
     async asrStop() {
-      this.buttonPressed = false;
       await this.asrTtsApi.asrCleanup();
-      this.transcribing = false;
-      this.$emit('transcribing', this.transcribing);
+
+      this.buttonPressed = false;
+      if (this.transcribing) {
+        this.transcribing = false;
+        this.$emit('transcribing', this.transcribing);
+      }
     },
 
     async ttsReadText(text, lang) {
+      const ttsAvailable = await this.asrTtsApi.ttsEnsureAvailable();
+
+      if (!ttsAvailable) {
+        console.error('TTS Not Available');
+
+        return;
+      }
+
       await this.asrTtsApi.ttsReadText(text, lang);
       this.$forceUpdate();
     },
@@ -177,6 +214,16 @@ export default {
       return validValues
         .filter((value) => Object.prototype.hasOwnProperty.call(messageData, value))
         .map((value) => this.cleanHTMLFromText(messageData[value]));
+    },
+
+    extractTextValuesRecurse(messageData) {
+      const textValues = this.extractTextValues(messageData);
+
+      const subValues = Object.values(messageData)
+        .filter((value) => Array.isArray(value) && value.length > 0)
+        .flatMap((array) => array.flatMap((entry) => this.extractTextValuesRecurse(entry)));
+
+      return textValues.concat(subValues);
     },
 
     cleanHTMLFromText(text) {
@@ -251,4 +298,3 @@ export default {
   color: var(--recording-color,#FF0000);
 }
 </style>
-

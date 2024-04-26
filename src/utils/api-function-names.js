@@ -85,8 +85,9 @@ export const API_ON_UPLOAD_FILE_DELETE_CLICK = 'upload_file_delete_clicked';
 export const API_ON_UPLOAD_FILE_STOP_CLICK = 'upload_file_stop_clicked';
 export const API_ON_UPLOAD_FILE_RESTART_CLICK = 'upload_file_restart_clicked';
 
-export const STOP_ASR_TTS = 'stop_asr_tts';
 export const API_ON_ASR_ENSURE_AVAILABLE = 'asr_ensure_available';
 export const API_ON_ASR_START_RECOGNITION = 'asr_start_recognition';
 export const API_ON_ASR_CLEANUP = 'asr_cleanup';
+export const API_ON_TTS_ENSURE_AVAILABLE = 'tts_ensure_available';
 export const API_ON_TTS_READ_TEXT = 'tts_read_text';
+export const API_ON_TTS_STOP = 'tts_stop';

@@ -5,6 +5,7 @@ import {
   API_ON_ASR_ENSURE_AVAILABLE,
   API_ON_ASR_START_RECOGNITION,
   API_ON_ASR_CLEANUP,
+  API_ON_TTS_ENSURE_AVAILABLE,
   API_ON_TTS_READ_TEXT,
   API_ON_TTS_STOP
 } from '../utils/api-function-names.js';
@@ -29,9 +30,10 @@ class AsrTtsApi {
         return this.webSpeech.asrEnsureAvailable();
     }
 
-    async asrStartRecognition(handleFinalResult, handleCancel, handleIntermediateResult) {
+    async asrStartRecognition(lang, handleFinalResult, handleCancel, handleIntermediateResult) {
         const payload = {
             ...basePayload(),
+            lang,
             handleFinalResult,
             handleCancel,
             handleIntermediateResult
@@ -40,7 +42,7 @@ class AsrTtsApi {
         await handleExtension(API_ON_ASR_START_RECOGNITION, payload);
 
         if (!payload.handledState.handled === true) {
-            this.webSpeech.asrStartRecognition(handleFinalResult, handleCancel, handleIntermediateResult);
+            this.webSpeech.asrStartRecognition(lang, handleFinalResult, handleCancel, handleIntermediateResult);
         }
     }
 
@@ -52,6 +54,21 @@ class AsrTtsApi {
         if (!payload.handledState.handled === true) {
             this.webSpeech.asrCleanup();
         }
+    }
+
+    async ttsEnsureAvailable() {
+        const payload = {
+            ...basePayload(),
+            ttsAvailable: false
+        };
+
+        await handleExtension(API_ON_TTS_ENSURE_AVAILABLE, payload);
+
+        if (payload.handledState.handled === true) {
+          return payload.ttsAvailable;
+        }
+
+        return this.webSpeech.ttsEnsureAvailable();
     }
 
     async ttsReadText(text, lang) {
