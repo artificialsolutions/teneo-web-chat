@@ -160,8 +160,11 @@ window.TeneoWebChat = {
     }
 
     if (twcProps.locale) {
-
       store.commit('locale', twcProps.locale);
+    }
+
+    if (twcProps.voice) {
+      store.commit('voice', twcProps.voice);
     }
 
 //Empty property
@@ -240,7 +243,7 @@ window.TeneoWebChat = {
 
       // Only continue if function name provided is valid
       if (!validFunctionNames.includes(function_name)) {
-        // TODO: throw error if invalid function_name was provided?
+        console.error(`Unknown function name: ${function_name}`);
         return;
       }
 

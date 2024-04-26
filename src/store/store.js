@@ -286,6 +286,11 @@ export const store = new Vuex.Store({
                 state.locale = newLocale;
             }
         },
+        voice(state, newVoice) {
+            if (typeof newVoice === 'string') {
+                state.voice = newVoice;
+            }
+        },
         storage(state, newStorage) {
             if (typeof newStorage === 'object') {
                 state.storage = newStorage;
@@ -362,6 +367,7 @@ export const store = new Vuex.Store({
         ttsActive: (state) => state.ttsActive,
         
         locale: (state) => state.locale,
+        voice: (state) => state.voice,
         autoRedirect: (state) => state.autoRedirect,
         localeObj: (state) => {
             return {'locale': state.locale};
