@@ -40,6 +40,7 @@ import TtsIcon from '../icons/tts.vue';
 import RecordingStartedBeep from '../sounds/recordingStartedBeep.vue';
 import RecordingEndedBeep from '../sounds/recordingEndedBeep.vue';
 import RecordingCancelledBeep from '../sounds/recordingCancelledBeep.vue';
+import { store } from '../store/store';
 import AsrTtsApi from '../utils/asr-tts-api.js';
 
 export default {
@@ -58,7 +59,8 @@ export default {
       buttonPressed: false,
       lastResult: '',
       readIncomingMessages: true,
-      asrTtsApi: new AsrTtsApi()
+      asrTtsApi: new AsrTtsApi(),
+      ttsTextQueue: [],
     };
   },
 
@@ -90,12 +92,20 @@ export default {
   mounted() {
     EventBus.$on(events.BOT_MESSAGE_RECEIVED, (message) => {
       if (this.ttsActive && this.readIncomingMessages) {
-        const { data } = message;
+        const { data, placeInQueue, queueLength } = message;
         const { lang } = document.documentElement;
+        const { locale, voice } = store.getters;
 
-        const textValues = this.extractTextValuesRecurse(data);
+        // Here we piece back together the messages that were split in parse-teneo-response
+        if (!placeInQueue || placeInQueue === 1) {
+          this.ttsTextQueue = this.extractTextValuesRecurse(data);
+        } else {
+          this.ttsTextQueue = this.ttsTextQueue.concat(this.extractTextValuesRecurse(data));
+        }
 
-        this.ttsReadText(textValues.join('.\n'), lang);
+        if (!placeInQueue || (placeInQueue === queueLength)) {
+          this.ttsReadText(this.ttsTextQueue.join('.\n'), locale || lang, voice);
+        }
       }
     });
 

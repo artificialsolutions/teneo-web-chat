@@ -30,10 +30,10 @@ class AsrTtsApi {
         return this.webSpeech.asrEnsureAvailable();
     }
 
-    async asrStartRecognition(lang, handleFinalResult, handleCancel, handleIntermediateResult) {
+    async asrStartRecognition(locale, handleFinalResult, handleCancel, handleIntermediateResult) {
         const payload = {
             ...basePayload(),
-            lang,
+            locale,
             handleFinalResult,
             handleCancel,
             handleIntermediateResult
@@ -42,7 +42,7 @@ class AsrTtsApi {
         await handleExtension(API_ON_ASR_START_RECOGNITION, payload);
 
         if (!payload.handledState.handled === true) {
-            this.webSpeech.asrStartRecognition(lang, handleFinalResult, handleCancel, handleIntermediateResult);
+            this.webSpeech.asrStartRecognition(locale, handleFinalResult, handleCancel, handleIntermediateResult);
         }
     }
 
@@ -71,17 +71,19 @@ class AsrTtsApi {
         return this.webSpeech.ttsEnsureAvailable();
     }
 
-    async ttsReadText(text, lang) {
+    ttsReadText(text, locale, voice, ttsComplete) {
         const payload = {
             ...basePayload(),
             text,
-            lang
+            locale,
+            voice,
+            ttsComplete
         };
 
-        await handleExtension(API_ON_TTS_READ_TEXT, payload);
+        handleExtension(API_ON_TTS_READ_TEXT, payload);
 
         if (!payload.handledState.handled === true) {
-            this.webSpeech.ttsReadText(text, lang);
+            this.webSpeech.ttsReadText(text, locale, voice, ttsComplete);
         }
     }
 

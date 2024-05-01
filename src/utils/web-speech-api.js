@@ -1,5 +1,3 @@
-import { store } from '../store/store';
-
 class WebSpeechIntegration {
   constructor() {
     this.recognition = null;
@@ -52,24 +50,23 @@ class WebSpeechIntegration {
   }
 
   // eslint-disable-next-line class-methods-use-this
-  ttsReadText(text, ttsLang) {
-    const { locale: langPref, voice: voicePref } = store.getters;
-    const lang = langPref || ttsLang;
+  ttsReadText(text, locale, voice, ttsComplete) {
     const utterance = new SpeechSynthesisUtterance(text);
 
-    utterance.lang = lang;
-    utterance.voice = WebSpeechIntegration.findBestVoice(lang, voicePref);
+    utterance.lang = locale;
+    utterance.voice = WebSpeechIntegration.findBestVoice(locale, voice);
+    utterance.onend = () => ttsComplete();
 
     WebSpeechIntegration.getSpeechSynthesis().speak(utterance);
   }
 
-  static findBestVoice(lang, voicePref) {
+  static findBestVoice(locale, voicePref) {
     const voicesByLanguage = WebSpeechIntegration.getSpeechSynthesis()
     .getVoices()
-    .filter((v) => v.lang === lang);
+    .filter((v) => v.lang === locale);
 
     if (!voicesByLanguage.length) {
-      throw new Error(`No voice found for language: ${lang}`);
+      throw new Error(`No voice found for language: ${locale}`);
     }
 
     const voice =
@@ -77,8 +74,6 @@ class WebSpeechIntegration {
       voicesByLanguage.find((v) => v.name.includes(voicePref)) ??
       voicesByLanguage.find((v) => !v.localService) ??
       voicesByLanguage[0];
-
-    console.log({ lang, voicePref, voice, voicesByLanguage });
 
     return voice;
   }
