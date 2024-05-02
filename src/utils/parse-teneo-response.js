@@ -7,6 +7,7 @@ import {
 } from './constants.js';
 import {EventBus, events} from '../utils/event-bus';
 import {store} from '../store/store';
+import validateTwcMessage from './twc-message-schema.js';
 
 
 const defaultMessageType = 'text';
@@ -92,6 +93,10 @@ export default async function parseTeneoResponse(teneoResponse) {
     }
 
     if (data) {
+        validateTwcMessage(data, (errors) => {
+            console.error('Malformed message data', { data, errors });
+        })
+
         messages.push({
             author: PARTICIPANT_BOT,
             type: data.type || defaultMessageType,
