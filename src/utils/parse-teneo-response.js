@@ -2,150 +2,155 @@ import {
     PARTICIPANT_BOT,
     TENEO_PARAM_KEY,
     TENEO_OUTPUTTEXTSEGMENTS_PARAM,
-    BUBBLE_DELAY,
-    TENEO_TEMPLATE_INDEX
+    BUBBLE_DELAY
 } from './constants.js';
-import {EventBus, events} from '../utils/event-bus';
-import {store} from '../store/store';
-import validateTwcMessage from './twc-message-schema.js';
-
+import { EventBus, events } from '../utils/event-bus';
+import { store } from '../store/store';
+import validateTwcMessage from '../utils/twc-message-schema.js';
 
 const defaultMessageType = 'text';
 
-export default async function parseTeneoResponse(teneoResponse) {
+const timeout = (ms) => {
+    return new Promise((resolve) => setTimeout(resolve, ms));
+};
 
+const getJsonParameterValue = (parameters, paramName) => {
+    if (Object.prototype.hasOwnProperty.call(parameters, paramName)) {
+        const paramValue = parameters[paramName];
 
-    let timeout = function (ms) {
-        return new Promise(resolve => setTimeout(resolve, ms));
-    }
-
-    const {parameters, text, link} = teneoResponse.output;
-    const messages = [];
-    // get ouputTextSegments parameter for speech bubbles
-    // it is a list with start and end indexes that looks like this
-    // [[0, 39], [40, 67], [68, 96], [97, 97]]
-
-    const ouputTextSegmentsParam = parameters && parameters[TENEO_OUTPUTTEXTSEGMENTS_PARAM];
-    let outputTextSegmentIndexes;
-    try {
-        if (ouputTextSegmentsParam) {
-            outputTextSegmentIndexes = JSON.parse(ouputTextSegmentsParam);
-        }
-    } catch (err) {
-        console.error('Error: Unable to parse outputTextSegmentsParam JSON string')
-    }
-
-    // handle 'attachments'
-    const messageParams = parameters && parameters[TENEO_PARAM_KEY];
-    let data;
-    try {
-        if (messageParams) {
-            data = JSON.parse(messageParams);
-        }
-    } catch (err) {
-        console.error('Error: Unable to parse JSON string')
-    }
-
-
-    if (outputTextSegmentIndexes && Array.isArray(outputTextSegmentIndexes) && text) {
-
-        // each segment (a list that contains a start and an end index) in the list is a bubble
-        for (let i = 0; i < outputTextSegmentIndexes.length; ++i) {
-            try {
-                // get the start and end index for this bubble
-                const bubbleStartIndex = outputTextSegmentIndexes[i][0];
-                const bubbleEndIndex = outputTextSegmentIndexes[i][1];
-
-                if (!isNaN(bubbleStartIndex) && !isNaN(bubbleEndIndex)) {
-                    // get the substring that needs to appear in a bubble
-                    const bubbleText = text.substring(bubbleStartIndex, bubbleEndIndex).trim();
-
-                    // add the bubble the list of messages, but only if it is not empty
-                    if (bubbleText) {
-                        messages.push({
-                            author: PARTICIPANT_BOT,
-                            type: 'text',
-                            data: {'text': bubbleText}
-                        });
-                    }
-
-
-                }
-            } catch (err) {
-                if (process.env.NODE_ENV !== "production") {
-                    console.error('Error: unexpected breakpoints value')
-                }
+        try {
+            if (paramValue) {
+                return JSON.parse(paramValue);
             }
+        } catch (err) {
+            console.error(`Error: Unable to parse '${paramName}' value as JSON string`);
+        }
+    }
+};
+
+const getTextBubbles = (outputTextSegmentIndexes, text) => {
+    const segmentStart = (segment) => segment[0];
+    const segmentEnd = (segment) => segment[1];
+
+    const textBubbles = outputTextSegmentIndexes
+      .filter((segment) => !(isNaN(segmentStart(segment)) || isNaN(segmentEnd(segment))))
+      .map((validSegment) => text.substring(segmentStart(validSegment), segmentEnd(validSegment)).trim());
+
+    return textBubbles.filter((bubbleText) => bubbleText);
+};
+
+const parseAndSplitText = (output, messages) => {
+    const { parameters, text } = output;
+    const outputTextSegmentIndexes = getJsonParameterValue(parameters, TENEO_OUTPUTTEXTSEGMENTS_PARAM);
+
+    if (outputTextSegmentIndexes && Array.isArray(outputTextSegmentIndexes)) {
+        if (!text) {
+            console.error(`${TENEO_OUTPUTTEXTSEGMENTS_PARAM} defined, but no text returned to segment`);
+
+            return;
         }
 
-    } else if (text) {
-        {
+        const textBubbles = getTextBubbles(outputTextSegmentIndexes, text);
+
+        textBubbles.forEach((bubbleText) => {
             messages.push({
                 author: PARTICIPANT_BOT,
                 type: 'text',
-                data: {text}
+                data: { 'text': bubbleText }
             });
-
-
-        }
-    } else {
-        console.error('No text content received!');
-    }
-
-    if (data) {
-        validateTwcMessage(data, (errors) => {
-            console.error('Malformed message data', { data, errors });
-        })
-
+        });
+    } else if (text) {
         messages.push({
             author: PARTICIPANT_BOT,
-            type: data.type || defaultMessageType,
-            data
+            type: 'text',
+            data: { text }
         });
     }
+};
 
-    if (link) {
-        let parsedLink;
-        let messageData;
-        let messageType;
-    
-        try {                    
-            parsedLink = JSON.parse(link);        
-        } catch (jsonError) {
-            if (!store.getters.autoRedirect) {
-                console.log('Unable to parse link as JSON :', jsonError);
-            }
-            messageType = 'system';
-            messageData = {'text': 'Unable to open hyperlink'};
-        }
-    
-        if (store.getters.autoRedirect) {
-            window.location.href = parsedLink ? parsedLink.url : link;
-        } else if (!parsedLink) {
-            messages.push({
-                author: PARTICIPANT_BOT,
-                type: messageType,
-                data: messageData
-            });     
-        } else {
-            messages.push({
-                author: PARTICIPANT_BOT,
-                type: 'linkpreview',
-                data: parsedLink
-            });
-        }
+const parseMessageData = (output, messages) => {
+    const { parameters } = output;
+    const data = getJsonParameterValue(parameters, TENEO_PARAM_KEY);
+
+    if (!data) {
+        return;
     }
 
-    var ind = 0;
-    while (ind < messages.length) {
-        const message = messages[ind];
-        message.placeInQueue = ++ind;
-        message.queueLength = messages.length;
-        // Emit event to update UI with new bubble, with a delay timer
-        await timeout(ind === 1 ? 0 : BUBBLE_DELAY).then(() => {
-            EventBus.$emit(events.PUSH_BUBBLE, message);
-        })
+    validateTwcMessage(data, (errors) => {
+        console.warn('Unrecognised message data', { data, errors });
+    });
+
+    messages.push({
+        author: PARTICIPANT_BOT,
+        type: data.type || defaultMessageType,
+        data
+    });
+};
+
+const parseLinkData = (output, messages) => {
+    const { link } = output;
+    const { autoRedirect } = store.getters;
+
+    if (!link) {
+        return;
     }
 
-    return parameters.hasOwnProperty('twcAutoReply') ? JSON.parse(parameters.twcAutoReply) : false;
+    const tryParseLink = (linkParam) => {
+        try {
+            return JSON.parse(linkParam);
+        } catch {
+            // Property 'link' can contain JSON or just a url - so if it errors, we assume just a url
+        }
+    };
+
+    const parsedLink = tryParseLink(link);
+
+    if (autoRedirect) {
+        window.location.href = parsedLink ? parsedLink.url : link;
+    } else if (parsedLink) {
+        messages.push({
+            author: PARTICIPANT_BOT,
+            type: 'linkpreview',
+            data: parsedLink
+        });
+    } else {
+        messages.push({
+            author: PARTICIPANT_BOT,
+            type: 'system',
+            data: { 'text': 'Unable to display link preview' }
+        });
+    }
+};
+
+const displayMessages = async (messages) => {
+    const messageQueue = messages.map((message, i) => {
+        return {
+            ...message,
+            placeInQueue: i + 1,
+            queueLength: messages.length
+        };
+    });
+
+    for (const message of messageQueue) {
+        if (message.placeInQueue > 1) {
+            // eslint-disable-next-line no-await-in-loop
+            await timeout(BUBBLE_DELAY);
+        }
+        EventBus.$emit(events.PUSH_BUBBLE, message);
+    }
+};
+
+export default async function parseTeneoResponse(teneoResponse) {
+
+    const { output } = teneoResponse;
+    const { parameters } = output;
+    const messages = [];
+
+    parseAndSplitText(output, messages);
+    parseMessageData(output, messages);
+    parseLinkData(output, messages);
+
+    await displayMessages(messages);
+
+    return getJsonParameterValue(parameters, 'twcAutoReply') || false;
 }
