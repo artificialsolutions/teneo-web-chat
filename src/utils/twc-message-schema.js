@@ -506,8 +506,6 @@ const twcValidator = ajv.compile(JSON.parse(twcSchemaJson));
 export default function validateTwcMessage(twcMessage, onError) {
     const valid = twcValidator(twcMessage);
 
-    console.log({ valid, twcMessage });
-
     if (valid) {
         return true;
     }
