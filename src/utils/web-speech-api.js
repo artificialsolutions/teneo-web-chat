@@ -55,7 +55,9 @@ class WebSpeechIntegration {
 
     utterance.lang = locale;
     utterance.voice = WebSpeechIntegration.findBestVoice(locale, voice);
-    utterance.onend = () => ttsComplete();
+    if (ttsComplete) {
+      utterance.onend = () => ttsComplete();
+    }
 
     WebSpeechIntegration.getSpeechSynthesis().speak(utterance);
   }
