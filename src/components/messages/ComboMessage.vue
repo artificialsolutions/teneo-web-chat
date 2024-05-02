@@ -199,11 +199,11 @@
       <div class="twc-combo-message" v-if="message.type==='table'">
         <div class="twc-table-message">
           <table class="twc-table twc-table-border">
-            <caption class="twc-table-title" v-if="message.data.title">{{ message.data.title }}</caption>
-            <thead v-if="message.data.headers">
+            <caption class="twc-table-title" v-if="legacyDataSupport(message).title">{{ legacyDataSupport(message).title }}</caption>
+            <thead v-if="legacyDataSupport(message).headers">
             <tr class="twc-table-header-row">
               <th
-                  v-for="(header) in message.data.headers"
+                  v-for="(header) in legacyDataSupport(message).headers"
                   :key="header"
                   class="twc-table-header-cell"
               >
@@ -211,9 +211,9 @@
               </th>
             </tr>
             </thead>
-            <tbody v-if="message.data.body">
+            <tbody v-if="legacyDataSupport(message).body">
             <tr
-                v-for="(row) in message.data.body"
+                v-for="(row) in legacyDataSupport(message).body"
                 :key="row"
                 class="twc-table-body-row"
             >
@@ -225,10 +225,10 @@
               </td>
             </tr>
             </tbody>
-            <tfoot v-if="message.data.footers">
+            <tfoot v-if="legacyDataSupport(message).footers">
             <tr class="twc-table-footer-row">
               <td
-                  v-for="(footer) in message.data.footers"
+                  v-for="(footer) in legacyDataSupport(message).footers"
                   :key="footer"
                   class="twc-table-footer-cell"
               >{{ footer }}
@@ -321,6 +321,9 @@ export default {
     },
     sanitizedHtmlText(text) {
       return sanitizeHtml(text);
+    },
+    legacyDataSupport(json) {
+      return json.data || json;
     }
   },
 };
