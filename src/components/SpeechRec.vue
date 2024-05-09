@@ -61,6 +61,7 @@ export default {
       readIncomingMessages: true,
       asrTtsApi: new AsrTtsApi(),
       ttsTextQueue: [],
+      ttsInProcess: false,
     };
   },
 
@@ -92,20 +93,19 @@ export default {
   mounted() {
     EventBus.$on(events.BOT_MESSAGE_RECEIVED, (message) => {
       if (this.ttsActive && this.readIncomingMessages) {
-        const { data, placeInQueue, queueLength } = message;
+        const { data } = message;
         const { lang } = document.documentElement;
         const { locale, voice } = store.getters;
 
         // Here we piece back together the messages that were split in parse-teneo-response
-        if (!placeInQueue || placeInQueue === 1) {
-          this.ttsTextQueue = this.extractTextValuesRecurse(data);
-        } else {
-          this.ttsTextQueue = this.ttsTextQueue.concat(this.extractTextValuesRecurse(data));
-        }
+        const ttsMessage = {
+          text: this.extractTextValuesRecurse(data),
+          lang: locale || lang,
+          voice,
+        };
 
-        if (!placeInQueue || (placeInQueue === queueLength)) {
-          this.ttsReadText(this.ttsTextQueue.join('.\n'), locale || lang, voice);
-        }
+        this.ttsTextQueue.push(ttsMessage);
+        this.ttsProcessQueue();
       }
     });
 
@@ -125,6 +125,20 @@ export default {
   },
 
   methods: {
+    async ttsProcessQueue() {
+      if (!this.ttsInProcess) {
+        let nextMessage = null;
+
+        this.ttsInProcess = true;
+
+        while (typeof (nextMessage = this.ttsTextQueue.shift()) !== 'undefined') {
+          // eslint-disable-next-line no-await-in-loop
+          await this.ttsReadText(nextMessage.text, nextMessage.lang, nextMessage.voice);
+        }
+        this.ttsInProcess = false;
+      }
+    },
+
     async asrStartRecognition() {
       const asrAvailable = await this.asrTtsApi.asrEnsureAvailable();
 
@@ -183,7 +197,7 @@ export default {
       }
     },
 
-    async ttsReadText(text, lang) {
+    async ttsReadText(text, lang, voice) {
       const ttsAvailable = await this.asrTtsApi.ttsEnsureAvailable();
 
       if (!ttsAvailable) {
@@ -192,11 +206,13 @@ export default {
         return;
       }
 
-      await this.asrTtsApi.ttsReadText(text, lang);
+      await this.asrTtsApi.ttsReadText(text, lang, voice);
       this.$forceUpdate();
     },
 
     async ttsStop() {
+      this.ttsInProcess = false;
+      this.ttsTextQueue = [];
       await this.asrTtsApi.ttsStop();
     },
 
