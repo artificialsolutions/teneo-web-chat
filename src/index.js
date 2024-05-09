@@ -30,6 +30,10 @@ window.TeneoWebChat = {
       store.commit('teneoEngineUrl', twcProps.teneoEngineUrl);
     }
 
+    if (twcProps.streamResponses) {
+      store.commit('streamResponses', twcProps.streamResponses);
+    }
+
     if (twcProps.title) {
       // TODO: Check if title is a string
       store.commit('initialTitle', twcProps.title);
@@ -287,6 +291,8 @@ return filteredMessageList;
 
       case apiConstants.API_GET_ENGINE_URL:
         return store.getters.engineUrlObj;
+      case apiConstants.API_GET_STREAM_RESPONSES:
+        return store.getters.streamResponses;
 
       case apiConstants.API_GET_STORAGE:
         return store.getters.storage;
@@ -548,6 +554,10 @@ return filteredMessageList;
             EventBus.$emit(events.SET_ENGINE_URL, payload);
           }
         }
+        break;
+
+      case apiConstants.API_CALL_SET_STREAM_RESPONSES:
+        store.commit('streamResponses', !!payload);
         break;
 
       case apiConstants.API_CALL_SHOW_UPLOAD_PANEL:

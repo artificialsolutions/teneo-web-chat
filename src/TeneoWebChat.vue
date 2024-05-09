@@ -27,10 +27,8 @@ import {
 import {
   API_KEY_VISIBILITY,
   API_STATE_MAXIMIZED,
-  API_STATE_MINIMIZED,
-  SESSION_ID_STORAGE_KEY
+  API_STATE_MINIMIZED
 } from './utils/constants.js';
-import detectSafari from './utils/detect-safari.js';
 
 registerMessageComponents();
 
@@ -41,11 +39,6 @@ const bodyScrollLock = require('body-scroll-lock');
 const {disableBodyScroll} = bodyScrollLock;
 const {enableBodyScroll} = bodyScrollLock;
 const messageListId = '#twc-message-list';
-
-// Detect safari (not just iOS) so we can clear session id from storage in closeSession
-const isSafari = detectSafari();
-const sessionKey = SESSION_ID_STORAGE_KEY;
-
 
 export default {
   name: 'TeneoWebChat',
@@ -215,14 +208,6 @@ export default {
     },
     closeSession() {
       this.$teneoApi.closeSession();
-
-      /*
-       * When opened in Safari, we explicitly store the session id in the browser storage
-       * it's a bit cleaner to delete it again when the engine session is closed
-       */
-      if (isSafari) {
-        this.$store.getters.storage.removeItem(sessionKey);
-      }
     },
     setWindowTitle(newTitle) {
       this.serviceName = newTitle;

@@ -382,6 +382,8 @@ TeneoWebChat.on('reset', () => TeneoWebChat.get('storage').removeItem('twc_last_
 const element = document.getElementById('teneo-web-chat');
 const teneoProps = {
     'teneoEngineUrl': '<%= process.env.TENEO_ENGINE_URL %>',
+    'streamResponses': <%= process.env.STREAM_RESPONSES || false %>,
+    
     'title': '<%= process.env.HEADER_TITLE %>',
     'titleIconUrl': '<%= process.env.HEADER_ICON_URL %>',
     'showCloseButton': <%= process.env.SHOW_CLOSE_BUTTON || false %>,

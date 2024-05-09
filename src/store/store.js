@@ -20,6 +20,7 @@ export const store = new Vuex.Store({
         title: DEFAULT_TITLE,
         titleIconUrl: '',
         teneoEngineUrl: '',
+        streamResponses: false,
         teneoEngineParams: {},
         showCloseButton: false,
         agentAvatarUrl: '',
@@ -84,6 +85,9 @@ export const store = new Vuex.Store({
             if (isValidUrl(newUrl)) {
                 state.teneoEngineUrl = newUrl;
             }
+        },
+        streamResponses(state, newStreamState) {
+            state.streamResponses = !!newStreamState;
         },
         title(state, newTitle) {
             if (typeof newTitle === 'string') {
@@ -301,6 +305,7 @@ export const store = new Vuex.Store({
         calloutVisibility: (state) => state.calloutVisibility,
         calloutText: (state) => state.calloutText,
         teneoEngineUrl: (state) => state.teneoEngineUrl,
+        streamResponses: (state) => state.streamResponses,
         visibility: (state) => state.visibility,
         initialTitle: (state) => state.initialTitle,
         initialTitleIconUrl: (state) => state.initialTitleIconUrl,

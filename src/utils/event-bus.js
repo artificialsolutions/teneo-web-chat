@@ -6,7 +6,6 @@ export const events = {
     END_SESSION: 'end-session',
     CLEAR_HISTORY: 'clear-history',
     ENGINE_REPLIED: 'engine-replied',
-    PUSH_BUBBLE: 'push-bubble',
     START_SPINNER: 'start-spinner',
     MAXIMIZE_WINDOW: 'maximize',
     MINIMIZE_WINDOW: 'minimize',
