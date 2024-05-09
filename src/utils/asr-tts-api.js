@@ -71,20 +71,23 @@ class AsrTtsApi {
         return this.webSpeech.ttsEnsureAvailable();
     }
 
-    ttsReadText(text, locale, voice, ttsComplete) {
-        const payload = {
-            ...basePayload(),
-            text,
-            locale,
-            voice,
-            ttsComplete
-        };
+    ttsReadText(text, locale, voice) {
+        return new Promise((resolve,) => {
+            const ttsComplete = () => resolve();
+            const payload = {
+                ...basePayload(),
+                text,
+                locale,
+                voice,
+                ttsComplete
+            };
 
-        handleExtension(API_ON_TTS_READ_TEXT, payload);
+            handleExtension(API_ON_TTS_READ_TEXT, payload);
 
-        if (!payload.handledState.handled === true) {
-            this.webSpeech.ttsReadText(text, locale, voice, ttsComplete);
-        }
+            if (!payload.handledState.handled === true) {
+                this.webSpeech.ttsReadText(text, locale, voice, ttsComplete);
+            }
+        });
     }
 
     async ttsStop() {
