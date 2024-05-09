@@ -1,18 +1,12 @@
 import {
     PARTICIPANT_BOT,
     TENEO_PARAM_KEY,
-    TENEO_OUTPUTTEXTSEGMENTS_PARAM,
-    BUBBLE_DELAY
+    TENEO_OUTPUTTEXTSEGMENTS_PARAM
 } from './constants.js';
-import { EventBus, events } from '../utils/event-bus';
 import { store } from '../store/store';
-import validateTwcMessage from '../utils/twc-message-schema.js';
+import validateMessage from '../utils/validate-message.js';
 
 const defaultMessageType = 'text';
-
-const timeout = (ms) => {
-    return new Promise((resolve) => setTimeout(resolve, ms));
-};
 
 const getJsonParameterValue = (parameters, paramName) => {
     if (Object.prototype.hasOwnProperty.call(parameters, paramName)) {
@@ -45,7 +39,13 @@ const parseAndSplitText = (output, messages) => {
 
     if (outputTextSegmentIndexes && Array.isArray(outputTextSegmentIndexes)) {
         if (!text) {
-            console.error(`${TENEO_OUTPUTTEXTSEGMENTS_PARAM} defined, but no text returned to segment`);
+
+            /*
+             * This can happen with streaming responses
+             * and bubbles are arguably obsoleted by streaming responses anyway
+             * So this is now just a log message
+             */
+            console.log(`${TENEO_OUTPUTTEXTSEGMENTS_PARAM} defined, but no text returned to segment`);
 
             return;
         }
@@ -76,9 +76,13 @@ const parseMessageData = (output, messages) => {
         return;
     }
 
-    validateTwcMessage(data, (errors) => {
+    const vResult = validateMessage(data);
+
+    if (!vResult) {
+        const { errors } = validateMessage;
+
         console.warn('Unrecognised message data', { data, errors });
-    });
+    }
 
     messages.push({
         author: PARTICIPANT_BOT,
@@ -122,25 +126,17 @@ const parseLinkData = (output, messages) => {
     }
 };
 
-const displayMessages = async (messages) => {
-    const messageQueue = messages.map((message, i) => {
+const buildMessageQueue = (messages) => {
+    return messages.map((message, i) => {
         return {
             ...message,
             placeInQueue: i + 1,
             queueLength: messages.length
         };
     });
-
-    for (const message of messageQueue) {
-        if (message.placeInQueue > 1) {
-            // eslint-disable-next-line no-await-in-loop
-            await timeout(BUBBLE_DELAY);
-        }
-        EventBus.$emit(events.PUSH_BUBBLE, message);
-    }
 };
 
-export default async function parseTeneoResponse(teneoResponse) {
+export default function parseTeneoResponse(teneoResponse) {
 
     const { output } = teneoResponse;
     const { parameters } = output;
@@ -150,7 +146,8 @@ export default async function parseTeneoResponse(teneoResponse) {
     parseMessageData(output, messages);
     parseLinkData(output, messages);
 
-    await displayMessages(messages);
-
-    return getJsonParameterValue(parameters, 'twcAutoReply') || false;
+    return {
+        messages: buildMessageQueue(messages),
+        autoReply: getJsonParameterValue(parameters, 'twcAutoReply') || false
+    };
 }
