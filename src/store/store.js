@@ -1,6 +1,6 @@
 import Vue from 'vue';
 import Vuex from 'vuex';
-import {DEFAULT_TITLE, FALLBACK_LOCALE} from '../utils/constants.js';
+import { DEFAULT_TITLE, FALLBACK_LOCALE } from '../utils/constants.js';
 import isValidUrl from '../utils/validate-url';
 
 Vue.use(Vuex);
@@ -34,11 +34,13 @@ export const store = new Vuex.Store({
 
         showScrollDownButton: false,
 
-        asrRecordSymbol:'',
-        ttsSymbol:'',
-        ttsStopSymbol:'',
-        asrRecordingSymbol:'',
-        
+        asrRecordSymbol: '',
+        ttsSymbol: '',
+        ttsStopSymbol: '',
+        asrRecordingSymbol: '',
+        msAsrSettings: false,
+        msTtsSettings: false,
+
         fileUploadSymbolFailed: '',
         fileUploadSymbolInterrupted: '',
         fileUploadSymbolDelete: '',
@@ -55,9 +57,10 @@ export const store = new Vuex.Store({
         showAsrButton: false,
         showTtsButton: false,
         asrActive: false,
-        ttsActive: false,                
-        ratingSymbol:'',        
+        ttsActive: false,
+        ratingSymbol: '',
         locale: FALLBACK_LOCALE,
+        voice: false,
         storage: window.sessionStorage,
         autoRedirect: true
     },
@@ -196,6 +199,13 @@ export const store = new Vuex.Store({
             state.asrRecordingSymbol = s;
         },
 
+        msAsrSettings(state, s) {
+            state.msAsrSettings = s;
+        },
+        msTtsSettings(state, s) {
+            state.msTtsSettings = s;
+        },
+
 
         fileUploadSymbolFailed(state, s) {
             state.fileUploadSymbolFailed = s;
@@ -270,7 +280,7 @@ export const store = new Vuex.Store({
                 state.ttsActive = activeBool;
             }
         },
-        
+
         ratingSymbol(state, s) {
             state.ratingSymbol = s;
         },
@@ -347,25 +357,11 @@ export const store = new Vuex.Store({
 
         uploadPanelAddFilesSymbol: (state) => state.uploadPanelAddFilesSymbol,
 
-        asrIconUrl: (state) => {
-            if (state.asrIconUrl) {
-                return state.asrIconUrl;
-            }
-
-            return state.initialAsrIconUrl;
-        },
-        showAsrButton: (state) => state.showAsrButton,
         asrActive: (state) => state.asrActive,
-        ttsIconUrl: (state) => {
-            if (state.ttsIconUrl) {
-                return state.ttsIconUrl;
-            }
-
-            return state.initialTtsIconUrl;
-        },
-        showTtsButton: (state) => state.showTtsButton,
         ttsActive: (state) => state.ttsActive,
-        
+        msAsrSettings: (state) => state.msAsrSettings,
+        msTtsSettings: (state) => state.msTtsSettings,
+
         locale: (state) => state.locale,
         voice: (state) => state.voice,
         autoRedirect: (state) => state.autoRedirect,

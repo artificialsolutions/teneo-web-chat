@@ -395,20 +395,16 @@ const teneoProps = {
     'uploadIconUrl': '<%= process.env.UPLOAD_ICON_URL %>',
     'showUploadButton': <%= process.env.SHOW_UPLOAD_BUTTON || false %>,
     'showScrollDownButton': <%= process.env.SHOW_SCROLL_DOWN_BUTTON || false %>,
-    'asrIconUrl': '<%= process.env.ASR_ICON_URL %>',
-    'showAsrButton': <%= process.env.SHOW_ASR_BUTTON || false %>,
-    'ttsIconUrl': '<%= process.env.TTS_ICON_URL %>',
-    'showTtsButton': <%= process.env.SHOW_TTS_BUTTON || false %>,
 
-    'ttsActive': <%= process.env.TTS_ACTIVE || false %>,
-    'asrActive': <%= process.env.ASR_ACTIVE || false %>,
-    
     'ratingSymbol':'<%= process.env.RATING_SYMBOL %>',
 
     'locale': '<%= process.env.LOCALE %>',
     'voice': '<%= process.env.VOICE %>',
 
     'autoRedirect': '<%= process.env.AUTO_OUTPUT_LINK_REDIRECT %>',
+
+    'ttsActive': <%= process.env.TTS_ACTIVE || false %>,
+    'asrActive': <%= process.env.ASR_ACTIVE || false %>,
 
     'asrRecordSymbol':'<%= process.env.ASR_RECORD_SYMBOL %>',
     'ttsSymbol':'<%= process.env.TTS_SYMBOL %>',
@@ -424,7 +420,30 @@ const teneoProps = {
     'fileUploadSymbolProgressBackgroundColor': '<%= process.env.FILE_UPLOAD_SYMBOL_PROGRESS_BACKGROUND_COLOR %>',
     'fileUploadSymbolProgressBarColor': '<%= process.env.FILE_UPLOAD_SYMBOL_PROGRESS_BAR_COLOR %>',
 
-    'uploadPanelAddFilesSymbol': '<%= process.env.UPLOAD_PANEL_ADD_FILES_SYMBOL %>'
+    'uploadPanelAddFilesSymbol': '<%= process.env.UPLOAD_PANEL_ADD_FILES_SYMBOL %>',
+
+
+    'msCognitiveAsrSubscriptionKey': '<%= process.env.MS_COGNITIVE_ASR_SUBSCRIPTION_KEY %>',
+    'msCognitiveAsrRegion': '<%= process.env.MS_COGNITIVE_ASR_REGION %>',
+    'msCognitiveAsrSubscriptionOnly': '<%= process.env.MS_COGNITIVE_ASR_SUBSCRIPTION_ONLY %>',
+    'msCognitiveAsrCustomAuthTokenUrl': '<%= process.env.MS_COGNITIVE_ASR_CUSTOM_AUTH_TOKEN_URL %>',
+    'msCognitiveAsrEndpoint': '<%= process.env.MS_COGNITIVE_ASR_ENDPOINT %>',
+    'msCognitiveAsrHost': '<%= process.env.MS_COGNITIVE_ASR_HOST %>',
+
+    'msCognitiveTtsSubscriptionKey': '<%= process.env.MS_COGNITIVE_TTS_SUBSCRIPTION_KEY %>',
+    'msCognitiveTtsRegion': '<%= process.env.MS_COGNITIVE_TTS_REGION %>',
+    'msCognitiveTtsSubscriptionOnly': '<%= process.env.MS_COGNITIVE_TTS_SUBSCRIPTION_ONLY %>',
+    'msCognitiveTtsCustomAuthTokenUrl': '<%= process.env.MS_COGNITIVE_TTS_CUSTOM_AUTH_TOKEN_URL %>',
+    'msCognitiveTtsEndpoint': '<%= process.env.MS_COGNITIVE_TTS_ENDPOINT %>',
+    'msCognitiveTtsHost': '<%= process.env.MS_COGNITIVE_TTS_HOST %>',
+
+    'msCognitiveSubscriptionKey': '<%= process.env.MS_COGNITIVE_SUBSCRIPTION_KEY %>',
+    'msCognitiveRegion': '<%= process.env.MS_COGNITIVE_REGION %>',
+    'msCognitiveSubscriptionOnly': '<%= process.env.MS_COGNITIVE_SUBSCRIPTION_ONLY %>',
+    'msCognitiveCustomAuthTokenUrl': '<%= process.env.MS_COGNITIVE_CUSTOM_AUTH_TOKEN_URL %>',
+    'msCognitiveEndpoint': '<%= process.env.MS_COGNITIVE_ENDPOINT %>',
+    'msCognitiveHost': '<%= process.env.MS_COGNITIVE_HOST %>',
+
 };
 
 window.TeneoWebChat.initialize(element, teneoProps);
