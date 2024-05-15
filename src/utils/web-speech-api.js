@@ -4,15 +4,59 @@ class WebSpeechIntegration {
   }
 
   // eslint-disable-next-line class-methods-use-this
-  asrEnsureAvailable() {
-    if (typeof WebSpeechIntegration.getSpeechRecognition() === 'undefined') {
-      return false;
+  asrEnsureAvailable(payload) {
+    payload.handledState.handled = true;
+    try {
+      payload.asrAvailable = (typeof WebSpeechIntegration.getSpeechRecognition() !== 'undefined');
+    } catch (error) {
+      console.error(error);
+      payload.asrAvailable = false;
     }
-
-    return true;
   }
 
-  asrStartRecognition(lang, handleFinalResult, handleCancel, handleIntermediateResult) {
+  asrStartRecognition(payload) {
+    payload.handledState.handled = true;
+
+    const { locale, handleFinalResult, handleCancel, handleIntermediateResult } = payload;
+
+    this.processAsr(locale, handleFinalResult, handleCancel, handleIntermediateResult);
+  }
+
+  asrCleanup(payload) {
+      payload.handledState.handled = true;
+      if (this.recognition) {
+        this.recognition.stop();
+        this.recognition = null;
+      }
+  }
+
+  // eslint-disable-next-line class-methods-use-this
+  ttsEnsureAvailable(payload) {
+    payload.handledState.handled = true;
+
+    try {
+      payload.ttsAvailable = (typeof WebSpeechIntegration.getSpeechSynthesis() !== 'undefined');
+    } catch (error) {
+      console.error(error);
+      payload.ttsAvailable = false;
+    }
+  }
+
+  ttsReadText(payload) {
+      payload.handledState.handled = true;
+
+      const { text, locale, voice, ttsComplete } = payload;
+
+      this.processTts(text, locale, voice, ttsComplete);
+  }
+
+  // eslint-disable-next-line class-methods-use-this
+  ttsStop(payload) {
+      payload.handledState.handled = true;
+      WebSpeechIntegration.getSpeechSynthesis().cancel();
+  }
+
+  processAsr(lang, handleFinalResult, handleCancel, handleIntermediateResult) {
     const isMobile = (/Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i).test(navigator.userAgent);
     const SpeechRecognition = WebSpeechIntegration.getSpeechRecognition();
 
@@ -33,24 +77,8 @@ class WebSpeechIntegration {
     this.recognition.start();
   }
 
-  asrCleanup() {
-    if (this.recognition) {
-      this.recognition.stop();
-      this.recognition = null;
-    }
-  }
-
   // eslint-disable-next-line class-methods-use-this
-  ttsEnsureAvailable() {
-    if (typeof WebSpeechIntegration.getSpeechSynthesis() === 'undefined') {
-      return false;
-    }
-
-    return true;
-  }
-
-  // eslint-disable-next-line class-methods-use-this
-  ttsReadText(text, locale, voice, ttsComplete) {
+  processTts(text, locale, voice, ttsComplete) {
     const utterance = new SpeechSynthesisUtterance(text);
 
     utterance.lang = locale;
@@ -78,11 +106,6 @@ class WebSpeechIntegration {
       voicesByLanguage[0];
 
     return voice;
-  }
-
-  // eslint-disable-next-line class-methods-use-this
-  ttsStop() {
-    WebSpeechIntegration.getSpeechSynthesis().cancel();
   }
 
   static getSpeechRecognition() {

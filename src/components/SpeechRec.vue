@@ -183,7 +183,7 @@ export default {
       }
     },
 
-    async ttsReadText(text, lang) {
+    async ttsReadText(text, lang, voice) {
       const ttsAvailable = await this.asrTtsApi.ttsEnsureAvailable();
 
       if (!ttsAvailable) {
@@ -192,7 +192,7 @@ export default {
         return;
       }
 
-      await this.asrTtsApi.ttsReadText(text, lang);
+      await this.asrTtsApi.ttsReadText(text, lang, voice);
       this.$forceUpdate();
     },
 

@@ -1,5 +1,7 @@
 import handleExtension from './handle-extension.js';
+import { store } from '../store/store';
 import basePayload from '../utils/base-payload.js';
+import MsCognitiveSpeechIntegration from '../utils/cognitive-speech-api.js';
 import WebSpeechIntegration from '../utils/web-speech-api.js';
 import {
   API_ON_ASR_ENSURE_AVAILABLE,
@@ -12,7 +14,17 @@ import {
 
 class AsrTtsApi {
     constructor() {
-      this.webSpeech = new WebSpeechIntegration();
+        const { msAsrSettings, msTtsSettings } = store.getters;
+
+        if (msAsrSettings && msTtsSettings) {
+            this.webSpeech = new MsCognitiveSpeechIntegration(msAsrSettings, msTtsSettings);
+        } else {
+            this.webSpeech = new WebSpeechIntegration();
+        }
+
+        const { webSpeech } = this;
+
+        console.log({ webSpeech });
     }
 
     async asrEnsureAvailable() {
@@ -23,11 +35,11 @@ class AsrTtsApi {
 
         await handleExtension(API_ON_ASR_ENSURE_AVAILABLE, payload);
 
-        if (payload.handledState.handled === true) {
-          return payload.asrAvailable;
+        if (!payload.handledState.handled === true) {
+            await this.webSpeech.asrEnsureAvailable(payload);
         }
 
-        return this.webSpeech.asrEnsureAvailable();
+        return payload.asrAvailable;
     }
 
     async asrStartRecognition(locale, handleFinalResult, handleCancel, handleIntermediateResult) {
@@ -42,7 +54,7 @@ class AsrTtsApi {
         await handleExtension(API_ON_ASR_START_RECOGNITION, payload);
 
         if (!payload.handledState.handled === true) {
-            this.webSpeech.asrStartRecognition(locale, handleFinalResult, handleCancel, handleIntermediateResult);
+            this.webSpeech.asrStartRecognition(payload);
         }
     }
 
@@ -52,7 +64,7 @@ class AsrTtsApi {
         await handleExtension(API_ON_ASR_CLEANUP, payload);
 
         if (!payload.handledState.handled === true) {
-            this.webSpeech.asrCleanup();
+            this.webSpeech.asrCleanup(payload);
         }
     }
 
@@ -64,27 +76,30 @@ class AsrTtsApi {
 
         await handleExtension(API_ON_TTS_ENSURE_AVAILABLE, payload);
 
-        if (payload.handledState.handled === true) {
-          return payload.ttsAvailable;
+        if (!payload.handledState.handled === true) {
+            await this.webSpeech.ttsEnsureAvailable(payload);
         }
 
-        return this.webSpeech.ttsEnsureAvailable();
+        return payload.ttsAvailable;
     }
 
-    ttsReadText(text, locale, voice, ttsComplete) {
-        const payload = {
-            ...basePayload(),
-            text,
-            locale,
-            voice,
-            ttsComplete
-        };
+    ttsReadText(text, locale, voice) {
+        return new Promise((resolve,) => {
+            const ttsComplete = () => resolve();
+            const payload = {
+                ...basePayload(),
+                text,
+                locale,
+                voice,
+                ttsComplete
+            };
 
-        handleExtension(API_ON_TTS_READ_TEXT, payload);
+            handleExtension(API_ON_TTS_READ_TEXT, payload);
 
-        if (!payload.handledState.handled === true) {
-            this.webSpeech.ttsReadText(text, locale, voice, ttsComplete);
-        }
+            if (!payload.handledState.handled === true) {
+                this.webSpeech.ttsReadText(payload);
+            }
+        });
     }
 
     async ttsStop() {
@@ -93,7 +108,7 @@ class AsrTtsApi {
         await handleExtension(API_ON_TTS_STOP, payload);
 
         if (!payload.handledState.handled === true) {
-            this.webSpeech.ttsStop();
+            this.webSpeech.ttsStop(payload);
         }
     }
 }
