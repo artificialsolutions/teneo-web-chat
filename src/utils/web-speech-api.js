@@ -56,24 +56,37 @@ class WebSpeechIntegration {
       WebSpeechIntegration.getSpeechSynthesis().cancel();
   }
 
-  processAsr(lang, handleFinalResult, handleCancel, handleIntermediateResult) {
-    const isMobile = (/Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i).test(navigator.userAgent);
+  initRecognition(lang) {
     const SpeechRecognition = WebSpeechIntegration.getSpeechRecognition();
+    const isMobile = (/Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i).test(navigator.userAgent);
 
-    this.recognition = new SpeechRecognition();
-    this.recognition.lang = lang;
-    this.recognition.continuous = true;
-    this.recognition.interimResults = !isMobile;
+    const recognition = new SpeechRecognition();
+
+    recognition.lang = lang;
+    recognition.continuous = true;
+    recognition.interimResults = !isMobile;
+
+    return recognition;
+  }
+
+  processAsr(lang, handleFinalResult, handleCancel, handleIntermediateResult) {
+    this.recognition = this.initRecognition(lang);
+
+    const controller = new AbortController();
+    const { signal } = controller;
+
     this.recognition.addEventListener('result', (event) => {
       const transcriptString = event.results[event.results.length - 1][0].transcript;
 
       if (event.results[event.results.length - 1].isFinal) {
+        // We have completed - so an 'end' is no longer a cancel
+        controller.abort();
         handleFinalResult(transcriptString);
       } else {
         handleIntermediateResult(transcriptString);
       }
     });
-    this.recognition.addEventListener('end', handleCancel);
+    this.recognition.addEventListener('end', handleCancel, { signal });
     this.recognition.start();
   }
 
