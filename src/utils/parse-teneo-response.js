@@ -3,11 +3,10 @@ import {
     TENEO_PARAM_KEY,
     TENEO_OUTPUTTEXTSEGMENTS_PARAM,
     BUBBLE_DELAY,
-    TENEO_TEMPLATE_INDEX
 } from './constants.js';
 import {EventBus, events} from '../utils/event-bus';
 import {store} from '../store/store';
-import validateTwcMessage from './twc-message-schema.js';
+import validateMessage from '../utils/validate-message-schema.js';
 
 
 const defaultMessageType = 'text';
@@ -93,9 +92,13 @@ export default async function parseTeneoResponse(teneoResponse) {
     }
 
     if (data) {
-        validateTwcMessage(data, (errors) => {
+        const vResult = validateMessage(data);
+    
+        if (!vResult) {
+            const { errors } = validateMessage;
+    
             console.error('Malformed message data', { data, errors });
-        })
+        }
 
         messages.push({
             author: PARTICIPANT_BOT,

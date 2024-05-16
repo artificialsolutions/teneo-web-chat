@@ -21,10 +21,6 @@ class AsrTtsApi {
         } else {
             this.webSpeech = new WebSpeechIntegration();
         }
-
-        const { webSpeech } = this;
-
-        console.log({ webSpeech });
     }
 
     async asrEnsureAvailable() {

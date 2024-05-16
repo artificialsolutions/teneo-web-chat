@@ -1,9 +1,4 @@
-/* eslint-disable max-lines */
-// The file is too long because of the length of the json schema def
-
-import { Ajv } from 'ajv';
-
-const twcSchemaJson = `{
+{
     "$id": "https://json-schema.teneo.ai/twc-schemas/messages",
     "type": "object",
     "properties": {
@@ -40,8 +35,8 @@ const twcSchemaJson = `{
             "type": "object",
             "properties": {
                 "type": { "type": "string", "const": "image" },
-                "image_url": { "type": "string", "format": "uri" },
-                "thumbnail_url": { "type": "string", "format": "uri" },
+                "image_url": { "type": "string" },
+                "thumbnail_url": { "type": "string" },
                 "alt": { "type": "string" }
             },
             "required": ["type"],
@@ -59,7 +54,7 @@ const twcSchemaJson = `{
             "type": "object",
             "properties": {
                 "type": { "type": "string", "enum": ["youtubevideo", "vimeovideo", "filevideo"] },
-                "video_url": { "type": "string", "format": "uri" }
+                "video_url": { "type": "string" }
             },
             "required": ["type", "video_url"],
             "additionalProperties": false
@@ -72,7 +67,7 @@ const twcSchemaJson = `{
             "type": "object",
             "properties": {
                 "type": { "type": "string", "const": "audio" },
-                "audio_url": { "type": "string", "format": "uri" }
+                "audio_url": { "type": "string" }
             },
             "required": ["type", "audio_url"],
             "additionalProperties": false
@@ -189,7 +184,7 @@ const twcSchemaJson = `{
                 "type": { "type": "string", "const": "card" },
                 "image": { "type": "object",
                     "properties": {
-                        "image_url": { "type": "string", "format": "uri" },
+                        "image_url": { "type": "string" },
                         "alt": { "type": "string" }
                 } },
                 "title": { "type": "string" },
@@ -308,7 +303,7 @@ const twcSchemaJson = `{
                 "type": { "type": "string", "const": "modal" },
                 "image": { "type": "object",
                     "properties": {
-                        "image_url": { "type": "string", "format": "uri" },
+                        "image_url": { "type": "string" },
                         "alt": { "type": "string" }
                 } },
                 "title": { "type": "string" },
@@ -496,23 +491,4 @@ const twcSchemaJson = `{
             "additionalProperties": false
         }
     }
-}`;
-
-// For now we ignore the uri format - we COULD add this and validate https://ajv.js.org/packages/ajv-formats.html
-const ajv = new Ajv({ formats: { uri: true } });
-
-const twcValidator = ajv.compile(JSON.parse(twcSchemaJson));
-
-export default function validateTwcMessage(twcMessage, onError) {
-    const valid = twcValidator(twcMessage);
-
-    if (valid) {
-        return true;
-    }
-
-    const { errors } = twcValidator;
-
-    onError(errors);
-
-    return false;
 }

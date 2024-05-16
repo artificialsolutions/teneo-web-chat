@@ -188,9 +188,11 @@ class MsCognitiveSpeechIntegration {
         if (!(new Intl.Locale(locale).region && new Intl.Locale(locale).language)) {
             throw new Error(`Locale for TTS must specify language AND region: ${locale}`);
         }
-
-        speechConfig.speechSynthesisVoiceName = voice;
         speechConfig.speechSynthesisLanguage = locale;
+
+        if (voice) {
+            speechConfig.speechSynthesisVoiceName = voice;
+        }
         if (token) {
             speechConfig.authorizationToken = token;
         }
