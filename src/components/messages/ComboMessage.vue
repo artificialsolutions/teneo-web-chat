@@ -203,8 +203,8 @@
             <thead v-if="legacyDataSupport(message).headers">
             <tr class="twc-table-header-row">
               <th
-                  v-for="(header) in legacyDataSupport(message).headers"
-                  :key="header"
+                  v-for="(header, hIndex) in legacyDataSupport(message).headers"
+                  :key="hIndex"
                   class="twc-table-header-cell"
               >
                 {{ header }}
@@ -213,13 +213,13 @@
             </thead>
             <tbody v-if="legacyDataSupport(message).body">
             <tr
-                v-for="(row) in legacyDataSupport(message).body"
-                :key="row"
+                v-for="(row, rIndex) in legacyDataSupport(message).body"
+                :key="rIndex"
                 class="twc-table-body-row"
             >
               <td
-                  v-for="(cell) in row"
-                  :key="cell"
+                  v-for="(cell, cIndex) in row"
+                  :key="cIndex"
                   class="twc-table-body-cell"
               >{{ cell }}
               </td>
@@ -228,8 +228,8 @@
             <tfoot v-if="legacyDataSupport(message).footers">
             <tr class="twc-table-footer-row">
               <td
-                  v-for="(footer) in legacyDataSupport(message).footers"
-                  :key="footer"
+                  v-for="(footer, fIndex) in legacyDataSupport(message).footers"
+                  :key="fIndex"
                   class="twc-table-footer-cell"
               >{{ footer }}
               </td>

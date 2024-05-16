@@ -4,24 +4,24 @@
     <thead v-if="tableHeaders">
     <tr class="twc-table-header-row">
       <th
-          v-for="(header) in tableHeaders"
-          :key="header"
+          v-for="(header, hIndex) in tableHeaders"
+          :key="hIndex"
           class="twc-table-header-cell"
       >
         {{ header }}
       </th>
     </tr>
     </thead>
-    
+
     <tbody v-if="tableBody">
     <tr
-        v-for="(row) in tableBody"
-        :key="row"
+        v-for="(row, rIndex) in tableBody"
+        :key="rIndex"
         class="twc-table-body-row"
     >
       <td
-          v-for="(cell) in row"
-          :key="cell"
+          v-for="(cell, cIndex) in row"
+          :key="cIndex"
           class="twc-table-body-cell"
       >{{ cell }}
       </td>
@@ -31,8 +31,8 @@
     <tfoot v-if="tableFooters">
     <tr class="twc-table-footer-row">
       <td
-          v-for="(footer) in tableFooters"
-          :key="footer"
+          v-for="(footer, fIndex) in tableFooters"
+          :key="fIndex"
           class="twc-table-footer-cell"
       >{{ footer }}
       </td>
