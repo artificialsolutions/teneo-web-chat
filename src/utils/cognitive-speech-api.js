@@ -13,11 +13,9 @@ class MsCognitiveSpeechIntegration {
 
     constructor(asrConfig, ttsConfig) {
         if (asrConfig) {
-            console.log('Initialising MS ASR', { asrConfig });
             this.initializeAsr(asrConfig);
         }
         if (ttsConfig) {
-            console.log('Initialising MS TTS', { ttsConfig });
             this.initializeTts(ttsConfig);
         }
     }
@@ -178,16 +176,20 @@ class MsCognitiveSpeechIntegration {
         }
     }
 
-    configureSpeechConfigForTts(speechConfig, tts) {
-        const { token } = this.ttsConfig;
-        const { locale, voice } = tts;
-
+    static validateLocale(locale) {
         if (!locale) {
             throw new Error('Locale required for TTS.');
         }
         if (!(new Intl.Locale(locale).region && new Intl.Locale(locale).language)) {
             throw new Error(`Locale for TTS must specify language AND region: ${locale}`);
         }
+    }
+
+    configureSpeechConfigForTts(speechConfig, tts) {
+        const { token } = this.ttsConfig;
+        const { locale, voice } = tts;
+
+        MsCognitiveSpeechIntegration.validateLocale(!locale);
         speechConfig.speechSynthesisLanguage = locale;
 
         if (voice) {
