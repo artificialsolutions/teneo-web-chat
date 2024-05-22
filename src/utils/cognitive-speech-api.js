@@ -189,7 +189,7 @@ class MsCognitiveSpeechIntegration {
         const { token } = this.ttsConfig;
         const { locale, voice } = tts;
 
-        MsCognitiveSpeechIntegration.validateLocale(!locale);
+        MsCognitiveSpeechIntegration.validateLocale(locale);
         speechConfig.speechSynthesisLanguage = locale;
 
         if (voice) {
