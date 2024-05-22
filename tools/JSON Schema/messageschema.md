@@ -18,7 +18,7 @@ When using ajv in a page with CSP enabled [certain considerations](https://ajv.j
 
 This pre-compilation is achieved with the [ajv CLI](https://github.com/ajv-validator/ajv-cli#compile-schemas), and assuming it is run from the folder containing this documentation the [output flag](https://github.com/ajv-validator/ajv-cli?tab=readme-ov-file#-o---output-file-for-compiled-validation-function-module) can be used to directly update the compiled js in the source code with the follow command (this assumes ajv is installed):
 
-```
+```cmd
 ajv compile -s "messageschema.json" -o "..\..\src\utils\validate-message-schema.js"
 ```
 
