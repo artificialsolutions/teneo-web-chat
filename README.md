@@ -1,4 +1,14 @@
 # Teneo Web Chat
+
+> [!IMPORTANT]
+> This project has been retired and archived  
+> The project is based on [Vue2 which is now EOL](https://v2.vuejs.org/eol/) and to migrate to Vue 3 would require major rework.  
+>  
+> A commercial offering "Teneo Web Widget" will be available from Artificial Solutions in the near future which is based on a more modern tech stack and will benefit from commercial support.  
+> If there is a need of continued use / development of this project for your own needs please feel free to fork the project - which will remain here in archived form.
+
+## Teneo Web Chat
+
 Teneo Web Chat is a chat widget that can be embedded in websites. Support for various components like buttons, quick replies, images, audio, videos and cards is built-in and the available Teneo Web Chat JavaScript API allows for easy live chat integration and extendability.
 
 Core features:

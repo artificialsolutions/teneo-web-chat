@@ -1,8 +1,27 @@
+# v3.7.12 - Final Release
+
+> [!IMPORTANT]  
+> This project has been retired and archived - this is the final release
+
+## May 2024
+
++   Allows for ASR / TTS integrations via the ASR / TTS events
++   Supports MS Cognitive Speech if configured - and falls back to web speech if not
++   Additional parameters (eg. title, description) will again be read by the TTS
++   ASR Start / End sounds re-added
++   Validation against normalised JSON Message schema
++   Supports normalised and legacy `table` message formats
+
+> [!NOTE]
+> This release includes validation against a normalised [JSON message schema](https://github.com/artificialsolutions/teneo-web-chat/blob/TWCD-44/tools/JSON%20Schema/messageschema.json). A [JSON Schema](https://json-schema.org/) document built from the [message formats documented on teneo.ai](https://developers.teneo.ai/resource/channels/teneo-web-chat#message-types).  
+> +   In TWC v.3.7.11 an additional (undocumented) `{ data: { ... } }` layer is required in the table or table-in-combo messages
+> +   v3.7.12 will now support either the [documented](https://developers.teneo.ai/resource/channels/teneo-web-chat#message-types_tables) or legacy forms in order to allow a smoother transition when preparing solutions for use with Teneo Web Widget
+
 # v3.7.11
 
 ## March 2024
 * CSS refactoring
-  * Review of hardocded values and substitution for variables.
+  * Review of hardcoded values and substitution for variables.
 * Carousel Bug:
   * Touch scrolling in Carousel.  
 * Features:
