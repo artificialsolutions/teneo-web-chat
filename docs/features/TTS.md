@@ -69,6 +69,82 @@ For example a simple install as described above with a 'North Europe' subscripti
 wss://northeurope.tts.speech.microsoft.com wss://northeurope.stt.speech.microsoft.com
 ```
 
+## Custom ASR / TTS Integration
+
+It would be possible to build an integration to a different ASR / TTS service using the new events added in this release:
+
+| event        | payload                |
+| ------------ | --------------------- |
+| API_ON_ASR_ENSURE_AVAILABLE | Perform any setup and indicate whether ASR is available. Called on each attempt before starting ASR recognition |
+| API_ON_ASR_START_RECOGNITION | Start the ASR process, receives handlers callbacks to notify TWC of recognition events |
+| API_ON_ASR_CLEANUP | Called once ASR has completed to perform any required cleanup |
+| API_ON_TTS_ENSURE_AVAILABLE | Perform any setup and indicate whether TTS is available. Called on each attempt before starting TTS synthesis |
+| API_ON_TTS_READ_TEXT | Start the TTS process, receives a handler for notifying of TTS completion |
+| API_ON_TTS_STOP | Stop TTS triggered from TWC (for example user mutes TTS) |
+
+### ASR Implementation - Dummy Example
+
+```javascript
+    initialize() {
+        EventBus.$on(API_ON_ASR_ENSURE_AVAILABLE, (payload) => this.asrEnsureAvailable(payload));
+        EventBus.$on(API_ON_ASR_START_RECOGNITION, (payload) => this.asrStartRecognition(payload));
+        EventBus.$on(API_ON_ASR_CLEANUP, (payload) => this.asrCleanup(payload));
+
+        EventBus.$on(API_ON_TTS_ENSURE_AVAILABLE, (payload) => this.ttsEnsureAvailable(payload));
+        EventBus.$on(API_ON_TTS_READ_TEXT, (payload) => this.ttsReadText(payload));
+        EventBus.$on(API_ON_TTS_STOP, (payload) => this.ttsStop(payload));
+    }
+
+    async asrEnsureAvailable(payload) {
+        // handled = true to prevent default TWC handling
+        payload.handledState.handled = true;
+
+        // Initialise ASR - set asrAvailable = true if successful
+        payload.asrAvailable = true;
+    }
+
+    asrStartRecognition(payload) {
+        // handled = true to prevent default TWC handling
+        payload.handledState.handled = true;
+        
+        const { locale, handleFinalResult, handleCancel, handleIntermediateResult } = payload;
+        // locale (string) 2 part locale to use for ASR - eg. es-ES
+        // handleFinalResult (function(string)): call with final transcription result text
+        // handleCancel (function()): call when cancelling ASR from the ASR side
+        // handleIntermediateResult (function(string)): call with intermediate transcription result texts (if supported by the ASR system)
+    }
+
+    asrCleanup(payload) {
+        // handled = true to prevent default TWC handling
+        payload.handledState.handled = true;
+
+        // Perform cleanup of ASR after completion (or cancellation)
+        // No additional payload
+    }
+
+    async ttsEnsureAvailable(payload) {
+        // handled = true to prevent default TWC handling
+        payload.handledState.handled = true;
+
+        // Initialise TTS - set asrAvailable = true if successful
+        payload.ttsAvailable = true;
+    }
+
+    ttsReadText(payload) {
+        payload.handledState.handled = true;
+        const { text, locale, voice, ttsComplete } = payload;
+        // text (string): the text to synthesize
+        // locale (string): 2 part locale to use for TTS - eg. es-ES
+        // voice (string): voice prop of TWC to use choosing TTS voice
+        // ttsComplete (function()): call on completion of outputting the synthesized result - eg. when the speaking is complete
+    }
+
+    ttsStop(payload) {
+        payload.handledState.handled = true;
+        // Stop the TTS
+    }
+```
+
 ## How to Use Voice Features
 
 ### Automatic Speech Recognition ASR(Recording Your Voice)
