@@ -39,7 +39,7 @@ export const events = {
     SCROLL_CHAT_DOWN: 'scroll_chat_down',
     SET_ENGINE_URL: 'set-engine-url',
     SET_ENGINE_PARAMS: 'set-engine-params',
-    SET_LOCALE: 'set_locale',    
+    SET_LOCALE: 'set_locale',
     SHOW_CALLOUT: 'show_callout',
     HIDE_CALLOUT: 'hide_calllout',
     ZOOM_IMAGE: 'zoom_image',

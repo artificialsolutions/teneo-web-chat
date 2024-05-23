@@ -140,6 +140,7 @@ export default {
       return this.asrActive || this.ttsActive;
      },
   },
+
   data() {
     return {
       inputActive: false,
@@ -148,7 +149,6 @@ export default {
       showUserInput: true,
       asrActive: store.getters.asrActive,
       ttsActive: store.getters.ttsActive,
-      readIncomingMessages:store.getters.ttsActive
     };
   },
 
@@ -199,16 +199,6 @@ export default {
       }
     });
 
-    EventBus.$on('tts-state-change', (readIncomingMessages) => {
-      this.readIncomingMessages = readIncomingMessages;
-    });
-
-    EventBus.$on(events.BOT_MESSAGE_RECEIVED, (message) => {
-      if (this.ttsActive && this.readIncomingMessages) {
-        this.$refs.liveTranscriptRef.readTranscription(message.data.text);
-      }
-    });
-
     // Detect changes and focus and emit event. This will be listened by ChatWindow to adapt to iOS Safari
     const userInput = document.getElementById('twc-user-input-field');
 
@@ -236,24 +226,25 @@ export default {
     }
   },
 
-  beforeDestroy() {
-    EventBus.$off(events.BOT_MESSAGE_RECEIVED);
-  },
-
   methods: {
     handleTranscriptionComplete(transcribedText) {
+      this.handleTranscription(transcribedText);
+
       this.sendButtonClicked(transcribedText).then(() => {
         this.clearTextarea();
       });
-  },
+    },
+
     handleTranscription(transcription) {
       const userInputField = document.getElementById('twc-user-input-field');
 
       userInputField.value = DOMPurify.sanitize(transcription);
     },
+
     handleTranscribing(value) {
       this.transcribing = value;
     },
+
     setInputActive(onoff) {
       this.inputActive = onoff;
       if (onoff === true) {

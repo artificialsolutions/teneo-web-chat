@@ -42,6 +42,7 @@ export const API_CALL_SET_ENGINE_URL = 'set_engine_url';
 export const API_CALL_ENABLE_USERINPUT = 'enable_user_input';
 export const API_CALL_DISABLE_USERINPUT = 'disable_user_input';
 export const API_SET_LOCALE = 'set_locale';
+export const API_SET_VOICE = 'set_voice';
 export const API_SET_ENGINE_PARAMS = 'set_engine_params';
 
 // Add dedicated add typing indicator method
@@ -54,9 +55,8 @@ export const API_GET_CHAT_HISTORY = 'chat_history';
 export const API_GET_ENGINE_URL = 'engine_url';
 export const API_GET_STORAGE = 'storage';
 export const API_GET_LOCALE = 'locale';
+export const API_GET_VOICE = 'voice';
 export const API_GET_ENGINE_PARAMS = 'engine_params';
-
-
 
 // Api callbacks
 export const API_ON_READY = 'ready';
@@ -73,8 +73,6 @@ export const API_ON_MINIMIZE_BUTTON_CLICK = 'minimize_button_clicked';
 export const API_ON_MODAL_BUTTON_CLICK = 'modal_button_clicked';
 export const API_ON_SEND_BUTTON_CLICK = 'send_button_clicked';
 export const API_ON_UPLOAD_BUTTON_CLICK = 'upload_button_clicked';
-export const API_ON_ASR_BUTTON_CLICK = 'asr_button_clicked';
-export const API_ON_TTS_BUTTON_CLICK = 'tts_button_clicked';
 export const API_ON_RESET = 'reset';
 
 export const API_CALL_HIDE_UPLOAD_PANEL = 'hide_upload_panel';
@@ -88,3 +86,10 @@ export const API_ON_SET_UPLOAD_STATE = 'set_upload_state';
 export const API_ON_UPLOAD_FILE_DELETE_CLICK = 'upload_file_delete_clicked';
 export const API_ON_UPLOAD_FILE_STOP_CLICK = 'upload_file_stop_clicked';
 export const API_ON_UPLOAD_FILE_RESTART_CLICK = 'upload_file_restart_clicked';
+
+export const API_ON_ASR_ENSURE_AVAILABLE = 'asr_ensure_available';
+export const API_ON_ASR_START_RECOGNITION = 'asr_start_recognition';
+export const API_ON_ASR_CLEANUP = 'asr_cleanup';
+export const API_ON_TTS_ENSURE_AVAILABLE = 'tts_ensure_available';
+export const API_ON_TTS_READ_TEXT = 'tts_read_text';
+export const API_ON_TTS_STOP = 'tts_stop';
