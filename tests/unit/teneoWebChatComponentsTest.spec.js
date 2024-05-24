@@ -112,7 +112,7 @@ describe('Test Message Components', () => {
         expect(wrapperWithLinks.exists()).toBe(true)
         expect(wrapperWithButtons.exists()).toBe(true)
         expect(wrapperWithClickablelist.exists()).toBe(true)
-        expect(wrapperWithLinkButtons.html()).toContain("<a role=\"link\" href=\"https://developers.artificial-solutions.com/engine\" target=\"_blank\" rel=\"noopener\" class=\"twc-linkbutton\">Engine</a>")
+        expect(wrapperWithLinkButtons.html()).toContain("<a role=\"link\" href=\"https://developers.teneo.ai/engine\" target=\"_blank\" rel=\"noopener\" class=\"twc-linkbutton\">Engine</a>")
     })
 
 
@@ -137,7 +137,7 @@ describe('Test Message Components', () => {
                 message: sampleJSON.linkButtonsMessageJSON
             }
         })
-        expect(wrapper.html()).toContain("<a role=\"link\" href=\"https://developers.artificial-solutions.com/\" target=\"_blank\" rel=\"noopener\" class=\"twc-linkbutton\">Link 3</a>")
+        expect(wrapper.html()).toContain("<a role=\"link\" href=\"https://developers.teneo.ai/\" target=\"_blank\" rel=\"noopener\" class=\"twc-linkbutton\">Link 3</a>")
     })
 
     test('Assert LinkPreviewMessage JSON', () => {
@@ -517,7 +517,7 @@ describe('Test Message Components', () => {
         expect(wrapper.html()).toContain('twc-file-video')
         expect(wrapper.html()).toContain('twc-vimeo-video')
         expect(wrapper.html()).toContain('twc-buttons');
-        expect(wrapper.html()).toContain('<a role=\"link\" href=\"https://developers.artificial-solutions.com/\" target=\"_blank\" rel=\"noopener\" class=\"twc-linkbutton\">Link 3</a>')
+        expect(wrapper.html()).toContain('<a role=\"link\" href=\"https://developers.teneo.ai/\" target=\"_blank\" rel=\"noopener\" class=\"twc-linkbutton\">Link 3</a>')
     })
 
 

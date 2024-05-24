@@ -92,12 +92,12 @@ export const cardMessageJSONWithLinkButtons = {
         'linkbutton_items': [
             {
                 'title': 'Studio',
-                'url': 'https://developers.artificial-solutions.com/studio',
+                'url': 'https://developers.teneo.ai/studio',
                 'target': '_blank'
             },
             {
                 'title': 'Engine',
-                'url': 'https://developers.artificial-solutions.com/engine',
+                'url': 'https://developers.teneo.ai/engine',
                 'target': '_blank'
             }
         ]
@@ -186,12 +186,12 @@ export const linkButtonsMessageJSON = {
             },
             {
                 'title': 'Link 2',
-                'url': 'https://developers.artificial-solutions.com/',
+                'url': 'https://developers.teneo.ai/',
                 'target': '_self'
             },
             {
                 'title': 'Link 3',
-                'url': 'https://developers.artificial-solutions.com/',
+                'url': 'https://developers.teneo.ai/',
                 'target': '_blank'
             }
         ]
@@ -294,12 +294,12 @@ export const comboMessageJSON = {
                     },
                     {
                         'title': 'Link 2',
-                        'url': 'https://developers.artificial-solutions.com/',
+                        'url': 'https://developers.teneo.ai/',
                         'target': '_self'
                     },
                     {
                         'title': 'Link 3',
-                        'url': 'https://developers.artificial-solutions.com/',
+                        'url': 'https://developers.teneo.ai/',
                         'target': '_blank'
                     }
                 ]
@@ -362,11 +362,11 @@ export const carouselMessageJSON = {
                     'linkbutton_items': [
                         {
                             'title': 'Studio',
-                            'url': 'https://developers.artificial-solutions.com/studio',
+                            'url': 'https://developers.teneo.ai/studio',
                             'target': '_blank'
                         }, {
                             'title': 'Engine',
-                            'url': 'https://developers.artificial-solutions.com/engine',
+                            'url': 'https://developers.teneo.ai/engine',
                             'target': '_blank'
                         }
                     ]

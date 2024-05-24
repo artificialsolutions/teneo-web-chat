@@ -1,26 +1,33 @@
 <template>
   <div class="button-container">
-    <button v-if="asrActive"
-            @mousedown="startTranscription"
-            @mouseup="stopASR"
-            @touchstart.prevent="startTranscription"
-            @touchend.prevent="stopASR"
-            @mouseleave="handleMouseLeave"
-            type="button"
-            :class="asrButtonClass"> 
-            <span v-if="asrRecordingSymbol && buttonPressed ">{{ asrRecordingSymbol }}</span>
-            <span v-else-if="asrRecordSymbol && !buttonPressed && !transcribing">{{ asrRecordSymbol }}</span>
-            <AsrIcon v-else aria-hidden="true" />
+    <button
+      v-if="asrActive"
+      type="button"
+      :class="asrButtonClass"
+      @mousedown="asrStartRecognition"
+      @mouseup="asrStop"
+      @touchstart.prevent="asrStartRecognition"
+      @touchend.prevent="asrStop"
+      @mouseleave="handleMouseLeave"
+    >
+      <span v-if="asrRecordingSymbol && buttonPressed ">{{ asrRecordingSymbol }}</span>
+      <span v-else-if="asrRecordSymbol && !buttonPressed && !transcribing">{{ asrRecordSymbol }}</span>
+      <AsrIcon v-else aria-hidden="true" />
     </button>
-    <button v-if="ttsActive" 
-            @click="toggleTTS"     
-            type="button" 
-            :class="ttsButtonClass">
+    <button
+      v-if="ttsActive"
+      type="button"
+      :class="ttsButtonClass"
+      @click="toggleTTS"
+    >
       <span v-if="ttsSymbol && readIncomingMessages">{{ ttsSymbol }}</span>
-      <span v-else-if="ttsStopSymbol && !readIncomingMessages">{{ ttsStopSymbol }}</span> 
-      <MuteIcon v-else-if="!ttsStopSymbol && !readIncomingMessages"  aria-hidden="true"/>
-      <TtsIcon v-else  aria-hidden="true"/>
-    </button>    
+      <span v-else-if="ttsStopSymbol && !readIncomingMessages">{{ ttsStopSymbol }}</span>
+      <MuteIcon v-else-if="!ttsStopSymbol && !readIncomingMessages" aria-hidden="true" />
+      <TtsIcon v-else aria-hidden="true" />
+    </button>
+    <RecordingStartedBeep ref="recordingStartedBeep" />
+    <RecordingEndedBeep ref="recordingEndedBeep" />
+    <RecordingCancelledBeep ref="recordingCancelledBeep" />
   </div>
 </template>
 
@@ -30,30 +37,35 @@ import { mapState, mapGetters } from 'vuex';
 import AsrIcon from '../icons/asr.vue';
 import MuteIcon from '../icons/mute.vue';
 import TtsIcon from '../icons/tts.vue';
+import RecordingStartedBeep from '../sounds/recordingStartedBeep.vue';
+import RecordingEndedBeep from '../sounds/recordingEndedBeep.vue';
+import RecordingCancelledBeep from '../sounds/recordingCancelledBeep.vue';
+import { store } from '../store/store';
+import AsrTtsApi from '../utils/asr-tts-api.js';
 
 export default {
   components: {
     AsrIcon,
     MuteIcon,
-    TtsIcon
+    TtsIcon,
+    RecordingStartedBeep,
+    RecordingEndedBeep,
+    RecordingCancelledBeep
   },
-  props: {
-    userInputFieldId: String,
-  },
+
   data() {
     return {
       transcribing: false,
       buttonPressed: false,
-      recognition: null,
-      alertMessage: this.$t('message.webspeech_not_supported'),
       lastResult: '',
-      readIncomingMessages: true
-
+      readIncomingMessages: true,
+      asrTtsApi: new AsrTtsApi(),
+      ttsTextQueue: [],
     };
   },
 
   computed: {
-    ...mapState(['asrRecordSymbol', 'ttsSymbol','ttsStopSymbol', 'asrRecordingSymbol']),
+    ...mapState(['asrRecordSymbol', 'ttsSymbol', 'ttsStopSymbol', 'asrRecordingSymbol']),
     ...mapGetters({
       asrActive: 'asrActive',
       ttsActive: 'ttsActive'
@@ -74,87 +86,164 @@ export default {
         'tts-disabled': !this.readIncomingMessages
       };
     }
-    
+
+  },
+
+  mounted() {
+    EventBus.$on(events.BOT_MESSAGE_RECEIVED, (message) => {
+      if (this.ttsActive && this.readIncomingMessages) {
+        const { data, placeInQueue, queueLength } = message;
+        const { lang } = document.documentElement;
+        const { locale, voice } = store.getters;
+
+        // Here we piece back together the messages that were split in parse-teneo-response
+        if (!placeInQueue || placeInQueue === 1) {
+          this.ttsTextQueue = this.extractTextValuesRecurse(data);
+        } else {
+          this.ttsTextQueue = this.ttsTextQueue.concat(this.extractTextValuesRecurse(data));
+        }
+
+        if (!placeInQueue || (placeInQueue === queueLength)) {
+          this.ttsReadText(this.ttsTextQueue.join('.\n'), locale || lang, voice);
+        }
+      }
+    });
+
+    EventBus.$on(events.MESSAGE_SENT, () => {
+      this.ttsStop();
+    });
+
+    EventBus.$on(events.STOP_ASR_TTS, () => {
+      this.asrStop();
+      this.ttsStop();
+    });
+  },
+
+  beforeDestroy() {
+    EventBus.$off(events.BOT_MESSAGE_RECEIVED);
+    EventBus.$off(events.STOP_ASR_TTS);
   },
 
   methods: {
-    startTranscription() {
-      this.buttonPressed = true;
-      
-      // Before creating a new SpeechRecognition cleanup
-      if (this.recognition) {
-        this.recognition.stop(); 
-        this.recognition = null; 
-      }      
-      const SpeechRecognition = window.SpeechRecognition || window.webkitSpeechRecognition;
+    async asrStartRecognition() {
+      const asrAvailable = await this.asrTtsApi.asrEnsureAvailable();
 
-      if (typeof SpeechRecognition === "undefined") {
-        alert(this.alertMessage);
+      if (!asrAvailable) {
+        console.error('ASR Not Available');
+
         return;
       }
+
+      this.ttsStop();
+      this.asrTtsApi.asrCleanup();
+
+      this.buttonPressed = true;
+      this.$refs.recordingStartedBeep.$el.play();
+
+      this.startTranscribing();
+    },
+
+    startTranscribing() {
       if (!this.transcribing) {
-        this.recognition = new SpeechRecognition();
-        this.recognition.continuous = true;
-        const isMobile = /Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(navigator.userAgent);
-        this.recognition.interimResults = !isMobile;
-        this.recognition.addEventListener('result', this.resultHandler);
-        this.recognition.addEventListener('end', this.endHandler);
-        this.recognition.start();
+        const { lang } = document.documentElement;
+
+        this.asrTtsApi.asrStartRecognition(lang, this.asrHandleFinalResult, this.asrHandleCancel, this.asrHandleIntermediateResult);
         this.transcribing = true;
         this.$emit('transcribing', this.transcribing);
       }
     },
 
-    stopASR() {
-      this.buttonPressed = false;
-      if (this.recognition) {
-        this.recognition.stop();
-      }
+    asrHandleCancel() {
       this.transcribing = false;
-      this.$emit('transcribing', this.transcribing);      
+      this.$emit('transcribing', this.transcribing);
+      this.$refs.recordingCancelledBeep.$el.play();
+      this.buttonPressed = false;
     },
 
-    readTranscription(text) {
-         const utterance = new SpeechSynthesisUtterance(text);
-         window.speechSynthesis.speak(utterance);
-         this.$forceUpdate();
+    asrHandleFinalResult(transcribedText) {
+      this.$emit('transcriptionComplete', transcribedText);
+
+      this.transcribing = false;
+      this.$emit('transcribing', this.transcribing);
+      this.$refs.recordingEndedBeep.$el.play();
+      this.buttonPressed = false;
     },
-    
+
+    asrHandleIntermediateResult(transcribedText) {
+      this.$emit('transcription', transcribedText);
+    },
+
+    async asrStop() {
+      await this.asrTtsApi.asrCleanup();
+
+      this.buttonPressed = false;
+      if (this.transcribing) {
+        this.transcribing = false;
+        this.$emit('transcribing', this.transcribing);
+      }
+    },
+
+    async ttsReadText(text, lang, voice) {
+      const ttsAvailable = await this.asrTtsApi.ttsEnsureAvailable();
+
+      if (!ttsAvailable) {
+        console.error('TTS Not Available');
+
+        return;
+      }
+
+      await this.asrTtsApi.ttsReadText(text, lang, voice);
+      this.$forceUpdate();
+    },
+
+    async ttsStop() {
+      await this.asrTtsApi.ttsStop();
+    },
+
     handleMouseLeave() {
       if (this.transcribing) {
-        this.stopASR();
+        this.asrStop();
       }
     },
 
     toggleTTS() {
-      window.speechSynthesis.cancel();
-       this.readIncomingMessages = !this.readIncomingMessages;       
-       EventBus.$emit('tts-state-change', this.readIncomingMessages); 
-
+      this.ttsStop();
+      this.readIncomingMessages = !this.readIncomingMessages;
     },
 
-    resultHandler(event) {
-      //Transcript as String
-      const transcriptString = event.results[event.results.length - 1][0].transcript;
-      this.$emit('transcription', transcriptString);      
-      if (event.results[event.results.length - 1].isFinal) {        
-        this.$emit('transcriptionComplete', transcriptString);
-      }
-    },
-      
-    endHandler() {
-      this.transcribing = false; 
-      this.$emit('transcribing', this.transcribing);
-    }
+    extractTextValues(messageData) {
 
-  },
-  mounted(){
-    EventBus.$emit('tts-state-change', this.readIncomingMessages); 
-  },
+      /*
+       * This array defines the values which should be considered text
+       * and therefore which values should be read by TTS
+       * It also defines the ORDER (left to right) in which they will
+       * be read if more than one exists in a message
+       */
+      const validValues = ['title', 'subtitle', 'text', 'alt'];
+
+      return validValues
+        .filter((value) => Object.prototype.hasOwnProperty.call(messageData, value))
+        .map((value) => this.cleanHTMLFromText(messageData[value]));
+    },
+
+    extractTextValuesRecurse(messageData) {
+      const textValues = this.extractTextValues(messageData);
+
+      const subValues = Object.values(messageData)
+        .filter((value) => Array.isArray(value) && value.length > 0)
+        .flatMap((array) => array.flatMap((entry) => this.extractTextValuesRecurse(entry)));
+
+      return textValues.concat(subValues);
+    },
+
+    cleanHTMLFromText(text) {
+      return new DOMParser().parseFromString(text, 'text/html').body.textContent || '';
+    },
+  }
 };
 </script>
 
-  
+
 <style scoped>
 .button-container {
   max-height: 200px;
@@ -162,26 +251,26 @@ export default {
   margin-right: 2px;
   display: flex;
   flex-direction: row;
-  align-items: center; 
-  justify-content: center;   
+  align-items: center;
+  justify-content: center;
 }
 
 .asr-button, .tts-button {
-  flex: 0 0 auto; 
+  flex: 0 0 auto;
   display: flex;
-  flex-direction: row; 
+  flex-direction: row;
   justify-content: center;
-  align-items: center; 
+  align-items: center;
   cursor: pointer;
-  background-color: #f0f0f0; 
+  background-color: #f0f0f0;
   border: none;
   border-radius: 4px;
   padding: 10px;
-  margin: 5px 0; 
-  width: 44px; 
-  height: 44px; 
+  margin: 5px 0;
+  width: 44px;
+  height: 44px;
   outline: none;
-  color: var(--sendicon-fg-color,#263238); 
+  color: var(--sendicon-fg-color,#263238);
 }
 
 .custom-icon {
@@ -192,32 +281,30 @@ export default {
   padding-bottom: 10px;
   width: 24px;
   height: 44px;
-  cursor: pointer;  
+  cursor: pointer;
 }
 
 .custom-icon.asr-idle
 .custom-icon.tts-enabled
  {
-  color: var(--sendicon-fg-color,#263238); 
+  color: var(--sendicon-fg-color,#263238);
 }
 
 @media (max-width: 450px) {
   .asr-button, .tts-button {
     width: 44px;
-    height: 44px; 
+    height: 44px;
     padding: 15px;
     margin: 10px 0;
   }
 }
 .custom-icon.tts-disabled
  {
-  color: var(--expired-color,#263238); 
+  color: var(--expired-color,#263238);
 }
 
-.custom-icon.recording 
+.custom-icon.recording
 {
-  color: var(--recording-color,#FF0000); 
+  color: var(--recording-color,#FF0000);
 }
 </style>
-
-  

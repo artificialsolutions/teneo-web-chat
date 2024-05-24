@@ -17,183 +17,135 @@ const validFunctionNames = Object.values(apiConstants);
 const messageList = new messageListCache();
 let isInitialised = false;
 
-window.twcTmp = {}
+const commitIfTruthy = (storeKey, propertyValue) => {
+  if (propertyValue) {
+    store.commit(storeKey, propertyValue);
+  }
+};
+const commitIfTrue = (storeKey, propertyValue) => {
+  if (propertyValue === true || propertyValue === 'true') {
+    store.commit(storeKey, propertyValue);
+  }
+};
+const commitIfNonEmpty = (storeKey, propertyValue) => {
+  if (Object.keys(propertyValue).length) {
+    store.commit(storeKey, propertyValue);
+  }
+};
+const commitMsCognitiveSpeechSettings = (twcProps) => {
+  const { msCognitiveAsrSubscriptionKey,
+    msCognitiveAsrRegion,
+    msCognitiveAsrSubscriptionOnly,
+    msCognitiveAsrCustomAuthTokenUrl,
+    msCognitiveAsrEndpoint,
+    msCognitiveAsrHost,
+
+    msCognitiveTtsSubscriptionKey,
+    msCognitiveTtsRegion,
+    msCognitiveTtsSubscriptionOnly,
+    msCognitiveTtsCustomAuthTokenUrl,
+    msCognitiveTtsEndpoint,
+    msCognitiveTtsHost,
+
+    msCognitiveSubscriptionKey,
+    msCognitiveRegion,
+    msCognitiveSubscriptionOnly,
+    msCognitiveCustomAuthTokenUrl,
+    msCognitiveEndpoint,
+    msCognitiveHost } = twcProps;
+
+  const asrSettings = {
+    subscriptionKey: msCognitiveAsrSubscriptionKey || msCognitiveSubscriptionKey,
+    region: msCognitiveAsrRegion || msCognitiveRegion,
+    useSubscriptionOnly: msCognitiveAsrSubscriptionOnly || msCognitiveSubscriptionOnly,
+    tokenUrl: msCognitiveAsrCustomAuthTokenUrl || msCognitiveCustomAuthTokenUrl,
+    endpointURL: msCognitiveAsrEndpoint || msCognitiveEndpoint,
+    hostURL: msCognitiveAsrHost || msCognitiveHost,
+  };
+
+  const ttsSettings = {
+    subscriptionKey: msCognitiveTtsSubscriptionKey || msCognitiveSubscriptionKey,
+    region: msCognitiveTtsRegion || msCognitiveRegion,
+    useSubscriptionOnly: msCognitiveTtsSubscriptionOnly || msCognitiveSubscriptionOnly,
+    tokenUrl: msCognitiveTtsCustomAuthTokenUrl || msCognitiveCustomAuthTokenUrl,
+    endpointURL: msCognitiveTtsEndpoint || msCognitiveEndpoint,
+    hostURL: msCognitiveTtsHost || msCognitiveHost,
+  };
+
+  commitIfNonEmpty('msAsrSettings', Object.fromEntries(Object.entries(asrSettings).filter(([, v]) => v)));
+  commitIfNonEmpty('msTtsSettings', Object.fromEntries(Object.entries(ttsSettings).filter(([, v]) => v)));
+};
+
+window.twcTmp = {};
 window.TeneoWebChat = {
+  // eslint-disable-next-line max-statements
   initialize(element, twcProps) {
 
-    // TODO: error handling (once store throws error)
     Vue.prototype.$store = store;
 
     // Store properties in storage
-    if (twcProps.teneoEngineUrl) {
+    commitIfTruthy('teneoEngineUrl', twcProps.teneoEngineUrl);
+    commitIfTruthy('initialTitle', twcProps.title);
+    commitIfTruthy('initialTitleIconUrl', twcProps.titleIconUrl);
+    commitIfTruthy('teneoEngineParams', twcProps.teneoEngineParams);
 
-      store.commit('teneoEngineUrl', twcProps.teneoEngineUrl);
-    }
+    commitIfTrue('showCloseButton', twcProps.showCloseButton);
 
-    if (twcProps.title) {
-      // TODO: Check if title is a string
-      store.commit('initialTitle', twcProps.title);
-    }
+    commitIfTruthy('agentAvatarUrl', twcProps.agentAvatarUrl);
+    commitIfTruthy('botAvatarUrl', twcProps.botAvatarUrl);
+    commitIfTruthy('userAvatarUrl', twcProps.userAvatarUrl);
+    commitIfTruthy('minimizeIconUrl', twcProps.minimizeIconUrl);
+    commitIfTruthy('closeIconUrl', twcProps.closeIconUrl);
+    commitIfTruthy('initialLaunchIconUrl', twcProps.launchIconUrl);
+    commitIfTruthy('initialSendIconUrl', twcProps.sendIconUrl);
+    commitIfTruthy('initialUploadIconUrl', twcProps.uploadIconUrl);
 
-    if (twcProps.titleIconUrl) {
+    commitIfTrue('showScrollDownButton', twcProps.showScrollDownButton);
 
-      store.commit('initialTitleIconUrl', twcProps.titleIconUrl);
-    }
+    commitIfTrue('showUploadButton', twcProps.showUploadButton);
 
-    if (twcProps.teneoEngineParams) {
-      // TODO: Check if twcProps.teneoEngineParams is a map
-       store.commit('teneoEngineParams', twcProps.teneoEngineParams);
-    }
+    commitIfTruthy('fileUploadSymbolFailed', twcProps.fileUploadSymbolFailed);
+    commitIfTruthy('fileUploadSymbolInterrupted', twcProps.fileUploadSymbolInterrupted);
+    commitIfTruthy('fileUploadSymbolDelete', twcProps.fileUploadSymbolDelete);
+    commitIfTruthy('fileUploadSymbolStop', twcProps.fileUploadSymbolStop);
+    commitIfTruthy('fileUploadSymbolRestart', twcProps.fileUploadSymbolRestart);
+    commitIfTruthy('fileUploadSymbolRetry', twcProps.fileUploadSymbolRetry);
+    commitIfTruthy('fileUploadSymbolProgressBackgroundColor', twcProps.fileUploadSymbolProgressBackgroundColor);
+    commitIfTruthy('fileUploadSymbolProgressBarColor', twcProps.fileUploadSymbolProgressBarColor);
+    commitIfTruthy('uploadPanelAddFilesSymbol', twcProps.uploadPanelAddFilesSymbol);
 
-    if (twcProps.showCloseButton === true || twcProps.showCloseButton === 'true') {
-      store.commit('showCloseButton', true);
-    }
+    commitIfTruthy('asrRecordSymbol', twcProps.asrRecordSymbol);
+    commitIfTruthy('ttsSymbol', twcProps.ttsSymbol);
+    commitIfTruthy('ttsStopSymbol', twcProps.ttsStopSymbol);
+    commitIfTruthy('asrRecordingSymbol', twcProps.asrRecordingSymbol);
+    commitIfTrue('asrActive', twcProps.asrActive);
+    commitIfTrue('ttsActive', twcProps.ttsActive);
 
-    if (twcProps.agentAvatarUrl) {
+    commitIfTruthy('locale', twcProps.locale);
+    commitIfTruthy('voice', twcProps.voice);
 
-      store.commit('agentAvatarUrl', twcProps.agentAvatarUrl);
-    }
-
-    if (twcProps.botAvatarUrl) {
-
-      store.commit('botAvatarUrl', twcProps.botAvatarUrl);
-    }
-
-    if (twcProps.userAvatarUrl) {
-
-      store.commit('userAvatarUrl', twcProps.userAvatarUrl);
-    }
-
-    if (twcProps.minimizeIconUrl) {
-
-      store.commit('minimizeIconUrl', twcProps.minimizeIconUrl);
-    }
-
-    if (twcProps.closeIconUrl) {
-
-      store.commit('closeIconUrl', twcProps.closeIconUrl);
-    }
-
-    if (twcProps.launchIconUrl) {
-
-      store.commit('initialLaunchIconUrl', twcProps.launchIconUrl);
-    }
-
-    if (twcProps.sendIconUrl) {
-
-      store.commit('initialSendIconUrl', twcProps.sendIconUrl);
-    }
-
-    if (twcProps.uploadIconUrl) {
-
-      store.commit('initialUploadIconUrl', twcProps.uploadIconUrl);
-    }
-
-    if (twcProps.showUploadButton === true || twcProps.showUploadButton === "true") {
-      store.commit('showUploadButton', true);
-    }
-
-    if (twcProps.showScrollDownButton === true || twcProps.showScrollDownButton === "true") {
-      store.commit('showScrollDownButton', true);
-    }
-
-    if (twcProps.fileUploadSymbolFailed) {
-      store.commit('fileUploadSymbolFailed', twcProps.fileUploadSymbolFailed);
-    }
-    if (twcProps.fileUploadSymbolInterrupted) {
-      store.commit('fileUploadSymbolInterrupted', twcProps.fileUploadSymbolInterrupted);
-    }
-    if (twcProps.fileUploadSymbolDelete) {
-      store.commit('fileUploadSymbolDelete', twcProps.fileUploadSymbolDelete);
-    }
-    if (twcProps.asrRecordSymbol) {
-      store.commit('asrRecordSymbol', twcProps.asrRecordSymbol);
-    }
-    if (twcProps.ttsSymbol) {
-      store.commit('ttsSymbol', twcProps.ttsSymbol);
-    }
-    if (twcProps.ttsStopSymbol) {
-      store.commit('ttsStopSymbol', twcProps.ttsStopSymbol);
-    }
-    if (twcProps.asrRecordingSymbol) {
-      store.commit('asrRecordingSymbol', twcProps.asrRecordingSymbol);
-    }
-    if (twcProps.fileUploadSymbolStop) {
-      store.commit('fileUploadSymbolStop', twcProps.fileUploadSymbolStop);
-    }
-    if (twcProps.fileUploadSymbolRestart) {
-      store.commit('fileUploadSymbolRestart', twcProps.fileUploadSymbolRestart);
-    }
-    if (twcProps.fileUploadSymbolRetry) {
-      store.commit('fileUploadSymbolRetry', twcProps.fileUploadSymbolRetry);
-    }
-    if (twcProps.fileUploadSymbolProgressBackgroundColor) {
-      store.commit('fileUploadSymbolProgressBackgroundColor', twcProps.fileUploadSymbolProgressBackgroundColor);
-    }
-    if (twcProps.fileUploadSymbolProgressBarColor) {
-      store.commit('fileUploadSymbolProgressBarColor', twcProps.fileUploadSymbolProgressBarColor);
-    }
-
-    if (twcProps.uploadPanelAddFilesSymbol) {
-      store.commit('uploadPanelAddFilesSymbol', twcProps.uploadPanelAddFilesSymbol);
-    }
-
-    if (twcProps.asrIconUrl) {
-      store.commit('initialAsrIconUrl', twcProps.asrIconUrl);
-    }
-
-    if (twcProps.showAsrButton === true || twcProps.showAsrButton === "true") {
-      store.commit('showAsrButton', true);
-    }
-    if (twcProps.asrActive === true || twcProps.asrActive === "true") {
-      store.commit('asrActive', true);
-    }
-    if (twcProps.ttsIconUrl) {
-      store.commit('initialTtsIconUrl', twcProps.ttsIconUrl);
-    }
-
-    if (twcProps.showTtsButton === true || twcProps.showTtsButton === "true") {
-      store.commit('showTtsButton', true);
-    }
-    if (twcProps.ttsActive === true || twcProps.ttsActive === "true") {
-      store.commit('ttsActive', true);
-    }
-
-    if (twcProps.locale) {
-
-      store.commit('locale', twcProps.locale);
-    }
-
-//Empty property
+    commitMsCognitiveSpeechSettings(twcProps);
 
     if (twcProps.customLocalizations) {
-      // TODO: error handling
       const { customLocalizations } = twcProps;
 
       if (Object.keys(customLocalizations).length > 0 && customLocalizations.constructor === Object) {
         // Merge objects
         Object.assign(translatedMessages, customLocalizations);
-        // TranslatedMessages[Object.keys(customLocalizations)[0]]=customLocalizations[Object.keys(customLocalizations)[0]]
       }
     }
 
-    if (twcProps.locale) {
-
-      store.commit('locale', twcProps.locale);
-    }
-   //Default is true to autoredirect, false or 'false' will flip it
-    if (twcProps.hasOwnProperty('autoRedirect') && twcProps.autoRedirect !== "" && !JSON.parse(twcProps.autoRedirect)) {
+   // Default is true to autoredirect, false or 'false' will flip it
+    if (Object.prototype.hasOwnProperty.call(twcProps, 'autoRedirect') && twcProps.autoRedirect !== '' && !JSON.parse(twcProps.autoRedirect)) {
       store.commit('autoRedirect', false);
     }
 
-    if (twcProps.storage) {
-
-      store.commit('storage', twcProps.storage);
-    }
+    commitIfTruthy('storage', twcProps.storage);
 
     // Check required properties
     if (!store.getters.teneoEngineUrl) {
-      // TODO: throw error if engine url is missing?
+      console.error('No Engine URL configured');
+
       return;
     }
 
@@ -240,7 +192,7 @@ window.TeneoWebChat = {
 
       // Only continue if function name provided is valid
       if (!validFunctionNames.includes(function_name)) {
-        // TODO: throw error if invalid function_name was provided?
+        console.error(`Unknown function name: ${function_name}`);
         return;
       }
 
@@ -289,8 +241,11 @@ return filteredMessageList;
         return store.getters.storage;
 
       case apiConstants.API_GET_LOCALE:
-        return store.getters.localeObj;        
+        return store.getters.localeObj;
 
+      case apiConstants.API_GET_VOICE:
+        return store.getters.voice;
+      
       case apiConstants.API_GET_ENGINE_PARAMS:
         return store.getters.teneoEngineParams
 
@@ -310,11 +265,14 @@ return filteredMessageList;
         EventBus.$emit(events.HIDE_CALLOUT);
         break;
 
-      case apiConstants.API_SET_LOCALE:
-        // TODO: throw error if payload is invalid or if store throws error
-        store.commit('locale', payload);
-        EventBus.$emit(events.SET_LOCALE, store.getters.locale);
-        break;
+        case apiConstants.API_SET_LOCALE:
+          store.commit('locale', payload);
+          EventBus.$emit(events.SET_LOCALE, store.getters.locale);
+          break;
+
+        case apiConstants.API_SET_VOICE:
+          store.commit('voice', payload);
+          break;
 
         case apiConstants.API_SET_ENGINE_PARAMS:
         // TODO: throw error if payload is invalid or if store throws error
